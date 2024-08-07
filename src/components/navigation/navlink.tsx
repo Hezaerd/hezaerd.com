@@ -1,4 +1,3 @@
-import { FC } from "react";
 import Link from "next/link";
 
 interface NavLinkProps {
@@ -8,9 +7,13 @@ interface NavLinkProps {
 
 const NavLink = ({ name, href }: NavLinkProps) => {
   return (
-    <li>
-      <Link href={href}>{name}</Link>
-    </li>
+    <Link
+      className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+      href={href}
+      prefetch={false}
+    >
+      {name}
+    </Link>
   );
 };
 
