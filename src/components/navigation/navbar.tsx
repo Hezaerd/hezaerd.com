@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { NavLink } from "@/components/navigation/navlink";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Skeleton } from "../ui/skeleton";
 
 export default function Navbar() {
   return (
@@ -19,7 +20,9 @@ export default function Navbar() {
           <div className="text-lg font-semibold">Hezaerd</div>
           <Avatar className="h-9 w-9">
             <AvatarImage src="https://github.com/hezaerd.png" alt="Hezaerd" />
-            <AvatarFallback>HZ</AvatarFallback>
+            <AvatarFallback>
+              <Skeleton className="h-9 w-9 rounded-full" />
+            </AvatarFallback>
           </Avatar>
         </div>
       </div>
