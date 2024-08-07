@@ -3,6 +3,7 @@ import { NavLink } from "@/components/navigation/navlink";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "../ui/skeleton";
 import ThemeToggler from "../theme/theme-toggler";
+import NavbarSheet from "./navbar-sheet";
 
 export default function Navbar() {
   return (
@@ -13,12 +14,16 @@ export default function Navbar() {
           <span className="text-lg font-semibold">Portfolio</span>
         </Link>
 
-        <nav className="hidden md:flex items-center gap-4">
-          <NavLink name="Home" href="/" />
-          <NavLink name="About" href="/about" />
-          <NavLink name="Projects" href="/projects" />
-          <NavLink name="Skills" href="/skills" />
-        </nav>
+        <div className="flex items-center gap-4">
+          <nav className="hidden md:flex items-center gap-4">
+            <NavLink name="Home" href="/" />
+            <NavLink name="About" href="/about" />
+            <NavLink name="Projects" href="/projects" />
+            <NavLink name="Skills" href="/skills" />
+          </nav>
+          <NavbarSheet />
+        </div>
+
         <div className="flex items-center gap-4">
           <ThemeToggler />
           <div className="text-lg font-semibold">Hezaerd</div>
