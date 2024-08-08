@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { NavLink } from "@/components/navigation/navlink";
-import ThemeToggler from "../theme/theme-toggler";
 import NavbarSheet from "./navbar-sheet";
 import NavbarProfile from "./navbar-profile";
 
@@ -23,7 +22,6 @@ export default function Navbar() {
         </div>
 
         <div className="flex items-center gap-4">
-          <ThemeToggler />
           <NavbarProfile />
         </div>
       </div>
