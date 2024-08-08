@@ -14,12 +14,12 @@ const author: Author = {
 };
 
 export const metadata: Metadata = {
-  title: "Hezaerd • Portfolio",
+  title: "Hezaerd - Portfolio",
   description: "I'm, Hezaerd, a software engineer and game developer.",
   authors: [author],
   keywords: ["Hezaerd", "Portfolio", "developer", "isart", "isart digital"],
   openGraph: {
-    title: "Hezaerd • Portfolio",
+    title: "Hezaerd - Portfolio",
     description: "I'm, Hezaerd, a software engineer and game developer.",
     type: "website",
     url: "https://hezaerd.com",
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     site: "@hezaerd",
     creator: "@hezaerd",
     description: "I'm, Hezaerd, a software engineer and game developer.",
-    title: "Hezaerd • Portfolio",
+    title: "Hezaerd - Portfolio",
     images: [
       {
         url: "https://github.com/hezaerd.png",
