@@ -31,17 +31,22 @@ export default function Home() {
           }}
           className="relative flex flex-col items-center justify-center gap-4 px-4"
         >
-          <div className="text-center text-3xl font-bold dark:text-primary md:text-7xl">
+          <div className="text-center text-3xl font-bold text-primary md:text-7xl">
             Hello I'm Hezaerd
           </div>
-          <div className="text-center text-xl dark:text-primary md:text-3xl">
-            <span>I'm </span>
-            <TypeAnimation
-              sequence={jobSequence}
-              wrapper="span"
-              speed={50}
-              repeat={Infinity}
-            />
+          <div className="text-xl text-primary md:text-3xl">
+            <span className="inline-flex items-center">
+              I'm&nbsp;
+              <span className="from-primary-gradient to-secondary-gradient bg-gradient-to-r bg-clip-text text-transparent">
+                <TypeAnimation
+                  sequence={jobSequence}
+                  wrapper="span"
+                  speed={50}
+                  repeat={Infinity}
+                  style={{ whiteSpace: "nowrap" }}
+                />
+              </span>
+            </span>
           </div>
           <HoverBorderGradient
             className="w-fit"
