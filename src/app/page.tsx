@@ -1,8 +1,21 @@
 "use client";
 
+import { motion } from "framer-motion";
+import { TypeAnimation } from "react-type-animation";
+
 import { AuroraBackground } from "@/components/ui/aurora-background";
 import { HoverBorderGradient } from "@/components/ui/hover-border-gradient";
-import { motion } from "framer-motion";
+
+const jobSequence = [
+  "also known as Swann",
+  1000,
+  "an engine developer",
+  1000,
+  "a gameplay Developer",
+  1000,
+  "a software engineer",
+  1000,
+];
 
 export default function Home() {
   return (
@@ -22,7 +35,13 @@ export default function Home() {
             Hello I'm Hezaerd
           </div>
           <div className="text-center text-xl dark:text-primary md:text-3xl">
-            I'm a full stack developer
+            <span>I'm </span>
+            <TypeAnimation
+              sequence={jobSequence}
+              wrapper="span"
+              speed={50}
+              repeat={Infinity}
+            />
           </div>
           <HoverBorderGradient
             className="w-fit"
