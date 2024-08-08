@@ -14,10 +14,36 @@ const author: Author = {
 };
 
 export const metadata: Metadata = {
-  title: "Hezaerd Portfolio",
-  description: "Hezaerd Portfolio",
+  title: "Hezaerd • Portfolio",
+  description: "I'm, Hezaerd, a software engineer and game developer.",
   authors: [author],
   keywords: ["Hezaerd", "Portfolio", "developer", "isart", "isart digital"],
+  openGraph: {
+    title: "Hezaerd • Portfolio",
+    description: "I'm, Hezaerd, a software engineer and game developer.",
+    type: "website",
+    url: "https://hezaerd.com",
+    siteName: "Hezaerd",
+    images: [
+      {
+        url: "https://github.com/hezaerd.png",
+        width: 1200,
+        height: 630,
+        alt: "Hezaerd",
+      },
+    ],
+  },
+  twitter: {
+    site: "@hezaerd",
+    creator: "@hezaerd",
+    description: "I'm, Hezaerd, a software engineer and game developer.",
+    title: "Hezaerd • Portfolio",
+    images: [
+      {
+        url: "https://github.com/hezaerd.png",
+      },
+    ],
+  },
 };
 
 export default function RootLayout({
