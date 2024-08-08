@@ -6,15 +6,14 @@ import NavbarProfile from "./navbar-profile";
 
 export default function Navbar() {
   return (
-    <div className="sticky top-0 left-0 z-50 w-full backdrop-blur-lg bg-background/60 border-b border-muted/50 shadow-lg">
-      <div className="container flex items-center justify-between h-16 px-4 md:px-6">
-
+    <div className="fixed left-0 top-0 z-50 w-full border-b border-muted/50 bg-background/60 shadow-lg backdrop-blur-lg">
+      <div className="container flex h-16 items-center justify-between px-4 md:px-6">
         <Link href={"/"} prefetch={false} className="flex items-center gap-4">
           <span className="text-lg font-semibold">Portfolio</span>
         </Link>
 
         <div className="flex items-center gap-4">
-          <nav className="hidden md:flex items-center gap-4">
+          <nav className="hidden items-center gap-4 md:flex">
             <NavLink name="Home" href="/" />
             <NavLink name="About" href="/about" />
             <NavLink name="Projects" href="/projects" />
