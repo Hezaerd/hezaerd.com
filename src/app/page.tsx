@@ -32,11 +32,11 @@ export default function Home() {
           className="relative flex flex-col items-center justify-center gap-4 px-4"
         >
           <div className="text-center text-3xl font-bold text-primary md:text-7xl">
-            Hello I&aposm Hezaerd
+            Hello I&apos;m Hezaerd
           </div>
           <div className="text-xl text-primary md:text-3xl">
             <span className="inline-flex items-center">
-              I&aposm&nbsp;
+              I&apos;m&nbsp;
               <span className="from-primary-gradient to-secondary-gradient bg-gradient-to-r bg-clip-text text-transparent">
                 <TypeAnimation
                   sequence={jobSequence}
