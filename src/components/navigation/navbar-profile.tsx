@@ -10,7 +10,8 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { RepositoryIcon } from "@/components/icons/repository-icon";
-import SparklesText from "../ui/sparkles-text";
+import SparklesText from "@/components/ui/sparkles-text";
+import TickerNumber from "@/components/ui/TickerNumber";
 
 export default function NavbarProfile() {
   const fetcher = (url: string) => fetch(url).then((res) => res.json());
@@ -82,7 +83,11 @@ export default function NavbarProfile() {
               >
                 <RepositoryIcon color="#a1a1aa" />
                 <span className="text-xs text-muted-foreground">
-                  {data ? data.public_repos : "..."} repositories
+                  <TickerNumber
+                    number={data ? data.public_repos : 0}
+                    className="text-xs text-muted-foreground"
+                  />{" "}
+                  repositories
                 </span>
               </a>
             </div>
