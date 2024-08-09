@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 import { useInView, useMotionValue, useSpring } from "framer-motion";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface TickerNumberProps {
   /**
@@ -28,6 +28,14 @@ interface TickerNumberProps {
   direction?: "up" | "down";
 
   /**
+   * @default false
+   * @type boolean
+   * @description
+   * Play the animation only once
+   */
+  doOnce?: boolean;
+
+  /**
    * @default ""
    * @type string
    * @description
@@ -40,6 +48,7 @@ export default function TickerNumber({
   number,
   duration = 2,
   direction = "up",
+  doOnce = false,
   className,
 }: TickerNumberProps) {
   const ref = useRef<HTMLSpanElement>(null);
@@ -51,14 +60,20 @@ export default function TickerNumber({
   });
 
   const isInView = useInView(ref, { once: true, margin: "0px" });
+  const [hasPlayed, setHasPlayed] = useState(false);
+
+  console.log("once", doOnce);
+  console.log("hasPlayed", hasPlayed);
 
   useEffect(() => {
-    isInView &&
-      setTimeout(
-        () => motionNumber.set(direction === "up" ? number : 0),
-        duration * 1000,
-      );
-  }, [motionNumber, isInView, duration, number, direction]);
+    if (isInView && (!doOnce || !hasPlayed)) {
+      setTimeout(() => {
+        motionNumber.set(direction === "up" ? number : 0);
+        setHasPlayed(true);
+        console.log("play");
+      }, duration * 1000);
+    }
+  }, [motionNumber, isInView, duration, number, direction, doOnce, hasPlayed]);
 
   useEffect(
     () =>

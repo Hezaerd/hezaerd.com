@@ -85,6 +85,7 @@ export default function NavbarProfile() {
                 <span className="text-xs text-muted-foreground">
                   <TickerNumber
                     number={data ? data.public_repos : 0}
+                    doOnce={true}
                     className="text-xs text-muted-foreground"
                   />{" "}
                   repositories
