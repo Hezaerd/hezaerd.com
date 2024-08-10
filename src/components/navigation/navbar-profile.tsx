@@ -89,7 +89,7 @@ export default function NavbarProfile() {
                     doOnce={true}
                     className="text-xs text-muted-foreground"
                   />{" "}
-                  repositories
+                  public repositories
                 </span>
               </a>
             </div>
