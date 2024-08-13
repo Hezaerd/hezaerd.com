@@ -62,15 +62,11 @@ export default function TickerNumber({
   const isInView = useInView(ref, { once: true, margin: "0px" });
   const [hasPlayed, setHasPlayed] = useState(false);
 
-  console.log("once", doOnce);
-  console.log("hasPlayed", hasPlayed);
-
   useEffect(() => {
     if (isInView && (!doOnce || !hasPlayed)) {
       setTimeout(() => {
         motionNumber.set(direction === "up" ? number : 0);
         setHasPlayed(true);
-        console.log("play");
       }, duration * 1000);
     }
   }, [motionNumber, isInView, duration, number, direction, doOnce, hasPlayed]);
