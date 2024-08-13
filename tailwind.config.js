@@ -2,6 +2,10 @@ const {
   default: flattenColorPalette,
 } = require("tailwindcss/lib/util/flattenColorPalette");
 
+const svgToDataUri = require("mini-svg-data-uri");
+const colors = require("tailwindcss/colors");
+
+// Define the configuration object
 const config = {
   darkMode: ["class"],
   content: [
@@ -87,7 +91,25 @@ const config = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate"), addVariablesForColors],
+  plugins: [
+    require("tailwindcss-animate"),
+    addVariablesForColors, // Potential fix: addVariablesForColors()
+    function ({ matchUtilities, theme }) {
+      matchUtilities(
+        {
+          "bg-dot": (value) => ({
+            backgroundImage: `url("${svgToDataUri(
+              `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="16" height="16" fill="none"><circle fill="${value}" id="pattern-circle" cx="10" cy="10" r="1.6257413380501518"></circle></svg>`,
+            )}")`,
+          }),
+        },
+        {
+          values: flattenColorPalette(theme("backgroundColor")),
+          type: "color",
+        },
+      );
+    },
+  ],
 };
 
 // This plugin adds each Tailwind color as a global CSS variable, e.g. var(--gray-200).
@@ -102,4 +124,5 @@ function addVariablesForColors({ addBase, theme }) {
   });
 }
 
-export default config;
+// Export the config
+module.exports = config;
