@@ -3,10 +3,10 @@
 import useSWR from "swr";
 import { ReactNode } from "react";
 
+import { Button } from "@/components/ui/button";
 import { BentoGrid, BentoGridItem } from "@/components/ui/bento-grid";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
-import { cn } from "@/lib/utils";
 
 const ProjectSkeleton = () => (
   <div className="flex h-full min-h-[6rem] w-full flex-1 rounded-xl border border-border bg-background bg-dot-white/[0.2] [mask-image:radial-gradient(ellipse_at_center,white,transparent)]"></div>
@@ -31,20 +31,14 @@ interface ProjectItem {
 }
 
 async function getLatestProjects() {
-  const projectCount = 5;
-  const url =
-    "https://api.github.com/users/hezaerd/repos?sort=pushed&per_page=" +
-    projectCount;
-
-  const response = await fetch(url);
+  // api/projects
+  const response = await fetch("/api/projects");
 
   if (!response.ok) {
     throw new Error("Failed to fetch projects");
   }
 
-  const data = await response.json();
-
-  return data;
+  return response.json();
 }
 
 export default function ProjectsBento() {
@@ -58,6 +52,15 @@ export default function ProjectsBento() {
         <div className="text-center text-destructive">
           Failed to load projects
         </div>
+
+        <Button
+          onClick={() => {
+            window.location.reload();
+          }}
+          className="btn btn-primary"
+        >
+          Retry
+        </Button>
       </section>
     );
   }
@@ -65,7 +68,7 @@ export default function ProjectsBento() {
   if (!data) {
     return (
       <section className="mt-16 flex w-full flex-col items-center space-y-4">
-        <h1 className="text-2xl font-bold">Latest Projects</h1>
+        <h1 className="text-2xl font-bold">Latest Contributions</h1>
         <div className="text-center text-primary/80">Loading projects...</div>
       </section>
     );
@@ -86,7 +89,7 @@ export default function ProjectsBento() {
 
   return (
     <section className="mt-16 flex w-full flex-col items-center space-y-4">
-      <h1 className="text-2xl font-bold">Latest Projects</h1>
+      <h1 className="text-2xl font-bold">Latest Contributions</h1>
       <BentoGrid className="max-w-8xl mx-auto">
         {projects.map((project, i) => (
           <a
