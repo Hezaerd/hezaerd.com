@@ -4,6 +4,8 @@ import { Inter } from "next/font/google";
 import { Author } from "next/dist/lib/metadata/types/metadata-types";
 
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Analytics } from "@vercel/analytics/react";
+
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import Navbar from "@/components/navigation/navbar";
 
@@ -60,6 +62,7 @@ export default function RootLayout({
           {children}
         </ThemeProvider>
         <SpeedInsights />
+        <Analytics />
       </body>
     </html>
   );
