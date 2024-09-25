@@ -8,7 +8,7 @@ interface NavLinkProps {
 const NavLink = ({ name, href }: NavLinkProps) => {
   return (
     <Link
-      className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+      className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
       href={href}
       prefetch={false}
     >

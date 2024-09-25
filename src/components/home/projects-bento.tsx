@@ -1,45 +1,13 @@
 "use client";
 
 import useSWR from "swr";
-import { ReactNode } from "react";
+
+import { type ProjectItem, getLatestProjects } from "@/schemas/project-item";
 
 import { Button } from "@/components/ui/button";
+import { ProjectIcon } from "@/components/icons/project-icon";
+import { ProjectSkeleton } from "@/components/ui/project-skeleton";
 import { BentoGrid, BentoGridItem } from "@/components/ui/bento-grid";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Skeleton } from "@/components/ui/skeleton";
-
-const ProjectSkeleton = () => (
-  <div className="flex h-full min-h-[6rem] w-full flex-1 rounded-xl border border-border bg-background bg-dot-white/[0.2] [mask-image:radial-gradient(ellipse_at_center,white,transparent)]"></div>
-);
-
-const ProjectIcon = ({ src, alt }: { src: string; alt: string }) => (
-  <Avatar className="h-9 w-9">
-    <AvatarImage src={src} alt={alt} className="mx-auto" />
-    <AvatarFallback>
-      <Skeleton className="h-9 w-9 rounded-full" />
-    </AvatarFallback>
-  </Avatar>
-);
-
-interface ProjectItem {
-  title: string;
-  description: string;
-  header: ReactNode;
-  className: string;
-  icon: ReactNode;
-  html_url?: string;
-}
-
-async function getLatestProjects() {
-  // api/projects
-  const response = await fetch("/api/projects");
-
-  if (!response.ok) {
-    throw new Error("Failed to fetch projects");
-  }
-
-  return response.json();
-}
 
 export default function ProjectsBento() {
   const { data, error } = useSWR("projects", getLatestProjects);
