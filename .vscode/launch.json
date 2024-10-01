@@ -1,10 +1,11 @@
 {
+  "version": "0.2.0",
   "configurations": [
     {
       "type": "chrome",
       "name": "localhost:3000",
       "request": "launch",
-      "url": "localhost:3000"
+      "url": "http://localhost:3000"
     }
   ]
 }
