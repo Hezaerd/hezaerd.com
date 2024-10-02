@@ -1,4 +1,9 @@
-import { ISpotifyAccessToken, ISpotifyTrack } from "@/interfaces/spotify";
+import {
+  ISpotifyAccessToken,
+  ISpotifyAlbum,
+  ISpotifyArtist,
+  ISpotifyTrack,
+} from "@/interfaces/spotify";
 
 const client_id = process.env.SPOTIFY_CLIENT_ID || "";
 const client_secret = process.env.SPOTIFY_CLIENT_SECRET || "";
@@ -15,6 +20,7 @@ const ENDPOINTS = {
   CURRENT: "https://api.spotify.com/v1/me/player/currently-playing",
   RECENTLY: "https://api.spotify.com/v1/me/player/recently-played?limit=5",
   TOP_TRACKS: "https://api.spotify.com/v1/me/top/tracks",
+  TOP_ARTISTS: "https://api.spotify.com/v1/me/top/artists",
 };
 
 export const getAccessToken = async (): Promise<ISpotifyAccessToken> => {
@@ -61,6 +67,20 @@ export const topTracks = async (): Promise<ISpotifyTrack[]> => {
   const data = await response.json();
 
   return data.items as ISpotifyTrack[];
+};
+
+export const topArtists = async (): Promise<ISpotifyArtist[]> => {
+  const token = await getAccessToken();
+
+  const response = await fetch(ENDPOINTS.TOP_ARTISTS, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  const data = await response.json();
+
+  return data.items as ISpotifyArtist[];
 };
 
 export const currentPlaying = async (): Promise<ISpotifyTrack | null> => {
