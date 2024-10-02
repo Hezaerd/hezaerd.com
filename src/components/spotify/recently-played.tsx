@@ -1,6 +1,6 @@
 "use client";
 
-import useSWR from "swr";
+import useSWR, { mutate } from "swr";
 
 import { fetcher } from "@/lib/fetcher";
 import { Button } from "@/components/ui/button";
@@ -13,7 +13,7 @@ const FetchError = () => {
       <div className="text-center text-destructive">Failed to load tracks</div>
       <Button
         onClick={() => {
-          window.location.reload();
+          mutate("/api/spotify/recently-played");
         }}
         className="btn btn-primary"
       >
