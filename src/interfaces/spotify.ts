@@ -16,6 +16,7 @@ export interface ISpotifyArtist {
   external_urls: IExternalUrls;
   href: string;
   id: string;
+  images: IImagesEntity[];
   name: string;
   type: string;
   uri: string;
