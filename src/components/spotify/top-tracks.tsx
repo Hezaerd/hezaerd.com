@@ -5,6 +5,7 @@ import useSWR, { mutate } from "swr";
 import { fetcher } from "@/lib/fetcher";
 import { Button } from "@/components/ui/button";
 import { SpotifyTrackCard } from "@/components/spotify/track-card";
+import { ISpotifyTrack } from "@/interfaces/spotify";
 
 const FetchError = () => {
   return (
@@ -47,8 +48,8 @@ export default function TopTracks() {
     <div className="flex h-screen flex-col items-center justify-center">
       <h1 className="text-2xl font-bold">Top Tracks</h1>
       <div className="pt-4">
-        {data.slice(0, 5).map((track: any) => (
-          <div key={track.played_at} className="py-1">
+        {data.slice(0, 5).map((track: ISpotifyTrack) => (
+          <div key={track.id} className="py-1">
             <SpotifyTrackCard track={track} />
           </div>
         ))}
