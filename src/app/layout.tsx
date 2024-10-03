@@ -62,10 +62,10 @@ export default function RootLayout({
           <Navbar />
           {children}
         </ThemeProvider>
+        <SpeedInsights />
+        <Analytics />
+        <GoogleAnalytics gaId="G-ZBGGWW1HXC" />
       </body>
-      <SpeedInsights />
-      <Analytics />
-      <GoogleAnalytics gaId="G-ZBGGWW1HXC" />
     </html>
   );
 }
