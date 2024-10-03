@@ -14,14 +14,10 @@ export const SpotifyArtistCard = ({ artist }: { artist: ISpotifyArtist }) => {
       </Avatar>
       <div>
         <h2 className="text-lg font-bold">{artist.name}</h2>
-        <a
-          href={artist.external_urls.spotify}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-sm text-primary"
-        >
-          Open in Spotify
-        </a>
+        {/* genre */}
+        <h3 className="text-sm text-primary/80">
+          {artist.genres.slice(0, 2).join(", ")}
+        </h3>
       </div>
     </div>
   );

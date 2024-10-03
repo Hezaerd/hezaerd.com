@@ -14,6 +14,7 @@ export interface IImagesEntity {
 
 export interface ISpotifyArtist {
   external_urls: IExternalUrls;
+  genres: string[];
   href: string;
   id: string;
   images: IImagesEntity[];
