@@ -1,8 +1,10 @@
 "use client";
 
 import useSWR, { mutate } from "swr";
+import { motion } from "framer-motion";
 
 import { fetcher } from "@/lib/fetcher";
+import { ISpotifyArtist } from "@/interfaces/spotify";
 import { Button } from "@/components/ui/button";
 import { SpotifyArtistCard } from "@/components/spotify/artist-card";
 
@@ -49,13 +51,24 @@ export default function TopArtists() {
   return (
     <div className="flex h-screen flex-col items-center justify-center">
       <h1 className="text-2xl font-bold">Top Artists</h1>
-      <div className="pt-4">
-        {data.slice(0, 5).map((artist: any) => (
-          <div key={artist.id} className="py-1">
+      <motion.div
+        className="pt-4"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.2 }}
+      >
+        {data.slice(0, 5).map((artist: ISpotifyArtist) => (
+          <motion.div
+            key={artist.id}
+            className="py-1"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 * data.indexOf(artist) }}
+          >
             <SpotifyArtistCard artist={artist} />
-          </div>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
     </div>
   );
 }
