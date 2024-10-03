@@ -2,6 +2,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Author } from "next/dist/lib/metadata/types/metadata-types";
+import { GoogleAnalytics } from "@next/third-parties/google";
 
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/react";
@@ -15,6 +16,12 @@ const author: Author = {
   name: "Hezaerd",
   url: "https://hezaerd.com",
 };
+
+const gaId = process.env.NEXT_PUBLIC_GA_ID || "";
+
+if (!gaId) {
+  console.warn("Google Analytics ID is missing.");
+}
 
 export const metadata: Metadata = {
   title: "Hezaerd - Portfolio",
@@ -63,6 +70,7 @@ export default function RootLayout({
         </ThemeProvider>
         <SpeedInsights />
         <Analytics />
+        <GoogleAnalytics gaId={gaId} />
       </body>
     </html>
   );
