@@ -17,12 +17,6 @@ const author: Author = {
   url: "https://hezaerd.com",
 };
 
-const gaId = process.env.NEXT_PUBLIC_GA_ID || "";
-
-if (!gaId) {
-  console.warn("Google Analytics ID is missing.");
-}
-
 export const metadata: Metadata = {
   title: "Hezaerd - Portfolio",
   description: "I'm, Hezaerd, a software engineer and game developer.",
@@ -70,7 +64,7 @@ export default function RootLayout({
         </ThemeProvider>
         <SpeedInsights />
         <Analytics />
-        <GoogleAnalytics gaId={gaId} />
+        <GoogleAnalytics gaId="G-ZBGGWW1HXC" />
       </body>
     </html>
   );
