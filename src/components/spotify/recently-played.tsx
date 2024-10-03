@@ -49,10 +49,10 @@ export default function RecentlyPlayed() {
   }
 
   return (
-    <div className="flex h-screen flex-col items-center justify-center">
+    <div className="flex flex-col items-center justify-center py-4 md:h-screen md:py-0">
       <h1 className="text-2xl font-bold">Recently Played</h1>
       <motion.div
-        className="pt-4"
+        className="pt-2 md:pt-4"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.2 }}
