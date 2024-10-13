@@ -35,7 +35,14 @@ const Loading = () => {
 };
 
 export default function TopTracks() {
-  const { data, error, isLoading } = useSWR("/api/spotify/top-tracks", fetcher);
+  const { data, error, isLoading } = useSWR(
+    "/api/spotify/top-tracks",
+    fetcher,
+    {
+      refreshInterval: 1000 * 60 * 5,
+      revalidateOnFocus: true,
+    },
+  );
 
   if (error) {
     return <FetchError />;

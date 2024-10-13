@@ -38,6 +38,10 @@ export default function TopArtists() {
   const { data, error, isLoading } = useSWR(
     "/api/spotify/top-artists",
     fetcher,
+    {
+      refreshInterval: 1000 * 60 * 5,
+      revalidateOnFocus: true,
+    },
   );
 
   if (error) {

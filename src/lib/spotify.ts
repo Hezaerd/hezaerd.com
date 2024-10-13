@@ -23,7 +23,7 @@ const ENDPOINTS = {
   TOP_ARTISTS: "https://api.spotify.com/v1/me/top/artists",
 };
 
-export const getAccessToken = async (): Promise<ISpotifyAccessToken> => {
+const getAccessToken = async (): Promise<ISpotifyAccessToken> => {
   const response = await fetch(ENDPOINTS.TOKEN, {
     method: "POST",
     headers: {

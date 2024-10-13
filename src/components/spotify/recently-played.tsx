@@ -38,6 +38,10 @@ export default function RecentlyPlayed() {
   const { data, error, isLoading } = useSWR(
     "/api/spotify/recently-played",
     fetcher,
+    {
+      refreshInterval: 1000 * 60 * 5,
+      revalidateOnFocus: true,
+    },
   );
 
   if (error) {
