@@ -42,65 +42,122 @@ const getAccessToken = async (): Promise<ISpotifyAccessToken> => {
 };
 
 export const recentlyPlayed = async (): Promise<ISpotifyTrack[]> => {
-  const token = await getAccessToken();
+  try {
+    console.log("Fetching recently played tracks...");
+    const token = await getAccessToken();
+    console.log("Access token retrieved:", token);
 
-  const response = await fetch(ENDPOINTS.RECENTLY, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    cache: "no-store",
-  });
+    const response = await fetch(ENDPOINTS.RECENTLY, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      cache: "no-store",
+    });
 
-  const data = await response.json();
+    console.log("Response status:", response.status);
 
-  return data.items as ISpotifyTrack[];
+    if (!response.ok) {
+      throw new Error(
+        `Error fetching recently played tracks: ${response.statusText}`,
+      );
+    }
+
+    const data = await response.json();
+
+    return data.items as ISpotifyTrack[];
+  } catch (error) {
+    console.error("Error in recentlyPlayed:", error);
+    throw error;
+  }
 };
 
 export const topTracks = async (): Promise<ISpotifyTrack[]> => {
-  const token = await getAccessToken();
+  try {
+    console.log("Fetching top tracks...");
+    const token = await getAccessToken();
+    console.log("Access token retrieved:", token);
 
-  const response = await fetch(ENDPOINTS.TOP_TRACKS, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    cache: "no-store",
-  });
+    const response = await fetch(ENDPOINTS.TOP_TRACKS, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      cache: "no-store",
+    });
 
-  const data = await response.json();
+    console.log("Response status:", response.status);
 
-  return data.items as ISpotifyTrack[];
+    if (!response.ok) {
+      throw new Error(`Error fetching top tracks: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+
+    return data.items as ISpotifyTrack[];
+  } catch (error) {
+    console.error("Error in topTracks:", error);
+    throw error;
+  }
 };
 
 export const topArtists = async (): Promise<ISpotifyArtist[]> => {
-  const token = await getAccessToken();
+  try {
+    console.log("Fetching top artists...");
+    const token = await getAccessToken();
+    console.log("Access token retrieved:", token);
 
-  const response = await fetch(ENDPOINTS.TOP_ARTISTS, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    cache: "no-store",
-  });
+    const response = await fetch(ENDPOINTS.TOP_ARTISTS, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      cache: "no-store",
+    });
 
-  const data = await response.json();
+    console.log("Response status:", response.status);
 
-  return data.items as ISpotifyArtist[];
+    if (!response.ok) {
+      throw new Error(`Error fetching top artists: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+
+    return data.items as ISpotifyArtist[];
+  } catch (error) {
+    console.error("Error in topArtists:", error);
+    throw error;
+  }
 };
 
 export const currentPlaying = async (): Promise<ISpotifyTrack | null> => {
-  const token = await getAccessToken();
+  try {
+    console.log("Fetching currently playing track...");
+    const token = await getAccessToken();
+    console.log("Access token retrieved:", token);
 
-  const response = await fetch(ENDPOINTS.CURRENT, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    cache: "no-store",
-  });
+    const response = await fetch(ENDPOINTS.CURRENT, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      cache: "no-store",
+    });
 
-  if (response.status === 204) {
-    return null;
+    console.log("Response status:", response.status);
+
+    if (response.status === 204) {
+      console.log("No currently playing track.");
+      return null;
+    }
+
+    if (!response.ok) {
+      throw new Error(
+        `Error fetching currently playing track: ${response.statusText}`,
+      );
+    }
+
+    const data = await response.json();
+
+    return data.item as ISpotifyTrack;
+  } catch (error) {
+    console.error("Error in currentPlaying:", error);
+    throw error;
   }
-
-  const data = await response.json();
-
-  return data.item as ISpotifyTrack;
 };
