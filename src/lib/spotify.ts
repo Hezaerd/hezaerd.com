@@ -19,8 +19,8 @@ const ENDPOINTS = {
   TOKEN: "https://accounts.spotify.com/api/token",
   CURRENT: "https://api.spotify.com/v1/me/player/currently-playing",
   RECENTLY: "https://api.spotify.com/v1/me/player/recently-played?limit=5",
-  TOP_TRACKS: "https://api.spotify.com/v1/me/top/tracks",
-  TOP_ARTISTS: "https://api.spotify.com/v1/me/top/artists",
+  TOP_TRACKS: "https://api.spotify.com/v1/me/top/tracks?limit=5",
+  TOP_ARTISTS: "https://api.spotify.com/v1/me/top/artists?limit=5",
 };
 
 const getAccessToken = async (): Promise<ISpotifyAccessToken> => {

@@ -61,7 +61,7 @@ export default function TopArtists() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.2 }}
       >
-        {data.slice(0, 5).map((artist: ISpotifyArtist) => (
+        {data.map((artist: ISpotifyArtist) => (
           <motion.div
             key={artist.id}
             className="py-1"

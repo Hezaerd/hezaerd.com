@@ -4,7 +4,6 @@ import useSWR, { mutate } from "swr";
 import { motion } from "framer-motion";
 
 import { fetcher } from "@/lib/fetcher";
-import { ISpotifyTrack } from "@/interfaces/spotify";
 import { Button } from "@/components/ui/button";
 import { SpotifyTrackCard } from "@/components/spotify/track-card";
 
@@ -61,7 +60,7 @@ export default function RecentlyPlayed() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.2 }}
       >
-        {data.slice(0, 5).map((track: any) => (
+        {data.map((track: any) => (
           <motion.div
             key={track.id}
             className="py-1"
