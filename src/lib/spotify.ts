@@ -48,6 +48,7 @@ export const recentlyPlayed = async (): Promise<ISpotifyTrack[]> => {
     headers: {
       Authorization: `Bearer ${token}`,
     },
+    cache: "no-store",
   });
 
   const data = await response.json();
@@ -62,6 +63,7 @@ export const topTracks = async (): Promise<ISpotifyTrack[]> => {
     headers: {
       Authorization: `Bearer ${token}`,
     },
+    cache: "no-store",
   });
 
   const data = await response.json();
@@ -76,6 +78,7 @@ export const topArtists = async (): Promise<ISpotifyArtist[]> => {
     headers: {
       Authorization: `Bearer ${token}`,
     },
+    cache: "no-store",
   });
 
   const data = await response.json();
@@ -90,6 +93,7 @@ export const currentPlaying = async (): Promise<ISpotifyTrack | null> => {
     headers: {
       Authorization: `Bearer ${token}`,
     },
+    cache: "no-store",
   });
 
   if (response.status === 204) {
