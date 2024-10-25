@@ -9,7 +9,7 @@ import {
   SpotifyTrackCard,
   SpotifyTrackCardSkeleton,
 } from "@/components/spotify/track-card";
-import { AlertCircle, RefreshCw } from "lucide-react";
+import { RefreshCw } from "lucide-react";
 
 const FetchError = () => {
   return (
@@ -72,15 +72,9 @@ export default function RecentlyPlayed() {
             transition={{ duration: 0.2 }}
           >
             {data?.map((track: any, index: number) => (
-              <motion.div
-                key={track.id || index}
-                className="py-1"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.1 * index }}
-              >
+              <div key={track.id || index} className="py-1">
                 <SpotifyTrackCard track={track.track} />
-              </motion.div>
+              </div>
             ))}
           </motion.div>
         )}
