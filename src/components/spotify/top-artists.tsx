@@ -36,8 +36,7 @@ export default function TopArtists() {
     "/api/spotify/top-artists",
     fetcher,
     {
-      refreshInterval: 1000 * 60 * 5,
-      revalidateOnFocus: true,
+      refreshInterval: 1000 * 60 * 60,
       onSuccess: () => {
         console.log("Successfully refreshed top artists");
       },
