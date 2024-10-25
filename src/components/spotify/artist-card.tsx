@@ -5,28 +5,34 @@ import { motion } from "framer-motion";
 
 export const SpotifyArtistCard = ({ artist }: { artist: ISpotifyArtist }) => {
   return (
-    <motion.div
-      className="w-80 rounded-lg p-1.5 transition-colors hover:bg-gray-50/5"
-      whileHover={{ scale: 1.02 }}
-      transition={{ type: "spring", stiffness: 400, damping: 10 }}
+    <a
+      href={artist.external_urls.spotify}
+      target="_blank"
+      rel="noopener noreferrer"
     >
-      <div className="flex w-full items-center space-x-4">
-        <Avatar className="h-16 w-16">
-          <AvatarImage
-            src={artist.images[0].url}
-            alt={artist.name}
-            className="mx-auto"
-          />
-          <AvatarFallback>{artist.name[0]}</AvatarFallback>
-        </Avatar>
-        <div className="flex-1 overflow-hidden">
-          <h2 className="truncate font-bold">{artist.name}</h2>
-          <h3 className="truncate text-sm text-primary/80">
-            {artist.genres.slice(0, 2).join(", ")}
-          </h3>
+      <motion.div
+        className="w-80 rounded-lg p-1.5 transition-colors hover:bg-gray-50/5"
+        whileHover={{ scale: 1.02 }}
+        transition={{ type: "spring", stiffness: 400, damping: 10 }}
+      >
+        <div className="flex w-full items-center space-x-4">
+          <Avatar className="h-16 w-16">
+            <AvatarImage
+              src={artist.images[0].url}
+              alt={artist.name}
+              className="mx-auto"
+            />
+            <AvatarFallback>{artist.name[0]}</AvatarFallback>
+          </Avatar>
+          <div className="flex-1 overflow-hidden">
+            <h2 className="truncate font-bold">{artist.name}</h2>
+            <h3 className="truncate text-sm text-primary/80">
+              {artist.genres.slice(0, 2).join(", ")}
+            </h3>
+          </div>
         </div>
-      </div>
-    </motion.div>
+      </motion.div>
+    </a>
   );
 };
 
