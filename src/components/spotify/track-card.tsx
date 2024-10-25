@@ -23,9 +23,9 @@ export const SpotifyTrackCard = ({ track }: { track: ISpotifyTrack }) => {
           <h2 className="truncate font-bold">
             {track.name.replace(/\s*\(.*?\)\s*/g, "")}
           </h2>
-          <p className="truncate text-sm text-primary/80">
+          <h3 className="truncate text-sm text-primary/80">
             {track.artists.map((artist) => artist.name).join(", ")}
-          </p>
+          </h3>
         </div>
       </div>
     </motion.div>
