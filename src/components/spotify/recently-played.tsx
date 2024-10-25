@@ -60,9 +60,9 @@ export default function RecentlyPlayed() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.2 }}
       >
-        {data.map((track: any) => (
+        {data.map((track: any, index: number) => (
           <motion.div
-            key={track.id}
+            key={track.id || index}
             className="py-1"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
