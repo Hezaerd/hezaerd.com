@@ -51,14 +51,11 @@ export const recentlyPlayed = async (): Promise<ISpotifyTrack[]> => {
     cache: "no-store",
   });
 
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(`Spotify API error: ${errorData.error || "Unknown error"}`);
-  }
-
   const data = await response.json();
 
-  return data.items as ISpotifyTrack[];
+  const tracks: ISpotifyTrack[] = data.items.map((item: any) => item.track);
+
+  return tracks;
 };
 
 export const topTracks = async (): Promise<ISpotifyTrack[]> => {
