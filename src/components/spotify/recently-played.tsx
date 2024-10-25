@@ -35,7 +35,7 @@ export default function RecentlyPlayed() {
     "/api/spotify/recently-played",
     fetcher,
     {
-      refreshInterval: 1000 * 60 * 5,
+      refreshInterval: 1000 * 60 * 3,
       revalidateOnFocus: true,
       onSuccess: () => {
         console.log("Successfully refreshed recently played tracks");
