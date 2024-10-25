@@ -9,6 +9,7 @@ import { Analytics } from "@vercel/analytics/react";
 
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import Navbar from "@/components/navigation/navbar";
+import { Footer } from "@/components/navigation/footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -61,6 +62,7 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
           <Navbar />
           {children}
+          <Footer />
         </ThemeProvider>
         <SpeedInsights />
         <Analytics />
