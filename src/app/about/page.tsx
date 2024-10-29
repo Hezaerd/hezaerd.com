@@ -7,6 +7,34 @@ import {
 } from "@/components/ui/timeline";
 import { HoverVideo } from "@/components/ui/hover-video";
 
+export const metadata = {
+  title: "Hezaerd - About Me",
+  description: "Learn more about my education and professional experience.",
+  openGraph: {
+    title: "Hezaerd - About Me",
+    description: "Learn more about my education and professional experience.",
+    images: [
+      {
+        url: "https://github.com/hezaerd.png",
+        width: 1200,
+        height: 630,
+        alt: "Hezaerd",
+      },
+    ],
+  },
+  twitter: {
+    site: "@hezaerd",
+    creator: "@hezaerd",
+    description: "Learn more about my education and professional experience.",
+    title: "Hezaerd - About Me",
+    images: [
+      {
+        url: "https://github.com/hezaerd.png",
+      },
+    ],
+  },
+};
+
 const tlConfig: TimelineConfig = {
   title: "My timeline",
   description: "Here's a summary of my education and professional experience.",
