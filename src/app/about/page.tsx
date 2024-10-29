@@ -24,9 +24,9 @@ const data: TimelineEntry[] = [
         <p className="mt-2 font-thin text-neutral-300">
           Game Engine Programming
         </p>
-        <p className="mt-2 text-neutral-300">
-          I am currently working on my graduation project which is a mobile
-          rhythm game.
+        <p className="mt-2 text-white">
+          I&apos;m working on my graduation project, which is a mobile rhythm
+          game named RhytmWreackers.
         </p>
       </div>
     ),
@@ -47,11 +47,12 @@ const data: TimelineEntry[] = [
           </a>{" "}
           (March 2024 - June 2024)
         </p>
-        <p className="mt-2 text-neutral-300">
-          I was charged with developing a Twitch extension and integration for
-          Los Pingheros
+        <p className="mt-2 text-white">
+          During my third year at Isart Digital, I completed an internship at
+          Hectiq, where I developed a Twitch extension and integration for Los
+          Pingheros.
         </p>
-        <p className="mt-2 text-neutral-300">
+        <p className="mt-2 text-white">
           <strong>Technologies used:</strong> Html, Css, Node.js, TypeScript
         </p>
 
@@ -87,8 +88,12 @@ const data: TimelineEntry[] = [
     content: (
       <div>
         <h4 className="text-xl font-semibold text-white">Education</h4>
-        <p className="mt-2 text-neutral-300">
-          Started at Isart Digital Paris - GAME ENGINE PROGRAMMING
+        <p className="mt-2 font-thin text-neutral-300">
+          Isart Digital Paris - GAME ENGINE PROGRAMMING
+        </p>
+        <p className="mt-2 text-white">
+          After two years in Montreal and earning my AEC in game engine
+          programming, I continued my studies in Paris.
         </p>
       </div>
     ),
@@ -98,8 +103,12 @@ const data: TimelineEntry[] = [
     content: (
       <div>
         <h4 className="text-xl font-semibold text-white">Education</h4>
-        <p className="mt-2 text-neutral-300">
-          Isart Digital Montréal - GAME ENGINE PROGRAMMING (2021-2023)
+        <p className="mt-2 font-thin text-neutral-300">
+          Isart Digital Montréal - GAME ENGINE PROGRAMMING
+        </p>
+        <p className="mt-2 text-white">
+          After completing my baccalauréat in Martinique, I moved to Montreal to
+          pursue my studies in game engine programming at Isart Digital.
         </p>
       </div>
     ),
@@ -111,10 +120,10 @@ export default function AboutPage() {
     <div className="mx-auto max-w-3xl px-4 py-20">
       <h1 className="text-4xl font-bold text-white">About Me</h1>
       <p className="mt-4 text-lg text-neutral-300">
-        I&apos;m a game developer with a passion for programming and video
-        games. I am currently studying at Isart Digital Paris to become a game
-        programmer. I am actively looking for an internship in a game studio to
-        learn more about the industry and improve my skills.
+        I&apos;m a passionate game developer currently studying Game Engine
+        Programming at Isart Digital Paris. I'm eager to enhance my skills and
+        learn more about the industry, and I'm actively seeking an internship at
+        a game studio.
       </p>
 
       <Timeline config={tlConfig} data={data} />
