@@ -13,6 +13,9 @@ export const metadata = {
   openGraph: {
     title: "Hezaerd - About Me",
     description: "Learn more about my education and professional experience.",
+    type: "website",
+    url: "https://hezaerd.com/about",
+    siteName: "Hezaerd",
     images: [
       {
         url: "https://github.com/hezaerd.png",
