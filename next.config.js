@@ -6,6 +6,11 @@ module.exports = {
         hostname: "i.scdn.co",
         port: "",
       },
+      {
+        protocol: "https",
+        hostname: "shared.akamai.steamstatic.com",
+        port: "",
+      },
     ],
   },
 };
