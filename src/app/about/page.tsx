@@ -6,7 +6,7 @@ import {
   type TimelineEntry,
 } from "@/components/ui/timeline";
 import { HoverVideo } from "@/components/ui/hover-video";
-
+import { ContactForm } from "@/components/contact/contact-form";
 export const metadata = {
   title: "Hezaerd - About Me",
   description: "Learn more about my education and professional experience.",
@@ -158,6 +158,10 @@ export default function AboutPage() {
       </p>
 
       <Timeline config={tlConfig} data={data} />
+
+      <div className="mt-16">
+        <ContactForm />
+      </div>
     </div>
   );
 }
