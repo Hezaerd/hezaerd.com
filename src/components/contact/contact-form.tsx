@@ -1,8 +1,14 @@
 "use client";
 
+import { startTransition } from "react";
+
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+
+import { ContactFormSchema } from "@/schemas/contact-form";
+import { sendEmail } from "@/lib/mail";
+
 import {
   Form,
   FormControl,
@@ -15,15 +21,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-
-const ContactFormSchema = z.object({
-  fullname: z.string().min(2, "Full name must be at least 2 characters"),
-  email: z.string().email("Invalid email address"),
-  subject: z.string().min(5, "Subject must be at least 5 characters"),
-  message: z.string().min(10, "Message must be at least 10 characters"),
-});
+import { useToast } from "@/hooks/use-toast";
 
 export function ContactForm() {
+  const { toast } = useToast();
+
   const form = useForm<z.infer<typeof ContactFormSchema>>({
     resolver: zodResolver(ContactFormSchema),
     defaultValues: {
@@ -35,7 +37,28 @@ export function ContactForm() {
   });
 
   function onSubmit(data: z.infer<typeof ContactFormSchema>) {
-    console.log(data);
+    startTransition(async () => {
+      const formData = new FormData();
+      Object.entries(data).forEach(([key, value]) => {
+        formData.append(key, value as string);
+      });
+
+      const result = await sendEmail(formData);
+
+      if (result.error) {
+        toast({
+          title: "Error",
+          description: result.error,
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Success",
+          description: "Your message has been sent successfully!",
+        });
+        form.reset();
+      }
+    });
   }
 
   return (
