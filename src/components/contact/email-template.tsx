@@ -29,7 +29,7 @@ export const EmailTemplate = ({
       <Container style={container}>
         <Heading style={h1}>New Contact Message</Heading>
         <Text style={text}>
-          You've received a new message from your portfolio site:
+          You&apos;ve received a new message from your portfolio site:
         </Text>
         <Section style={messageContainer}>
           <Text style={messageHeader}>From:</Text>
