@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
-import { isSecretValid } from "../api/bad-apple/generate-secret/route";
-import { red } from "tailwindcss/colors";
+import { isSecretValid } from "@/lib/secrets";
+import { BadAppleSecret } from "@/components/secrets/bad-apple";
 
 export default async function BadApplePage({
   searchParams: rawSearchParams,
@@ -16,14 +16,7 @@ export default async function BadApplePage({
 
   return (
     <div className="h-screen w-screen pt-16">
-      <video
-        src="videos/bad_apple.mov"
-        className="h-full w-full object-cover"
-        autoPlay
-        loop
-        muted
-        playsInline
-      />
+      <BadAppleSecret />
     </div>
   );
 }
