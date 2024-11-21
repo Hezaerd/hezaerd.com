@@ -14,6 +14,9 @@ export function generateSecret(): string {
 export function isSecretValid(secret: string): boolean {
   if (secrets.has(secret) && secrets.get(secret)) {
     secrets.set(secret, false); // invalidate secret
+
+    console.log(`Secret ${secret} consumed`);
+
     return true;
   }
   return false;
