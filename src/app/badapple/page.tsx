@@ -1,6 +1,14 @@
 import { redirect } from "next/navigation";
 import { isSecretValid } from "@/lib/secrets";
 import { BadAppleSecret } from "@/components/secrets/bad-apple";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Hezaerd - Bad Apple",
+  description:
+    "Internet is balanced around 3 pillars: Cats, Bad Apple and Rick Roll.",
+  keywords: ["Hezaerd", "Bad Apple", "Eastergg"],
+};
 
 export default async function BadApplePage({
   searchParams: rawSearchParams,
@@ -11,6 +19,7 @@ export default async function BadApplePage({
   const secret = searchParams.secret;
 
   if (!secret || !isSecretValid(secret)) {
+    console.log("Access denied, invalid secret:", secret);
     redirect("/"); // redirect to home if secret is invalid
   }
 
