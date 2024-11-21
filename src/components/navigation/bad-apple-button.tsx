@@ -8,7 +8,7 @@ export function BadAppleButton() {
   const router = useRouter();
 
   const handleClick = async () => {
-    const response = await fetch("/api/bad-apple/generate-secret");
+    const response = await fetch("/api/generate-secret");
     const { secret } = await response.json();
 
     router.push(`/badapple?secret=${secret}`);
