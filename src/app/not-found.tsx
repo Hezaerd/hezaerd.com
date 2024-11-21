@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { BadAppleButton } from "@/components/navigation/bad-apple-button";
 
 export default function NotFound() {
   return (
@@ -14,6 +15,10 @@ export default function NotFound() {
       <Link href="/">
         <Button>Return to Home</Button>
       </Link>
+
+      <div className="fixed bottom-0 right-0 mb-4 mr-4">
+        <BadAppleButton />
+      </div>
     </div>
   );
 }
