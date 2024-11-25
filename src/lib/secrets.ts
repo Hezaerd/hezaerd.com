@@ -17,6 +17,14 @@ export function isSecretValid(secret: string): boolean {
 
     console.log(`Secret ${secret} consumed`);
 
+    // print all valid secrets
+    console.log("Valid secrets:");
+    for (const [secret, valid] of secrets) {
+      if (valid) {
+        console.log(secret);
+      }
+    }
+
     return true;
   }
   return false;
