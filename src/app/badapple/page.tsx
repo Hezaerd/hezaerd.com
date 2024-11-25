@@ -18,7 +18,12 @@ export default async function BadApplePage({
   const searchParams = await rawSearchParams;
   const secret = searchParams.secret;
 
-  if (!secret || !isSecretValid(secret)) {
+  if (!secret) {
+    console.log("Access denied, secret not provided");
+    redirect("/"); // redirect to home if secret is not provided
+  }
+
+  if (!isSecretValid(secret)) {
     console.log("Access denied, invalid secret:", secret);
     redirect("/"); // redirect to home if secret is invalid
   }
