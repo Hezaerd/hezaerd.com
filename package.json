@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -32,7 +32,6 @@
     "next-themes": "^0.3.0",
     "react": "^19.0.0-rc-1631855f-20241023",
     "react-dom": "^19.0.0-rc-1631855f-20241023",
-    "react-has-hwa": "^1.0.0",
     "react-hook-form": "^7.53.1",
     "react-type-animation": "^3.2.0",
     "resend": "^4.0.1-alpha.0",
@@ -45,6 +44,7 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "babel-plugin-react-compiler": "^19.0.0-beta-df7b47d-20241124",
     "eslint": "^8",
     "eslint-config-next": "^15.0.0-rc.1",
     "postcss": "^8",
