@@ -1,5 +1,4 @@
 import { NextConfig } from "next";
-import MillionLint from "@million/lint";
 
 const config: NextConfig = {
   experimental: {
@@ -21,4 +20,4 @@ const config: NextConfig = {
   },
 };
 
-export default MillionLint.next({ rsc: true })(config);
+export default config;
