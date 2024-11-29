@@ -73,7 +73,7 @@ export default function RecentlyPlayed() {
             transition={{ duration: 0.2 }}
           >
             {data?.map((track: ISpotifyTrack, index: number) => (
-              <div key={track.id || index} className="py-1">
+              <div key={track.id + index} className="py-1">
                 <SpotifyTrackCard track={track} />
               </div>
             ))}
