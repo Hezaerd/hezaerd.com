@@ -1,18 +1,13 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Github, Linkedin, Twitter } from "lucide-react";
+import { Github, Twitter } from "lucide-react";
 
 const socials = [
   {
     name: "Github",
     url: "https://github.com/hezaerd",
     icon: Github,
-  },
-  {
-    name: "Linkedin",
-    url: "https://www.linkedin.com/in/swann-rouanet",
-    icon: Linkedin,
   },
   {
     name: "Twitter",
