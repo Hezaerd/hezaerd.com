@@ -35,8 +35,6 @@ export async function sendEmail(formData: FormData) {
       react: EmailTemplate({ fullName: fullname, email, content: message }),
     });
 
-    console.log("Successfully sent email", data);
-
     return { success: true, data };
   } catch (error) {
     console.error("Failed to send email", error);

@@ -38,9 +38,6 @@ export default function RecentlyPlayed() {
     {
       refreshInterval: 1000 * 60 * 3,
       revalidateOnFocus: true,
-      onSuccess: () => {
-        console.log("Successfully refreshed recently played tracks");
-      },
     },
   );
 

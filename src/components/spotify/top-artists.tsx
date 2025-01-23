@@ -37,9 +37,6 @@ export default function TopArtists() {
     fetcher,
     {
       refreshInterval: 1000 * 60 * 60,
-      onSuccess: () => {
-        console.log("Successfully refreshed top artists");
-      },
     },
   );
 
