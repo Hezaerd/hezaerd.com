@@ -176,6 +176,9 @@ export default function Projects() {
 
   return (
     <section id="projects" className="container mx-auto px-4 py-16">
+      <h1 className="mb-12 mt-12 text-center text-3xl font-bold">
+        My GitHub Projects
+      </h1>
       <div className="space-y-12">
         <div>
           <h2 className="mb-6 text-2xl font-bold">Pinned Projects</h2>
