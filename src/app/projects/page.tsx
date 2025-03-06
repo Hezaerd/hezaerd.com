@@ -16,7 +16,7 @@ interface Repository {
 }
 
 interface ProjectsData {
-  starred: Repository[];
+  pinned: Repository[];
   recent: Repository[];
 }
 
@@ -164,9 +164,9 @@ export default function Projects() {
     <section id="projects" className="container mx-auto px-4 py-16">
       <div className="space-y-12">
         <div>
-          <h2 className="mb-6 text-2xl font-bold">Most Starred Projects</h2>
+          <h2 className="mb-6 text-2xl font-bold">Pinned Projects</h2>
           <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-            {projects.starred.map((project, index) => (
+            {projects.pinned.map((project, index) => (
               <ProjectCard key={project.id} project={project} index={index} />
             ))}
           </div>
