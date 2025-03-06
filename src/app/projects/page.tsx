@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
-import { Star, GitBranch, ArrowUpRight } from "lucide-react";
+import { Star, GitBranch, ArrowUpRight, Github } from "lucide-react";
 import { motion } from "framer-motion";
 
 interface Repository {
@@ -81,7 +81,21 @@ function ProjectCard({
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
           >
-            <ArrowUpRight size={20} />
+            <motion.div
+              initial={{ rotate: 0 }}
+              animate={{ rotate: 360 }}
+              transition={{ duration: 0.5 }}
+              className="flex items-center justify-center"
+            >
+              <ArrowUpRight
+                size={20}
+                className="transition-opacity duration-200 group-hover:opacity-0"
+              />
+              <Github
+                size={20}
+                className="absolute opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+              />
+            </motion.div>
           </motion.a>
         </motion.div>
         <p className="mb-4 flex-grow text-sm text-muted-foreground">
