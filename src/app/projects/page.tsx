@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Star, GitBranch, ArrowUpRight, Github } from "lucide-react";
 import { motion } from "framer-motion";
+import useSWR from "swr";
 
 interface Repository {
   id: number;
@@ -137,31 +138,22 @@ function ProjectCard({
 }
 
 export default function Projects() {
-  const [projects, setProjects] = useState<ProjectsData | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    async function fetchProjects() {
-      try {
-        const response = await fetch("/api/projects");
-        if (!response.ok) {
-          throw new Error("Failed to fetch projects");
-        }
-        const data = await response.json();
-        setProjects(data);
-      } catch (err) {
-        setError("Failed to load projects");
-        console.error("Error fetching projects:", err);
-      }
-    }
-
-    fetchProjects();
-  }, []);
+  const fetcher = (url: string) => fetch(url).then((res) => res.json());
+  const { data: projects, error } = useSWR<ProjectsData>(
+    "/api/projects",
+    fetcher,
+    {
+      fallbackData: JSON.parse(localStorage.getItem("projects") || "null"),
+      onSuccess: (data) => {
+        localStorage.setItem("projects", JSON.stringify(data));
+      },
+    },
+  );
 
   if (error) {
     return (
       <div className="flex h-screen items-center justify-center">
-        <p className="text-destructive">{error}</p>
+        <p className="text-destructive">Failed to load projects</p>
       </div>
     );
   }
