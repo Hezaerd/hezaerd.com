@@ -139,13 +139,28 @@ function ProjectCard({
 
 export default function Projects() {
   const fetcher = (url: string) => fetch(url).then((res) => res.json());
+  const [fallbackData, setFallbackData] = useState<ProjectsData | undefined>(
+    undefined,
+  );
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const cachedData = localStorage.getItem("projects");
+      if (cachedData) {
+        setFallbackData(JSON.parse(cachedData));
+      }
+    }
+  }, []);
+
   const { data: projects, error } = useSWR<ProjectsData>(
     "/api/projects",
     fetcher,
     {
-      fallbackData: JSON.parse(localStorage.getItem("projects") || "null"),
+      fallbackData,
       onSuccess: (data) => {
-        localStorage.setItem("projects", JSON.stringify(data));
+        if (typeof window !== "undefined") {
+          localStorage.setItem("projects", JSON.stringify(data));
+        }
       },
     },
   );
