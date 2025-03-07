@@ -1,140 +1,41 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card } from "@/components/ui/card";
-import { Star, GitBranch, ArrowUpRight, Github } from "lucide-react";
-import { motion } from "framer-motion";
 import useSWR from "swr";
+import GithubProjectCard from "./components/github-project-card";
+import ManualProjectCard from "./components/manual-project-card";
+import { Repository } from "@/components/projects/types";
 
-interface Repository {
-  id: number;
-  name: string;
-  description: string;
-  html_url: string;
-  stargazers_count: number;
-  forks_count: number;
-  language: string;
-}
+const manualProjects: Repository[] = [
+  {
+    id: 1,
+    name: "Manual Project 1",
+    description: "Description for manual project 1",
+    html_url: "https://github.com/user/manual-project-1",
+    language: "JavaScript",
+    thumbnail: "https://via.placeholder.com/150",
+  },
+  {
+    id: 2,
+    name: "Manual Project 2",
+    description: "Description for manual project 2",
+    html_url: "https://github.com/user/manual-project-2",
+    language: "TypeScript",
+    thumbnail: "https://via.placeholder.com/150",
+  },
+  {
+    id: 3,
+    name: "Manual Project 3",
+    description: "Description for manual project 3",
+    html_url: "https://github.com/user/manual-project-3",
+    language: "Python",
+    thumbnail: "https://via.placeholder.com/150",
+  },
+];
 
 interface ProjectsData {
   pinned: Repository[];
   recent: Repository[];
-}
-
-// GitHub language colors
-const languageColors: { [key: string]: string } = {
-  TypeScript: "#3178C6",
-  JavaScript: "#F7DF1E",
-  Python: "#3776AB",
-  Java: "#B07219",
-  "C++": "#F34B7D",
-  C: "#555555",
-  "C#": "#178600",
-  Ruby: "#CC342D",
-  Go: "#00ADD8",
-  Rust: "#DEA584",
-  PHP: "#4F5D95",
-  Swift: "#F05138",
-  Kotlin: "#A97BFF",
-  Dart: "#00B4AB",
-  HTML: "#E34C26",
-  CSS: "#563D7C",
-  Shell: "#89E051",
-  Vue: "#41B883",
-  React: "#61DAFB",
-  Svelte: "#FF3E00",
-};
-
-function ProjectCard({
-  project,
-  index,
-}: {
-  project: Repository;
-  index: number;
-}) {
-  const languageColor = project.language
-    ? languageColors[project.language] || "#6e7681"
-    : "#6e7681";
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3, delay: index * 0.1 }}
-      whileHover={{ y: -5 }}
-      whileTap={{ y: 0 }}
-    >
-      <Card className="group flex h-full flex-col p-4 transition-all duration-200 hover:border-primary hover:shadow-lg">
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.2 }}
-          className="mb-2 flex items-start justify-between"
-        >
-          <h3 className="text-lg font-semibold transition-colors group-hover:text-primary">
-            {project.name}
-          </h3>
-          <motion.a
-            href={project.html_url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-muted-foreground transition-colors hover:text-primary"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <motion.div
-              initial={{ rotate: 0 }}
-              animate={{ rotate: 360 }}
-              transition={{ duration: 0.5 }}
-              className="flex items-center justify-center"
-            >
-              <ArrowUpRight
-                size={20}
-                className="transition-opacity duration-200 group-hover:opacity-0"
-              />
-              <Github
-                size={20}
-                className="absolute opacity-0 transition-opacity duration-200 group-hover:opacity-100"
-              />
-            </motion.div>
-          </motion.a>
-        </motion.div>
-        <p className="mb-4 flex-grow text-sm text-muted-foreground">
-          {project.description || "No description available"}
-        </p>
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.2, delay: 0.1 }}
-          className="flex items-center gap-4 text-sm text-muted-foreground"
-        >
-          {project.language && (
-            <span className="flex items-center gap-1">
-              <span
-                className="h-3 w-3 rounded-full"
-                style={{ backgroundColor: languageColor }}
-              />
-              {project.language}
-            </span>
-          )}
-          <motion.span
-            className="flex items-center gap-1"
-            whileHover={{ scale: 1.05 }}
-          >
-            <Star size={16} className="text-yellow-500" fill="currentColor" />
-            {project.stargazers_count}
-          </motion.span>
-          <motion.span
-            className="flex items-center gap-1"
-            whileHover={{ scale: 1.05 }}
-          >
-            <GitBranch size={16} />
-            {project.forks_count}
-          </motion.span>
-        </motion.div>
-      </Card>
-    </motion.div>
-  );
 }
 
 export default function Projects() {
@@ -191,7 +92,11 @@ export default function Projects() {
           <h2 className="mb-6 text-2xl font-bold">Pinned Projects</h2>
           <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
             {projects.pinned.map((project, index) => (
-              <ProjectCard key={project.id} project={project} index={index} />
+              <GithubProjectCard
+                key={project.id}
+                project={project}
+                index={index}
+              />
             ))}
           </div>
         </div>
@@ -200,7 +105,24 @@ export default function Projects() {
           <h2 className="mb-6 text-2xl font-bold">Recently Updated Projects</h2>
           <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
             {projects.recent.map((project, index) => (
-              <ProjectCard key={project.id} project={project} index={index} />
+              <GithubProjectCard
+                key={project.id}
+                project={project}
+                index={index}
+              />
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <h2 className="mb-6 text-2xl font-bold">Manual Projects</h2>
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+            {manualProjects.map((project, index) => (
+              <ManualProjectCard
+                key={project.id}
+                project={project}
+                index={index}
+              />
             ))}
           </div>
         </div>
