@@ -3,7 +3,7 @@
 import useSWR, { mutate } from "swr";
 import { motion } from "framer-motion";
 
-import { fetcher } from "@/lib/fetcher";
+import { fetcher, SWR_CONFIG } from "@/lib/fetcher";
 import { ISpotifyTrack } from "@/interfaces/spotify";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,17 +12,23 @@ import {
 } from "@/components/spotify/track-card";
 import { RefreshCw } from "lucide-react";
 
-const FetchError = () => {
+interface FetchErrorProps {
+  title: string;
+  endpoint: string;
+}
+
+const FetchError = ({ title, endpoint }: FetchErrorProps) => {
   return (
     <div className="flex flex-col items-center justify-center py-4 md:h-screen md:py-0">
-      <h1 className="mb-4 text-2xl font-bold">Recently Played</h1>
+      <h1 className="mb-4 text-2xl font-bold">{title}</h1>
       <div className="text-center text-destructive" aria-live="polite">
         Failed to load tracks{" "}
         <Button
           onClick={() => {
-            mutate("/api/spotify/top-tracks");
+            mutate(endpoint);
           }}
           variant="ghost"
+          aria-label="Retry loading tracks"
         >
           <RefreshCw className="h-4 w-4" />
         </Button>
@@ -32,21 +38,25 @@ const FetchError = () => {
 };
 
 export default function TopTracks() {
-  const { data, error, isLoading } = useSWR(
-    "/api/spotify/top-tracks",
+  const endpoint = "/api/spotify/top-tracks";
+  const { data, error, isLoading, isValidating } = useSWR<ISpotifyTrack[]>(
+    endpoint,
     fetcher,
-    {
-      refreshInterval: 1000 * 60 * 60,
-    },
+    SWR_CONFIG,
   );
 
   if (error) {
-    return <FetchError />;
+    return <FetchError title="Top Tracks" endpoint={endpoint} />;
   }
 
   return (
     <div className="flex flex-col items-center justify-center py-4 md:h-screen md:py-0">
-      <h1 className="mb-4 text-2xl font-bold">Top Tracks</h1>
+      <h1 className="mb-4 text-2xl font-bold">
+        Top Tracks
+        {isValidating && !isLoading && (
+          <span className="ml-2 inline-block animate-spin text-xs">⟳</span>
+        )}
+      </h1>
       <div aria-live="polite">
         {isLoading ? (
           <motion.div>
