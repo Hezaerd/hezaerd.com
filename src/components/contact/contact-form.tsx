@@ -1,10 +1,11 @@
 "use client";
 
-import { startTransition } from "react";
+import { startTransition, useState } from "react";
 
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2 } from "lucide-react";
 
 import { ContactFormSchema } from "@/schemas/contact-form";
 import { sendEmail } from "@/lib/mail";
@@ -25,6 +26,7 @@ import { useToast } from "@/hooks/use-toast";
 
 export function ContactForm() {
   const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<z.infer<typeof ContactFormSchema>>({
     resolver: zodResolver(ContactFormSchema),
@@ -37,6 +39,7 @@ export function ContactForm() {
   });
 
   function onSubmit(data: z.infer<typeof ContactFormSchema>) {
+    setIsLoading(true);
     startTransition(async () => {
       const formData = new FormData();
       Object.entries(data).forEach(([key, value]) => {
@@ -58,23 +61,30 @@ export function ContactForm() {
         });
         form.reset();
       }
+      setIsLoading(false);
     });
   }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           <FormField
             control={form.control}
             name="fullname"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Full Name</FormLabel>
+                <FormLabel className="text-white">Full Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="John Doe" {...field} />
+                  <Input
+                    placeholder="John Doe"
+                    {...field}
+                    className="border-neutral-800 bg-neutral-900/50 text-white placeholder:text-neutral-400"
+                  />
                 </FormControl>
-                <FormDescription>Enter your full name.</FormDescription>
+                <FormDescription className="text-neutral-400">
+                  Enter your full name.
+                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -84,11 +94,17 @@ export function ContactForm() {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email</FormLabel>
+                <FormLabel className="text-white">Email</FormLabel>
                 <FormControl>
-                  <Input placeholder="john.doe@example.com" {...field} />
+                  <Input
+                    placeholder="john.doe@example.com"
+                    {...field}
+                    className="border-neutral-800 bg-neutral-900/50 text-white placeholder:text-neutral-400"
+                  />
                 </FormControl>
-                <FormDescription>Enter your email address.</FormDescription>
+                <FormDescription className="text-neutral-400">
+                  Enter your email address.
+                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -99,14 +115,15 @@ export function ContactForm() {
           name="subject"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Subject</FormLabel>
+              <FormLabel className="text-white">Subject</FormLabel>
               <FormControl>
                 <Input
                   placeholder="Enter the subject of your message"
                   {...field}
+                  className="border-neutral-800 bg-neutral-900/50 text-white placeholder:text-neutral-400"
                 />
               </FormControl>
-              <FormDescription>
+              <FormDescription className="text-neutral-400">
                 Briefly describe the purpose of your message.
               </FormDescription>
               <FormMessage />
@@ -118,23 +135,39 @@ export function ContactForm() {
           name="message"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Message</FormLabel>
+              <FormLabel className="text-white">Message</FormLabel>
               <FormControl>
-                <Textarea
-                  placeholder="Type your message here"
-                  className="min-h-[150px]"
-                  {...field}
-                />
+                <div className="relative">
+                  <Textarea
+                    placeholder="Type your message here"
+                    className="min-h-[150px] border-neutral-800 bg-neutral-900/50 text-white placeholder:text-neutral-400"
+                    {...field}
+                  />
+                  <div className="absolute bottom-2 right-2 text-sm text-neutral-400">
+                    {field.value.length}/500
+                  </div>
+                </div>
               </FormControl>
-              <FormDescription>
+              <FormDescription className="text-neutral-400">
                 Provide details about your inquiry or message.
               </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full md:w-auto">
-          Send Message
+        <Button
+          type="submit"
+          className="w-full bg-gradient-to-r from-primary-gradient to-secondary-gradient transition-opacity hover:opacity-90 md:w-auto"
+          disabled={isLoading}
+        >
+          {isLoading ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Sending...
+            </>
+          ) : (
+            "Send Message"
+          )}
         </Button>
       </form>
     </Form>
