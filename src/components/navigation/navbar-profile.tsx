@@ -25,24 +25,16 @@ export default function NavbarProfile() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          <div className="flex items-center gap-2">
-            <SparklesText
-              text="@hezaerd"
-              sparklesCount={2}
-              colors={{ first: "#c084fc", second: "#c026d3" }}
-              className="text-lg font-semibold"
+          <Avatar className="h-9 w-9">
+            <AvatarImage
+              src="https://github.com/hezaerd.png"
+              alt="Hezaerd"
+              className="mx-auto"
             />
-            <Avatar className="h-9 w-9">
-              <AvatarImage
-                src="https://github.com/hezaerd.png"
-                alt="Hezaerd"
-                className="mx-auto"
-              />
-              <AvatarFallback>
-                <Skeleton className="h-9 w-9 rounded-full" />
-              </AvatarFallback>
-            </Avatar>
-          </div>
+            <AvatarFallback>
+              <Skeleton className="h-9 w-9 rounded-full" />
+            </AvatarFallback>
+          </Avatar>
         </a>
       </HoverCardTrigger>
       <HoverCardContent className="w-80">
