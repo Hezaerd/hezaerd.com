@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { BadAppleButton } from "@/components/navigation/bad-apple-button";
 
 export default function NotFound() {
   return (

@@ -11,7 +11,7 @@ import { ThemeProvider } from "@/components/theme/theme-provider";
 import Navbar from "@/components/navigation/navbar";
 import { Footer } from "@/components/navigation/footer";
 import { Toaster } from "@/components/ui/toaster";
-
+import { SkipNav } from "@/components/navigation/skip-nav";
 const inter = Inter({ subsets: ["latin"] });
 
 const author: Author = {
@@ -61,6 +61,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+          <SkipNav />
           <Navbar />
           <main>{children}</main>
           <Footer />
