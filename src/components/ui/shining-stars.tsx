@@ -8,9 +8,10 @@ const STAR_COUNT = 60;
 const SPRITE_SIZE = 256;
 const MIN_SIZE = 10;
 const MAX_SIZE = 20;
-const MIN_OPACITY = 0.3;
-const MAX_OPACITY = 1.0;
-const OPACITY_ANIMATION_SPEED = 0.005;
+const MIN_OPACITY = 0;
+const MAX_OPACITY = 0.8;
+const MIN_OPACITY_ANIMATION_SPEED = 0.0075;
+const MAX_OPACITY_ANIMATION_SPEED = 0.01;
 
 interface ShiningStarsProps {
   starImages: string[]; // Array of 2 image URLs
@@ -105,6 +106,12 @@ export default function ShiningStars({ starImages }: ShiningStarsProps) {
         // Calculate the actual size using the clean scale factor
         const size = SPRITE_SIZE * scaleFactor;
 
+        // Generate random animation speed
+        const animationSpeed =
+          Math.random() *
+            (MAX_OPACITY_ANIMATION_SPEED - MIN_OPACITY_ANIMATION_SPEED) +
+          MIN_OPACITY_ANIMATION_SPEED;
+
         return {
           x: Math.random() * dimensions.width,
           y: Math.random() * dimensions.height,
@@ -113,9 +120,7 @@ export default function ShiningStars({ starImages }: ShiningStarsProps) {
             Math.random() * Math.min(images.length, MAX_STAR_IMAGES),
           ),
           opacity: Math.random() * (MAX_OPACITY - MIN_OPACITY) + MIN_OPACITY,
-          speed:
-            Math.random() * OPACITY_ANIMATION_SPEED +
-            OPACITY_ANIMATION_SPEED / 2,
+          speed: animationSpeed,
           phase: Math.random() * Math.PI * 2, // Random starting phase
           direction: Math.random() < 0.5 ? 1 : -1, // Random starting direction
         };
