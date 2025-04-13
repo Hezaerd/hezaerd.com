@@ -5,6 +5,7 @@ import useSWR from "swr";
 import GithubProjectCard from "./components/github-project-card";
 import ManualProjectCard from "./components/manual-project-card";
 import { Repository } from "@/components/projects/types";
+import { createMetadata } from "@/lib/metadata";
 
 const manualProjects: Repository[] = [
   {
@@ -37,6 +38,11 @@ interface ProjectsData {
   pinned: Repository[];
   recent: Repository[];
 }
+
+export const metadata = createMetadata({
+  title: "Projects",
+  description: "My GitHub projects",
+});
 
 export default function Projects() {
   const fetcher = (url: string) => fetch(url).then((res) => res.json());

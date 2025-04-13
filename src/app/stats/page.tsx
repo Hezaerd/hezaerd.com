@@ -3,6 +3,7 @@ import RecentlyPlayed from "@/components/spotify/recently-played";
 import TopArtists from "@/components/spotify/top-artists";
 import TopTracks from "@/components/spotify/top-tracks";
 import { Card } from "@/components/ui/card";
+import { createMetadata } from "@/lib/metadata";
 
 function LoadingSkeleton() {
   return (
@@ -35,11 +36,10 @@ function LoadingSkeleton() {
   );
 }
 
-export const metadata = {
-  title: "Spotify Stats | Hezaerd Portfolio",
-  description:
-    "Check out my recent Spotify listening habits, top tracks, and favorite artists.",
-};
+export const metadata = createMetadata({
+  title: "Stats",
+  description: "My stats from various platforms like Github, Spotify, etc.",
+});
 
 export default function Stats() {
   return (
