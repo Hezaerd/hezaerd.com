@@ -39,10 +39,10 @@ interface ProjectsData {
   recent: Repository[];
 }
 
-export const metadata = createMetadata({
-  title: "Projects",
-  description: "My GitHub projects",
-});
+// export const metadata = createMetadata({
+//   title: "Projects",
+//   description: "My GitHub projects",
+// });
 
 export default function Projects() {
   const fetcher = (url: string) => fetch(url).then((res) => res.json());
