@@ -6,11 +6,7 @@ export default function Blank() {
   return (
     <div>
       <ShiningStars
-        starImages={[
-          "/shining-stars/star.png",
-          "/shining-stars/star.png",
-          "/shining-stars/point.png",
-        ]}
+        starImages={["/shining-stars/star.png", "/shining-stars/point.png"]}
       />
     </div>
   );
