@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 const MAX_STAR_IMAGES = 2;
 const MIN_STAR_IMAGES = 1;
-const STAR_COUNT = 70;
+const STAR_COUNT = 50;
 
 // Maximum attempts to place a star without collision
 const MAX_PLACEMENT_ATTEMPTS = 50;
