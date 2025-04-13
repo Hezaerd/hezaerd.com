@@ -8,8 +8,8 @@ export default function Blank() {
       <ShiningStars
         starImages={[
           "/shining-stars/star.png",
+          "/shining-stars/star.png",
           "/shining-stars/point.png",
-          "/shining-stars/diamond.png",
         ]}
       />
     </div>
