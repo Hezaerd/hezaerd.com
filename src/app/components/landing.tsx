@@ -4,12 +4,19 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { SendHorizontal } from "lucide-react";
-import { AuroraBackground } from "@/components/ui/aurora-background";
 import { AuroraText } from "@/components/text/aurora-text";
 
 export function Landing() {
+  const handleScroll = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    const href = e.currentTarget.href;
+    const targetId = href.replace(/.*\#/, "");
+    const elem = document.getElementById(targetId);
+    elem?.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
-    <AuroraBackground id="landing" className="flex h-screen flex-col">
+    <div className="flex h-screen flex-col">
       <div className="flex flex-grow flex-col items-center justify-center px-4">
         <div className="text-center">
           <motion.h1
@@ -54,7 +61,7 @@ export function Landing() {
                 className="relative z-10 flex items-center gap-2 border-r text-primary"
                 asChild
               >
-                <Link href="/#contact">
+                <Link href="/#contact" onClick={handleScroll}>
                   Contact me
                   <SendHorizontal className="h-4 w-4" />
                 </Link>
@@ -63,6 +70,6 @@ export function Landing() {
           </motion.div>
         </div>
       </div>
-    </AuroraBackground>
+    </div>
   );
 }
