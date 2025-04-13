@@ -12,6 +12,7 @@ const MIN_OPACITY = 0;
 const MAX_OPACITY = 0.8;
 const MIN_OPACITY_ANIMATION_SPEED = 0.0075;
 const MAX_OPACITY_ANIMATION_SPEED = 0.01;
+const MAX_PLACEMENT_ATTEMPTS = 50; // Maximum attempts to place a star without collision
 
 interface ShiningStarsProps {
   starImages: string[]; // Array of 2 image URLs
@@ -95,8 +96,28 @@ export default function ShiningStars({ starImages }: ShiningStarsProps) {
         return 1 / divisor;
       };
 
+      // Helper function to check if a new star position would collide with existing stars
+      const checkCollision = (
+        x: number,
+        y: number,
+        size: number,
+        existingStars: Star[],
+      ): boolean => {
+        // Calculate a minimum distance between stars based on their sizes
+        // Using 0.7 as a factor allows some slight overlap but prevents full collisions
+        return existingStars.some((star) => {
+          const dx = x - star.x;
+          const dy = y - star.y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+          const minDistance = (size + star.size) * 0.7; // Allow for some overlap
+          return distance < minDistance;
+        });
+      };
+
       // Initialize stars with random properties and clean scale factors
-      starsRef.current = Array.from({ length: STAR_COUNT }, () => {
+      starsRef.current = [];
+
+      for (let i = 0; i < STAR_COUNT; i++) {
         // Get a random target size within the min/max range
         const targetSize = Math.random() * (MAX_SIZE - MIN_SIZE) + MIN_SIZE;
 
@@ -112,9 +133,27 @@ export default function ShiningStars({ starImages }: ShiningStarsProps) {
             (MAX_OPACITY_ANIMATION_SPEED - MIN_OPACITY_ANIMATION_SPEED) +
           MIN_OPACITY_ANIMATION_SPEED;
 
-        return {
-          x: Math.random() * dimensions.width,
-          y: Math.random() * dimensions.height,
+        // Try to find a position without collision
+        let x, y;
+        let attempts = 0;
+        let hasCollision = true;
+
+        // Try several positions until we find one without collision or reach max attempts
+        while (hasCollision && attempts < MAX_PLACEMENT_ATTEMPTS) {
+          x = Math.random() * dimensions.width;
+          y = Math.random() * dimensions.height;
+          hasCollision = checkCollision(x, y, size, starsRef.current);
+          attempts++;
+        }
+
+        // If we couldn't find a position without collision after max attempts, skip this star
+        if (hasCollision) {
+          continue;
+        }
+
+        starsRef.current.push({
+          x: x!,
+          y: y!,
           size,
           imageIndex: Math.floor(
             Math.random() * Math.min(images.length, MAX_STAR_IMAGES),
@@ -123,8 +162,8 @@ export default function ShiningStars({ starImages }: ShiningStarsProps) {
           speed: animationSpeed,
           phase: Math.random() * Math.PI * 2, // Random starting phase
           direction: Math.random() < 0.5 ? 1 : -1, // Random starting direction
-        };
-      });
+        });
+      }
 
       // Start the animation loop
       startAnimation();
