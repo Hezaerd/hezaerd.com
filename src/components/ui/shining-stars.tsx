@@ -4,15 +4,23 @@ import { useEffect, useRef, useState } from "react";
 
 const MAX_STAR_IMAGES = 2;
 const MIN_STAR_IMAGES = 1;
-const STAR_COUNT = 60;
+const STAR_COUNT = 70;
+
+// Maximum attempts to place a star without collision
+const MAX_PLACEMENT_ATTEMPTS = 50;
+
+// Different size ranges for each sprite type
 const SPRITE_SIZE = 256;
-const MIN_SIZE = 10;
-const MAX_SIZE = 20;
+const SPRITE_1_MIN_SIZE = 10;
+const SPRITE_1_MAX_SIZE = 20;
+const SPRITE_2_MIN_SIZE = 10; // Larger min size for the second sprite
+const SPRITE_2_MAX_SIZE = 15; // Larger max size for the second sprite
+
+// Opacity and animation speed
 const MIN_OPACITY = 0;
 const MAX_OPACITY = 0.8;
 const MIN_OPACITY_ANIMATION_SPEED = 0.0075;
 const MAX_OPACITY_ANIMATION_SPEED = 0.01;
-const MAX_PLACEMENT_ATTEMPTS = 50; // Maximum attempts to place a star without collision
 
 interface ShiningStarsProps {
   starImages: string[]; // Array of 2 image URLs
@@ -118,8 +126,26 @@ export default function ShiningStars({ starImages }: ShiningStarsProps) {
       starsRef.current = [];
 
       for (let i = 0; i < STAR_COUNT; i++) {
-        // Get a random target size within the min/max range
-        const targetSize = Math.random() * (MAX_SIZE - MIN_SIZE) + MIN_SIZE;
+        // Determine which image/sprite to use
+        const imageIndex = Math.floor(
+          Math.random() * Math.min(images.length, MAX_STAR_IMAGES),
+        );
+
+        // Apply different size ranges based on the sprite type
+        let minSize, maxSize;
+
+        if (imageIndex === 0) {
+          // First sprite
+          minSize = SPRITE_1_MIN_SIZE;
+          maxSize = SPRITE_1_MAX_SIZE;
+        } else {
+          // Second sprite
+          minSize = SPRITE_2_MIN_SIZE;
+          maxSize = SPRITE_2_MAX_SIZE;
+        }
+
+        // Get a random target size within the appropriate min/max range for this sprite
+        const targetSize = Math.random() * (maxSize - minSize) + minSize;
 
         // Calculate a clean scale factor based on the target size
         const scaleFactor = getCleanScaleFactor(targetSize);
@@ -155,9 +181,7 @@ export default function ShiningStars({ starImages }: ShiningStarsProps) {
           x: x!,
           y: y!,
           size,
-          imageIndex: Math.floor(
-            Math.random() * Math.min(images.length, MAX_STAR_IMAGES),
-          ),
+          imageIndex,
           opacity: Math.random() * (MAX_OPACITY - MIN_OPACITY) + MIN_OPACITY,
           speed: animationSpeed,
           phase: Math.random() * Math.PI * 2, // Random starting phase
