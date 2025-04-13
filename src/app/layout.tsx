@@ -1,5 +1,4 @@
 import "./globals.css";
-import Link from "next/link";
 import { Inter } from "next/font/google";
 
 import { createMetadata } from "@/lib/metadata";
@@ -8,8 +7,8 @@ import { ThemeProvider } from "@/components/theme/theme-provider";
 import Navbar from "@/components/navigation/navbar";
 import { Footer } from "@/components/navigation/footer";
 import { Toaster } from "@/components/ui/toaster";
-import { SkipNav } from "@/components/navigation/skip-nav";
 import ShiningStars from "@/components/ui/shining-stars";
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = createMetadata({
@@ -28,10 +27,10 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-        <Link rel="icon" href="https://github.com/hezaerd.png" />
-
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
-          <SkipNav />
+          <ShiningStars
+            starImages={["/shining-stars/star.png", "/shining-stars/point.png"]}
+          />
           <Navbar />
           <main id="main-content">{children}</main>
           <Footer />
