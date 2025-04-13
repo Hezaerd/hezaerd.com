@@ -9,7 +9,7 @@ import Navbar from "@/components/navigation/navbar";
 import { Footer } from "@/components/navigation/footer";
 import { Toaster } from "@/components/ui/toaster";
 import { SkipNav } from "@/components/navigation/skip-nav";
-
+import ShiningStars from "@/components/ui/shining-stars";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = createMetadata({
