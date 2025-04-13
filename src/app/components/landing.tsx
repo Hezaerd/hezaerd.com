@@ -4,7 +4,6 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { SendHorizontal } from "lucide-react";
-import { AuroraBackground } from "@/components/ui/aurora-background";
 import { AuroraText } from "@/components/text/aurora-text";
 
 export function Landing() {
