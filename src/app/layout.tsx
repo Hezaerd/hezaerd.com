@@ -12,6 +12,7 @@ import Navbar from "@/components/navigation/navbar";
 import { Footer } from "@/components/navigation/footer";
 import { Toaster } from "@/components/ui/toaster";
 import { SkipNav } from "@/components/navigation/skip-nav";
+import Link from "next/link";
 const inter = Inter({ subsets: ["latin"] });
 
 const author: Author = {
@@ -60,6 +61,8 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
+        <Link rel="icon" href="https://github.com/hezaerd.png" />
+
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
           <SkipNav />
           <Navbar />
