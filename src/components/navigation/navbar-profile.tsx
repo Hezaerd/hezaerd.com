@@ -10,7 +10,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { RepositoryIcon } from "@/components/icons/repository-icon";
-import SparklesText from "@/components/ui/sparkles-text";
+import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import TickerNumber from "@/components/ui/TickerNumber";
 
 export default function NavbarProfile() {
@@ -40,22 +40,7 @@ export default function NavbarProfile() {
       <HoverCardContent className="w-80">
         <div className="flex justify-between space-x-4">
           <div className="self-center">
-            <Avatar className="h-16 w-16">
-              <a
-                href="https://github.com/hezaerd"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <AvatarImage
-                  src="https://github.com/hezaerd.png"
-                  alt="Hezaerd"
-                  className="mx-auto"
-                />
-              </a>
-              <AvatarFallback>
-                <Skeleton className="h-16 w-16 rounded-full" />
-              </AvatarFallback>
-            </Avatar>
+            <GitHubLogoIcon className="h-16 w-16" />
           </div>
           <div className="items-center space-y-1">
             <a
