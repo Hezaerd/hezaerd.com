@@ -18,7 +18,9 @@ const SPRITE_2_MAX_SIZE = 15; // Larger max size for the second sprite
 
 // Opacity and animation speed
 const MIN_OPACITY = 0;
-const MAX_OPACITY = 0.8;
+const MAX_OPACITY = 1;
+const MIN_OPACITY_DELTA = 0.3; // Minimum difference between min and max opacity
+const MAX_OPACITY_DELTA = 1.0; // Maximum difference between min and max opacity
 const MIN_OPACITY_ANIMATION_SPEED = 0.0075;
 const MAX_OPACITY_ANIMATION_SPEED = 0.01;
 
@@ -227,11 +229,18 @@ export default function ShiningStars({ starImages }: ShiningStarsProps) {
         // Generate random min and max opacity values for this specific star
         // Ensure minOpacity is less than maxOpacity and both are within global range
         const opacityRange = MAX_OPACITY - MIN_OPACITY;
-        // Random min opacity between global MIN_OPACITY and 70% of the way to MAX_OPACITY
-        const minOpacity = MIN_OPACITY + Math.random() * opacityRange * 0.7;
-        // Random max opacity between minOpacity and global MAX_OPACITY
-        const maxOpacity =
-          minOpacity + Math.random() * (MAX_OPACITY - minOpacity);
+
+        // First determine the delta (difference between min and max opacity)
+        const opacityDelta =
+          MIN_OPACITY_DELTA +
+          Math.random() * (MAX_OPACITY_DELTA - MIN_OPACITY_DELTA);
+
+        // Calculate min opacity, ensuring we have room for the delta
+        const minOpacity =
+          MIN_OPACITY + Math.random() * (opacityRange - opacityDelta);
+
+        // Max opacity is min opacity plus the delta
+        const maxOpacity = Math.min(MAX_OPACITY, minOpacity + opacityDelta);
 
         // Try to find a position without collision
         let x, y;
