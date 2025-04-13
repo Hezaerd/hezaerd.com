@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "knip": "knip"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
@@ -39,13 +40,14 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@types/node": "^20",
+    "@types/node": "^22.14.1",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "babel-plugin-react-compiler": "^19.0.0-beta-df7b47d-20241124",
     "eslint": "^8",
     "eslint-config-next": "^15.0.0-rc.1",
+    "knip": "^5.50.2",
     "tailwindcss": "^3.4.1",
-    "typescript": "^5"
+    "typescript": "^5.8.3"
   }
 }
