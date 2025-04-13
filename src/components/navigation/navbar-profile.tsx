@@ -11,7 +11,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { RepositoryIcon } from "@/components/icons/repository-icon";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
-import TickerNumber from "@/components/ui/TickerNumber";
+import TickerNumber from "@/components/text/ticker-number";
 
 export default function NavbarProfile() {
   const fetcher = (url: string) => fetch(url).then((res) => res.json());
