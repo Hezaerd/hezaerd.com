@@ -33,6 +33,16 @@ const MAX_MOVEMENT_AMPLITUDE = 10; // Maximum pixels a star can move from its ce
 const MIN_MOVEMENT_FREQUENCY = 0.00005; // Min oscillation frequency (lower = slower)
 const MAX_MOVEMENT_FREQUENCY = 0.0003; // Max oscillation frequency (higher = faster)
 
+// Shooting star settings
+const SHOOTING_STAR_CHANCE = 0.0025; // Chance per frame to spawn a shooting star (0.01 = 1%)
+const SHOOTING_STAR_MIN_SPEED = 0.1; // Pixels per millisecond
+const SHOOTING_STAR_MAX_SPEED = 0.5; // Pixels per millisecond
+const SHOOTING_STAR_MIN_SIZE = 1; // Minimum size of shooting star
+const SHOOTING_STAR_MAX_SIZE = 3; // Maximum size of shooting star
+const SHOOTING_STAR_MIN_LENGTH = 30; // Minimum trail length in pixels
+const SHOOTING_STAR_MAX_LENGTH = 150; // Maximum trail length in pixels
+const SHOOTING_STAR_TRAIL_POINTS = 50; // Number of points to draw in trail
+
 interface ShiningStarsProps {
   starImages: string[]; // Array of 2 image URLs
 }
@@ -58,12 +68,25 @@ interface Star {
   movementPhase: number; // Random phase offset for movement
 }
 
+// Define the ShootingStar interface
+interface ShootingStar {
+  x: number; // Current x position
+  y: number; // Current y position
+  angle: number; // Direction of travel in radians
+  speed: number; // Speed in pixels per ms
+  size: number; // Size of the shooting star
+  trailLength: number; // Length of trail in pixels
+  trailPoints: { x: number; y: number; alpha: number }[]; // Trail points with opacity
+  progress: number; // 0 to 1, represents progress across screen
+}
+
 export default function ShiningStars({ starImages }: ShiningStarsProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
   const starsRef = useRef<Star[]>([]);
   const imagesRef = useRef<HTMLImageElement[]>([]);
   const animationFrameIdRef = useRef<number>(0);
+  const shootingStarsRef = useRef<ShootingStar[]>([]);
 
   // Debug mode refs - using refs instead of state to avoid re-renders
   const debugModeRef = useRef(false);
@@ -205,8 +228,9 @@ export default function ShiningStars({ starImages }: ShiningStarsProps) {
         });
       };
 
-      // Initialize stars with random properties and clean scale factors
+      // Initialize arrays
       starsRef.current = [];
+      shootingStarsRef.current = [];
 
       // Calculate star count based on canvas dimensions
       const canvasArea = dimensions.width * dimensions.height;
@@ -383,11 +407,181 @@ export default function ShiningStars({ starImages }: ShiningStarsProps) {
           }
         });
 
+        // Reset global alpha before drawing shooting stars
+        ctx.globalAlpha = 1.0;
+
+        // Check if we should create a new shooting star
+        if (Math.random() < SHOOTING_STAR_CHANCE * (deltaTime / 16.67)) {
+          createShootingStar();
+        }
+
+        // Update and draw shooting stars
+        const activeShootingStars: ShootingStar[] = [];
+        shootingStarsRef.current.forEach((shootingStar) => {
+          // Update position
+          const distance = shootingStar.speed * deltaTime;
+          shootingStar.x += Math.cos(shootingStar.angle) * distance;
+          shootingStar.y += Math.sin(shootingStar.angle) * distance;
+
+          // Update progress based on position relative to screen dimensions
+          const screenDiagonal = Math.sqrt(
+            dimensions.width * dimensions.width +
+              dimensions.height * dimensions.height,
+          );
+          shootingStar.progress += distance / screenDiagonal;
+
+          // Update trail points
+          shootingStar.trailPoints.unshift({
+            x: shootingStar.x,
+            y: shootingStar.y,
+            alpha: 1.0, // Start with full opacity
+          });
+
+          // Keep only the needed number of trail points
+          if (shootingStar.trailPoints.length > SHOOTING_STAR_TRAIL_POINTS) {
+            shootingStar.trailPoints = shootingStar.trailPoints.slice(
+              0,
+              SHOOTING_STAR_TRAIL_POINTS,
+            );
+          }
+
+          // Calculate trail fade based on position
+          const totalPoints = shootingStar.trailPoints.length;
+          shootingStar.trailPoints.forEach((point, index) => {
+            // Fade based on index (further back = more faded)
+            point.alpha = 1 - index / totalPoints;
+          });
+
+          // Draw the shooting star and its trail
+          drawShootingStar(ctx, shootingStar);
+
+          // Keep if still on screen and not finished
+          if (
+            shootingStar.x >= 0 &&
+            shootingStar.x <= dimensions.width &&
+            shootingStar.y >= 0 &&
+            shootingStar.y <= dimensions.height &&
+            shootingStar.progress < 1
+          ) {
+            activeShootingStars.push(shootingStar);
+          }
+        });
+
+        // Update the array with only active shooting stars
+        shootingStarsRef.current = activeShootingStars;
+
         // Request next frame
         animationFrameIdRef.current = requestAnimationFrame(animate);
       };
 
       animationFrameIdRef.current = requestAnimationFrame(animate);
+    };
+
+    // Create a new shooting star with random properties
+    const createShootingStar = () => {
+      // Choose a side of the screen to start from (0=top, 1=right, 2=bottom, 3=left)
+      const side = Math.floor(Math.random() * 4);
+      let x, y, angle;
+
+      // Position and angle based on starting side
+      switch (side) {
+        case 0: // Top
+          x = Math.random() * dimensions.width;
+          y = 0;
+          angle =
+            Math.PI / 2 +
+            ((Math.random() * Math.PI) / 4) * (Math.random() < 0.5 ? -1 : 1);
+          break;
+        case 1: // Right
+          x = dimensions.width;
+          y = Math.random() * dimensions.height;
+          angle =
+            Math.PI +
+            ((Math.random() * Math.PI) / 4) * (Math.random() < 0.5 ? -1 : 1);
+          break;
+        case 2: // Bottom
+          x = Math.random() * dimensions.width;
+          y = dimensions.height;
+          angle =
+            (Math.PI * 3) / 2 +
+            ((Math.random() * Math.PI) / 4) * (Math.random() < 0.5 ? -1 : 1);
+          break;
+        case 3: // Left
+        default:
+          x = 0;
+          y = Math.random() * dimensions.height;
+          angle =
+            ((Math.random() * Math.PI) / 4) * (Math.random() < 0.5 ? -1 : 1);
+          break;
+      }
+
+      // Create the shooting star
+      const shootingStar: ShootingStar = {
+        x,
+        y,
+        angle,
+        speed:
+          SHOOTING_STAR_MIN_SPEED +
+          Math.random() * (SHOOTING_STAR_MAX_SPEED - SHOOTING_STAR_MIN_SPEED),
+        size:
+          SHOOTING_STAR_MIN_SIZE +
+          Math.random() * (SHOOTING_STAR_MAX_SIZE - SHOOTING_STAR_MIN_SIZE),
+        trailLength:
+          SHOOTING_STAR_MIN_LENGTH +
+          Math.random() * (SHOOTING_STAR_MAX_LENGTH - SHOOTING_STAR_MIN_LENGTH),
+        trailPoints: [],
+        progress: 0,
+      };
+
+      shootingStarsRef.current.push(shootingStar);
+    };
+
+    // Draw a shooting star and its trail
+    const drawShootingStar = (
+      ctx: CanvasRenderingContext2D,
+      shootingStar: ShootingStar,
+    ) => {
+      // Ensure alpha is 1.0 for shooting stars (no blinking)
+      ctx.globalAlpha = 1.0;
+
+      // Draw the trail using gradient lines
+      if (shootingStar.trailPoints.length > 1) {
+        for (let i = 0; i < shootingStar.trailPoints.length - 1; i++) {
+          const point = shootingStar.trailPoints[i];
+          const nextPoint = shootingStar.trailPoints[i + 1];
+
+          // Create gradient for trail
+          const gradient = ctx.createLinearGradient(
+            point.x,
+            point.y,
+            nextPoint.x,
+            nextPoint.y,
+          );
+
+          gradient.addColorStop(0, `rgba(255, 255, 255, ${point.alpha})`);
+          gradient.addColorStop(1, `rgba(255, 255, 255, ${nextPoint.alpha})`);
+
+          ctx.beginPath();
+          ctx.strokeStyle = gradient;
+          ctx.lineWidth =
+            shootingStar.size * (1 - i / shootingStar.trailPoints.length);
+          ctx.moveTo(point.x, point.y);
+          ctx.lineTo(nextPoint.x, nextPoint.y);
+          ctx.stroke();
+        }
+      }
+
+      // Draw the shooting star (head)
+      ctx.beginPath();
+      ctx.fillStyle = "rgba(255, 255, 255, 1)";
+      ctx.arc(
+        shootingStar.x,
+        shootingStar.y,
+        shootingStar.size,
+        0,
+        Math.PI * 2,
+      );
+      ctx.fill();
     };
 
     loadStars();
