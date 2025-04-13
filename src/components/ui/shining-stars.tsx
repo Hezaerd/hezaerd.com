@@ -27,6 +27,12 @@ const MAX_OPACITY_DELTA = 1.0; // Maximum difference between min and max opacity
 const MIN_OPACITY_ANIMATION_SPEED = 0.0075;
 const MAX_OPACITY_ANIMATION_SPEED = 0.01;
 
+// Movement speed constraints
+const MIN_MOVEMENT_AMPLITUDE = 2; // Minimum pixels a star can move from its center
+const MAX_MOVEMENT_AMPLITUDE = 10; // Maximum pixels a star can move from its center
+const MIN_MOVEMENT_FREQUENCY = 0.00005; // Min oscillation frequency (lower = slower)
+const MAX_MOVEMENT_FREQUENCY = 0.0003; // Max oscillation frequency (higher = faster)
+
 interface ShiningStarsProps {
   starImages: string[]; // Array of 2 image URLs
 }
@@ -35,6 +41,8 @@ interface ShiningStarsProps {
 interface Star {
   x: number;
   y: number;
+  originalX: number; // Original/center position
+  originalY: number; // Original/center position
   size: number;
   imageIndex: number;
   opacity: number;
@@ -43,6 +51,11 @@ interface Star {
   speed: number;
   phase: number; // Offset the animation cycle
   direction: 1 | -1; // 1 for increasing opacity, -1 for decreasing
+  // Spring movement properties
+  amplitudeX: number;
+  amplitudeY: number;
+  frequency: number;
+  movementPhase: number; // Random phase offset for movement
 }
 
 export default function ShiningStars({ starImages }: ShiningStarsProps) {
@@ -279,9 +292,22 @@ export default function ShiningStars({ starImages }: ShiningStarsProps) {
         const initialOpacity =
           Math.random() * (maxOpacity - minOpacity) + minOpacity;
 
+        // Generate spring movement parameters
+        const amplitude =
+          MIN_MOVEMENT_AMPLITUDE +
+          Math.random() * (MAX_MOVEMENT_AMPLITUDE - MIN_MOVEMENT_AMPLITUDE);
+        const amplitudeX = amplitude * (0.3 + Math.random() * 0.7); // Vary x amplitude
+        const amplitudeY = amplitude * (0.3 + Math.random() * 0.7); // Vary y amplitude
+        const frequency =
+          MIN_MOVEMENT_FREQUENCY +
+          Math.random() * (MAX_MOVEMENT_FREQUENCY - MIN_MOVEMENT_FREQUENCY);
+        const movementPhase = Math.random() * Math.PI * 2; // Random starting phase for movement
+
         starsRef.current.push({
           x: x!,
           y: y!,
+          originalX: x!,
+          originalY: y!,
           size,
           imageIndex,
           opacity: initialOpacity,
@@ -290,6 +316,10 @@ export default function ShiningStars({ starImages }: ShiningStarsProps) {
           speed: animationSpeed,
           phase: Math.random() * Math.PI * 2, // Random starting phase
           direction: Math.random() < 0.5 ? 1 : -1, // Random starting direction
+          amplitudeX,
+          amplitudeY,
+          frequency,
+          movementPhase,
         });
       }
 
@@ -320,6 +350,15 @@ export default function ShiningStars({ starImages }: ShiningStarsProps) {
             star.opacity = star.minOpacity;
             star.direction = 1;
           }
+
+          // Update position with spring animation
+          const time = currentTime * star.frequency;
+          star.x =
+            star.originalX +
+            Math.sin(time + star.movementPhase) * star.amplitudeX;
+          star.y =
+            star.originalY +
+            Math.cos(time + star.movementPhase) * star.amplitudeY;
 
           // Draw star with updated opacity
           ctx.globalAlpha = star.opacity;
@@ -420,6 +459,11 @@ export default function ShiningStars({ starImages }: ShiningStarsProps) {
               <div>
                 Direction:{" "}
                 {hoveredStar.direction > 0 ? "Increasing" : "Decreasing"}
+              </div>
+              <div>
+                Movement: Amplitude X={formatNumber(hoveredStar.amplitudeX)}, Y=
+                {formatNumber(hoveredStar.amplitudeY)}, Freq=
+                {formatNumber(hoveredStar.frequency)}
               </div>
             </div>
           ) : (
