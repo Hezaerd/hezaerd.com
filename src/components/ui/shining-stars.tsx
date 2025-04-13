@@ -4,7 +4,10 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 const MAX_STAR_IMAGES = 2;
 const MIN_STAR_IMAGES = 1;
-const STAR_COUNT = 50;
+const MIN_STAR_COUNT = 10;
+const MAX_STAR_COUNT = 50;
+const BASE_WIDTH = 1080; // Reference width for scaling
+const BASE_HEIGHT = 720; // Reference height for scaling
 
 // Maximum attempts to place a star without collision
 const MAX_PLACEMENT_ATTEMPTS = 50;
@@ -192,7 +195,19 @@ export default function ShiningStars({ starImages }: ShiningStarsProps) {
       // Initialize stars with random properties and clean scale factors
       starsRef.current = [];
 
-      for (let i = 0; i < STAR_COUNT; i++) {
+      // Calculate star count based on canvas dimensions
+      const canvasArea = dimensions.width * dimensions.height;
+      const baseArea = BASE_WIDTH * BASE_HEIGHT;
+      const scaleFactor = canvasArea / baseArea;
+
+      // Calculate dynamic star count with min/max constraints
+      const dynamicStarCount = Math.floor(MAX_STAR_COUNT * scaleFactor);
+      const starCount = Math.max(
+        MIN_STAR_COUNT,
+        Math.min(MAX_STAR_COUNT, dynamicStarCount),
+      );
+
+      for (let i = 0; i < starCount; i++) {
         // Determine which image/sprite to use
         const imageIndex = Math.floor(
           Math.random() * Math.min(images.length, MAX_STAR_IMAGES),
@@ -377,6 +392,9 @@ export default function ShiningStars({ starImages }: ShiningStarsProps) {
 
           <div className="mb-2">
             <div>Stars: {starsRef.current.length}</div>
+            <div>
+              Canvas: {dimensions.width}x{dimensions.height}
+            </div>
             {mousePos && (
               <div>
                 Mouse: x={mousePos.x}, y={mousePos.y}
