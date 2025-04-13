@@ -2,15 +2,18 @@
 
 import { useEffect, useRef, useState } from "react";
 
+const MAX_STAR_IMAGES = 2;
+const MIN_STAR_IMAGES = 1;
+const STAR_COUNT = 60;
+const SPRITE_SIZE = 256;
+const MIN_SIZE = 10;
+const MAX_SIZE = 20;
+const MIN_OPACITY = 0.3;
+const MAX_OPACITY = 1.0;
+const OPACITY_ANIMATION_SPEED = 0.005;
+
 interface ShiningStarsProps {
-  starCount?: number;
-  starImages: string[]; // Array of 3 image URLs
-  minSize?: number;
-  maxSize?: number;
-  minOpacity?: number;
-  maxOpacity?: number;
-  animationSpeed?: number;
-  spriteSize?: number; // Original size of the star sprites
+  starImages: string[]; // Array of 2 image URLs
 }
 
 // Define the Star interface to track each star's properties
@@ -25,16 +28,7 @@ interface Star {
   direction: 1 | -1; // 1 for increasing opacity, -1 for decreasing
 }
 
-export default function ShiningStars({
-  starCount = 60,
-  starImages,
-  minSize = 10,
-  maxSize = 20,
-  minOpacity = 0.3,
-  maxOpacity = 1.0,
-  animationSpeed = 0.005,
-  spriteSize = 256, // Default sprite size is 256x256
-}: ShiningStarsProps) {
+export default function ShiningStars({ starImages }: ShiningStarsProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
   const starsRef = useRef<Star[]>([]);
@@ -74,8 +68,10 @@ export default function ShiningStars({
 
     // Load the star images
     const loadStars = async () => {
-      if (starImages.length < 3) {
-        console.error("ShiningStars requires at least 3 star images");
+      if (starImages.length < MIN_STAR_IMAGES) {
+        console.error(
+          `ShiningStars requires at least ${MIN_STAR_IMAGES} star image(s)`,
+        );
         return;
       }
 
@@ -93,29 +89,33 @@ export default function ShiningStars({
 
       // Calculate appropriate scale factors for clean downscaling
       const getCleanScaleFactor = (targetSize: number) => {
-        // Find the largest divisor of spriteSize that results in a size >= targetSize
-        const divisor = Math.max(1, Math.floor(spriteSize / targetSize));
+        // Find the largest divisor of SPRITE_SIZE that results in a size >= targetSize
+        const divisor = Math.max(1, Math.floor(SPRITE_SIZE / targetSize));
         return 1 / divisor;
       };
 
       // Initialize stars with random properties and clean scale factors
-      starsRef.current = Array.from({ length: starCount }, () => {
+      starsRef.current = Array.from({ length: STAR_COUNT }, () => {
         // Get a random target size within the min/max range
-        const targetSize = Math.random() * (maxSize - minSize) + minSize;
+        const targetSize = Math.random() * (MAX_SIZE - MIN_SIZE) + MIN_SIZE;
 
         // Calculate a clean scale factor based on the target size
         const scaleFactor = getCleanScaleFactor(targetSize);
 
         // Calculate the actual size using the clean scale factor
-        const size = spriteSize * scaleFactor;
+        const size = SPRITE_SIZE * scaleFactor;
 
         return {
           x: Math.random() * dimensions.width,
           y: Math.random() * dimensions.height,
           size,
-          imageIndex: Math.floor(Math.random() * images.length),
-          opacity: Math.random() * (maxOpacity - minOpacity) + minOpacity,
-          speed: Math.random() * animationSpeed + animationSpeed / 2,
+          imageIndex: Math.floor(
+            Math.random() * Math.min(images.length, MAX_STAR_IMAGES),
+          ),
+          opacity: Math.random() * (MAX_OPACITY - MIN_OPACITY) + MIN_OPACITY,
+          speed:
+            Math.random() * OPACITY_ANIMATION_SPEED +
+            OPACITY_ANIMATION_SPEED / 2,
           phase: Math.random() * Math.PI * 2, // Random starting phase
           direction: Math.random() < 0.5 ? 1 : -1, // Random starting direction
         };
@@ -141,11 +141,11 @@ export default function ShiningStars({
           star.opacity += star.speed * star.direction * (deltaTime / 16.67);
 
           // Change direction if opacity reaches min or max
-          if (star.opacity >= maxOpacity) {
-            star.opacity = maxOpacity;
+          if (star.opacity >= MAX_OPACITY) {
+            star.opacity = MAX_OPACITY;
             star.direction = -1;
-          } else if (star.opacity <= minOpacity) {
-            star.opacity = minOpacity;
+          } else if (star.opacity <= MIN_OPACITY) {
+            star.opacity = MIN_OPACITY;
             star.direction = 1;
           }
 
@@ -175,17 +175,7 @@ export default function ShiningStars({
         cancelAnimationFrame(animationFrameIdRef.current);
       }
     };
-  }, [
-    dimensions,
-    starCount,
-    starImages,
-    minSize,
-    maxSize,
-    minOpacity,
-    maxOpacity,
-    animationSpeed,
-    spriteSize,
-  ]);
+  }, [dimensions, starImages]);
 
   return (
     <canvas
