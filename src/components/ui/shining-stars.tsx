@@ -503,9 +503,13 @@ const createAnimationLoop = (
   hoveredStarRef: React.MutableRefObject<Star | null>,
 ) => {
   let lastTime = performance.now();
+  let isActive = true; // Add flag to track if animation should continue
 
   const animate = (currentTime: number) => {
-    const deltaTime = currentTime - lastTime;
+    if (!isActive) return; // Stop animation if no longer active
+
+    // Cap deltaTime to prevent large jumps
+    const deltaTime = Math.min(currentTime - lastTime, 32); // Cap at ~30fps minimum
     lastTime = currentTime;
 
     // Clear canvas
@@ -565,12 +569,21 @@ const createAnimationLoop = (
     // Update the array with only active shooting stars
     shootingStarsRef.current = activeShootingStars;
 
-    // Return the requestAnimationFrame ID
-    return requestAnimationFrame(animate);
+    // Request next frame only if still active
+    if (isActive) {
+      requestAnimationFrame(animate);
+    }
   };
 
-  // Start the animation and return the initial frame ID
-  return requestAnimationFrame(animate);
+  // Start the animation
+  requestAnimationFrame(animate);
+
+  // Return cleanup function
+  return {
+    stop: () => {
+      isActive = false;
+    },
+  };
 };
 
 // Component props interfaces
@@ -583,7 +596,7 @@ export default function ShiningStars({ starImages }: ShiningStarsProps) {
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
   const starsRef = useRef<Star[]>([]);
   const imagesRef = useRef<HTMLImageElement[]>([]);
-  const animationFrameIdRef = useRef<number>(0);
+  const animationControlRef = useRef<{ stop: () => void } | null>(null);
   const shootingStarsRef = useRef<ShootingStar[]>([]);
 
   // Debug mode refs - using refs instead of state to avoid re-renders
@@ -738,8 +751,13 @@ export default function ShiningStars({ starImages }: ShiningStarsProps) {
     };
 
     const startAnimation = () => {
-      // Use the createAnimationLoop function to start the animation
-      animationFrameIdRef.current = createAnimationLoop(
+      // Stop any existing animation
+      if (animationControlRef.current) {
+        animationControlRef.current.stop();
+      }
+
+      // Start new animation loop
+      animationControlRef.current = createAnimationLoop(
         ctx,
         dimensions,
         starsRef,
@@ -754,8 +772,9 @@ export default function ShiningStars({ starImages }: ShiningStarsProps) {
 
     // Cleanup animation when component unmounts or dimensions change
     return () => {
-      if (animationFrameIdRef.current) {
-        cancelAnimationFrame(animationFrameIdRef.current);
+      if (animationControlRef.current) {
+        animationControlRef.current.stop();
+        animationControlRef.current = null;
       }
     };
   }, [dimensions, starImages]); // Removed debug dependencies
