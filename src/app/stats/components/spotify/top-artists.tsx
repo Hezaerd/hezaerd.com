@@ -3,7 +3,7 @@
 import useSWR, { mutate } from "swr";
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { ChevronDown, RefreshCw, AlertTriangle } from "lucide-react";
+import { ChevronDown, ChevronRight, RefreshCw, AlertTriangle, ArrowRight } from "lucide-react";
 
 import { fetcher, SWR_CONFIG } from "@/lib/fetcher";
 import { ISpotifyArtist } from "@/interfaces/spotify";
@@ -67,6 +67,7 @@ const FetchError = ({ title, endpoint, error }: FetchErrorProps) => {
 
 export default function TopArtists() {
   const [timeRange, setTimeRange] = useState<TimeRange>("medium_term");
+  const [isOpen, setIsOpen] = useState(false);
   const endpoint = `/api/spotify/top-artists?time_range=${timeRange}`;
   const { data, error, isLoading, isValidating } = useSWR<ISpotifyArtist[]>(
     endpoint,
@@ -86,11 +87,15 @@ export default function TopArtists() {
           <span className="ml-2 inline-block animate-spin text-xs">⟳</span>
         )}
       </h1>
-      <div className="mb-8 flex items-center justify-center gap-2">
-        <DropdownMenu modal={false}>
+      <div className="mb-4 flex items-center justify-center gap-2">
+        <DropdownMenu modal={false} open={isOpen} onOpenChange={setIsOpen}>
           <DropdownMenuTrigger className="flex items-center gap-1 text-sm text-muted-foreground focus:outline-none">
             {TIME_RANGES[timeRange]}
-            <ChevronDown className="h-4 w-4 opacity-50" />
+            {isOpen ? (
+              <ChevronDown className="h-4 w-4 opacity-50 transition-transform duration-200" />
+            ) : (
+              <ChevronRight className="h-4 w-4 opacity-50 transition-transform duration-200" />
+            )}
           </DropdownMenuTrigger>
           <DropdownMenuContent align="center" className="w-[200px]">
             {Object.entries(TIME_RANGES).map(([key, label]) => (
