@@ -3,6 +3,7 @@
 import useSWR, { mutate } from "swr";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import { RefreshCw, AlertTriangle } from "lucide-react";
 
 import { fetcher, SWR_CONFIG } from "@/lib/fetcher";
 import { ISpotifyTrack } from "@/interfaces/spotify";
@@ -10,29 +11,48 @@ import { Button } from "@/components/ui/button";
 import {
   SpotifyTrackCard,
   SpotifyTrackCardSkeleton,
-} from "@/components/spotify/track-card";
-import { RefreshCw } from "lucide-react";
+} from "@/app/stats/components/spotify/track-card";
 
 interface FetchErrorProps {
   title: string;
   endpoint: string;
+  error: any;
 }
 
-const FetchError = ({ title, endpoint }: FetchErrorProps) => {
+const FetchError = ({ title, endpoint, error }: FetchErrorProps) => {
+  const errorMessage = error?.error || "Failed to load tracks";
+  const isConfigError = errorMessage.includes("not properly configured") ||
+                        errorMessage.includes("Unable to authenticate");
+
   return (
-    <div className="flex flex-col items-center justify-center py-4 md:h-screen md:py-0">
+    <div className="flex flex-col items-center justify-center py-4 md:h-auto">
       <h1 className="mb-4 text-2xl font-bold">{title}</h1>
-      <div className="text-center text-destructive" aria-live="polite">
-        Failed to load tracks{" "}
-        <Button
-          onClick={() => {
-            mutate(endpoint);
-          }}
-          variant="ghost"
-          aria-label="Retry loading tracks"
-        >
-          <RefreshCw className="h-4 w-4" />
-        </Button>
+      <div className="text-center" aria-live="polite">
+        <div className="mb-2 flex items-center justify-center text-destructive">
+          <AlertTriangle className="mr-2 h-5 w-5" />
+          <span>{errorMessage}</span>
+        </div>
+
+        {!isConfigError && (
+          <Button
+            onClick={() => {
+              mutate(endpoint);
+            }}
+            variant="outline"
+            size="sm"
+            aria-label="Retry loading tracks"
+            className="mt-2"
+          >
+            <RefreshCw className="mr-2 h-4 w-4" />
+            Retry
+          </Button>
+        )}
+
+        {error?.details && (
+          <p className="mt-2 text-xs text-muted-foreground">
+            {error.details}
+          </p>
+        )}
       </div>
     </div>
   );
@@ -78,17 +98,20 @@ export default function RecentlyPlayed() {
   }, [data]);
 
   if (error) {
-    return <FetchError title="Recently Played" endpoint={endpoint} />;
+    return <FetchError title="Recently Played" endpoint={endpoint} error={error} />;
   }
 
   return (
-    <div className="flex flex-col items-center justify-center py-4 md:h-screen md:py-0">
+    <div className="flex flex-col items-center justify-center py-4 md:py-0">
       <h1 className="mb-4 text-2xl font-bold">
         Recently Played
         {isValidating && !isLoading && (
           <span className="ml-2 inline-block animate-spin text-xs">⟳</span>
         )}
       </h1>
+      <p className="mb-8 text-center text-muted-foreground">
+        Probably 5min ago
+      </p>
       <div aria-live="polite">
         {isLoading ? (
           <motion.div>

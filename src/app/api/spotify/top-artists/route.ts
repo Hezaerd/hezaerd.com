@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { topArtists } from "@/lib/spotify";
+import { topArtists, TimeRange } from "@/lib/spotify";
 import { createSuccessResponse, createErrorResponse } from "../utils";
 
 /**
@@ -11,8 +11,12 @@ import { createSuccessResponse, createErrorResponse } from "../utils";
  */
 export async function GET(req: NextRequest) {
   try {
-    // Fetch top artists from Spotify API
-    const data = await topArtists();
+    // Get time range from query params (default to medium_term if not specified)
+    const url = new URL(req.url);
+    const timeRange = url.searchParams.get("time_range") as TimeRange || "medium_term";
+
+    // Fetch top artists from Spotify API with the specified time range
+    const data = await topArtists(timeRange);
 
     // Return successful response without caching to ensure fresh data
     return createSuccessResponse(data);
