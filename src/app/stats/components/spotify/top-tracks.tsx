@@ -79,33 +79,13 @@ export default function TopTracks() {
   }
 
   return (
-    <div className="flex flex-col py-4 md:h-auto">
-      <div className="mb-4 flex items-center justify-between">
-        <h1 className="text-2xl font-bold">
-          Top Tracks
-          {isValidating && !isLoading && (
-            <span className="ml-2 inline-block animate-spin text-xs">⟳</span>
-          )}
-        </h1>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="ml-2 h-8">
-              {TIME_RANGES[timeRange]} <ChevronDown className="ml-1 h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {Object.entries(TIME_RANGES).map(([value, label]) => (
-              <DropdownMenuItem
-                key={value}
-                onClick={() => setTimeRange(value as TimeRange)}
-                className={timeRange === value ? "bg-accent" : ""}
-              >
-                {label}
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
+    <div className="flex flex-col items-center justify-center py-4 md:py-0">
+      <h1 className="mb-4 text-2xl font-bold">
+        Top Tracks
+        {isValidating && !isLoading && (
+          <span className="ml-2 inline-block animate-spin text-xs">⟳</span>
+        )}
+      </h1>
       <div aria-live="polite">
         {isLoading ? (
           <motion.div>
