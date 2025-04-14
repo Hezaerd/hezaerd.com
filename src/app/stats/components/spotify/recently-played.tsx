@@ -102,15 +102,13 @@ export default function RecentlyPlayed() {
   }
 
   return (
-    <div className="flex flex-col py-4 md:h-auto">
-      <div className="mb-4 flex items-center justify-between">
-        <h1 className="text-2xl font-bold">
-          Recently Played
-          {isValidating && !isLoading && (
-            <span className="ml-2 inline-block animate-spin text-xs">⟳</span>
-          )}
-        </h1>
-      </div>
+    <div className="flex flex-col items-center justify-center py-4 md:py-0">
+      <h1 className="mb-4 text-2xl font-bold">
+        Recently Played
+        {isValidating && !isLoading && (
+          <span className="ml-2 inline-block animate-spin text-xs">⟳</span>
+        )}
+      </h1>
       <div aria-live="polite">
         {isLoading ? (
           <motion.div>
