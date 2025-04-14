@@ -86,6 +86,25 @@ export default function TopArtists() {
           <span className="ml-2 inline-block animate-spin text-xs">⟳</span>
         )}
       </h1>
+      <div className="mb-8 flex items-center justify-center gap-2">
+        <DropdownMenu modal={false}>
+          <DropdownMenuTrigger className="flex items-center gap-1 text-sm text-muted-foreground focus:outline-none">
+            {TIME_RANGES[timeRange]}
+            <ChevronDown className="h-4 w-4 opacity-50" />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="center" className="w-[200px]">
+            {Object.entries(TIME_RANGES).map(([key, label]) => (
+              <DropdownMenuItem
+                key={key}
+                onClick={() => setTimeRange(key as TimeRange)}
+                className="cursor-pointer"
+              >
+                {label}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
       <div aria-live="polite">
         {isLoading ? (
           <motion.div>
