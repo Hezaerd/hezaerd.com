@@ -14,7 +14,10 @@ const SPOTIFY_CONFIG = {
   refresh_token: process.env.SPOTIFY_REFRESH_TOKEN || "",
 };
 
-// Validate required credentials
+/**
+ * Validates required Spotify credentials
+ * @throws Error if any required credentials are missing
+ */
 const validateCredentials = () => {
   const { client_id, client_secret, refresh_token } = SPOTIFY_CONFIG;
 
@@ -25,15 +28,14 @@ const validateCredentials = () => {
   }
 };
 
-// Run validation
-validateCredentials();
-
 /**
  * Basic authentication header required for token requests
  */
-const basicAuth = Buffer.from(
-  `${SPOTIFY_CONFIG.client_id}:${SPOTIFY_CONFIG.client_secret}`,
-).toString("base64");
+const getBasicAuth = () => {
+  return Buffer.from(
+    `${SPOTIFY_CONFIG.client_id}:${SPOTIFY_CONFIG.client_secret}`,
+  ).toString("base64");
+};
 
 /**
  * API endpoints for Spotify
@@ -46,6 +48,16 @@ const ENDPOINTS = {
   TOP_ARTISTS: "https://api.spotify.com/v1/me/top/artists?limit=5",
 };
 
+// Time ranges for Spotify API
+export type TimeRange = "short_term" | "medium_term" | "long_term";
+
+// Human-readable time range labels
+export const TIME_RANGES = {
+  short_term: "Last Month",
+  medium_term: "Last 6 Months",
+  long_term: "All Time",
+};
+
 /**
  * Fetches a new access token from Spotify
  * @returns Spotify access token
@@ -53,6 +65,10 @@ const ENDPOINTS = {
  */
 const getAccessToken = async (): Promise<string> => {
   try {
+    // Validate credentials before making API calls
+    validateCredentials();
+
+    const basicAuth = getBasicAuth();
     const response = await fetch(ENDPOINTS.TOKEN, {
       method: "POST",
       headers: {
@@ -157,36 +173,36 @@ export const recentlyPlayed = async (): Promise<ISpotifyTrack[]> => {
 
 /**
  * Fetches the user's top tracks from Spotify
+ * @param timeRange Time range to fetch: short_term (1 month), medium_term (6 months), or long_term (years)
  * @returns Array of top tracks
  */
-export const topTracks = async (): Promise<ISpotifyTrack[]> => {
+export const topTracks = async (timeRange: TimeRange = "medium_term"): Promise<ISpotifyTrack[]> => {
   try {
-    const data = await spotifyFetch<{ items: ISpotifyTrack[] }>(
-      ENDPOINTS.TOP_TRACKS,
-    );
+    const endpoint = `${ENDPOINTS.TOP_TRACKS}&time_range=${timeRange}`;
+    const data = await spotifyFetch<{ items: ISpotifyTrack[] }>(endpoint);
     return data.items;
   } catch (error) {
     console.error("Error fetching top tracks:", error);
     throw new Error(
-      error instanceof Error ? error.message : "Failed to fetch top tracks",
+      error instanceof Error ? error.message : "Failed to fetch top tracks"
     );
   }
 };
 
 /**
  * Fetches the user's top artists from Spotify
+ * @param timeRange Time range to fetch: short_term (1 month), medium_term (6 months), or long_term (years)
  * @returns Array of top artists
  */
-export const topArtists = async (): Promise<ISpotifyArtist[]> => {
+export const topArtists = async (timeRange: TimeRange = "medium_term"): Promise<ISpotifyArtist[]> => {
   try {
-    const data = await spotifyFetch<{ items: ISpotifyArtist[] }>(
-      ENDPOINTS.TOP_ARTISTS,
-    );
+    const endpoint = `${ENDPOINTS.TOP_ARTISTS}&time_range=${timeRange}`;
+    const data = await spotifyFetch<{ items: ISpotifyArtist[] }>(endpoint);
     return data.items;
   } catch (error) {
     console.error("Error fetching top artists:", error);
     throw new Error(
-      error instanceof Error ? error.message : "Failed to fetch top artists",
+      error instanceof Error ? error.message : "Failed to fetch top artists"
     );
   }
 };

@@ -1,13 +1,13 @@
 import { Suspense } from "react";
-import RecentlyPlayed from "@/components/spotify/recently-played";
-import TopArtists from "@/components/spotify/top-artists";
-import TopTracks from "@/components/spotify/top-tracks";
+import RecentlyPlayed from "@/app/stats/components/spotify/recently-played";
+import TopArtists from "@/app/stats/components/spotify/top-artists";
+import TopTracks from "@/app/stats/components/spotify/top-tracks";
 import { Card } from "@/components/ui/card";
 import { createMetadata } from "@/lib/metadata";
 
 function LoadingSkeleton() {
   return (
-    <div className="flex flex-col gap-4 md:flex-row">
+    <div className="flex flex-col gap-6 md:flex-row">
       <Card className="flex-1 p-6">
         <div className="mb-4 h-8 w-24 animate-pulse rounded-md bg-muted" />
         <div className="space-y-2">
@@ -51,15 +51,15 @@ export default function Stats() {
 
       <Suspense fallback={<LoadingSkeleton />}>
         <div className="flex flex-col gap-8 md:flex-row">
-          <div className="flex-1">
+          <Card className="flex-1 p-6">
             <TopArtists />
-          </div>
-          <div className="flex-1">
+          </Card>
+          <Card className="flex-1 p-6">
             <TopTracks />
-          </div>
-          <div className="flex-1">
+          </Card>
+          <Card className="flex-1 p-6">
             <RecentlyPlayed />
-          </div>
+          </Card>
         </div>
       </Suspense>
     </section>

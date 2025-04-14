@@ -38,14 +38,29 @@ export function createErrorResponse(
   // Log the error with context for server-side debugging
   console.error(`Error in Spotify API (${context}):`, error);
 
+  const errorMessage = error instanceof Error ? error.message : "Unknown error";
+
+  // Check for specific error types
+  let userFriendlyMessage = `Failed to fetch ${context}`;
+  let responseStatus = status;
+
+  // Handle credential errors with more specific messages and appropriate status code
+  if (errorMessage.includes("Missing Spotify credentials")) {
+    userFriendlyMessage = "Spotify integration is not properly configured. Missing API credentials.";
+    responseStatus = 503; // Service Unavailable
+  } else if (errorMessage.includes("Failed to get access token")) {
+    userFriendlyMessage = "Unable to authenticate with Spotify. Please check API credentials.";
+    responseStatus = 401; // Unauthorized
+  }
+
   // Return a user-friendly error response
   return NextResponse.json(
     {
-      error: `Failed to fetch ${context}`,
-      details: error instanceof Error ? error.message : "Unknown error",
+      error: userFriendlyMessage,
+      details: errorMessage,
     },
     {
-      status,
+      status: responseStatus,
       headers: NO_CACHE_HEADERS,
     },
   );
