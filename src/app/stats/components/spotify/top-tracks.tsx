@@ -1,9 +1,9 @@
 "use client";
 
 import useSWR, { mutate } from "swr";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
-import { ChevronDown, RefreshCw, AlertTriangle } from "lucide-react";
+import { ChevronDown, ChevronRight, RefreshCw, AlertTriangle } from "lucide-react";
 
 import { fetcher, SWR_CONFIG } from "@/lib/fetcher";
 import { ISpotifyTrack } from "@/interfaces/spotify";
@@ -73,6 +73,7 @@ export default function TopTracks() {
     fetcher,
     SWR_CONFIG,
   );
+  const [isOpen, setIsOpen] = useState(false);
 
   if (error) {
     return <FetchError title="Top Tracks" endpoint={endpoint} error={error} />;
@@ -86,6 +87,51 @@ export default function TopTracks() {
           <span className="ml-2 inline-block animate-spin text-xs">⟳</span>
         )}
       </h1>
+      <div className="mb-4 flex items-center justify-center gap-2">
+        <DropdownMenu modal={false} open={isOpen} onOpenChange={setIsOpen}>
+          <DropdownMenuTrigger className="flex items-center gap-1 text-sm text-muted-foreground focus:outline-none">
+            {TIME_RANGES[timeRange]}
+            <div className="relative h-4 w-4">
+              <AnimatePresence initial={false} mode="wait">
+                {isOpen ? (
+                  <motion.div
+                    key="chevron-down"
+                    initial={{ opacity: 0, rotate: -90 }}
+                    animate={{ opacity: 0.5, rotate: 0 }}
+                    exit={{ opacity: 0, rotate: 90 }}
+                    transition={{ duration: 0.2 }}
+                    className="absolute"
+                  >
+                    <ChevronDown className="h-4 w-4" />
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="chevron-right"
+                    initial={{ opacity: 0, rotate: -90 }}
+                    animate={{ opacity: 0.5, rotate: 0 }}
+                    exit={{ opacity: 0, rotate: 90 }}
+                    transition={{ duration: 0.2 }}
+                    className="absolute"
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="center" className="w-[200px]">
+            {Object.entries(TIME_RANGES).map(([key, label]) => (
+              <DropdownMenuItem
+                key={key}
+                onClick={() => setTimeRange(key as TimeRange)}
+                className="cursor-pointer"
+              >
+                {label}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
       <div aria-live="polite">
         {isLoading ? (
           <motion.div>

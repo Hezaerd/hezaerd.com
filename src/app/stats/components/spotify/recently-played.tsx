@@ -109,6 +109,9 @@ export default function RecentlyPlayed() {
           <span className="ml-2 inline-block animate-spin text-xs">⟳</span>
         )}
       </h1>
+      <p className="mb-8 text-center text-muted-foreground">
+        Probably 5min ago
+      </p>
       <div aria-live="polite">
         {isLoading ? (
           <motion.div>
