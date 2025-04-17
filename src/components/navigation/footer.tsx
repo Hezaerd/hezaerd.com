@@ -20,24 +20,26 @@ export const Footer = () => {
   const date = new Date().getFullYear();
 
   return (
-    <footer className="bg-primary-700 flex h-24 w-full flex-col items-center justify-center border-t">
-      <div className="flex space-x-4">
-        {socials.map((social) => (
-          <motion.a
-            key={social.name}
-            href={social.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            className="text-primary/50 hover:text-primary"
-          >
-            <social.icon size={24} aria-label={social.name} />
-          </motion.a>
-        ))}
-      </div>
-      <div className="mt-2 text-primary/50">
-        <a>© Hezaerd {date}</a>
+    <footer className="flex h-24 w-full flex-col items-center justify-center border-t">
+      <div className="flex flex-col items-center gap-2">
+        <div className="flex space-x-4">
+          {socials.map((social) => (
+            <motion.a
+              key={social.name}
+              href={social.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              className="text-primary/50 hover:text-primary"
+            >
+              <social.icon size={24} aria-label={social.name} />
+            </motion.a>
+          ))}
+        </div>
+        <div className="text-primary/50">
+          <a>© Hezaerd {date}</a>
+        </div>
       </div>
     </footer>
   );
