@@ -66,7 +66,7 @@ const FetchError = ({ title, endpoint, error }: FetchErrorProps) => {
 };
 
 export default function TopTracks() {
-  const [timeRange, setTimeRange] = useState<TimeRange>("medium_term");
+  const [timeRange, setTimeRange] = useState<TimeRange>("short_term");
   const endpoint = `/api/spotify/top-tracks?time_range=${timeRange}`;
   const { data, error, isLoading, isValidating } = useSWR<ISpotifyTrack[]>(
     endpoint,
