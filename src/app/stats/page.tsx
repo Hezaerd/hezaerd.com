@@ -41,8 +41,12 @@ export const metadata = createMetadata({
 
 export default function Stats() {
   return (
-    <Suspense fallback={<LoadingSkeleton />}>
-      <SpotifyStats />
-    </Suspense>
+    <div className="container mx-auto px-4 py-16">
+      <div className="bg-star-overlay">
+        <Suspense fallback={<LoadingSkeleton />}>
+          <SpotifyStats />
+        </Suspense>
+      </div>
+    </div>
   );
 }

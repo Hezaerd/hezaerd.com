@@ -123,6 +123,16 @@ const config = {
         },
       );
     },
+    function ({ addUtilities }) {
+      addUtilities({
+        '.bg-star-overlay': {
+          'background-color': 'rgba(0, 0, 0, 0.50)',
+          'backdrop-filter': 'blur(2px)',
+          'border-radius': '0.5rem',
+          'padding': '2rem',
+        },
+      });
+    },
   ],
 };
 

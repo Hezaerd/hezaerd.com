@@ -90,46 +90,48 @@ export default function Projects() {
 
   return (
     <section id="projects" className="container mx-auto px-4 py-16">
-      <h1 className="mb-12 mt-12 text-center text-3xl font-bold">
-        My GitHub Projects
-      </h1>
-      <div className="space-y-12">
-        <div>
-          <h2 className="mb-6 text-2xl font-bold">Pinned Projects</h2>
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-            {projects.pinned.map((project, index) => (
-              <GithubProjectCard
-                key={project.id}
-                project={project}
-                index={index}
-              />
-            ))}
+      <div className="bg-star-overlay">
+        <h1 className="mb-12 mt-12 text-center text-3xl font-bold">
+          My GitHub Projects
+        </h1>
+        <div className="space-y-12">
+          <div>
+            <h2 className="mb-6 text-2xl font-bold">Pinned Projects</h2>
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+              {projects.pinned.map((project, index) => (
+                <GithubProjectCard
+                  key={project.id}
+                  project={project}
+                  index={index}
+                />
+              ))}
+            </div>
           </div>
-        </div>
 
-        <div>
-          <h2 className="mb-6 text-2xl font-bold">Recently Updated Projects</h2>
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-            {projects.recent.map((project, index) => (
-              <GithubProjectCard
-                key={project.id}
-                project={project}
-                index={index}
-              />
-            ))}
+          <div>
+            <h2 className="mb-6 text-2xl font-bold">Recently Updated Projects</h2>
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+              {projects.recent.map((project, index) => (
+                <GithubProjectCard
+                  key={project.id}
+                  project={project}
+                  index={index}
+                />
+              ))}
+            </div>
           </div>
-        </div>
 
-        <div>
-          <h2 className="mb-6 text-2xl font-bold">Manual Projects</h2>
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-            {manualProjects.map((project, index) => (
-              <ManualProjectCard
-                key={project.id}
-                project={project}
-                index={index}
-              />
-            ))}
+          <div>
+            <h2 className="mb-6 text-2xl font-bold">Manual Projects</h2>
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+              {manualProjects.map((project, index) => (
+                <ManualProjectCard
+                  key={project.id}
+                  project={project}
+                  index={index}
+                />
+              ))}
+            </div>
           </div>
         </div>
       </div>
