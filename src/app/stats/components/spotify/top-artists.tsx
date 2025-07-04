@@ -66,7 +66,7 @@ const FetchError = ({ title, endpoint, error }: FetchErrorProps) => {
 };
 
 export default function TopArtists() {
-  const [timeRange, setTimeRange] = useState<TimeRange>("medium_term");
+  const [timeRange, setTimeRange] = useState<TimeRange>("short_term");
   const [isOpen, setIsOpen] = useState(false);
   const endpoint = `/api/spotify/top-artists?time_range=${timeRange}`;
   const { data, error, isLoading, isValidating } = useSWR<ISpotifyArtist[]>(
