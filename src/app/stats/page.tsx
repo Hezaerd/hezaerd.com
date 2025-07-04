@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import SpotifyStats from "@/app/stats/components/spotify/spotify-stats";
+import GitHubStats from "@/app/stats/components/github/github-stats";
 import { Card } from "@/components/ui/card";
 import { createMetadata } from "@/lib/metadata";
 
@@ -43,6 +44,11 @@ export default function Stats() {
   return (
     <div className="container mx-auto px-4 py-16">
       <div className="bg-star-overlay">
+        <div className="mb-16">
+          <Suspense fallback={<LoadingSkeleton />}>
+            <GitHubStats />
+          </Suspense>
+        </div>
         <Suspense fallback={<LoadingSkeleton />}>
           <SpotifyStats />
         </Suspense>
