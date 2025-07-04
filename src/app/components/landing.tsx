@@ -55,47 +55,25 @@ export function Landing() {
             transition={{ duration: 0.6, delay: 1 }}
             className="mt-8 flex justify-center"
           >
-            <div className="flex items-center justify-center gap-4">
-              <Button
-                variant="outline"
-                className="relative z-10 flex w-32 items-center justify-center gap-2 border-r text-primary group"
-                asChild
-              >
-                <Link href="/#contact" onClick={handleScroll}>
-                  <motion.span
-                    className="inline-flex items-center gap-2"
-                  >
-                    <span className="relative">
-                      Contact me
-                      <span className="absolute bottom-0 left-0 h-[2px] w-0 bg-primary transition-all duration-300 group-hover:w-full"></span>
-                    </span>
-                    <div className="group-hover:rotate-[-15deg] transition-transform duration-200 ease-out">
-                      <SendHorizontal className="h-4 w-4" />
-                    </div>
-                  </motion.span>
-                </Link>
-              </Button>
-
-              <Button
-                variant="outline"
-                className="relative z-10 flex w-32 items-center justify-center gap-2 border-r text-primary group"
-                asChild
-              >
-                <a href="https://hezlibs.hezaerd.com?ref=portfolio&source=landing" target="_blank" rel="noopener noreferrer">
-                  <motion.span
-                    className="inline-flex items-center gap-2"
-                  >
-                    <span className="relative">
-                      HezLibs
-                      <span className="absolute bottom-0 left-0 h-[2px] w-0 bg-primary transition-all duration-300 group-hover:w-full"></span>
-                    </span>
-                    <div className="group-hover:rotate-[-15deg] transition-transform duration-200 ease-out">
-                      <LibraryBig className="h-4 w-4" />
-                    </div>
-                  </motion.span>
-                </a>
-              </Button>
-            </div>
+            <Button
+              variant="outline"
+              className="relative z-10 flex w-32 items-center justify-center gap-2 border-r text-primary group"
+              asChild
+            >
+              <Link href="/#contact" onClick={handleScroll}>
+                <motion.span
+                  className="inline-flex items-center gap-2"
+                >
+                  <span className="relative">
+                    Contact me
+                    <span className="absolute bottom-0 left-0 h-[2px] w-0 bg-primary transition-all duration-300 group-hover:w-full"></span>
+                  </span>
+                  <div className="group-hover:rotate-[-15deg] transition-transform duration-200 ease-out">
+                    <SendHorizontal className="h-4 w-4" />
+                  </div>
+                </motion.span>
+              </Link>
+            </Button>
           </motion.div>
         </div>
       </div>
