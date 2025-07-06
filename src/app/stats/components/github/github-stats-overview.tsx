@@ -109,19 +109,22 @@ export default function GitHubStatsOverview({
             <Code className="h-4 w-4" />
             <h4 className="font-medium">Top Languages</h4>
           </div>
-          <div className="space-y-2">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
             {topLanguages.map((lang, index) => (
               <motion.div
                 key={lang.language}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className="flex items-center justify-between p-2 rounded-md bg-muted/50"
+                className="flex items-center gap-3 p-3 rounded-lg bg-muted/30 border border-border/50 hover:bg-muted/50 transition-colors"
               >
-                <span className="font-medium">{lang.language}</span>
-                <span className="text-sm text-muted-foreground">
-                  {lang.count} repos
-                </span>
+                <div className="w-3 h-3 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex-shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <p className="font-medium text-sm truncate">{lang.language}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {lang.count} {lang.count === 1 ? 'repo' : 'repos'}
+                  </p>
+                </div>
               </motion.div>
             ))}
           </div>
