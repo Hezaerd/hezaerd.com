@@ -14,6 +14,14 @@ const SPOTIFY_CONFIG = {
   refresh_token: process.env.SPOTIFY_REFRESH_TOKEN || "",
 };
 
+// Simple in-memory cache for access token
+let tokenCache: { token: string; expiresAt: number } | null = null;
+const TOKEN_CACHE_DURATION = 50 * 60 * 1000; // 50 minutes (tokens expire in 1 hour)
+
+// Request throttling to prevent spam
+let lastRequestTime = 0;
+const MIN_REQUEST_INTERVAL = 100; // Minimum 100ms between requests
+
 /**
  * Validates required Spotify credentials
  * @throws Error if any required credentials are missing
@@ -21,9 +29,14 @@ const SPOTIFY_CONFIG = {
 const validateCredentials = () => {
   const { client_id, client_secret, refresh_token } = SPOTIFY_CONFIG;
 
-  if (!client_id || !client_secret || !refresh_token) {
+  const missingCredentials = [];
+  if (!client_id) missingCredentials.push("SPOTIFY_CLIENT_ID");
+  if (!client_secret) missingCredentials.push("SPOTIFY_CLIENT_SECRET");
+  if (!refresh_token) missingCredentials.push("SPOTIFY_REFRESH_TOKEN");
+
+  if (missingCredentials.length > 0) {
     throw new Error(
-      "Missing Spotify credentials. Please check your environment variables.",
+      `Missing Spotify credentials: ${missingCredentials.join(", ")}. Please check your environment variables.`,
     );
   }
 };
@@ -65,6 +78,11 @@ export const TIME_RANGES = {
  */
 const getAccessToken = async (): Promise<string> => {
   try {
+    // Check if we have a valid cached token
+    if (tokenCache && Date.now() < tokenCache.expiresAt) {
+      return tokenCache.token;
+    }
+
     // Validate credentials before making API calls
     validateCredentials();
 
@@ -96,9 +114,17 @@ const getAccessToken = async (): Promise<string> => {
       throw new Error("No access token returned from Spotify");
     }
 
+    // Cache the token with expiration
+    tokenCache = {
+      token: data.access_token,
+      expiresAt: Date.now() + TOKEN_CACHE_DURATION,
+    };
+
     return data.access_token;
   } catch (error) {
     console.error("Spotify token error:", error);
+    // Clear cache on error
+    tokenCache = null;
     throw new Error(
       error instanceof Error
         ? error.message
@@ -114,40 +140,83 @@ const getAccessToken = async (): Promise<string> => {
  * @throws Error if fetch fails
  */
 const spotifyFetch = async <T>(endpoint: string): Promise<T> => {
-  try {
-    const token = await getAccessToken();
+  const maxRetries = 2;
+  let lastError: Error | null = null;
 
-    const response = await fetch(endpoint, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      // Ensure we always get fresh data
-      cache: "no-store",
-      next: {
-        revalidate: 0, // Don't cache on the server side
-      },
-    });
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      // Throttle requests to prevent spam
+      const now = Date.now();
+      const timeSinceLastRequest = now - lastRequestTime;
+      if (timeSinceLastRequest < MIN_REQUEST_INTERVAL) {
+        await new Promise(resolve => setTimeout(resolve, MIN_REQUEST_INTERVAL - timeSinceLastRequest));
+      }
+      lastRequestTime = Date.now();
 
-    if (!response.ok) {
-      if (response.status === 204 && endpoint === ENDPOINTS.CURRENT) {
-        return null as T;
+      const token = await getAccessToken();
+
+      const response = await fetch(endpoint, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        // Use only one cache setting to avoid conflicts
+        cache: "no-store",
+      });
+
+      if (!response.ok) {
+        if (response.status === 204 && endpoint === ENDPOINTS.CURRENT) {
+          return null as T;
+        }
+
+        // Handle empty responses that can't be parsed as JSON
+        const text = await response.text();
+        let error;
+        try {
+          error = JSON.parse(text);
+        } catch {
+          error = { error: `HTTP ${response.status}: ${text || "Empty response"}` };
+        }
+
+        throw new Error(
+          `Spotify API error (${response.status}): ${error.error || "Unknown"}`,
+        );
       }
 
-      const error = await response
-        .json()
-        .catch(() => ({ error: "Unknown error" }));
-      throw new Error(
-        `Spotify API error (${response.status}): ${error.error || "Unknown"}`,
-      );
-    }
+      // Handle empty responses that can't be parsed as JSON
+      const text = await response.text();
+      if (!text.trim()) {
+        if (endpoint === ENDPOINTS.CURRENT) {
+          return null as T;
+        }
+        throw new Error("Empty response from Spotify API");
+      }
 
-    return await response.json();
-  } catch (error) {
-    console.error(`Spotify API fetch error (${endpoint}):`, error);
-    throw error instanceof Error
-      ? error
-      : new Error("Failed to fetch from Spotify API");
+      try {
+        return JSON.parse(text);
+      } catch (parseError) {
+        console.error(`Failed to parse JSON from ${endpoint}:`, text);
+        throw new Error(`Invalid JSON response from Spotify API: ${parseError instanceof Error ? parseError.message : "Unknown parse error"}`);
+      }
+    } catch (error) {
+      lastError = error instanceof Error ? error : new Error("Unknown error");
+
+      // Don't retry on certain errors
+      if (lastError.message.includes("401") || lastError.message.includes("403")) {
+        break; // Authentication errors shouldn't be retried
+      }
+
+      if (attempt < maxRetries) {
+        // Exponential backoff: wait 1s, then 2s
+        const delay = Math.pow(2, attempt) * 1000;
+        console.warn(`Spotify API attempt ${attempt + 1} failed, retrying in ${delay}ms:`, lastError.message);
+        await new Promise(resolve => setTimeout(resolve, delay));
+        continue;
+      }
+    }
   }
+
+  console.error(`Spotify API fetch error (${endpoint}) after ${maxRetries + 1} attempts:`, lastError);
+  throw lastError || new Error("Failed to fetch from Spotify API");
 };
 
 /**
@@ -213,17 +282,30 @@ export const topArtists = async (timeRange: TimeRange = "medium_term"): Promise<
  */
 export const currentPlaying = async (): Promise<ISpotifyTrack | null> => {
   try {
+    console.log("Fetching currently playing track from Spotify...");
+
     // If no track is playing, this will return null
     const data = await spotifyFetch<{ item: ISpotifyTrack } | null>(
       ENDPOINTS.CURRENT,
     );
 
     if (!data) {
+      console.log("No track currently playing");
       return null;
     }
 
+    console.log("Successfully fetched currently playing track:", data.item.name);
     return data.item;
   } catch (error) {
+    // Handle specific cases where user might not be playing anything
+    if (error instanceof Error) {
+      if (error.message.includes("204") || error.message.includes("Empty response")) {
+        // User is not currently playing anything
+        console.log("User is not currently playing anything (204/empty response)");
+        return null;
+      }
+    }
+
     console.error("Error fetching currently playing track:", error);
     throw new Error(
       error instanceof Error
