@@ -14,7 +14,9 @@ export const CurrentlyPlaying = () => {
     fetcher,
     {
       ...SWR_CONFIG,
-      refreshInterval: 10000, // Refresh every 10 seconds
+      refreshInterval: 30000, // Refresh every 30 seconds instead of 10
+      errorRetryCount: 2, // Reduce retry attempts
+      dedupingInterval: 15000, // Increase deduping interval
     }
   );
 
