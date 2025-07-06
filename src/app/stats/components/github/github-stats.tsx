@@ -53,18 +53,37 @@ function LoadingSkeleton() {
 
       {/* Commit Graph Skeleton */}
       <Card className="p-6">
-        <div className="flex items-center gap-2 mb-4">
-          <Skeleton className="h-5 w-5" />
-          <Skeleton className="h-6 w-40" />
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <Skeleton className="h-5 w-5" />
+            <Skeleton className="h-6 w-40" />
+          </div>
+          <div className="flex items-center gap-2 text-sm">
+            <Skeleton className="h-4 w-4" />
+            <Skeleton className="h-4 w-24" />
+          </div>
         </div>
-        <div className="flex gap-1">
-          {[...Array(53)].map((_, i) => (
-            <div key={i} className="flex flex-col gap-1">
-              {[...Array(7)].map((_, j) => (
-                <Skeleton key={j} className="w-3 h-3 rounded-sm" />
-              ))}
-            </div>
-          ))}
+        <div className="overflow-x-auto">
+          <div className="flex gap-1 min-w-max">
+            {Array.from({ length: 53 }).map((_, weekIndex) => (
+              <div key={weekIndex} className="flex flex-col gap-1">
+                {Array.from({ length: 7 }).map((_, dayIndex) => (
+                  <Skeleton key={dayIndex} className="w-4 h-4 rounded-sm" />
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="flex items-center justify-between mt-4 text-xs text-muted-foreground">
+          <span>Less</span>
+          <div className="flex items-center gap-1">
+            <Skeleton className="w-4 h-4 rounded-sm" />
+            <Skeleton className="w-4 h-4 rounded-sm" />
+            <Skeleton className="w-4 h-4 rounded-sm" />
+            <Skeleton className="w-4 h-4 rounded-sm" />
+            <Skeleton className="w-4 h-4 rounded-sm" />
+          </div>
+          <span>More</span>
         </div>
       </Card>
     </div>
@@ -99,6 +118,8 @@ export default function GitHubStats() {
       </Card>
     );
   }
+
+  console.log(data);
 
     return (
     <div className="space-y-6">

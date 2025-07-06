@@ -7,4 +7,6 @@ export interface Repository {
   stargazers_count?: number;
   forks_count?: number;
   thumbnail?: string;
+  categories?: string[];
+  featured?: boolean;
 }

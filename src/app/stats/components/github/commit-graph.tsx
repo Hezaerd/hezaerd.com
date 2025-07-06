@@ -3,6 +3,7 @@
 import { Card } from "@/components/ui/card";
 import { motion } from "framer-motion";
 import { Calendar, TrendingUp } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 import type { ContributionGraph } from "@/interfaces/github";
 
@@ -55,7 +56,7 @@ export default function CommitGraph({ contributionGraph }: CommitGraphProps) {
               {week.contributionDays.map((day, dayIndex) => (
                 <motion.div
                   key={dayIndex}
-                  className={`w-3 h-3 rounded-sm ${getContributionColor(
+                  className={`w-4 h-4 rounded-sm ${getContributionColor(
                     day.contributionCount
                   )} transition-colors duration-200`}
                   whileHover={{ scale: 1.2 }}
@@ -70,11 +71,11 @@ export default function CommitGraph({ contributionGraph }: CommitGraphProps) {
       <div className="flex items-center justify-between mt-4 text-xs text-muted-foreground">
         <span>Less</span>
         <div className="flex items-center gap-1">
-          <div className="w-3 h-3 rounded-sm bg-[#ebedf0] dark:bg-[#161b22]" />
-          <div className="w-3 h-3 rounded-sm bg-[#9be9a8] dark:bg-[#0e4429]" />
-          <div className="w-3 h-3 rounded-sm bg-[#40c463] dark:bg-[#006d32]" />
-          <div className="w-3 h-3 rounded-sm bg-[#30a14e] dark:bg-[#26a641]" />
-          <div className="w-3 h-3 rounded-sm bg-[#216e39] dark:bg-[#39d353]" />
+          <div className="w-4 h-4 rounded-sm bg-[#ebedf0] dark:bg-[#161b22]" />
+          <div className="w-4 h-4 rounded-sm bg-[#9be9a8] dark:bg-[#0e4429]" />
+          <div className="w-4 h-4 rounded-sm bg-[#40c463] dark:bg-[#006d32]" />
+          <div className="w-4 h-4 rounded-sm bg-[#30a14e] dark:bg-[#26a641]" />
+          <div className="w-4 h-4 rounded-sm bg-[#216e39] dark:bg-[#39d353]" />
         </div>
         <span>More</span>
       </div>
