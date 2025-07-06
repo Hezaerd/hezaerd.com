@@ -178,7 +178,7 @@ function ContactForm() {
 export function ContactMe() {
   return (
     <div id="contact" className="py-10">
-      <div className="bg-star-overlay">
+      <div>
         <h2 className="mb-8 text-3xl font-bold text-white">Get in Touch</h2>
         <ContactForm />
       </div>

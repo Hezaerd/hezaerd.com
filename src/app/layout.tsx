@@ -32,6 +32,7 @@ export default function RootLayout({
           <ShiningStars
             starImages={["/shining-stars/star.png", "/shining-stars/point.png"]}
           />
+          <div className="fixed inset-0 -z-[5] bg-black/50 backdrop-blur-[1px] pointer-events-none" />
           <Navbar />
           <main id="main-content">{children}</main>
           <Footer />

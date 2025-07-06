@@ -43,7 +43,7 @@ export const metadata = createMetadata({
 export default function Stats() {
   return (
     <div className="container mx-auto px-4 py-16">
-      <div className="bg-star-overlay">
+      <div>
         <div className="mb-16">
           <Suspense fallback={<LoadingSkeleton />}>
             <GitHubStats />
