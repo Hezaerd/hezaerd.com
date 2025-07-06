@@ -1,7 +1,7 @@
 export function AboutMe() {
   return (
     <div id="about" className="pt-20">
-      <div className="bg-star-overlay">
+      <div>
         <h1 className="text-4xl font-bold text-white">About Me</h1>
         <p className="mt-4 text-lg text-neutral-300">
           I&apos;m a passionate game developer currently studying Game Engine

@@ -115,7 +115,7 @@ const data: TimelineEntry[] = [
 export function MyTimeline() {
   return (
     <div id="timeline" className="py-10">
-      <div className="bg-star-overlay">
+      <div>
         <Timeline config={tlConfig} data={data} />
       </div>
     </div>
