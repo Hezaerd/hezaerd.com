@@ -20,6 +20,7 @@ import {
   Search
 } from "lucide-react";
 import { Repository } from "@/components/projects/types";
+import { GitHubData } from "@/interfaces/github";
 import { createMetadata } from "@/lib/metadata";
 import ProjectStats from "./components/project-stats";
 
@@ -129,6 +130,17 @@ export default function Projects() {
     },
   );
 
+  // Fetch GitHub stats from the same API as the stats page
+  const { data: githubStats } = useSWR<GitHubData>(
+    "/api/github/stats",
+    fetcher,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      refreshInterval: 300000, // Refresh every 5 minutes
+    }
+  );
+
   // Combine all projects
   const allProjects = [
     ...(projects?.pinned || []),
@@ -148,22 +160,12 @@ export default function Projects() {
   const featuredProjects = filteredProjects.filter(project => project.featured);
   const regularProjects = filteredProjects.filter(project => !project.featured);
 
-  // Calculate statistics
-  const totalProjects = allProjects.length;
-  const totalStars = allProjects.reduce((sum, project) => sum + (project.stargazers_count || 0), 0);
-  const totalForks = allProjects.reduce((sum, project) => sum + (project.forks_count || 0), 0);
-
-  // Get top language
-  const languageCounts: { [key: string]: number } = {};
-  allProjects.forEach(project => {
-    if (project.language) {
-      languageCounts[project.language] = (languageCounts[project.language] || 0) + 1;
-    }
-  });
-  const topLanguage = Object.entries(languageCounts)
-    .sort(([,a], [,b]) => b - a)[0]?.[0] || "None";
-
-  const totalContributions = 1000; // This would come from GitHub API
+  // Use GitHub stats from the API instead of calculating from projects
+  const totalProjects = githubStats?.stats.public_repos || 0;
+  const totalStars = githubStats?.stats.total_stars || 0;
+  const totalForks = githubStats?.stats.total_forks || 0;
+  const topLanguage = githubStats?.top_languages?.[0]?.language || "None";
+  const totalContributions = githubStats?.stats.total_commits || 0;
 
   // Get dynamic categories from all projects
   const categories = getAllCategories(allProjects);

@@ -25,13 +25,15 @@ const StatItem = ({
   label,
   value,
   color = "text-blue-500",
-  delay = 0
+  delay = 0,
+  isText = false
 }: {
   icon: any;
   label: string;
-  value: number;
+  value: number | string;
   color?: string;
   delay?: number;
+  isText?: boolean;
 }) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
@@ -44,13 +46,17 @@ const StatItem = ({
     </div>
     <div>
       <p className="text-sm text-muted-foreground">{label}</p>
-      <p className="text-2xl font-bold">
-        <TickerNumber
-          number={value}
-          duration={1.5}
-          doOnce={true}
-        />
-      </p>
+      {isText ? (
+        <p className="text-lg font-bold">{value}</p>
+      ) : (
+        <p className="text-2xl font-bold">
+          <TickerNumber
+            number={typeof value === 'number' ? value : 0}
+            duration={1.5}
+            doOnce={true}
+          />
+        </p>
+      )}
     </div>
   </motion.div>
 );
@@ -100,9 +106,10 @@ export default function ProjectStats({
           <StatItem
             icon={Code}
             label="Top Language"
-            value={0}
+            value={topLanguage}
             color="text-purple-500"
             delay={0.4}
+            isText={true}
           />
           <StatItem
             icon={Users}
