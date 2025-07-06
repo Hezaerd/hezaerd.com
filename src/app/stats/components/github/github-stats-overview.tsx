@@ -55,6 +55,8 @@ export default function GitHubStatsOverview({
   stats,
   topLanguages
 }: GitHubStatsOverviewProps) {
+
+  console.log(stats);
   return (
     <Card className="p-6">
       <div className="flex items-center gap-2 mb-6">
@@ -82,9 +84,9 @@ export default function GitHubStatsOverview({
           color="text-yellow-500"
         />
         <StatCard
-          icon={GitBranch}
-          label="Total Forks"
-          value={stats.total_forks}
+          icon={FileText}
+          label="Commits (this year)"
+          value={stats.total_commits}
           color="text-blue-500"
         />
         <StatCard

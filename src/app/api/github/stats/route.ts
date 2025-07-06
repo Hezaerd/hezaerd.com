@@ -40,7 +40,9 @@ export async function GET(request: NextRequest) {
     // Calculate additional stats from repositories
     const totalStars = reposData.reduce((sum: number, repo: any) => sum + repo.stargazers_count, 0);
     const totalForks = reposData.reduce((sum: number, repo: any) => sum + repo.forks_count, 0);
-    const totalCommits = reposData.reduce((sum: number, repo: any) => sum + (repo.forks_count || 0), 0);
+    // Note: GitHub REST API does not provide all-time commit count directly.
+    // We'll use the total contributions from the contribution graph (last 365 days) as a proxy for yearly commits.
+    // const totalCommits = reposData.reduce((sum: number, repo: any) => sum + (repo.forks_count || 0), 0); // incorrect
 
     // Get top languages
     const languages: { [key: string]: number } = {};
@@ -111,7 +113,8 @@ export async function GET(request: NextRequest) {
         following: userData.following,
         total_stars: totalStars,
         total_forks: totalForks,
-        total_commits: totalCommits,
+        // This is the total number of contributions (commits, PRs, issues, etc.) in the last 365 days
+        total_commits: contributionData?.totalContributions || 0,
       },
       top_languages: topLanguages,
       contribution_graph: contributionData,
