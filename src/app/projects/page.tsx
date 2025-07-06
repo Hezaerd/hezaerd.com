@@ -187,7 +187,7 @@ export default function Projects() {
       <div className="container mx-auto px-4 py-16">
         {/* Hero Section */}
         <motion.div
-          className="text-center mb-16"
+          className="text-center mb-16 pt-8"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
@@ -197,7 +197,7 @@ export default function Projects() {
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             A collection of my work, experiments, and contributions to the developer community.
-            From web applications to data science projects, here&apos;s what I&apos;ve been building.
+            From games to libraries passing by web applications, here&apos;s what I&apos;ve been building.
           </p>
         </motion.div>
 
