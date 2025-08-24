@@ -1,0 +1,29 @@
+{
+  "name": "hezaerd.com",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "packageManager": "bun@1.2.4",
+  "scripts": {
+    "prepare": "husky",
+    "dev": "turbo run dev",
+    "dev:pf": "turbo run dev --filter=portfolio",
+    "dev:mods": "turbo run dev --filter=mods",
+    "check": "biome check .",
+    "check:fix": "biome check . --write"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.2.2",
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
+    "@types/bun": "latest",
+    "husky": "^9.1.7"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ]
+}
