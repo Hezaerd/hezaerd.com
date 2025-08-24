@@ -21,9 +21,15 @@ export default {
 			2,
 			"always",
 			[
+                // Root
 				"root",
+
+                // Apps
                 "portfolio",
-                "mods"
+                "mods",
+
+                // Packages
+                "tsconfig"
 			],
 		],
 		"scope-empty": [2, "never"],
