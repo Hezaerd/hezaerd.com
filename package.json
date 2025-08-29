@@ -10,6 +10,17 @@
 		"check": "biome check .",
 		"check:fix": "biome check . --write"
 	},
+	"dependencies": {
+		"@tailwindcss/postcss": "^4.1.12",
+		"babel-plugin-react-compiler": "^19.1.0-rc.2",
+		"next": "^15.5.0",
+		"pino": "^9.9.0",
+		"pino-pretty": "^13.1.1",
+		"postcss": "^8.5.6",
+		"react": "^19.1.1",
+		"react-dom": "^19.1.1",
+		"tailwindcss": "^4.1.12"
+	},
 	"devDependencies": {
 		"@biomejs/biome": "^2.2.2",
 		"@commitlint/cli": "^19.8.1",
@@ -21,14 +32,5 @@
 	},
 	"peerDependencies": {
 		"typescript": "^5"
-	},
-	"dependencies": {
-		"@tailwindcss/postcss": "^4.1.12",
-		"babel-plugin-react-compiler": "^19.1.0-rc.2",
-		"next": "^15.5.0",
-		"postcss": "^8.5.6",
-		"react": "^19.1.1",
-		"react-dom": "^19.1.1",
-		"tailwindcss": "^4.1.12"
 	}
 }
