@@ -1,23 +1,7 @@
-import { NextConfig } from "next";
+import type { NextConfig } from "next";
 
-const config: NextConfig = {
-  experimental: {
-    reactCompiler: true,
-  },
-  images: {
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "i.scdn.co",
-        port: "",
-      },
-      {
-        protocol: "https",
-        hostname: "shared.akamai.steamstatic.com",
-        port: "",
-      },
-    ],
-  },
+const nextConfig: NextConfig = {
+	/* config options here */
 };
 
-export default config;
+export default nextConfig;
