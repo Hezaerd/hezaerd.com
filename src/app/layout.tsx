@@ -1,47 +1,56 @@
-import "./globals.css";
-import { Inter } from "next/font/google";
-
-import { createMetadata } from "@/lib/metadata";
-import { Analytics } from "./analytics";
+import type { Metadata } from "next";
+import { Geist, Geist_Mono } from "next/font/google";
+import { PortfolioProvider } from "@/components/providers/PortfolioProvider";
 import { ThemeProvider } from "@/components/theme/theme-provider";
-import Navbar from "@/components/navigation/navbar";
-import { Footer } from "@/components/navigation/footer";
-import { Toaster } from "@/components/ui/toaster";
-import ShiningStars from "@/components/ui/shining-stars";
-import { StarButton } from "@/components/ui/star-button";
+import { Toaster } from "@/components/ui/sonner";
+import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
-
-export const metadata = createMetadata({
-  title: {
-    absolute: "Hezaerd",
-    template: "%s | Hezaerd",
-  },
-  description: "I'm, Hezaerd, a software engineer and game developer.",
+const geistSans = Geist({
+	variable: "--font-geist-sans",
+	subsets: ["latin"],
 });
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
-  return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={inter.className}>
-        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
-          <ShiningStars
-            starImages={["/shining-stars/star.png", "/shining-stars/point.png"]}
-          />
-          <div className="fixed inset-0 -z-[5] bg-black/50 backdrop-blur-[1px] pointer-events-none" />
-          <Navbar />
-          <main id="main-content">{children}</main>
-          <Footer />
-          <StarButton />
-          <Toaster />
-        </ThemeProvider>
+const geistMono = Geist_Mono({
+	variable: "--font-geist-mono",
+	subsets: ["latin"],
+});
 
-        <Analytics />
-      </body>
-    </html>
-  );
+// Dynamic metadata that updates when personal info changes
+export async function generateMetadata(): Promise<Metadata> {
+	// Dynamically import to get the latest data
+	const { personalInfo } = await import("../data/personal-info");
+
+	return {
+		title: `${personalInfo.name} - ${personalInfo.role}`,
+		description: personalInfo.bio,
+		icons: {
+			icon: "/favicon.ico",
+		},
+	};
+}
+
+export default function RootLayout({
+	children,
+}: {
+	children: React.ReactNode;
+}) {
+	return (
+		<html lang="en" suppressHydrationWarning>
+			<body
+				className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+			>
+				<PortfolioProvider>
+					<ThemeProvider
+						attribute="class"
+						defaultTheme="system"
+						enableSystem
+						disableTransitionOnChange
+					>
+						{children}
+						<Toaster />
+					</ThemeProvider>
+				</PortfolioProvider>
+			</body>
+		</html>
+	);
 }

@@ -1,17 +1,26 @@
-import { Landing } from "./components/landing";
-import { AboutMe } from "./components/about-me";
-import { MyTimeline } from "./components/my-timeline";
-import { ContactMe } from "./components/contact-me";
+"use client";
+
+import { Navbar } from "@/components/navbar";
+import {
+	About,
+	Footer,
+	GithubStats,
+	Hero,
+	Projects,
+	Resume,
+} from "@/components/sections";
 
 export default function Home() {
-  return (
-    <>
-      <Landing />
-      <div className="mx-auto max-w-3xl px-4">
-        <AboutMe />
-        <MyTimeline />
-        <ContactMe />
-      </div>
-    </>
-  );
+	return (
+		<div className="min-h-screen bg-background">
+			<Navbar />
+			<Hero />
+			<About />
+			<Projects />
+			<Resume />
+			<GithubStats />
+			{/* <Contact /> */}
+			<Footer />
+		</div>
+	);
 }
