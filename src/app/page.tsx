@@ -3,6 +3,7 @@
 import { Navbar } from "@/components/navbar";
 import {
 	About,
+	Contact,
 	Footer,
 	GithubStats,
 	Hero,
@@ -19,7 +20,7 @@ export default function Home() {
 			<Projects />
 			<Resume />
 			<GithubStats />
-			{/* <Contact /> */}
+			<Contact />
 			<Footer />
 		</div>
 	);
