@@ -29,17 +29,26 @@ function useActiveSection(homeId: string) {
 	useEffect(() => {
 		const observerOptions = {
 			root: null,
-			rootMargin: "-20% 0px -60% 0px",
-			threshold: 0.1,
+			rootMargin: "-10% 0px -50% 0px", // Less strict margins
+			threshold: [0, 0.1, 0.25], // Multiple thresholds for better detection
 		};
 
+		let currentSectionId = homeId;
+
 		const observerCallback = (entries: IntersectionObserverEntry[]) => {
-			entries.forEach((entry) => {
-				if (entry.isIntersecting) {
-					const sectionId = entry.target.id;
+			// Sort entries by intersection ratio (descending) to prioritize most visible section
+			const sortedEntries = entries
+				.filter((entry) => entry.isIntersecting)
+				.sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+
+			if (sortedEntries.length > 0) {
+				const mostVisibleSection = sortedEntries[0];
+				const sectionId = mostVisibleSection.target.id;
+				if (sectionId !== currentSectionId) {
+					currentSectionId = sectionId;
 					setActiveSection(sectionId);
 				}
-			});
+			}
 		};
 
 		const observer = new IntersectionObserver(
@@ -47,18 +56,35 @@ function useActiveSection(homeId: string) {
 			observerOptions,
 		);
 
-		// Observe all sections
-		const sections = document.querySelectorAll("section[id]");
-		sections.forEach((section) => {
-			observer.observe(section);
-		});
+		// Function to observe sections (with retry for dynamic content)
+		const observeSections = () => {
+			const sections = document.querySelectorAll("section[id]");
+			sections.forEach((section) => {
+				observer.observe(section);
+			});
+			return sections;
+		};
+
+		// Initial observation
+		let sections = observeSections();
+
+		// Re-observe after a delay to catch dynamically loaded content (like GitHub stats)
+		const timeoutId = setTimeout(() => {
+			// Unobserve old sections first
+			sections.forEach((section) => {
+				observer.unobserve(section);
+			});
+			// Re-observe all sections
+			sections = observeSections();
+		}, 1000);
 
 		return () => {
+			clearTimeout(timeoutId);
 			sections.forEach((section) => {
 				observer.unobserve(section);
 			});
 		};
-	}, []);
+	}, [homeId]);
 
 	return activeSection;
 }
