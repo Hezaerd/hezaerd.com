@@ -5,12 +5,13 @@ import { motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { CommitGraph } from "@/components/github/CommitGraph";
 import { GitHubStatsDisplay } from "@/components/github/GitHubStatsDisplay";
+import { useSectionIds } from "@/components/providers/SectionIdsProvider";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useGitHubStats } from "@/hooks/useGitHubStats";
 
 export function GithubStats() {
-	const sectionId = "github-stats";
+	const { sectionIds } = useSectionIds();
 	const [formattedDate, setFormattedDate] = useState<string>("");
 	const {
 		data,
@@ -37,7 +38,7 @@ export function GithubStats() {
 	if (isLoading && !data) {
 		return (
 			<section
-				id={sectionId}
+				id={sectionIds.githubStats}
 				className="py-16 px-4 sm:px-6 lg:px-8 bg-background"
 			>
 				<div className="max-w-7xl mx-auto">
@@ -71,7 +72,7 @@ export function GithubStats() {
 
 		return (
 			<section
-				id={sectionId}
+				id={sectionIds.githubStats}
 				className="py-16 px-4 sm:px-6 lg:px-8 bg-background"
 			>
 				<div className="max-w-7xl mx-auto">
@@ -129,7 +130,7 @@ export function GithubStats() {
 
 	return (
 		<section
-			id={sectionId}
+			id={sectionIds.githubStats}
 			className="py-16 px-4 sm:px-6 lg:px-8 bg-background"
 		>
 			<div className="max-w-7xl mx-auto">
@@ -142,7 +143,7 @@ export function GithubStats() {
 				>
 					<Github className="w-7 h-7 text-primary" /> GitHub Stats
 					{/* Show subtle loading indicator when background refreshing */}
-					{(isFetching && !isRefetching) && (
+					{isFetching && !isRefetching && (
 						<Loader2 className="w-4 h-4 animate-spin text-muted-foreground opacity-50" />
 					)}
 				</motion.h2>

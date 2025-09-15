@@ -2,11 +2,11 @@
 
 import { Mail } from "lucide-react";
 import { motion } from "motion/react";
-import { useId } from "react";
+import { useSectionIds } from "@/components/providers/SectionIdsProvider";
 import { Button } from "@/components/ui/button";
 
 export function Contact() {
-	const id = useId();
+	const { sectionIds } = useSectionIds();
 
 	const handleEmailClick = () => {
 		window.location.href = "mailto:hezaerd@hezaerd.com";
@@ -14,7 +14,7 @@ export function Contact() {
 
 	return (
 		<section
-			id={id}
+			id={sectionIds.contact}
 			className="py-24 px-4 sm:px-6 lg:px-8 min-h-screen bg-gradient-to-br from-background to-muted/20"
 		>
 			<div className="max-w-4xl mx-auto">
