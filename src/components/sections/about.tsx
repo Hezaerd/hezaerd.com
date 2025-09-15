@@ -2,15 +2,15 @@
 
 import { User, Wrench } from "lucide-react";
 import { motion } from "motion/react";
-import { useId } from "react";
+import { useSectionIds } from "@/components/providers/SectionIdsProvider";
 import { personalInfo } from "@/data/personal-info";
 import { skills } from "@/data/skills";
 
 export function About() {
-	const aboutId = useId();
+	const { sectionIds } = useSectionIds();
 
 	return (
-		<section id={aboutId} className="py-16 px-4 sm:px-6 lg:px-8 bg-card">
+		<section id={sectionIds.about} className="py-16 px-4 sm:px-6 lg:px-8 bg-card">
 			<div className="max-w-7xl mx-auto">
 				<motion.h2
 					className="text-3xl sm:text-4xl font-bold text-center text-card-foreground mb-12 flex items-center justify-center gap-2"

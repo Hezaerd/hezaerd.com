@@ -12,13 +12,14 @@ import {
 	Wrench,
 } from "lucide-react";
 import { motion } from "motion/react";
-import { useCallback, useEffect, useId, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { ProjectModal } from "@/components/project-modal";
+import { useSectionIds } from "@/components/providers/SectionIdsProvider";
 import { Button } from "@/components/ui/button";
 import { projects } from "@/data/projects";
 
 export function Projects() {
-	const id = useId();
+	const { sectionIds } = useSectionIds();
 	const [selectedProject, setSelectedProject] = useState<
 		(typeof projects)[0] | null
 	>(null);
@@ -90,7 +91,7 @@ export function Projects() {
 
 	return (
 		<section
-			id={id}
+			id={sectionIds.projects}
 			className="min-h-screen flex flex-col justify-center py-16 px-4 sm:px-6 lg:px-8"
 		>
 			<div className="max-w-7xl mx-auto w-full">

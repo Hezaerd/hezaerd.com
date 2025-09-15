@@ -2,7 +2,7 @@
 
 import { FolderGit2, Wrench } from "lucide-react";
 import { motion } from "motion/react";
-import { useId } from "react";
+import { useSectionIds } from "@/components/providers/SectionIdsProvider";
 import { Button } from "@/components/ui/button";
 import { personalInfo } from "@/data/personal-info";
 
@@ -20,11 +20,11 @@ const slideUp = {
 };
 
 export function Hero() {
-	const id = useId();
+	const { sectionIds } = useSectionIds();
 
 	return (
 		<section
-			id={id}
+			id={sectionIds.home}
 			className="h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8"
 		>
 			<div className="max-w-7xl mx-auto text-center">
@@ -58,7 +58,7 @@ export function Hero() {
 						size="lg"
 						className="hover:bg-primary/70 hover:shadow-lg transition-all duration-200"
 						onClick={() => {
-							document.getElementById("projects")?.scrollIntoView({
+							document.getElementById(sectionIds.projects)?.scrollIntoView({
 								behavior: "smooth",
 							});
 						}}

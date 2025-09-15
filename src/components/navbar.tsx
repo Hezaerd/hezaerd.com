@@ -1,15 +1,8 @@
 "use client";
 
-import {
-	Briefcase,
-	FileText,
-	Github,
-	Home,
-	Mail,
-	Menu,
-	User,
-} from "lucide-react";
+import { Menu } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { useSectionIds } from "@/components/providers/SectionIdsProvider";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
 import { Button } from "@/components/ui/button";
 import {
@@ -29,18 +22,9 @@ import {
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 
-const navigationItems = [
-	{ name: "Home", href: "#home", icon: Home },
-	{ name: "About", href: "#about", icon: User },
-	{ name: "Projects", href: "#projects", icon: Briefcase },
-	{ name: "Resume", href: "#resume", icon: FileText },
-	{ name: "GitHub", href: "#github-stats", icon: Github },
-	{ name: "Contact", href: "#contact", icon: Mail },
-];
-
 // Custom hook to track active section
-function useActiveSection() {
-	const [activeSection, setActiveSection] = useState("home");
+function useActiveSection(homeId: string) {
+	const [activeSection, setActiveSection] = useState(homeId);
 
 	useEffect(() => {
 		const observerOptions = {
@@ -80,10 +64,11 @@ function useActiveSection() {
 }
 
 export function Navbar() {
+	const { navigationItems, sectionIds } = useSectionIds();
 	const [isScrolled, setIsScrolled] = useState(false);
 	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 	const [underlineStyle, setUnderlineStyle] = useState({ width: 0, left: 0 });
-	const activeSection = useActiveSection();
+	const activeSection = useActiveSection(sectionIds.home);
 	const navItemRefs = useRef<{ [key: string]: HTMLElement | null }>({});
 	const navListRef = useRef<HTMLUListElement>(null);
 
@@ -128,7 +113,7 @@ export function Navbar() {
 	// Set initial position on mount
 	useEffect(() => {
 		const setInitialPosition = () => {
-			const homeNavItem = navItemRefs.current.home;
+			const homeNavItem = navItemRefs.current[sectionIds.home];
 			const navList = navListRef.current;
 
 			if (homeNavItem && navList) {
@@ -149,7 +134,7 @@ export function Navbar() {
 		const timeoutId = setTimeout(setInitialPosition, 100);
 
 		return () => clearTimeout(timeoutId);
-	}, []);
+	}, [sectionIds.home]);
 
 	const scrollToSection = (href: string) => {
 		const element = document.querySelector(href);
@@ -177,7 +162,7 @@ export function Navbar() {
 					{/* Logo */}
 					<div className="flex-shrink-0">
 						<a
-							href="#home"
+							href={`#${sectionIds.home}`}
 							className="text-2xl font-bold text-primary hover:text-primary/80 transition-all duration-300"
 						>
 							Portfolio
@@ -228,7 +213,7 @@ export function Navbar() {
 						<ThemeToggle />
 						<Button
 							onClick={() => {
-								scrollToSection("#contact");
+								scrollToSection(`#${sectionIds.contact}`);
 							}}
 							className="bg-primary hover:bg-primary/90 text-primary-foreground border-0 transition-all duration-300 shadow-lg hover:shadow-xl"
 						>
@@ -292,7 +277,7 @@ export function Navbar() {
 										</div>
 										<div className="px-4">
 											<Button
-												onClick={() => scrollToSection("#contact")}
+												onClick={() => scrollToSection(`#${sectionIds.contact}`)}
 												className="w-full bg-primary hover:bg-primary/90 text-primary-foreground border-0 transition-all duration-300"
 											>
 												Get In Touch
