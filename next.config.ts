@@ -13,6 +13,11 @@ const nextConfig: NextConfig = {
             'sonner',
             'motion',
         ]
+    },
+    logging: {
+        fetches: {
+            fullUrl: true,
+        }
     }
 };
 
