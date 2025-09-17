@@ -1,12 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { AnalyticsProvider } from "@/components/providers/AnalyticsProvider";
-import { PortfolioProvider } from "@/components/providers/PortfolioProvider";
 import { SectionIdsProvider } from "@/components/providers/SectionIdsProvider";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
@@ -82,20 +80,17 @@ export default function RootLayout({
 				className={`${geistSans.variable} ${geistMono.variable} antialiased`}
 			>
 				<AnalyticsProvider>
-					<PortfolioProvider>
-                        <ReactQueryDevtools initialIsOpen={false} />
-                            <SectionIdsProvider>
-                                <ThemeProvider
-                                    attribute="class"
-                                    defaultTheme="system"
-                                    enableSystem
-                                    disableTransitionOnChange
-                                    >
-                                    {children}
-                                    <Toaster />
-                                </ThemeProvider>
-                            </SectionIdsProvider>
-					</PortfolioProvider>
+                    <SectionIdsProvider>
+                        <ThemeProvider
+                            attribute="class"
+                            defaultTheme="system"
+                            enableSystem
+                            disableTransitionOnChange
+                            >
+                            {children}
+                            <Toaster />
+                        </ThemeProvider>
+                    </SectionIdsProvider>
 				</AnalyticsProvider>
 			</body>
 		</html>

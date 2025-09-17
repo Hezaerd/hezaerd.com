@@ -1,231 +1,250 @@
-"use client";
-
-import { AlertCircle, Github, Loader2, RefreshCw } from "lucide-react";
-import { motion } from "motion/react";
-import { useEffect, useState } from "react";
-import { CommitGraph } from "@/components/github/CommitGraph";
-import { GitHubStatsDisplay } from "@/components/github/GitHubStatsDisplay";
-import { useSectionIds } from "@/components/providers/SectionIdsProvider";
-import { Button } from "@/components/ui/button";
+import { Github } from "lucide-react";
+import { CommitGraph } from "@/components/github/commit-graph";
+import { GitHubStatsDisplay } from "@/components/github/github-stats-display";
 import { Card, CardContent } from "@/components/ui/card";
-import { useGitHubStats } from "@/hooks/useGitHubStats";
+import type {
+	ContributionDay,
+	ContributionWeek,
+	GitHubContributions,
+	GitHubLanguageStats,
+	GitHubRepository,
+	GitHubStats,
+	GitHubUser,
+} from "@/types/github";
 
-export function GithubStats() {
-	const { sectionIds } = useSectionIds();
-	const [formattedDate, setFormattedDate] = useState<string>("");
-	const {
-		data,
-		isLoading,
-		error,
-		refetch,
-		isRefetching,
-		isFetching,
-		isPlaceholderData,
-	} = useGitHubStats();
+const GITHUB_API_BASE = "https://api.github.com";
 
-	// Update formatted date on client side to prevent hydration mismatch
-	useEffect(() => {
-		if (data?.data?.lastUpdated) {
-			setFormattedDate(new Date(data.data.lastUpdated).toLocaleString());
+async function fetchGitHubAPI(endpoint: string, token: string) {
+	const response = await fetch(`${GITHUB_API_BASE}${endpoint}`, {
+		headers: {
+			Authorization: `Bearer ${token}`,
+			Accept: "application/vnd.github.v3+json",
+			"User-Agent": "Portfolio-App",
+		},
+		next: { revalidate: 300 }, // Revalidate every 5 minutes
+	});
+
+	if (!response.ok) {
+		throw new Error(
+			`GitHub API Error: ${response.status} ${response.statusText}`,
+		);
+	}
+
+	return response.json();
+}
+
+async function fetchUserData(token: string): Promise<GitHubUser> {
+	return await fetchGitHubAPI("/user", token);
+}
+
+async function fetchUserRepositories(
+	username: string,
+	token: string,
+): Promise<GitHubRepository[]> {
+	const repos = await fetchGitHubAPI(
+		`/users/${username}/repos?type=public&sort=updated&per_page=100`,
+		token,
+	);
+
+	return repos
+		.filter((repo: GitHubRepository) => !repo.fork && !repo.archived)
+		.sort(
+			(a: GitHubRepository, b: GitHubRepository) =>
+				b.stargazers_count - a.stargazers_count,
+		);
+}
+
+async function calculateLanguageStats(
+	repositories: GitHubRepository[],
+	username: string,
+	token: string,
+): Promise<GitHubLanguageStats> {
+	const languageStats: GitHubLanguageStats = {};
+	const topRepos = repositories.slice(0, 20);
+
+	for (const repo of topRepos) {
+		try {
+			const languages = await fetchGitHubAPI(
+				`/repos/${username}/${repo.name}/languages`,
+				token,
+			);
+
+			Object.entries(languages).forEach(([language, bytes]) => {
+				languageStats[language] =
+					(languageStats[language] || 0) + (bytes as number);
+			});
+		} catch (error) {
+			console.warn(`Failed to fetch languages for ${repo.name}:`, error);
 		}
-	}, [data?.data?.lastUpdated]);
+	}
 
-	const handleRetry = () => {
-		refetch();
+	return languageStats;
+}
+
+async function generateContributionsData(
+	repositories: GitHubRepository[],
+): Promise<GitHubContributions> {
+	const now = new Date();
+	const oneYearAgo = new Date();
+	oneYearAgo.setFullYear(now.getFullYear() - 1);
+
+	const weeks: ContributionWeek[] = [];
+	const totalDays = 365;
+	const daysPerWeek = 7;
+	const totalWeeks = Math.ceil(totalDays / daysPerWeek);
+
+	for (let week = 0; week < totalWeeks; week++) {
+		const contributionDays: ContributionDay[] = [];
+
+		for (let day = 0; day < daysPerWeek; day++) {
+			const date = new Date(oneYearAgo);
+			date.setDate(date.getDate() + week * daysPerWeek + day);
+
+			if (date > now) break;
+
+			const repoActivity = repositories.filter((repo) => {
+				const pushDate = new Date(repo.pushed_at);
+				const dayStart = new Date(date);
+				const dayEnd = new Date(date);
+				dayEnd.setDate(dayEnd.getDate() + 1);
+				return pushDate >= dayStart && pushDate < dayEnd;
+			}).length;
+
+			const count = repoActivity;
+			let level: 0 | 1 | 2 | 3 | 4 = 0;
+
+			if (count > 0) level = 1;
+			if (count > 2) level = 2;
+			if (count > 5) level = 3;
+			if (count > 10) level = 4;
+
+			contributionDays.push({
+				date: date.toISOString().split("T")[0],
+				count,
+				level,
+			});
+		}
+
+		if (contributionDays.length > 0) {
+			weeks.push({
+				contributionDays,
+				firstDay: contributionDays[0].date,
+			});
+		}
+	}
+
+	const totalContributions = weeks.reduce(
+		(total, week) =>
+			total + week.contributionDays.reduce((sum, day) => sum + day.count, 0),
+		0,
+	);
+
+	return {
+		totalContributions,
+		weeks,
+		fromYear: oneYearAgo.getFullYear(),
+		toYear: now.getFullYear(),
 	};
+}
 
-	// Only show loading state if we have no data at all (first load)
-	if (isLoading && !data) {
-		return (
-			<section
-				id={sectionIds.githubStats}
-				className="py-16 px-4 sm:px-6 lg:px-8 bg-background"
-			>
-				<div className="max-w-7xl mx-auto">
-					<motion.h2
-						className="text-3xl sm:text-4xl font-bold text-center text-foreground mb-12 flex items-center justify-center gap-2"
-						initial={{ opacity: 0, y: 30 }}
-						whileInView={{ opacity: 1, y: 0 }}
-						transition={{ duration: 0.6 }}
-						viewport={{ once: true }}
-					>
-						<Github className="w-7 h-7 text-primary" /> GitHub Stats
-					</motion.h2>
+async function getGitHubStats(): Promise<GitHubStats | null> {
+	try {
+		const token = process.env.GITHUB_TOKEN;
 
-					<Card>
-						<CardContent className="p-16 text-center">
-							<Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-primary" />
-							<p className="text-muted-foreground">
-								Loading GitHub statistics...
-							</p>
-						</CardContent>
-					</Card>
-				</div>
-			</section>
+		if (!token) {
+			console.error("GitHub token not configured");
+			return null;
+		}
+
+		const user = await fetchUserData(token);
+		const repositories = await fetchUserRepositories(user.login, token);
+		const topRepositories = repositories.slice(0, 6);
+		const totalStars = repositories.reduce(
+			(sum, repo) => sum + repo.stargazers_count,
+			0,
 		);
-	}
-
-	// Show error state only if we have no cached data to fall back to
-	if (error && !data) {
-		const errorMessage =
-			error instanceof Error ? error.message : "Failed to fetch GitHub stats";
-
-		return (
-			<section
-				id={sectionIds.githubStats}
-				className="py-16 px-4 sm:px-6 lg:px-8 bg-background"
-			>
-				<div className="max-w-7xl mx-auto">
-					<motion.h2
-						className="text-3xl sm:text-4xl font-bold text-center text-foreground mb-12 flex items-center justify-center gap-2"
-						initial={{ opacity: 0, y: 30 }}
-						whileInView={{ opacity: 1, y: 0 }}
-						transition={{ duration: 0.6 }}
-						viewport={{ once: true }}
-					>
-						<Github className="w-7 h-7 text-primary" /> GitHub Stats
-					</motion.h2>
-
-					<Card>
-						<CardContent className="p-16 text-center">
-							<AlertCircle className="w-8 h-8 mx-auto mb-4 text-destructive" />
-							<h3 className="text-lg font-semibold mb-2">
-								Failed to Load GitHub Stats
-							</h3>
-							<p className="text-muted-foreground mb-6 max-w-md mx-auto">
-								{errorMessage.includes("token")
-									? "GitHub token not configured. Please add your GitHub token in the onboarding settings."
-									: `Error: ${errorMessage}`}
-							</p>
-							<Button
-								onClick={handleRetry}
-								disabled={isRefetching}
-								variant="outline"
-								className="min-w-[120px]"
-							>
-								{isRefetching ? (
-									<>
-										<Loader2 className="w-4 h-4 mr-2 animate-spin" />
-										Retrying...
-									</>
-								) : (
-									<>
-										<RefreshCw className="w-4 h-4 mr-2" />
-										Try Again
-									</>
-								)}
-							</Button>
-						</CardContent>
-					</Card>
-				</div>
-			</section>
+		const languageStats = await calculateLanguageStats(
+			repositories,
+			user.login,
+			token,
 		);
-	}
+		const favoriteLanguage =
+			Object.keys(languageStats).length > 0
+				? Object.entries(languageStats).sort(([, a], [, b]) => b - a)[0][0]
+				: null;
+		const contributions = await generateContributionsData(repositories);
 
-	if (!data?.success || !data.data) {
+		return {
+			user,
+			topRepositories,
+			totalStars,
+			favoriteLanguage,
+			languageStats,
+			contributions,
+			lastUpdated: new Date().toISOString(),
+		};
+	} catch (error) {
+		console.error("GitHub API Error:", error);
 		return null;
 	}
+}
 
-	const stats = data.data;
+export async function GithubStats({ id }: { id?: string }) {
+	const stats = await getGitHubStats();
+
+	if (!stats) {
+		return (
+			<section
+				id={id}
+				className="py-16 px-4 sm:px-6 lg:px-8 bg-background"
+			>
+				<div className="max-w-7xl mx-auto">
+					<h2 className="text-3xl sm:text-4xl font-bold text-center text-foreground mb-12 flex items-center justify-center gap-2">
+						<Github className="w-7 h-7 text-primary" /> GitHub Stats
+					</h2>
+					<Card>
+						<CardContent className="p-16 text-center">
+							<p className="text-muted-foreground">
+								GitHub stats temporarily unavailable
+							</p>
+						</CardContent>
+					</Card>
+				</div>
+			</section>
+		);
+	}
 
 	return (
 		<section
-			id={sectionIds.githubStats}
+			id={id}
 			className="py-16 px-4 sm:px-6 lg:px-8 bg-background"
 		>
 			<div className="max-w-7xl mx-auto">
-				<motion.h2
-					className="text-3xl sm:text-4xl font-bold text-center text-foreground mb-12 flex items-center justify-center gap-2"
-					initial={{ opacity: 0, y: 30 }}
-					whileInView={{ opacity: 1, y: 0 }}
-					transition={{ duration: 0.6 }}
-					viewport={{ once: true }}
-				>
+				<h2 className="text-3xl sm:text-4xl font-bold text-center text-foreground mb-12 flex items-center justify-center gap-2">
 					<Github className="w-7 h-7 text-primary" /> GitHub Stats
-					{/* Show subtle loading indicator when background refreshing */}
-					{isFetching && !isRefetching && (
-						<Loader2 className="w-4 h-4 animate-spin text-muted-foreground opacity-50" />
-					)}
-				</motion.h2>
+				</h2>
 
 				<div className="space-y-8">
 					{/* Stats Overview */}
-					<motion.div
-						initial={{ opacity: 0, y: 20 }}
-						whileInView={{ opacity: 1, y: 0 }}
-						transition={{ duration: 0.6, delay: 0.1 }}
-						viewport={{ once: true }}
-						className={isPlaceholderData ? "opacity-75" : "opacity-100"}
-					>
-						<GitHubStatsDisplay stats={stats} />
-					</motion.div>
+					<GitHubStatsDisplay stats={stats} />
 
 					{/* Contribution Graph */}
-					<motion.div
-						initial={{ opacity: 0, y: 20 }}
-						whileInView={{ opacity: 1, y: 0 }}
-						transition={{ duration: 0.6, delay: 0.2 }}
-						viewport={{ once: true }}
-						className={isPlaceholderData ? "opacity-75" : "opacity-100"}
-					>
-						<Card>
-							<CardContent className="p-6">
-								<h3 className="text-lg font-semibold mb-6 flex items-center">
-									<Github className="w-5 h-5 mr-2" />
-									Contribution Activity
-								</h3>
-								<CommitGraph contributions={stats.contributions} />
-							</CardContent>
-						</Card>
-					</motion.div>
+					<Card>
+						<CardContent className="p-6">
+							<h3 className="text-lg font-semibold mb-6 flex items-center">
+								<Github className="w-5 h-5 mr-2" />
+								Contribution Activity
+							</h3>
+							<CommitGraph contributions={stats.contributions} />
+						</CardContent>
+					</Card>
 
 					{/* Last Updated */}
-					<motion.div
-						className="text-center"
-						initial={{ opacity: 0 }}
-						whileInView={{ opacity: 1 }}
-						transition={{ duration: 0.6, delay: 0.3 }}
-						viewport={{ once: true }}
-					>
-						<div className="flex flex-col items-center gap-2">
-							<p className="text-sm text-muted-foreground">
-								{formattedDate && (
-									<>
-										Last updated: {formattedDate}
-										{isPlaceholderData && (
-											<span className="ml-2 text-xs text-amber-600">
-												(cached data)
-											</span>
-										)}
-									</>
-								)}
-							</p>
-							{error && data && (
-								<p className="text-xs text-amber-600">
-									Using cached data - background refresh failed
-								</p>
-							)}
-							<Button
-								onClick={handleRetry}
-								disabled={isRefetching}
-								variant="ghost"
-								size="sm"
-								className="mt-1"
-							>
-								{isRefetching ? (
-									<>
-										<Loader2 className="w-3 h-3 mr-2 animate-spin" />
-										Refreshing...
-									</>
-								) : (
-									<>
-										<RefreshCw className="w-3 h-3 mr-2" />
-										Refresh Data
-									</>
-								)}
-							</Button>
-						</div>
-					</motion.div>
+					<div className="text-center">
+						<p className="text-sm text-muted-foreground">
+							Last updated: {new Date(stats.lastUpdated).toLocaleString()}
+						</p>
+					</div>
 				</div>
 			</div>
 		</section>
