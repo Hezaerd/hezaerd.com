@@ -22,19 +22,41 @@ const geistMono = Geist_Mono({
     preload: false,
 });
 
-// Dynamic metadata that updates when personal info changes
-export async function generateMetadata(): Promise<Metadata> {
-	// Dynamically import to get the latest data
-	const { personalInfo } = await import("../data/personal-info");
-
-	return {
-		title: `${personalInfo.name} - ${personalInfo.role}`,
-		description: personalInfo.bio,
-		icons: {
-			icon: "/favicon.ico",
-		},
-	};
-}
+export const metadata: Metadata = {
+    metadataBase: new URL("https://hezaerd.com"),
+    title: {
+        default: "Hezaerd - Software Engineer",
+        template: "%s | Hezaerd",
+    },
+    description: "Passionate about building high-performance software solutions, ranging from game engines, game development tools, to full-stack applications. Specialized in C++ and C#",
+    keywords: ["software engineer", "game developer", "game engine", "full stack"],
+    authors: [{ name: "Hezaerd", url: "https://hezaerd.com" }],
+    creator: "Hezaerd",
+    openGraph: {
+        type: "website",
+        locale: "en_US",
+        url: "https://hezaerd.com",
+        siteName: "Hezaerd Portfolio",
+        title: "Hezaerd - Software Engineer",
+        description: "Passionate about building high-performance software solutions, ranging from game engines, game development tools, to full-stack applications. Specialized in C++ and C#",
+    },
+    twitter: {
+        card: "summary_large_image",
+        title: "Hezaerd - Software Engineer",
+        description: "Passionate about building high-performance software solutions, ranging from game engines, game development tools, to full-stack applications. Specialized in C++ and C#",
+    },
+    robots: {
+        index: true,
+        follow: true,
+        googleBot: {
+            index: true,
+            follow: true,
+            'max-video-preview': -1,
+            'max-image-preview': 'large',
+            'max-snippet': -1,
+        },
+    },
+};
 
 export default function RootLayout({
 	children,
