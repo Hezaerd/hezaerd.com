@@ -2,7 +2,7 @@
 
 import { FolderGit2, Wrench } from "lucide-react";
 import { motion } from "motion/react";
-import { useSectionIds } from "@/components/providers/SectionIdsProvider";
+import { useSectionIds } from "@/components/providers/section-id-provider";
 import { Button } from "@/components/ui/button";
 import { personalInfo } from "@/data/personal-info";
 
