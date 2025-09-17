@@ -9,7 +9,10 @@ export function Resume() {
 	const { sectionIds } = useSectionIds();
 
 	return (
-		<section id={sectionIds.resume} className="py-16 px-4 sm:px-6 lg:px-8 bg-card">
+		<section
+			id={sectionIds.resume}
+			className="py-16 px-4 sm:px-6 lg:px-8 bg-card"
+		>
 			<div className="max-w-7xl mx-auto">
 				<motion.h2
 					className="text-3xl sm:text-4xl font-bold text-center text-card-foreground mb-12 flex items-center justify-center gap-2"

@@ -277,7 +277,9 @@ export function Navbar() {
 										</div>
 										<div className="px-4">
 											<Button
-												onClick={() => scrollToSection(`#${sectionIds.contact}`)}
+												onClick={() =>
+													scrollToSection(`#${sectionIds.contact}`)
+												}
 												className="w-full bg-primary hover:bg-primary/90 text-primary-foreground border-0 transition-all duration-300"
 											>
 												Get In Touch
