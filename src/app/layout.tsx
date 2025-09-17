@@ -6,6 +6,7 @@ import { SectionIdsProvider } from "@/components/providers/SectionIdsProvider";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
@@ -43,17 +44,18 @@ export default function RootLayout({
 			>
 				<AnalyticsProvider>
 					<PortfolioProvider>
-						<SectionIdsProvider>
-							<ThemeProvider
-								attribute="class"
-								defaultTheme="system"
-								enableSystem
-								disableTransitionOnChange
-							>
-								{children}
-								<Toaster />
-							</ThemeProvider>
-						</SectionIdsProvider>
+                        <ReactQueryDevtools initialIsOpen={false} />
+                            <SectionIdsProvider>
+                                <ThemeProvider
+                                    attribute="class"
+                                    defaultTheme="system"
+                                    enableSystem
+                                    disableTransitionOnChange
+                                    >
+                                    {children}
+                                    <Toaster />
+                                </ThemeProvider>
+                            </SectionIdsProvider>
 					</PortfolioProvider>
 				</AnalyticsProvider>
 			</body>
