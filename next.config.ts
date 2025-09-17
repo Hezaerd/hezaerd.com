@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
 	experimental: {
+        reactCompiler: true,
         optimizePackageImports: [
             '@radix-ui/react-dialog',
             '@radix-ui/react-label',
