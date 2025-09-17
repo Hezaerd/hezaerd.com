@@ -1,8 +1,8 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { useState } from "react";
-import type { GitHubContributions, ContributionDay } from "@/types/github";
+import type { ContributionDay, GitHubContributions } from "@/types/github";
 
 interface CommitGraphProps {
 	contributions: GitHubContributions;
