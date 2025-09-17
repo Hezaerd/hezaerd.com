@@ -1,5 +1,5 @@
-"use client";
-
+import { Suspense } from "react";
+import { GitHubStatsSkeleton } from "@/components/github/github-stats-skeleton";
 import { Navbar } from "@/components/navbar";
 import {
 	About,
@@ -11,6 +11,8 @@ import {
 	Resume,
 } from "@/components/sections";
 
+export const experimental_ppr = true;
+
 export default function Home() {
 	return (
 		<div className="min-h-screen bg-background">
@@ -19,7 +21,11 @@ export default function Home() {
 			<About />
 			<Projects />
 			<Resume />
-			<GithubStats />
+
+			<Suspense fallback={<GitHubStatsSkeleton />}>
+				<GithubStats />
+			</Suspense>
+
 			<Contact />
 			<Footer />
 		</div>

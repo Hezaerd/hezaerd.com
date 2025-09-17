@@ -7,6 +7,7 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 
 const nextConfig: NextConfig = {
     experimental: {
+        ppr: 'incremental',
         reactCompiler: true,
         optimizePackageImports: [
             'lucide-react',
