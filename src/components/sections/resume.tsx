@@ -2,7 +2,7 @@
 
 import { Briefcase, GraduationCap } from "lucide-react";
 import { motion } from "motion/react";
-import { useSectionIds } from "@/components/providers/SectionIdsProvider";
+import { useSectionIds } from "@/components/providers/section-id-provider";
 import { education, workExperience } from "@/data/experience";
 
 export function Resume() {

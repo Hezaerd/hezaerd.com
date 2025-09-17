@@ -2,7 +2,7 @@
 
 import { Menu } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { useSectionIds } from "@/components/providers/SectionIdsProvider";
+import { useSectionIds } from "@/components/providers/section-id-provider";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
 import { Button } from "@/components/ui/button";
 import {

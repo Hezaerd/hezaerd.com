@@ -14,7 +14,7 @@ import {
 import { motion } from "motion/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ProjectModal } from "@/components/project-modal";
-import { useSectionIds } from "@/components/providers/SectionIdsProvider";
+import { useSectionIds } from "@/components/providers/section-id-provider";
 import { Button } from "@/components/ui/button";
 import { projects } from "@/data/projects";
 
