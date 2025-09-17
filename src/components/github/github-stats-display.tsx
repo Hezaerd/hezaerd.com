@@ -4,6 +4,7 @@ import { Book, Code, ExternalLink, GitFork, Star } from "lucide-react";
 import { motion } from "motion/react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
+import { ClientDate } from "@/components/ui/client-date";
 import type { GitHubStats } from "@/types/github";
 
 interface GitHubStatsDisplayProps {
@@ -218,8 +219,7 @@ export function GitHubStatsDisplay({
 														{repo.forks_count}
 													</div>
 													<div>
-														Last push{" "}
-														{new Date(repo.pushed_at).toLocaleDateString()}
+														Last push <ClientDate dateString={repo.pushed_at} />
 													</div>
 												</div>
 											</div>
