@@ -1,9 +1,10 @@
 "use client";
 
-import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
+import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { type ReactNode, useEffect, useState } from "react";
+
 
 interface PortfolioProviderProps {
 	children: ReactNode;
@@ -29,19 +30,27 @@ export function PortfolioProvider({ children }: PortfolioProviderProps) {
 	);
 
 	const [persister, setPersister] = useState<
-		ReturnType<typeof createSyncStoragePersister> | undefined
+		Awaited<ReturnType<typeof createAsyncStoragePersister>> | undefined
 	>(undefined);
 	const [isHydrated, setIsHydrated] = useState(false);
 
 	useEffect(() => {
 		// Only create persister after hydration to prevent SSR mismatches
-		const newPersister = createSyncStoragePersister({
-			storage: window.localStorage,
-			key: "hezaerd-portfolio-cache",
-			throttleTime: 1000, // Throttle saves to localStorage
+		const initializePersister = async () => {
+			const newPersister = await createAsyncStoragePersister({
+				storage: window.localStorage,
+				key: "hezaerd-portfolio-cache",
+				throttleTime: 1000, // Throttle saves to localStorage
+			});
+			setPersister(newPersister);
+			setIsHydrated(true);
+		};
+
+		initializePersister().catch((error) => {
+			console.error("Failed to initialize persister:", error);
+			// Fall back to no persistence if persister fails
+			setIsHydrated(true);
 		});
-		setPersister(newPersister);
-		setIsHydrated(true);
 	}, []);
 
 	// During SSR and before hydration, use the basic QueryClientProvider
