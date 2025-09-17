@@ -2,13 +2,17 @@ import { Github } from "lucide-react";
 import { CommitGraph } from "@/components/github/commit-graph";
 import { GitHubStatsDisplay } from "@/components/github/github-stats-display";
 import { Card, CardContent } from "@/components/ui/card";
+import { ClientDate } from "@/components/ui/client-date";
 import type { GitHubStats, GitHubStatsResponse } from "@/types/github";
 
 async function getGitHubStats(): Promise<GitHubStats | null> {
 	try {
-		const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/github-stats`, {
-			next: { revalidate: 300 },
-		});
+		const response = await fetch(
+			`${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/github-stats`,
+			{
+				next: { revalidate: 300 },
+			},
+		);
 
 		if (!response.ok) {
 			console.error(`GitHub API Error: ${response.status}`);
@@ -76,7 +80,7 @@ export async function GithubStats({ id }: { id?: string }) {
 					{/* Last Updated */}
 					<div className="text-center">
 						<p className="text-sm text-muted-foreground">
-							Last updated: <span suppressHydrationWarning>{new Date(stats.lastUpdated).toLocaleString()}</span>
+							Last updated: <ClientDate dateString={stats.lastUpdated} />
 						</p>
 					</div>
 				</div>
