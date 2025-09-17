@@ -11,11 +11,15 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 const geistSans = Geist({
 	variable: "--font-geist-sans",
 	subsets: ["latin"],
+    display: 'swap',
+    preload: true,
 });
 
 const geistMono = Geist_Mono({
 	variable: "--font-geist-mono",
 	subsets: ["latin"],
+    display: 'swap',
+    preload: false,
 });
 
 // Dynamic metadata that updates when personal info changes
