@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { AnalyticsProvider } from "@/components/providers/AnalyticsProvider";
 import { PortfolioProvider } from "@/components/providers/PortfolioProvider";
 import { SectionIdsProvider } from "@/components/providers/SectionIdsProvider";
 import { ThemeProvider } from "@/components/theme/theme-provider";
@@ -40,19 +41,21 @@ export default function RootLayout({
 			<body
 				className={`${geistSans.variable} ${geistMono.variable} antialiased`}
 			>
-				<PortfolioProvider>
-					<SectionIdsProvider>
-						<ThemeProvider
-							attribute="class"
-							defaultTheme="system"
-							enableSystem
-							disableTransitionOnChange
-						>
-							{children}
-							<Toaster />
-						</ThemeProvider>
-					</SectionIdsProvider>
-				</PortfolioProvider>
+				<AnalyticsProvider>
+					<PortfolioProvider>
+						<SectionIdsProvider>
+							<ThemeProvider
+								attribute="class"
+								defaultTheme="system"
+								enableSystem
+								disableTransitionOnChange
+							>
+								{children}
+								<Toaster />
+							</ThemeProvider>
+						</SectionIdsProvider>
+					</PortfolioProvider>
+				</AnalyticsProvider>
 			</body>
 		</html>
 	);
