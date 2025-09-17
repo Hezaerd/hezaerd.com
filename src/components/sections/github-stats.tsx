@@ -194,10 +194,7 @@ export async function GithubStats({ id }: { id?: string }) {
 
 	if (!stats) {
 		return (
-			<section
-				id={id}
-				className="py-16 px-4 sm:px-6 lg:px-8 bg-background"
-			>
+			<section id={id} className="py-16 px-4 sm:px-6 lg:px-8 bg-background">
 				<div className="max-w-7xl mx-auto">
 					<h2 className="text-3xl sm:text-4xl font-bold text-center text-foreground mb-12 flex items-center justify-center gap-2">
 						<Github className="w-7 h-7 text-primary" /> GitHub Stats
@@ -215,10 +212,7 @@ export async function GithubStats({ id }: { id?: string }) {
 	}
 
 	return (
-		<section
-			id={id}
-			className="py-16 px-4 sm:px-6 lg:px-8 bg-background"
-		>
+		<section id={id} className="py-16 px-4 sm:px-6 lg:px-8 bg-background">
 			<div className="max-w-7xl mx-auto">
 				<h2 className="text-3xl sm:text-4xl font-bold text-center text-foreground mb-12 flex items-center justify-center gap-2">
 					<Github className="w-7 h-7 text-primary" /> GitHub Stats
