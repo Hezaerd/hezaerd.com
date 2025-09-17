@@ -65,7 +65,20 @@ export default function RootLayout({
 }) {
 	return (
 		<html lang="en" suppressHydrationWarning>
-			<body
+            <head>
+				{/* Preload critical resources */}
+				<link rel="preconnect" href="https://fonts.googleapis.com" />
+				<link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+				<link rel="dns-prefetch" href="https://api.github.com" />
+
+				{/* Viewport optimization */}
+				<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+
+				{/* Theme color for mobile browsers */}
+				<meta name="theme-color" content="#000000" />
+				<meta name="color-scheme" content="dark light" />
+			</head>
+            <body
 				className={`${geistSans.variable} ${geistMono.variable} antialiased`}
 			>
 				<AnalyticsProvider>
