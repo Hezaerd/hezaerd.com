@@ -1,45 +1,24 @@
-"use client";
-
 import { Briefcase, GraduationCap } from "lucide-react";
-import { motion } from "motion/react";
-import { useSectionIds } from "@/components/providers/section-id-provider";
+import { AnimatedFadeIn } from "@/components/ui/animated-wrapper";
 import { education, workExperience } from "@/data/experience";
+import { SECTION_IDS } from "@/lib/sections";
 
 export function Resume() {
-	const { sectionIds } = useSectionIds();
-
 	return (
 		<section
-			id={sectionIds.resume}
+			id={SECTION_IDS.resume}
 			className="py-16 px-4 sm:px-6 lg:px-8 bg-card"
 		>
 			<div className="max-w-7xl mx-auto">
-				<motion.h2
-					className="text-3xl sm:text-4xl font-bold text-center text-card-foreground mb-12 flex items-center justify-center gap-2"
-					initial={{ opacity: 0, y: 30 }}
-					whileInView={{ opacity: 1, y: 0 }}
-					transition={{ duration: 0.6 }}
-					viewport={{ once: true }}
-				>
+				<AnimatedFadeIn className="text-3xl sm:text-4xl font-bold text-center text-card-foreground mb-12 flex items-center justify-center gap-2">
 					<Briefcase className="w-7 h-7 text-primary" /> Experience & Education
-				</motion.h2>
+				</AnimatedFadeIn>
 				<div className="grid md:grid-cols-2 gap-12">
-					<motion.div
-						initial={{ opacity: 0, x: -50 }}
-						whileInView={{ opacity: 1, x: 0 }}
-						transition={{ duration: 0.6, delay: 0.2 }}
-						viewport={{ once: true }}
-					>
+					<AnimatedFadeIn direction="left" delay={0.2}>
 						<h3 className="text-2xl font-semibold text-card-foreground mb-6 flex items-center gap-2">
 							<Briefcase className="w-5 h-5 text-primary" /> Work Experience
 						</h3>
-						<motion.div
-							className="space-y-6"
-							initial={{ opacity: 0 }}
-							whileInView={{ opacity: 1 }}
-							transition={{ duration: 0.4 }}
-							viewport={{ once: true }}
-						>
+						<AnimatedFadeIn className="space-y-6" delay={0.4}>
 							{workExperience.map((exp) => (
 								<div
 									key={exp.title}
@@ -56,24 +35,13 @@ export function Resume() {
 									</p>
 								</div>
 							))}
-						</motion.div>
-					</motion.div>
-					<motion.div
-						initial={{ opacity: 0, x: 50 }}
-						whileInView={{ opacity: 1, x: 0 }}
-						transition={{ duration: 0.6, delay: 0.4 }}
-						viewport={{ once: true }}
-					>
+						</AnimatedFadeIn>
+					</AnimatedFadeIn>
+					<AnimatedFadeIn direction="right" delay={0.4}>
 						<h3 className="text-2xl font-semibold text-card-foreground mb-6 flex items-center gap-2">
 							<GraduationCap className="w-5 h-5 text-primary" /> Education
 						</h3>
-						<motion.div
-							className="space-y-6"
-							initial={{ opacity: 0 }}
-							whileInView={{ opacity: 1 }}
-							transition={{ duration: 0.4 }}
-							viewport={{ once: true }}
-						>
+						<AnimatedFadeIn className="space-y-6" delay={0.6}>
 							{education.map((edu) => (
 								<div
 									key={edu.degree}
@@ -91,8 +59,8 @@ export function Resume() {
 									</p>
 								</div>
 							))}
-						</motion.div>
-					</motion.div>
+						</AnimatedFadeIn>
+					</AnimatedFadeIn>
 				</div>
 			</div>
 		</section>
