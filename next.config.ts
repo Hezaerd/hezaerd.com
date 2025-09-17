@@ -1,9 +1,15 @@
 import type { NextConfig } from "next";
 
+// Import bundle analyzer
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+    enabled: process.env.ANALYZE === 'true',
+});
+
 const nextConfig: NextConfig = {
-	experimental: {
+    experimental: {
         reactCompiler: true,
         optimizePackageImports: [
+            'lucide-react',
             '@radix-ui/react-dialog',
             '@radix-ui/react-label',
             '@radix-ui/react-navigation-menu',
@@ -21,4 +27,5 @@ const nextConfig: NextConfig = {
     }
 };
 
-export default nextConfig;
+// Export the config wrapped with bundle analyzer
+export default withBundleAnalyzer(nextConfig);
