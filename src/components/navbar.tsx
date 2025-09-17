@@ -2,7 +2,6 @@
 
 import { Menu } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { useSectionIds } from "@/components/providers/section-id-provider";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
 import { Button } from "@/components/ui/button";
 import {
@@ -20,6 +19,7 @@ import {
 	SheetTitle,
 	SheetTrigger,
 } from "@/components/ui/sheet";
+import { NAVIGATION_ITEMS, SECTION_IDS } from "@/lib/sections";
 import { cn } from "@/lib/utils";
 
 // Custom hook to track active section
@@ -64,11 +64,10 @@ function useActiveSection(homeId: string) {
 }
 
 export function Navbar() {
-	const { navigationItems, sectionIds } = useSectionIds();
 	const [isScrolled, setIsScrolled] = useState(false);
 	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 	const [underlineStyle, setUnderlineStyle] = useState({ width: 0, left: 0 });
-	const activeSection = useActiveSection(sectionIds.home);
+	const activeSection = useActiveSection(SECTION_IDS.home);
 	const navItemRefs = useRef<{ [key: string]: HTMLElement | null }>({});
 	const navListRef = useRef<HTMLUListElement>(null);
 
@@ -113,7 +112,7 @@ export function Navbar() {
 	// Set initial position on mount
 	useEffect(() => {
 		const setInitialPosition = () => {
-			const homeNavItem = navItemRefs.current[sectionIds.home];
+			const homeNavItem = navItemRefs.current[SECTION_IDS.home];
 			const navList = navListRef.current;
 
 			if (homeNavItem && navList) {
@@ -134,7 +133,7 @@ export function Navbar() {
 		const timeoutId = setTimeout(setInitialPosition, 100);
 
 		return () => clearTimeout(timeoutId);
-	}, [sectionIds.home]);
+	}, []);
 
 	const scrollToSection = (href: string) => {
 		const element = document.querySelector(href);
@@ -162,7 +161,7 @@ export function Navbar() {
 					{/* Logo */}
 					<div className="flex-shrink-0">
 						<a
-							href={`#${sectionIds.home}`}
+							href={`#${SECTION_IDS.home}`}
 							className="text-2xl font-bold text-primary hover:text-primary/80 transition-all duration-300"
 						>
 							Portfolio
@@ -176,7 +175,7 @@ export function Navbar() {
 								ref={navListRef}
 								className="space-x-1 relative"
 							>
-								{navigationItems.map((item) => (
+								{NAVIGATION_ITEMS.map((item) => (
 									<NavigationMenuItem key={item.name}>
 										<NavigationMenuLink
 											ref={(el) => {
@@ -213,7 +212,7 @@ export function Navbar() {
 						<ThemeToggle />
 						<Button
 							onClick={() => {
-								scrollToSection(`#${sectionIds.contact}`);
+								scrollToSection(`#${SECTION_IDS.contact}`);
 							}}
 							className="bg-primary hover:bg-primary/90 text-primary-foreground border-0 transition-all duration-300 shadow-lg hover:shadow-xl"
 						>
@@ -245,7 +244,7 @@ export function Navbar() {
 									</SheetDescription>
 								</SheetHeader>
 								<div className="mt-8 space-y-4">
-									{navigationItems.map((item) => {
+									{NAVIGATION_ITEMS.map((item) => {
 										const Icon = item.icon;
 										return (
 											<Button
@@ -278,7 +277,7 @@ export function Navbar() {
 										<div className="px-4">
 											<Button
 												onClick={() =>
-													scrollToSection(`#${sectionIds.contact}`)
+													scrollToSection(`#${SECTION_IDS.contact}`)
 												}
 												className="w-full bg-primary hover:bg-primary/90 text-primary-foreground border-0 transition-all duration-300"
 											>

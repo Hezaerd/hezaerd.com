@@ -236,7 +236,7 @@ export async function GithubStats({ id }: { id?: string }) {
 					{/* Last Updated */}
 					<div className="text-center">
 						<p className="text-sm text-muted-foreground">
-							Last updated: {new Date(stats.lastUpdated).toLocaleString()}
+							Last updated: <span suppressHydrationWarning>{new Date(stats.lastUpdated).toLocaleString()}</span>
 						</p>
 					</div>
 				</div>
