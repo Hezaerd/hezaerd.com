@@ -8,7 +8,7 @@ import type { GitHubStats, GitHubStatsResponse } from "@/types/github";
 async function getGitHubStats(): Promise<GitHubStats | null> {
 	try {
 		const response = await fetch(
-			`${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/github-stats`,
+			`${process.env.NEXT_PUBLIC_APP_URL}/api/github-stats`,
 			{
 				next: { revalidate: 300 },
 			},
