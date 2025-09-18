@@ -93,8 +93,4 @@ export const projects: Project[] = [
 		teamSize: "8 developers",
 		role: "Programmer",
 	}
-		duration: "4 months",
-		teamSize: "8 developers",
-		role: "Programmer",
-	}
 ];
