@@ -44,7 +44,7 @@ export function ProjectCard({ project, index, onClick, onHover, onLeave }: Proje
 	return (
 		<div className="flex-[0_0_100%] min-w-0 pl-4 md:flex-[0_0_50%] lg:flex-[0_0_33.333%]">
 			<motion.div
-				className="bg-card rounded-lg shadow-lg overflow-hidden border border-border cursor-pointer mx-2 h-full"
+				className="bg-card rounded-lg shadow-lg overflow-hidden border border-border cursor-pointer mx-2 h-full flex flex-col"
 				onClick={onClick}
 				onHoverStart={handleMouseEnter}
 				onHoverEnd={handleMouseLeave}
@@ -57,7 +57,7 @@ export function ProjectCard({ project, index, onClick, onHover, onLeave }: Proje
 				whileTap={{ scale: 0.98 }}
 			>
 				<motion.div
-					className="h-40 relative overflow-hidden"
+					className="h-40 relative overflow-hidden flex-shrink-0"
 					animate={{
 						scale: isHovered ? 1.05 : 1,
 					}}
@@ -126,9 +126,9 @@ export function ProjectCard({ project, index, onClick, onHover, onLeave }: Proje
 						</motion.div>
 					)}
 				</motion.div>
-				<div className="p-4">
+				<div className="p-4 flex flex-col flex-grow min-h-0">
 					<motion.h3
-						className="text-lg font-semibold text-card-foreground mb-2 flex items-center gap-2"
+						className="text-lg font-semibold text-card-foreground mb-2 flex items-center gap-2 flex-shrink-0"
 						animate={{
 							color: isHovered
 								? "hsl(var(--primary))"
@@ -139,10 +139,10 @@ export function ProjectCard({ project, index, onClick, onHover, onLeave }: Proje
 						<FolderGit2 className="w-4 h-4 text-primary" />
 						{project.title}
 					</motion.h3>
-					<p className="text-muted-foreground mb-3 text-sm line-clamp-3">
+					<p className="text-muted-foreground mb-3 text-sm line-clamp-3 flex-grow">
 						{project.description}
 					</p>
-					<div className="flex gap-1 flex-wrap mb-3">
+					<div className="flex gap-1 flex-wrap mb-3 flex-shrink-0">
 						{project.tags.slice(0, 3).map((tag) => (
 							<span
 								key={tag}
@@ -160,16 +160,18 @@ export function ProjectCard({ project, index, onClick, onHover, onLeave }: Proje
 							</span>
 						)}
 					</div>
-					<div className="text-xs text-primary font-medium relative inline-block">
-						<span>Click to view details →</span>
-						<motion.div
-							className="absolute bottom-0 left-0 h-0.5 bg-primary w-full"
-							animate={{
-								scaleX: isHovered ? 1 : 0,
-							}}
-							style={{ originX: 0 }}
-							transition={{ duration: 0.3, ease: "easeOut" }}
-						/>
+					<div className="flex-shrink-0">
+						<span className="text-xs text-primary font-medium relative inline-block">
+							Click to view details →
+							<motion.div
+								className="absolute bottom-0 left-0 h-0.5 bg-primary w-full"
+								animate={{
+									scaleX: isHovered ? 1 : 0,
+								}}
+								style={{ originX: 0 }}
+								transition={{ duration: 0.3, ease: "easeOut" }}
+							/>
+						</span>
 					</div>
 				</div>
 			</motion.div>
