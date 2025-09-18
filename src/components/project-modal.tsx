@@ -27,17 +27,15 @@ interface ProjectModalProps {
 }
 
 export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
-	// Handler for GitHub link
-	const handleGithubClick = () => {
-		if (project.githubUrl) {
-			window.open(project.githubUrl, "_blank");
+	const handleSourcesClick = () => {
+		if (project.sourcesUrl) {
+			window.open(project.sourcesUrl, "_blank");
 		}
 	};
 
-	// Handler for live demo link
-	const handleLiveClick = () => {
-		if (project.liveUrl) {
-			window.open(project.liveUrl, "_blank");
+	const handleReleaseClick = () => {
+		if (project.releaseUrl) {
+			window.open(project.releaseUrl, "_blank");
 		}
 	};
 	return (
@@ -92,27 +90,27 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
 					</div>
 
 					{/* Action Buttons */}
-					{(project.githubUrl || project.liveUrl) && (
+					{(project.sourcesUrl || project.releaseUrl) && (
 						<div className="flex gap-3">
-							{project.githubUrl && (
+							{project.sourcesUrl && (
 								<Button
 									variant="outline"
 									size="sm"
 									className="flex items-center gap-2"
-									onClick={handleGithubClick}
+									onClick={handleSourcesClick}
 								>
 									<Github className="w-4 h-4" />
-									View Code
+									View Sources
 								</Button>
 							)}
-							{project.liveUrl && (
+							{project.releaseUrl && (
 								<Button
 									size="sm"
 									className="flex items-center gap-2"
-									onClick={handleLiveClick}
+									onClick={handleReleaseClick}
 								>
 									<ExternalLink className="w-4 h-4" />
-									Live Demo
+									Play
 								</Button>
 							)}
 						</div>

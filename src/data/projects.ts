@@ -9,8 +9,8 @@ export interface Project {
 	features?: string[];
 	challenges?: string[];
 	technologies?: string[];
-	githubUrl?: string;
-	liveUrl?: string;
+	sourcesUrl?: string;
+	releaseUrl?: string;
 	duration?: string;
 	teamSize?: string;
 	role?: string;
@@ -44,6 +44,7 @@ export const projects: Project[] = [
 			"Coordinating with sound designers to create responsive audio-visual experiences",
 		],
 		technologies: ["C#", "Unity", "Wwise", "Android", "Jira", "Perforce"],
+        releaseUrl: "https://isart-digital.itch.io/stellarsuplex",
 		duration: "9 months",
 		teamSize: "16 developers",
 		role: "Lead Programmer & Technical Architect",
@@ -76,6 +77,7 @@ export const projects: Project[] = [
 			"Node.js",
 			"TypeScript",
 		],
+        releaseUrl: "https://store.steampowered.com/app/2418600/Los_Pingheros/",
 		duration: "4 months",
 		teamSize: "8 developers",
 		role: "Programmer",
@@ -108,6 +110,7 @@ export const projects: Project[] = [
             "Perforce",
             "Trello"
         ],
+        sourcesUrl: "https://github.com/Hezaerd/Coloris",
         duration: "4 days",
         teamSize: "6 developers",
         role: "Programmer"
