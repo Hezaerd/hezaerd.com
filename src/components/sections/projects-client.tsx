@@ -12,6 +12,7 @@ import { ProjectCard } from "./project-card";
 
 export function ProjectsClient() {
 	const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+	const [videoCurrentTime, setVideoCurrentTime] = useState<number>(0);
 	const [searchTerm, setSearchTerm] = useState("");
 	const [isMac, setIsMac] = useState(false);
 	const searchInputRef = useRef<HTMLInputElement>(null);
@@ -65,6 +66,12 @@ export function ProjectsClient() {
 
 	const handleProjectLeave = useCallback(() => {
 		autoplay.current.reset();
+	}, []);
+
+	// Handler for project click with video time synchronization
+	const handleProjectClick = useCallback((project: Project, videoTime?: number) => {
+		setSelectedProject(project);
+		setVideoCurrentTime(videoTime || 0);
 	}, []);
 
 	// Keyboard shortcut to focus search
@@ -128,7 +135,7 @@ export function ProjectsClient() {
 								key={`${project.title}-${index}`}
 								project={project}
 								index={index}
-								onClick={() => setSelectedProject(project)}
+								onClick={(videoTime) => handleProjectClick(project, videoTime)}
 								onHover={handleProjectHover}
 								onLeave={handleProjectLeave}
 							/>
@@ -158,6 +165,7 @@ export function ProjectsClient() {
 					project={selectedProject}
 					isOpen={!!selectedProject}
 					onClose={() => setSelectedProject(null)}
+					initialVideoTime={videoCurrentTime}
 				/>
 			)}
 		</>

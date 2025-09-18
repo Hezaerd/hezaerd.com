@@ -15,7 +15,7 @@ interface ProjectCardProps {
 		previewVideo?: string;
 	};
 	index: number;
-	onClick: () => void;
+	onClick: (videoCurrentTime?: number) => void;
 	onHover?: () => void;
 	onLeave?: () => void;
 }
@@ -47,11 +47,16 @@ export function ProjectCard({
 		onLeave?.();
 	};
 
+	const handleClick = () => {
+		const videoCurrentTime = videoRef.current?.currentTime || 0;
+		onClick(videoCurrentTime);
+	};
+
 	return (
 		<div className="flex-[0_0_100%] min-w-0 pl-4 md:flex-[0_0_50%] lg:flex-[0_0_33.333%]">
 			<motion.div
 				className="bg-card rounded-lg shadow-lg overflow-hidden border border-border cursor-pointer mx-2 h-full flex flex-col"
-				onClick={onClick}
+				onClick={handleClick}
 				onHoverStart={handleMouseEnter}
 				onHoverEnd={handleMouseLeave}
 				whileHover={{
