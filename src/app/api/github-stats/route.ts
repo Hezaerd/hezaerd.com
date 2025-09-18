@@ -22,90 +22,92 @@ export async function GET(request: NextRequest) {
 
 		const userData = await userResponse.json();
 
-			// Fetch recent push events to get latest activity
-	const eventsResponse = await fetch(
-		`https://api.github.com/users/${username}/events?per_page=100`,
-		{
-			headers: {
-				Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
-				"Content-Type": "application/json",
-			},
-		},
-	);
-
-	if (!eventsResponse.ok) {
-		console.error(`Failed to fetch events: ${eventsResponse.status}`);
-		return new Response("Failed to fetch GitHub stats", { status: 500 });
-	}
-
-	const eventsData = await eventsResponse.json();
-
-	// Extract unique repositories from recent push events
-	const recentRepoNames = new Set<string>();
-	eventsData
-		.filter((event: any) => event.type === "PushEvent")
-		.forEach((event: any) => {
-			if (event.repo?.name) {
-				recentRepoNames.add(event.repo.name);
-			}
-		});
-
-	// Fetch repositories for additional stats (all repos for language stats)
-	const reposResponse = await fetch(
-		`https://api.github.com/users/${username}/repos?per_page=100&sort=updated&type=all`,
-		{
-			headers: {
-				Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
-				"Content-Type": "application/json",
-			},
-		},
-	);
-
-	if (!reposResponse.ok) {
-		console.error(`Failed to fetch repos: ${reposResponse.status}`);
-		return new Response("Failed to fetch GitHub stats", { status: 500 });
-	}
-
-	const reposData = await reposResponse.json();
-
-	// Filter out forks and archived repos for language stats
-	const publicRepos = reposData.filter(
-		(repo: any) => !repo.fork && !repo.archived,
-	);
-
-	// Get detailed info for recent repositories from events
-	const recentRepos: any[] = [];
-	const recentRepoNamesArray = Array.from(recentRepoNames).slice(0, 10); // Limit to 10 recent repos
-
-	for (const repoName of recentRepoNamesArray) {
-		try {
-			const repoResponse = await fetch(
-				`https://api.github.com/repos/${repoName}`,
-				{
-					headers: {
-						Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
-						"Content-Type": "application/json",
-					},
+		// Fetch recent push events to get latest activity
+		const eventsResponse = await fetch(
+			`https://api.github.com/users/${username}/events?per_page=100`,
+			{
+				headers: {
+					Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+					"Content-Type": "application/json",
 				},
-			);
+			},
+		);
 
-			if (repoResponse.ok) {
-				const repoData = await repoResponse.json();
-				recentRepos.push(repoData);
-			}
-		} catch (error) {
-			console.warn(`Failed to fetch repo details for ${repoName}:`, error);
+		if (!eventsResponse.ok) {
+			console.error(`Failed to fetch events: ${eventsResponse.status}`);
+			return new Response("Failed to fetch GitHub stats", { status: 500 });
 		}
-	}
+
+		const eventsData = await eventsResponse.json();
+
+		// Extract unique repositories from recent push events
+		const recentRepoNames = new Set<string>();
+		eventsData
+			.filter((event: any) => event.type === "PushEvent")
+			.forEach((event: any) => {
+				if (event.repo?.name) {
+					recentRepoNames.add(event.repo.name);
+				}
+			});
+
+		// Fetch repositories for additional stats (all repos for language stats)
+		const reposResponse = await fetch(
+			`https://api.github.com/users/${username}/repos?per_page=100&sort=updated&type=all`,
+			{
+				headers: {
+					Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+					"Content-Type": "application/json",
+				},
+			},
+		);
+
+		if (!reposResponse.ok) {
+			console.error(`Failed to fetch repos: ${reposResponse.status}`);
+			return new Response("Failed to fetch GitHub stats", { status: 500 });
+		}
+
+		const reposData = await reposResponse.json();
+
+		// Filter out forks and archived repos for language stats
+		const publicRepos = reposData.filter(
+			(repo: any) => !repo.fork && !repo.archived,
+		);
+
+		// Get detailed info for recent repositories from events
+		const recentRepos: any[] = [];
+		const recentRepoNamesArray = Array.from(recentRepoNames).slice(0, 10); // Limit to 10 recent repos
+
+		for (const repoName of recentRepoNamesArray) {
+			try {
+				const repoResponse = await fetch(
+					`https://api.github.com/repos/${repoName}`,
+					{
+						headers: {
+							Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+							"Content-Type": "application/json",
+						},
+					},
+				);
+
+				if (repoResponse.ok) {
+					const repoData = await repoResponse.json();
+					recentRepos.push(repoData);
+				}
+			} catch (error) {
+				console.warn(`Failed to fetch repo details for ${repoName}:`, error);
+			}
+		}
 
 		// Remove duplicates based on repository ID and sort by last push date
-	const uniqueRecentRepos = recentRepos
-		.filter((repo, index, self) =>
-			index === self.findIndex(r => r.id === repo.id)
-		)
-		.sort((a: any, b: any) =>
-			new Date(b.pushed_at).getTime() - new Date(a.pushed_at).getTime()
-		);
+		const uniqueRecentRepos = recentRepos
+			.filter(
+				(repo, index, self) =>
+					index === self.findIndex((r) => r.id === repo.id),
+			)
+			.sort(
+				(a: any, b: any) =>
+					new Date(b.pushed_at).getTime() - new Date(a.pushed_at).getTime(),
+			);
 
 		// Calculate additional stats from repositories
 		const totalStars = publicRepos.reduce(
@@ -210,9 +212,7 @@ export async function GET(request: NextRequest) {
 				created_at: userData.created_at,
 				updated_at: userData.updated_at,
 			},
-					topRepositories: uniqueRecentRepos
-			.slice(0, 6)
-			.map((repo: any) => ({
+			topRepositories: uniqueRecentRepos.slice(0, 6).map((repo: any) => ({
 				id: repo.id,
 				name: repo.name,
 				full_name: repo.full_name,

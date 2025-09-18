@@ -18,7 +18,8 @@ export const workExperience: WorkExperience[] = [
 		title: "Full stack & game developer",
 		company: "Hectiq",
 		period: "2024 (4 months)",
-		description: "Prototyping and development in autonomous mode of both a Twitch extension and integration for a game.",
+		description:
+			"Prototyping and development in autonomous mode of both a Twitch extension and integration for a game.",
 		color: "primary",
 	},
 	{
@@ -31,12 +32,12 @@ export const workExperience: WorkExperience[] = [
 ];
 
 export const education: Education[] = [
-    {
-        degree: "Game Programming",
-        school: "Isart Digital Paris",
-        period: "2023 - 2025",
-        description: ""
-    },
+	{
+		degree: "Game Programming",
+		school: "Isart Digital Paris",
+		period: "2023 - 2025",
+		description: "",
+	},
 	{
 		degree: "Game Engine Programing",
 		school: "Isart Digital Montreal",

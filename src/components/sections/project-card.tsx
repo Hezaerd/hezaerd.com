@@ -20,7 +20,13 @@ interface ProjectCardProps {
 	onLeave?: () => void;
 }
 
-export function ProjectCard({ project, index, onClick, onHover, onLeave }: ProjectCardProps) {
+export function ProjectCard({
+	project,
+	index,
+	onClick,
+	onHover,
+	onLeave,
+}: ProjectCardProps) {
 	const [isHovered, setIsHovered] = useState(false);
 	const videoRef = useRef<HTMLVideoElement>(null);
 

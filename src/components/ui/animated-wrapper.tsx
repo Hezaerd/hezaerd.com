@@ -16,25 +16,33 @@ export function AnimatedFadeIn({
 	className = "",
 	delay = 0,
 	direction = "up",
-	distance = 30
+	distance = 30,
 }: AnimatedSectionProps) {
 	const getInitialPosition = () => {
 		switch (direction) {
-			case "up": return { opacity: 0, y: distance };
-			case "down": return { opacity: 0, y: -distance };
-			case "left": return { opacity: 0, x: distance };
-			case "right": return { opacity: 0, x: -distance };
-			default: return { opacity: 0, y: distance };
+			case "up":
+				return { opacity: 0, y: distance };
+			case "down":
+				return { opacity: 0, y: -distance };
+			case "left":
+				return { opacity: 0, x: distance };
+			case "right":
+				return { opacity: 0, x: -distance };
+			default:
+				return { opacity: 0, y: distance };
 		}
 	};
 
 	const getFinalPosition = () => {
 		switch (direction) {
 			case "up":
-			case "down": return { opacity: 1, y: 0 };
+			case "down":
+				return { opacity: 1, y: 0 };
 			case "left":
-			case "right": return { opacity: 1, x: 0 };
-			default: return { opacity: 1, y: 0 };
+			case "right":
+				return { opacity: 1, x: 0 };
+			default:
+				return { opacity: 1, y: 0 };
 		}
 	};
 

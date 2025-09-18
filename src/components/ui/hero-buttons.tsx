@@ -26,11 +26,7 @@ export function HeroButtons() {
 				<FolderGit2 className="w-5 h-5" />
 				View Portfolio
 			</Button>
-			<Button
-				variant="outline"
-				size="lg"
-				onClick={openResume}
-			>
+			<Button variant="outline" size="lg" onClick={openResume}>
 				<Wrench className="w-5 h-5" />
 				Download Resume
 			</Button>

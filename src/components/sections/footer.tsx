@@ -11,8 +11,7 @@ export function Footer() {
 				<div className="flex flex-col md:flex-row justify-between items-center gap-6">
 					<AnimatedFadeIn className="text-center md:text-left">
 						<p className="text-muted-foreground mb-2">
-							© <CurrentYear /> {personalInfo.name}. All rights
-							reserved.
+							© <CurrentYear /> {personalInfo.name}. All rights reserved.
 						</p>
 						<p className="text-sm text-muted-foreground flex items-center justify-center md:justify-start gap-1">
 							Portfolio crafted by{" "}
