@@ -25,7 +25,11 @@ export function About() {
 							</p>
 						)}
 					</AnimatedFadeIn>
-					<AnimatedFadeIn className="bg-primary p-1 rounded-lg" direction="right" delay={0.2}>
+					<AnimatedFadeIn
+						className="bg-primary p-1 rounded-lg"
+						direction="right"
+						delay={0.2}
+					>
 						<div className="bg-background p-8 rounded-lg">
 							<h3 className="text-xl font-semibold text-foreground mb-4 flex items-center gap-2">
 								<Wrench className="w-5 h-5 text-primary" /> Skills &

@@ -6,7 +6,7 @@ export const skills: string[] = [
 	"Python",
 	"Unity",
 	"Unreal Engine",
-    "Wwise",
+	"Wwise",
 	"Git",
 	"Perforce",
 ];
