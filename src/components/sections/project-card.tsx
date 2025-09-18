@@ -53,9 +53,9 @@ export function ProjectCard({
 	};
 
 	return (
-		<div className="flex-[0_0_100%] min-w-0 pl-4 md:flex-[0_0_50%] lg:flex-[0_0_33.333%]">
+		<div className="flex-[0_0_100%] min-w-0 px-2 md:flex-[0_0_50%] lg:flex-[0_0_33.333%]">
 			<motion.div
-				className="bg-card rounded-lg shadow-lg overflow-hidden border border-border cursor-pointer mx-2 h-full flex flex-col"
+				className="bg-card rounded-lg shadow-lg overflow-hidden border border-border cursor-pointer h-full flex flex-col"
 				onClick={handleClick}
 				onHoverStart={handleMouseEnter}
 				onHoverEnd={handleMouseLeave}

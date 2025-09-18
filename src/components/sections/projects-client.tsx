@@ -144,7 +144,7 @@ export function ProjectsClient() {
 
 				{/* Carousel */}
 				<div className="overflow-hidden py-8" ref={emblaRef}>
-					<div className="flex">
+					<div className="flex -ml-2 md:ml-0">
 						{filteredProjects.map((project, index) => (
 							<ProjectCard
 								key={`${project.title}-${index}`}
