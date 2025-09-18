@@ -9,6 +9,7 @@ import {
 	Projects,
 	Resume,
 } from "@/components/sections";
+import { SECTION_IDS } from "@/lib/sections";
 
 export const experimental_ppr = true;
 
@@ -22,7 +23,7 @@ export default function Home() {
 			<Resume />
 
 			<Suspense fallback={<GitHubStatsSkeleton />}>
-				<GithubStats />
+				<GithubStats id={SECTION_IDS.githubStats} />
 			</Suspense>
 
 			<Footer />
