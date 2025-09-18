@@ -9,7 +9,6 @@ export function Footer() {
 		<footer className="bg-card border-t border-border py-12 px-4 sm:px-6 lg:px-8">
 			<div className="max-w-7xl mx-auto">
 				<div className="flex flex-col md:flex-row justify-between items-center gap-6">
-					{/* Copyright and Credits */}
 					<AnimatedFadeIn className="text-center md:text-left">
 						<p className="text-muted-foreground mb-2">
 							© <CurrentYear /> {personalInfo.name}. All rights
@@ -29,15 +28,8 @@ export function Footer() {
 						</p>
 					</AnimatedFadeIn>
 
-					{/* Social Media Icons */}
 					<AnimatedFadeIn className="flex gap-4" delay={0.1}>
-						<SocialButtons
-							github={personalInfo.github}
-							linkedin={personalInfo.linkedin}
-							twitter={personalInfo.twitter}
-							email={personalInfo.email}
-							website={personalInfo.website}
-						/>
+						<SocialButtons />
 					</AnimatedFadeIn>
 				</div>
 			</div>
