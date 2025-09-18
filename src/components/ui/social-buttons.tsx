@@ -1,78 +1,25 @@
 "use client";
 
-import { ExternalLink, Github, Linkedin, Mail, Twitter } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { socials } from "@/data/socials";
 
-interface SocialButtonsProps {
-	github: string;
-	linkedin: string;
-	twitter?: string;
-	email: string;
-	website?: string;
-}
-
-export function SocialButtons({ github, linkedin, twitter, email, website }: SocialButtonsProps) {
+export function SocialButtons() {
 	return (
 		<>
-			<Button
-				variant="ghost"
-				size="icon"
-				onClick={() => {
-					window.open(github, "_blank");
-				}}
-				className="hover:bg-accent hover:text-accent-foreground transition-colors duration-200"
-			>
-				<Github className="w-5 h-5" />
-				<span className="sr-only">GitHub</span>
-			</Button>
-			<Button
-				variant="ghost"
-				size="icon"
-				onClick={() => {
-					window.open(linkedin, "_blank");
-				}}
-				className="hover:bg-accent hover:text-accent-foreground transition-colors duration-200"
-			>
-				<Linkedin className="w-5 h-5" />
-				<span className="sr-only">LinkedIn</span>
-			</Button>
-			{twitter && (
+			{socials.map((social) => (
 				<Button
+					key={social.name}
 					variant="ghost"
 					size="icon"
 					onClick={() => {
-						window.open(twitter, "_blank");
+						window.open(social.url, "_blank");
 					}}
 					className="hover:bg-accent hover:text-accent-foreground transition-colors duration-200"
 				>
-					<Twitter className="w-5 h-5" />
-					<span className="sr-only">Twitter</span>
+					<social.icon className="w-5 h-5" />
+					<span className="sr-only">{social.name}</span>
 				</Button>
-			)}
-			<Button
-				variant="ghost"
-				size="icon"
-				onClick={() => {
-					window.open(`mailto:${email}`, "_blank");
-				}}
-				className="hover:bg-accent hover:text-accent-foreground transition-colors duration-200"
-			>
-				<Mail className="w-5 h-5" />
-				<span className="sr-only">Email</span>
-			</Button>
-			{website && (
-				<Button
-					variant="ghost"
-					size="icon"
-					onClick={() => {
-						window.open(website, "_blank");
-					}}
-					className="hover:bg-accent hover:text-accent-foreground transition-colors duration-200"
-				>
-					<ExternalLink className="w-5 h-5" />
-					<span className="sr-only">Website</span>
-				</Button>
-			)}
+			))}
 		</>
 	);
 }
