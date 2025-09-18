@@ -2,7 +2,9 @@
 
 import { FolderGit2, Mail, User, Wrench } from "lucide-react";
 import { motion } from "motion/react";
+import Image from "next/image";
 import { useState } from "react";
+import { HoverVideo } from "@/components/ui/hover-video";
 
 interface ProjectCardProps {
 	project: {
@@ -10,21 +12,35 @@ interface ProjectCardProps {
 		description: string;
 		tags: string[];
 		highlight?: string;
+		previewImage?: string;
+		previewVideo?: string;
 	};
 	index: number;
 	onClick: () => void;
+	onHover?: () => void;
+	onLeave?: () => void;
 }
 
-export function ProjectCard({ project, index, onClick }: ProjectCardProps) {
+export function ProjectCard({ project, index, onClick, onHover, onLeave }: ProjectCardProps) {
 	const [isHovered, setIsHovered] = useState(false);
+
+	const handleMouseEnter = () => {
+		setIsHovered(true);
+		onHover?.();
+	};
+
+	const handleMouseLeave = () => {
+		setIsHovered(false);
+		onLeave?.();
+	};
 
 	return (
 		<div className="flex-[0_0_100%] min-w-0 pl-4 md:flex-[0_0_50%] lg:flex-[0_0_33.333%]">
 			<motion.div
 				className="bg-card rounded-lg shadow-lg overflow-hidden border border-border cursor-pointer mx-2 h-full"
 				onClick={onClick}
-				onHoverStart={() => setIsHovered(true)}
-				onHoverEnd={() => setIsHovered(false)}
+				onHoverStart={handleMouseEnter}
+				onHoverEnd={handleMouseLeave}
 				whileHover={{
 					y: -12,
 					boxShadow:
@@ -34,14 +50,68 @@ export function ProjectCard({ project, index, onClick }: ProjectCardProps) {
 				whileTap={{ scale: 0.98 }}
 			>
 				<motion.div
-					className="h-40 bg-gradient-to-br from-primary via-primary/90 to-primary/70 flex items-center justify-center text-primary-foreground text-lg font-bold p-4 text-center"
+					className="h-40 relative overflow-hidden"
 					animate={{
 						scale: isHovered ? 1.05 : 1,
-						filter: isHovered ? "brightness(0.9)" : "brightness(1)",
 					}}
 					transition={{ duration: 0.2 }}
 				>
-					{project.highlight || project.title}
+					{project.previewImage ? (
+						project.previewVideo ? (
+							/* Use HoverVideo component for image + video - it handles everything */
+							<HoverVideo
+								className="w-full h-full rounded-none"
+								image={
+									<Image
+										src={project.previewImage}
+										alt={`${project.title} preview`}
+										width={400}
+										height={240}
+										sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+										priority={index < 3}
+									/>
+								}
+								video={
+									// biome-ignore lint/a11y/useMediaCaption: decorative preview video doesn't need captions
+									<video src={project.previewVideo} />
+								}
+							/>
+						) : (
+							/* Image only with overlay */
+							<>
+								<Image
+									src={project.previewImage}
+									alt={`${project.title} preview`}
+									fill
+									className="object-cover"
+									sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+									priority={index < 3}
+								/>
+								<motion.div
+									className="absolute inset-0 bg-black/20 flex items-center justify-center"
+									animate={{
+										opacity: isHovered ? 0.1 : 0.3,
+									}}
+									transition={{ duration: 0.3 }}
+								>
+									<span className="text-white text-lg font-bold p-4 text-center drop-shadow-lg">
+										{project.highlight || project.title}
+									</span>
+								</motion.div>
+							</>
+						)
+					) : (
+						/* Fallback to original gradient design */
+						<motion.div
+							className="h-full bg-gradient-to-br from-primary via-primary/90 to-primary/70 flex items-center justify-center text-primary-foreground text-lg font-bold p-4 text-center"
+							animate={{
+								filter: isHovered ? "brightness(0.9)" : "brightness(1)",
+							}}
+							transition={{ duration: 0.2 }}
+						>
+							{project.highlight || project.title}
+						</motion.div>
+					)}
 				</motion.div>
 				<div className="p-4">
 					<motion.h3
@@ -65,15 +135,9 @@ export function ProjectCard({ project, index, onClick }: ProjectCardProps) {
 								key={tag}
 								className="px-2 py-1 bg-secondary text-secondary-foreground text-xs rounded-full flex items-center gap-1"
 							>
-								{tag === "C++" && (
-									<Wrench className="w-3 h-3 text-primary" />
-								)}
-								{tag === "Unity" && (
-									<User className="w-3 h-3 text-primary" />
-								)}
-								{tag === "AI" && (
-									<Mail className="w-3 h-3 text-primary" />
-								)}
+								{tag === "C++" && <Wrench className="w-3 h-3 text-primary" />}
+								{tag === "Unity" && <User className="w-3 h-3 text-primary" />}
+								{tag === "AI" && <Mail className="w-3 h-3 text-primary" />}
 								{tag}
 							</span>
 						))}

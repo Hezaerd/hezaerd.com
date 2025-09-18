@@ -7,16 +7,17 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { ProjectModal } from "@/components/project-modal";
 import { AnimatedFadeIn } from "@/components/ui/animated-wrapper";
 import { Button } from "@/components/ui/button";
-import { projects } from "@/data/projects";
+import { type Project, projects } from "@/data/projects";
 import { ProjectCard } from "./project-card";
 
 export function ProjectsClient() {
-	const [selectedProject, setSelectedProject] = useState<
-		(typeof projects)[0] | null
-	>(null);
+	const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 	const [searchTerm, setSearchTerm] = useState("");
 	const [isMac, setIsMac] = useState(false);
 	const searchInputRef = useRef<HTMLInputElement>(null);
+
+	// Create autoplay plugin reference
+	const autoplay = useRef(Autoplay({ delay: 4000, stopOnInteraction: true }));
 
 	// Detect operating system
 	useEffect(() => {
@@ -46,7 +47,7 @@ export function ProjectsClient() {
 				"(min-width: 1024px)": { slidesToScroll: 3 },
 			},
 		},
-		[Autoplay({ delay: 4000, stopOnInteraction: true })],
+		[autoplay.current],
 	);
 
 	const scrollPrev = useCallback(() => {
@@ -56,6 +57,15 @@ export function ProjectsClient() {
 	const scrollNext = useCallback(() => {
 		if (emblaApi) emblaApi.scrollNext();
 	}, [emblaApi]);
+
+	// Handlers for pausing/resuming carousel on project hover
+	const handleProjectHover = useCallback(() => {
+		autoplay.current.stop();
+	}, []);
+
+	const handleProjectLeave = useCallback(() => {
+		autoplay.current.reset();
+	}, []);
 
 	// Keyboard shortcut to focus search
 	useEffect(() => {
@@ -119,6 +129,8 @@ export function ProjectsClient() {
 								project={project}
 								index={index}
 								onClick={() => setSelectedProject(project)}
+								onHover={handleProjectHover}
+								onLeave={handleProjectLeave}
 							/>
 						))}
 					</div>
