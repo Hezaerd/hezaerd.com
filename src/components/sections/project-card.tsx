@@ -67,7 +67,7 @@ export function ProjectCard({ project, index, onClick, onHover, onLeave }: Proje
 						<>
 							{/* Preview Image */}
 							<motion.div
-								className="w-full h-full relative"
+								className="w-full h-full object-cover object-center"
 								animate={{
 									opacity: isHovered && project.previewVideo ? 0 : 1,
 								}}
@@ -88,7 +88,7 @@ export function ProjectCard({ project, index, onClick, onHover, onLeave }: Proje
 								<motion.video
 									ref={videoRef}
 									src={project.previewVideo}
-									className="absolute inset-0 w-full h-full object-cover"
+									className="absolute inset-0 w-full h-full object-cover object-center"
 									muted
 									loop
 									playsInline
