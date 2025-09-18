@@ -15,6 +15,7 @@ export function ProjectsClient() {
 	const [videoCurrentTime, setVideoCurrentTime] = useState<number>(0);
 	const [searchTerm, setSearchTerm] = useState("");
 	const [isMac, setIsMac] = useState(false);
+	const [isSearchFocused, setIsSearchFocused] = useState(false);
 	const searchInputRef = useRef<HTMLInputElement>(null);
 
 	// Create autoplay plugin reference
@@ -91,8 +92,12 @@ export function ProjectsClient() {
 		<>
 			{/* Search Bar */}
 			<AnimatedFadeIn className="max-w-md mx-auto mb-8" delay={0.2}>
-				<div className="relative">
-					<Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+				<div className="relative group">
+					<Search className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 transition-all duration-300 ease-in-out ${
+						isSearchFocused || searchTerm
+							? "text-primary scale-110"
+							: "text-muted-foreground group-hover:text-foreground"
+					}`} />
 					<input
 						type="text"
 						placeholder="Search projects by name, description, or tag..."
@@ -100,10 +105,20 @@ export function ProjectsClient() {
 						onChange={(e) => {
 							setSearchTerm(e.target.value);
 						}}
+						onFocus={() => setIsSearchFocused(true)}
+						onBlur={() => setIsSearchFocused(false)}
 						ref={searchInputRef}
-						className="w-full pl-10 pr-20 py-3 text-sm bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent placeholder:text-muted-foreground"
+						className={`w-full pl-10 pr-20 py-3 text-sm bg-card border rounded-lg placeholder:text-muted-foreground transition-all duration-300 ease-in-out transform ${
+							isSearchFocused
+								? "scale-105 border-primary shadow-lg shadow-primary/20 focus:outline-none focus:ring-2 focus:ring-primary/30"
+								: "border-border hover:border-foreground/30 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+						}`}
 					/>
-					<div className="absolute right-2 top-1/2 transform -translate-y-1/2 text-xs text-muted-foreground bg-muted px-2 py-1 rounded border flex items-center gap-1">
+					<div className={`absolute right-2 top-1/2 transform -translate-y-1/2 text-xs bg-muted px-2 py-1 rounded border flex items-center gap-1 transition-all duration-300 ease-in-out ${
+						isSearchFocused
+							? "text-primary border-primary/50 shadow-sm scale-105"
+							: "text-muted-foreground border-border group-hover:text-foreground group-hover:border-foreground/30"
+					}`}>
 						<kbd className="font-mono">{isMac ? "⌘" : "Ctrl"} K</kbd>
 					</div>
 				</div>
