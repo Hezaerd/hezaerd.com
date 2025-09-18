@@ -5,12 +5,14 @@ import {
 	ChevronDown,
 	Copy,
 	ExternalLink,
+	Home,
 	ListMusic,
 	Music,
 	Search,
 	Settings,
 	User,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -120,6 +122,7 @@ interface TokenResponse {
 }
 
 export default function SpotifyHelperPage() {
+	const router = useRouter();
 	const clientIdInputId = useId();
 	const clientSecretInputId = useId();
 	const searchInputRef = useRef<HTMLInputElement>(null);
@@ -326,6 +329,18 @@ export default function SpotifyHelperPage() {
 	return (
 		<div className="min-h-screen bg-background py-16 px-4 sm:px-6 lg:px-8">
 			<div className="max-w-4xl mx-auto">
+				{/* Back to Home Button */}
+				<div className="mb-8">
+					<Button
+						variant="ghost"
+						onClick={() => router.push("/")}
+						className="group flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+					>
+						<Home className="w-4 h-4 group-hover:scale-110 transition-transform" />
+						Back to Home
+					</Button>
+				</div>
+
 				<div className="text-center mb-12">
 					<h1 className="text-4xl font-bold text-foreground mb-4 flex items-center justify-center gap-3">
 						Spotify OAuth Helper
