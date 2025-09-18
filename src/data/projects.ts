@@ -61,7 +61,7 @@ export const projects: Project[] = [
 			"An interactive physics simulation tool for rapid prototyping and educational demos. Built with C# and Unity.",
 		tags: ["C#", "Unity", "Physics"],
 		highlight: "Physics Sandbox",
-		previewImage: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=400&h=240&fit=crop&crop=center",
+		// previewImage: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=400&h=240&fit=crop&crop=center",
 		longDescription:
 			"An advanced physics simulation environment designed for educational purposes and rapid prototyping. Features real-time physics manipulation, interactive debugging tools, and a comprehensive library of physics demonstrations ranging from basic mechanics to complex fluid dynamics.",
 		features: [
