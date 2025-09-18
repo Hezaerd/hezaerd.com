@@ -194,25 +194,23 @@ export function Navbar() {
 										</NavigationMenuLink>
 									</NavigationMenuItem>
 								))}
-								{/* Sliding underline */}
 								<div
 									className="absolute bottom-0 h-0.5 bg-primary rounded-full transition-all duration-300 ease-out"
 									style={{
 										left: `${underlineStyle.left}px`,
 										width: `${underlineStyle.width}px`,
-										transform: "translateY(-2px)", // Move it slightly up from the very bottom
+										transform: "translateY(-2px)",
 									}}
 								/>
 							</NavigationMenuList>
 						</NavigationMenu>
 					</div>
 
-					{/* Theme Toggle and CTA Button */}
 					<div className="hidden md:flex items-center gap-3">
 						<ThemeToggle />
 						<Button
 							onClick={() => {
-								scrollToSection(`#${SECTION_IDS.contact}`);
+								window.open("mailto:hezaerd@gmail.com", "_blank");
 							}}
 							className="bg-primary hover:bg-primary/90 text-primary-foreground border-0 transition-all duration-300 shadow-lg hover:shadow-xl"
 						>
@@ -220,7 +218,6 @@ export function Navbar() {
 						</Button>
 					</div>
 
-					{/* Mobile Menu Button */}
 					<div className="md:hidden">
 						<Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
 							<SheetTrigger asChild>
@@ -276,9 +273,9 @@ export function Navbar() {
 										</div>
 										<div className="px-4">
 											<Button
-												onClick={() =>
-													scrollToSection(`#${SECTION_IDS.contact}`)
-												}
+												onClick={() => {
+													window.open("mailto:hezaerd@gmail.com", "_blank");
+												}}
 												className="w-full bg-primary hover:bg-primary/90 text-primary-foreground border-0 transition-all duration-300"
 											>
 												Get In Touch
