@@ -3,8 +3,7 @@
 import { FolderGit2, Mail, User, Wrench } from "lucide-react";
 import { motion } from "motion/react";
 import Image from "next/image";
-import { useState } from "react";
-import { HoverVideo } from "@/components/ui/hover-video";
+import { useRef, useState } from "react";
 
 interface ProjectCardProps {
 	project: {
@@ -23,14 +22,22 @@ interface ProjectCardProps {
 
 export function ProjectCard({ project, index, onClick, onHover, onLeave }: ProjectCardProps) {
 	const [isHovered, setIsHovered] = useState(false);
+	const videoRef = useRef<HTMLVideoElement>(null);
 
 	const handleMouseEnter = () => {
 		setIsHovered(true);
+		if (videoRef.current && project.previewVideo) {
+			videoRef.current.play().catch(console.error);
+		}
 		onHover?.();
 	};
 
 	const handleMouseLeave = () => {
 		setIsHovered(false);
+		if (videoRef.current && project.previewVideo) {
+			videoRef.current.pause();
+			videoRef.current.currentTime = 0;
+		}
 		onLeave?.();
 	};
 
@@ -57,28 +64,15 @@ export function ProjectCard({ project, index, onClick, onHover, onLeave }: Proje
 					transition={{ duration: 0.2 }}
 				>
 					{project.previewImage ? (
-						project.previewVideo ? (
-							/* Use HoverVideo component for image + video - it handles everything */
-							<HoverVideo
-								className="w-full h-full rounded-none"
-								image={
-									<Image
-										src={project.previewImage}
-										alt={`${project.title} preview`}
-										width={400}
-										height={240}
-										sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-										priority={index < 3}
-									/>
-								}
-								video={
-									// biome-ignore lint/a11y/useMediaCaption: decorative preview video doesn't need captions
-									<video src={project.previewVideo} />
-								}
-							/>
-						) : (
-							/* Image only with overlay */
-							<>
+						<>
+							{/* Preview Image */}
+							<motion.div
+								className="w-full h-full relative"
+								animate={{
+									opacity: isHovered && project.previewVideo ? 0 : 1,
+								}}
+								transition={{ duration: 0.3 }}
+							>
 								<Image
 									src={project.previewImage}
 									alt={`${project.title} preview`}
@@ -87,19 +81,38 @@ export function ProjectCard({ project, index, onClick, onHover, onLeave }: Proje
 									sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
 									priority={index < 3}
 								/>
-								<motion.div
-									className="absolute inset-0 bg-black/20 flex items-center justify-center"
+							</motion.div>
+
+							{/* Preview Video (shown on hover) */}
+							{project.previewVideo && (
+								<motion.video
+									ref={videoRef}
+									src={project.previewVideo}
+									className="absolute inset-0 w-full h-full object-cover"
+									muted
+									loop
+									playsInline
+									initial={{ opacity: 0 }}
 									animate={{
-										opacity: isHovered ? 0.1 : 0.3,
+										opacity: isHovered ? 1 : 0,
 									}}
 									transition={{ duration: 0.3 }}
-								>
-									<span className="text-white text-lg font-bold p-4 text-center drop-shadow-lg">
-										{project.highlight || project.title}
-									</span>
-								</motion.div>
-							</>
-						)
+								/>
+							)}
+
+							{/* Highlight overlay with low opacity on hover */}
+							<motion.div
+								className="absolute inset-0 bg-black/20 flex items-center justify-center"
+								animate={{
+									opacity: isHovered ? 0.1 : 0.3,
+								}}
+								transition={{ duration: 0.3 }}
+							>
+								<span className="text-white text-lg font-bold p-4 text-center drop-shadow-lg">
+									{project.highlight || project.title}
+								</span>
+							</motion.div>
+						</>
 					) : (
 						/* Fallback to original gradient design */
 						<motion.div
