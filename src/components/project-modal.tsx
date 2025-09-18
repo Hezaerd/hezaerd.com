@@ -10,6 +10,7 @@ import {
 	Users,
 	Wrench,
 } from "lucide-react";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
@@ -24,9 +25,10 @@ interface ProjectModalProps {
 	project: Project;
 	isOpen: boolean;
 	onClose: () => void;
+	initialVideoTime?: number;
 }
 
-export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
+export function ProjectModal({ project, isOpen, onClose, initialVideoTime = 0 }: ProjectModalProps) {
 	const handleSourcesClick = () => {
 		if (project.sourcesUrl) {
 			window.open(project.sourcesUrl, "_blank");
@@ -38,18 +40,70 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
 			window.open(project.releaseUrl, "_blank");
 		}
 	};
+
+	const handleVideoLoad = (videoElement: HTMLVideoElement) => {
+		if (initialVideoTime && initialVideoTime > 0) {
+			videoElement.currentTime = initialVideoTime;
+		}
+	};
 	return (
 		<Dialog open={isOpen} onOpenChange={onClose}>
-			<DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-				<DialogHeader>
-					<DialogTitle className="text-2xl font-bold flex items-center gap-2">
-						<Wrench className="w-6 h-6 text-primary" />
-						{project.title}
-					</DialogTitle>
-					<DialogDescription className="text-base">
-						{project.longDescription || project.description}
-					</DialogDescription>
-				</DialogHeader>
+			<DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto p-0">
+				{/* Media Banner - Notion-style at the very top */}
+				<div className="relative w-full h-64 md:h-80 bg-secondary/30 overflow-hidden">
+					{project.previewVideo ? (
+						<video
+							className="w-full h-full object-cover"
+							autoPlay
+							loop
+							muted
+							playsInline
+							onLoadedData={(e) => handleVideoLoad(e.currentTarget)}
+						>
+							<source src={project.previewVideo} type="video/mp4" />
+							<source src={project.previewVideo} type="video/webm" />
+							{/* Fallback to image if video fails */}
+							{project.previewImage && (
+								<Image
+									src={project.previewImage}
+									alt={project.title}
+									fill
+									className="object-cover"
+								/>
+							)}
+						</video>
+					) : project.previewImage ? (
+						<Image
+							src={project.previewImage}
+							alt={project.title}
+							fill
+							className="object-cover"
+							priority
+						/>
+					) : project.highlight ? (
+						<div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/20 to-primary/10">
+							<h2 className="text-3xl md:text-4xl font-bold text-primary text-center px-4">
+								{project.highlight}
+							</h2>
+						</div>
+					) : (
+						<div className="w-full h-full flex items-center justify-center bg-secondary/50">
+							<Wrench className="w-16 h-16 text-muted-foreground" />
+						</div>
+					)}
+				</div>
+
+				{/* Content with padding */}
+				<div className="p-6">
+					<DialogHeader className="mb-6">
+						<DialogTitle className="text-2xl font-bold flex items-center gap-2">
+							<Wrench className="w-6 h-6 text-primary" />
+							{project.title}
+						</DialogTitle>
+						<DialogDescription className="text-base">
+							{project.longDescription || project.description}
+						</DialogDescription>
+					</DialogHeader>
 
 				<div className="space-y-6">
 					{/* Project Details Grid */}
@@ -137,7 +191,8 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
 					)}
 
 					{/* Features & Challenges */}
-					{((project.features && project.features.length > 0) || (project.challenges && project.challenges.length > 0)) && (
+					{((project.features && project.features.length > 0) ||
+						(project.challenges && project.challenges.length > 0)) && (
 						<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 							{/* Features */}
 							{project.features && project.features.length > 0 && (
@@ -191,6 +246,7 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
 							))}
 						</div>
 					</div>
+				</div>
 				</div>
 			</DialogContent>
 		</Dialog>
