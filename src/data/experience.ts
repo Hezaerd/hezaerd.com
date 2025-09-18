@@ -15,28 +15,32 @@ export interface Education {
 
 export const workExperience: WorkExperience[] = [
 	{
-		title: "Senior Game Engine Developer",
-		company: "TechCorp Studios",
-		period: "2022 - Present",
-		description:
-			"Led the development of a custom 3D engine and tools for a cross-platform game project.",
+		title: "Full stack & game developer",
+		company: "Hectiq",
+		period: "2024 (4 months)",
+		description: "Prototyping and development in autonomous mode of both a Twitch extension and integration for a game.",
 		color: "primary",
 	},
 	{
-		title: "Gameplay Programmer",
-		company: "GameDev Solutions",
-		period: "2020 - 2022",
-		description:
-			"Implemented core gameplay systems and optimized performance for shipped titles.",
+		title: "Game developer",
+		company: "Vagabond",
+		period: "2022 (2 months)",
+		description: "Development of a VR serious game to talk about poverty.",
 		color: "accent",
 	},
 ];
 
 export const education: Education[] = [
+    {
+        degree: "Game Programming",
+        school: "Isart Digital Paris",
+        period: "2023 - 2025",
+        description: ""
+    },
 	{
-		degree: "AEC Game Engine Programing",
+		degree: "Game Engine Programing",
 		school: "Isart Digital Montreal",
-		period: "2018 - 2020",
-		description: "skibidi feur",
+		period: "2021 - 2023",
+		description: "",
 	},
 ];
