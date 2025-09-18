@@ -3,7 +3,6 @@ import { GitHubStatsSkeleton } from "@/components/github/github-stats-skeleton";
 import { Navbar } from "@/components/navbar";
 import {
 	About,
-	Contact,
 	Footer,
 	GithubStats,
 	Hero,
@@ -26,7 +25,6 @@ export default function Home() {
 				<GithubStats />
 			</Suspense>
 
-			<Contact />
 			<Footer />
 		</div>
 	);
