@@ -15,10 +15,12 @@ import { SECTION_IDS } from "@/lib/sections";
 export const experimental_ppr = true;
 
 interface HomeProps {
-	searchParams?: { [key: string]: string | string[] | undefined };
+	searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
-export default function Home({ searchParams }: HomeProps) {
+export default async function Home({ searchParams }: HomeProps) {
+	const resolvedSearchParams = await searchParams;
+
 	return (
 		<div className="min-h-screen bg-background">
 			<Navbar />
@@ -31,7 +33,7 @@ export default function Home({ searchParams }: HomeProps) {
 				<GithubStats id={SECTION_IDS.githubStats} />
 			</Suspense>
 
-			<SpotifyStats searchParams={searchParams} />
+			<SpotifyStats searchParams={resolvedSearchParams} />
 
 			<Footer />
 		</div>
