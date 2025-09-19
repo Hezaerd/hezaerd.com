@@ -1,5 +1,4 @@
 import { ExternalLink } from "lucide-react";
-import { AnimatedFadeIn } from "@/components/ui/animated-wrapper";
 import { CurrentYear } from "@/components/ui/current-year";
 import { SocialButtons } from "@/components/ui/social-buttons";
 import { personalInfo } from "@/data/personal-info";
@@ -9,7 +8,7 @@ export function Footer() {
 		<footer className="bg-card border-t border-border py-12 px-4 sm:px-6 lg:px-8">
 			<div className="max-w-7xl mx-auto">
 				<div className="flex flex-col md:flex-row justify-between items-center gap-6">
-					<AnimatedFadeIn className="text-center md:text-left">
+					<div className="text-center md:text-left">
 						<p className="text-muted-foreground mb-2">
 							© <CurrentYear /> {personalInfo.name}. All rights reserved.
 						</p>
@@ -25,11 +24,11 @@ export function Footer() {
 								<ExternalLink className="w-3 h-3" />
 							</a>
 						</p>
-					</AnimatedFadeIn>
+					</div>
 
-					<AnimatedFadeIn className="flex gap-4" delay={0.1}>
+					<div className="flex gap-4">
 						<SocialButtons />
-					</AnimatedFadeIn>
+					</div>
 				</div>
 			</div>
 		</footer>

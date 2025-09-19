@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "motion/react";
 import { useState } from "react";
 import type { ContributionDay, GitHubContributions } from "@/types/github";
 
@@ -87,7 +86,11 @@ export function CommitGraph({
 		return `${count} contributions`;
 	};
 
-	const monthLabels: { month: string; weekIndex: number; leftOffset: number }[] = [];
+	const monthLabels: {
+		month: string;
+		weekIndex: number;
+		leftOffset: number;
+	}[] = [];
 	const processedMonths = new Set<string>();
 
 	const dayLabelsColumnRenderedWidth = 32 + 8;
@@ -98,11 +101,12 @@ export function CommitGraph({
 			const monthKey = `${firstDayDate.getFullYear()}-${firstDayDate.getMonth()}`;
 
 			if (!processedMonths.has(monthKey) && firstDayDate.getDate() <= 7) {
-				const leftOffset = dayLabelsColumnRenderedWidth + (weekIndex * CELL_DIMENSION_PX);
+				const leftOffset =
+					dayLabelsColumnRenderedWidth + weekIndex * CELL_DIMENSION_PX;
 				monthLabels.push({
 					month: MONTHS[firstDayDate.getMonth()],
 					weekIndex: weekIndex,
-					leftOffset: leftOffset
+					leftOffset: leftOffset,
 				});
 				processedMonths.add(monthKey);
 			}
@@ -158,7 +162,7 @@ export function CommitGraph({
 									key={day}
 									className="text-xs text-muted-foreground h-3 flex items-center justify-end"
 								>
-									{(index === 1 || index === 3 || index === 5) ? day : ""}
+									{index === 1 || index === 3 || index === 5 ? day : ""}
 								</div>
 							))}
 						</div>
@@ -166,30 +170,36 @@ export function CommitGraph({
 						<div className="flex gap-1 min-w-fit">
 							{contributions.weeks.map((week, weekIndex) => (
 								<div key={week.firstDay} className="flex flex-col gap-1">
-									{Array.from({ length: new Date(week.firstDay).getDay() }).map((_, i) => (
-										<div key={`empty-${week.firstDay}-${i}`} className="w-3 h-3" />
-									))}
+									{Array.from({ length: new Date(week.firstDay).getDay() }).map(
+										(_, i) => (
+											<div
+												key={`empty-${week.firstDay}-${i}`}
+												className="w-3 h-3"
+											/>
+										),
+									)}
 									{week.contributionDays.map((day, dayIndex) => (
-										<motion.div
+										<button
 											key={day.date}
-											className={`w-4 h-4 rounded-sm cursor-pointer transition-all duration-200 hover:ring-1 hover:ring-primary hover:ring-offset-1 ${getContributionColor(
+											type="button"
+											className={`w-4 h-4 rounded-sm cursor-pointer transition-all duration-200 hover:ring-1 hover:ring-primary hover:ring-offset-1 hover:scale-110 ${getContributionColor(
 												day.level,
 											)}`}
-											whileHover={{ scale: 1.15 }}
 											onMouseEnter={(e) => handleMouseEnter(day, e)}
 											onMouseLeave={handleMouseLeave}
-											initial={{ opacity: 0, scale: 0.8 }}
-											animate={{ opacity: 1, scale: 1 }}
-											transition={{
-												duration: 0.2,
-												delay: (weekIndex * 7 + dayIndex) * 0.001,
-											}}
+											aria-label={`${day.count} contributions on ${day.date}`}
 										/>
 									))}
 									{Array.from({
-										length: 7 - (new Date(week.firstDay).getDay() + week.contributionDays.length)
+										length:
+											7 -
+											(new Date(week.firstDay).getDay() +
+												week.contributionDays.length),
 									}).map((_, i) => (
-										<div key={`empty-end-${week.firstDay}-${i}`} className="w-3 h-3" />
+										<div
+											key={`empty-end-${week.firstDay}-${i}`}
+											className="w-3 h-3"
+										/>
 									))}
 								</div>
 							))}
@@ -197,16 +207,13 @@ export function CommitGraph({
 					</div>
 
 					{tooltip && (
-						<motion.div
+						<div
 							className="fixed z-50 px-3 py-2 text-xs bg-popover border border-border rounded-md shadow-lg pointer-events-none max-w-xs"
 							style={{
 								left: tooltipPosition.x,
 								top: tooltipPosition.y,
 								transform: "translateX(-50%) translateY(-100%)",
 							}}
-							initial={{ opacity: 0, y: 10 }}
-							animate={{ opacity: 1, y: 0 }}
-							exit={{ opacity: 0, y: 10 }}
 						>
 							<div className="font-medium text-popover-foreground">
 								{formatContributionText(tooltip.count)}
@@ -214,7 +221,7 @@ export function CommitGraph({
 							<div className="text-muted-foreground">
 								{formatTooltipDate(tooltip.date)}
 							</div>
-						</motion.div>
+						</div>
 					)}
 				</div>
 			</div>

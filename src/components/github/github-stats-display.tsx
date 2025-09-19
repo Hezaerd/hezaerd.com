@@ -1,7 +1,6 @@
 "use client";
 
 import { Book, Code, ExternalLink, GitFork, Star } from "lucide-react";
-import { motion } from "motion/react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { ClientDate } from "@/components/ui/client-date";
@@ -61,11 +60,7 @@ export function GitHubStatsDisplay({
 		<div className={`space-y-6 ${className}`}>
 			{/* Overview Stats */}
 			<div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-				<motion.div
-					initial={{ opacity: 0, y: 20 }}
-					animate={{ opacity: 1, y: 0 }}
-					transition={{ duration: 0.5, delay: 0.1 }}
-				>
+				<div>
 					<Card className="text-center">
 						<CardContent className="p-6">
 							<div className="flex items-center justify-center mb-2">
@@ -77,13 +72,9 @@ export function GitHubStatsDisplay({
 							<p className="text-sm text-muted-foreground">Total Stars</p>
 						</CardContent>
 					</Card>
-				</motion.div>
+				</div>
 
-				<motion.div
-					initial={{ opacity: 0, y: 20 }}
-					animate={{ opacity: 1, y: 0 }}
-					transition={{ duration: 0.5, delay: 0.2 }}
-				>
+				<div>
 					<Card className="text-center">
 						<CardContent className="p-6">
 							<div className="flex items-center justify-center mb-2">
@@ -95,13 +86,9 @@ export function GitHubStatsDisplay({
 							<p className="text-sm text-muted-foreground">Public Repos</p>
 						</CardContent>
 					</Card>
-				</motion.div>
+				</div>
 
-				<motion.div
-					initial={{ opacity: 0, y: 20 }}
-					animate={{ opacity: 1, y: 0 }}
-					transition={{ duration: 0.5, delay: 0.3 }}
-				>
+				<div>
 					<Card className="text-center">
 						<CardContent className="p-6">
 							<div className="flex items-center justify-center mb-2">
@@ -113,16 +100,12 @@ export function GitHubStatsDisplay({
 							<p className="text-sm text-muted-foreground">Top Language</p>
 						</CardContent>
 					</Card>
-				</motion.div>
+				</div>
 			</div>
 
 			{/* Language Breakdown */}
 			{topLanguages.length > 0 && (
-				<motion.div
-					initial={{ opacity: 0, y: 20 }}
-					animate={{ opacity: 1, y: 0 }}
-					transition={{ duration: 0.5, delay: 0.4 }}
-				>
+				<div>
 					<Card>
 						<CardContent className="p-6">
 							<h3 className="text-lg font-semibold mb-4 flex items-center">
@@ -136,12 +119,9 @@ export function GitHubStatsDisplay({
 										100
 									).toFixed(1);
 									return (
-										<motion.div
+										<div
 											key={language}
 											className="flex items-center justify-between"
-											initial={{ opacity: 0, x: -20 }}
-											animate={{ opacity: 1, x: 0 }}
-											transition={{ duration: 0.3, delay: 0.1 * index }}
 										>
 											<div className="flex items-center space-x-3">
 												<div
@@ -155,22 +135,18 @@ export function GitHubStatsDisplay({
 													{formatBytes(bytes)}
 												</div>
 											</div>
-										</motion.div>
+										</div>
 									);
 								})}
 							</div>
 						</CardContent>
 					</Card>
-				</motion.div>
+				</div>
 			)}
 
 			{/* Top Repositories */}
 			{topRepositories.length > 0 && (
-				<motion.div
-					initial={{ opacity: 0, y: 20 }}
-					animate={{ opacity: 1, y: 0 }}
-					transition={{ duration: 0.5, delay: 0.5 }}
-				>
+				<div>
 					<Card>
 						<CardContent className="p-6">
 							<h3 className="text-lg font-semibold mb-4 flex items-center">
@@ -179,12 +155,9 @@ export function GitHubStatsDisplay({
 							</h3>
 							<div className="space-y-4">
 								{topRepositories.slice(0, 4).map((repo, index) => (
-									<motion.div
+									<div
 										key={repo.id}
 										className="border border-border rounded-lg p-4 hover:bg-accent/50 transition-colors"
-										initial={{ opacity: 0, y: 10 }}
-										animate={{ opacity: 1, y: 0 }}
-										transition={{ duration: 0.3, delay: 0.1 * index }}
 									>
 										<div className="flex items-start justify-between">
 											<div className="flex-1">
@@ -224,12 +197,12 @@ export function GitHubStatsDisplay({
 												</div>
 											</div>
 										</div>
-									</motion.div>
+									</div>
 								))}
 							</div>
 						</CardContent>
 					</Card>
-				</motion.div>
+				</div>
 			)}
 		</div>
 	);
