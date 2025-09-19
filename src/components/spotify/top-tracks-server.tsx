@@ -31,7 +31,10 @@ export async function TopTracksServer({ timeRange }: TopTracksServerProps) {
 							<div className="flex items-center gap-3 p-2 rounded-lg hover:bg-muted/50 transition-colors">
 								<div className="relative">
 									<Image
-										src={topTracks[index].album.images[0]?.url || "/placeholder-album.png"}
+										src={
+											topTracks[index].album.images[0]?.url ||
+											"/placeholder-album.png"
+										}
 										alt={topTracks[index].album.name}
 										width={48}
 										height={48}
@@ -45,7 +48,9 @@ export async function TopTracksServer({ timeRange }: TopTracksServerProps) {
 									</Badge>
 								</div>
 								<div className="flex-1 min-w-0">
-									<h4 className="font-medium truncate">{topTracks[index].name}</h4>
+									<h4 className="font-medium truncate">
+										{topTracks[index].name}
+									</h4>
 									<p className="text-sm text-muted-foreground truncate">
 										{topTracks[index].artists.map((a) => a.name).join(", ")}
 									</p>

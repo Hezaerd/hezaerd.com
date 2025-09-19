@@ -35,9 +35,11 @@ export function SpotifyStatsClient() {
 
 	// Initialize time range from URL parameters or default
 	const urlTimeRange = searchParams.get("timeRange") as TimeRange;
-	const initialTimeRange = urlTimeRange && ["short_term", "medium_term", "long_term"].includes(urlTimeRange)
-		? urlTimeRange
-		: "medium_term";
+	const initialTimeRange =
+		urlTimeRange &&
+		["short_term", "medium_term", "long_term"].includes(urlTimeRange)
+			? urlTimeRange
+			: "medium_term";
 	const [timeRange, setTimeRange] = useState<TimeRange>(initialTimeRange);
 
 	const fetchSpotifyStats = useCallback(async (range: TimeRange) => {
@@ -79,7 +81,11 @@ export function SpotifyStatsClient() {
 	// Update time range when URL parameters change
 	useEffect(() => {
 		const urlTimeRange = searchParams.get("timeRange") as TimeRange;
-		if (urlTimeRange && ["short_term", "medium_term", "long_term"].includes(urlTimeRange) && urlTimeRange !== timeRange) {
+		if (
+			urlTimeRange &&
+			["short_term", "medium_term", "long_term"].includes(urlTimeRange) &&
+			urlTimeRange !== timeRange
+		) {
 			setTimeRange(urlTimeRange);
 		}
 	}, [searchParams, timeRange]);
@@ -163,186 +169,221 @@ export function SpotifyStatsClient() {
 				<div className="space-y-8">
 					{/* Time Range Selector */}
 					<AnimatedFadeIn className="flex flex-wrap justify-center gap-2">
-				{TIME_RANGES.map((range) => (
-					<Button
-						key={range.value}
-						variant={timeRange === range.value ? "default" : "outline"}
-						onClick={() => handleTimeRangeChange(range.value)}
-						className="flex flex-col items-center gap-1 h-auto py-3 px-4"
-					>
-						<span className="font-medium">{range.label}</span>
-						<span className="text-xs opacity-70">{range.description}</span>
-					</Button>
-				))}
-			</AnimatedFadeIn>
-
-			{/* Stats Table */}
-			<Card>
-				<CardContent className="p-0">
-					<div className="grid grid-cols-3">
-						{/* Headers */}
-						<div className="border-r border-border">
-							<div className="p-6 border-b border-border">
-								<CardTitle className="flex items-center gap-2">
-									<Users className="w-5 h-5 text-primary" />
-									Top Artists
-								</CardTitle>
-							</div>
-						</div>
-						<div className="border-r border-border">
-							<div className="p-6 border-b border-border">
-								<CardTitle className="flex items-center gap-2">
-									<Music className="w-5 h-5 text-primary" />
-									Top Tracks
-								</CardTitle>
-							</div>
-						</div>
-						<div>
-							<div className="p-6 border-b border-border">
-								<CardTitle className="flex items-center gap-2">
-									<Clock className="w-5 h-5 text-primary" />
-									Recently Played
-								</CardTitle>
-							</div>
-						</div>
-
-						{/* Rows */}
-						{Array.from({ length: 5 }).map((_, rowIndex) => (
-							<React.Fragment key={`spotify-stats-row-${rowIndex + 1}`}>
-								{/* Top Artists Row */}
-								<div className="border-r border-border">
-									<AnimatedFadeIn delay={0.1 + rowIndex * 0.1}>
-										<div className="p-4 border-b border-border last:border-b-0">
-											{stats.topArtists[rowIndex] ? (
-												<div className="flex items-center gap-3">
-													<div className="relative">
-														<Image
-															src={stats.topArtists[rowIndex].images[0]?.url || "/placeholder-artist.png"}
-															alt={stats.topArtists[rowIndex].name}
-															width={48}
-															height={48}
-															className="w-12 h-12 rounded-full object-cover"
-														/>
-														<Badge
-															variant="secondary"
-															className="absolute -top-1 -right-1 w-5 h-5 p-0 flex items-center justify-center text-xs"
-														>
-															{rowIndex + 1}
-														</Badge>
-													</div>
-													<div className="flex-1 min-w-0">
-														<h4 className="font-medium truncate">{stats.topArtists[rowIndex].name}</h4>
-														<p className="text-sm text-muted-foreground truncate">
-															{stats.topArtists[rowIndex].genres.slice(0, 2).join(", ")}
-														</p>
-													</div>
-													<a
-														href={stats.topArtists[rowIndex].external_urls.spotify}
-														target="_blank"
-														rel="noopener noreferrer"
-														className="text-primary hover:text-primary/80 transition-colors"
-													>
-														<Music className="w-4 h-4" />
-													</a>
-												</div>
-											) : (
-												<div className="h-16 flex items-center justify-center text-muted-foreground">
-													—
-												</div>
-											)}
-										</div>
-									</AnimatedFadeIn>
-								</div>
-
-								{/* Top Tracks Row */}
-								<div className="border-r border-border">
-									<AnimatedFadeIn delay={0.2 + rowIndex * 0.1}>
-										<div className="p-4 border-b border-border last:border-b-0">
-											{stats.topTracks[rowIndex] ? (
-												<div className="flex items-center gap-3">
-													<div className="relative">
-														<Image
-															src={stats.topTracks[rowIndex].album.images[0]?.url || "/placeholder-album.png"}
-															alt={stats.topTracks[rowIndex].album.name}
-															width={48}
-															height={48}
-															className="w-12 h-12 rounded object-cover"
-														/>
-														<Badge
-															variant="secondary"
-															className="absolute -top-1 -right-1 w-5 h-5 p-0 flex items-center justify-center text-xs"
-														>
-															{rowIndex + 1}
-														</Badge>
-													</div>
-													<div className="flex-1 min-w-0">
-														<h4 className="font-medium truncate">{stats.topTracks[rowIndex].name}</h4>
-														<p className="text-sm text-muted-foreground truncate">
-															{stats.topTracks[rowIndex].artists.map((a) => a.name).join(", ")}
-														</p>
-													</div>
-													<a
-														href={stats.topTracks[rowIndex].external_urls.spotify}
-														target="_blank"
-														rel="noopener noreferrer"
-														className="text-primary hover:text-primary/80 transition-colors"
-													>
-														<Music className="w-4 h-4" />
-													</a>
-												</div>
-											) : (
-												<div className="h-16 flex items-center justify-center text-muted-foreground">
-													—
-												</div>
-											)}
-										</div>
-									</AnimatedFadeIn>
-								</div>
-
-								{/* Recently Played Row */}
-								<div>
-									<AnimatedFadeIn delay={0.3 + rowIndex * 0.1}>
-										<div className="p-4 border-b border-border last:border-b-0">
-											{stats.recentlyPlayed[rowIndex] ? (
-												<div className="flex items-center gap-3">
-													<Image
-														src={stats.recentlyPlayed[rowIndex].track.album.images[0]?.url || "/placeholder-album.png"}
-														alt={stats.recentlyPlayed[rowIndex].track.album.name}
-														width={48}
-														height={48}
-														className="w-12 h-12 rounded object-cover"
-													/>
-													<div className="flex-1 min-w-0">
-														<h4 className="font-medium truncate">{stats.recentlyPlayed[rowIndex].track.name}</h4>
-														<p className="text-sm text-muted-foreground truncate">
-															{stats.recentlyPlayed[rowIndex].track.artists.map((a) => a.name).join(", ")}
-														</p>
-														<p className="text-xs text-muted-foreground">
-															{new Date(stats.recentlyPlayed[rowIndex].played_at).toLocaleDateString()}
-														</p>
-													</div>
-													<a
-														href={stats.recentlyPlayed[rowIndex].track.external_urls.spotify}
-														target="_blank"
-														rel="noopener noreferrer"
-														className="text-primary hover:text-primary/80 transition-colors"
-													>
-														<Music className="w-4 h-4" />
-													</a>
-												</div>
-											) : (
-												<div className="h-16 flex items-center justify-center text-muted-foreground">
-													—
-												</div>
-											)}
-										</div>
-									</AnimatedFadeIn>
-								</div>
-							</React.Fragment>
+						{TIME_RANGES.map((range) => (
+							<Button
+								key={range.value}
+								variant={timeRange === range.value ? "default" : "outline"}
+								onClick={() => handleTimeRangeChange(range.value)}
+								className="flex flex-col items-center gap-1 h-auto py-3 px-4"
+							>
+								<span className="font-medium">{range.label}</span>
+								<span className="text-xs opacity-70">{range.description}</span>
+							</Button>
 						))}
-					</div>
-				</CardContent>
-			</Card>
+					</AnimatedFadeIn>
+
+					{/* Stats Table */}
+					<Card>
+						<CardContent className="p-0">
+							<div className="grid grid-cols-3">
+								{/* Headers */}
+								<div className="border-r border-border">
+									<div className="p-6 border-b border-border">
+										<CardTitle className="flex items-center gap-2">
+											<Users className="w-5 h-5 text-primary" />
+											Top Artists
+										</CardTitle>
+									</div>
+								</div>
+								<div className="border-r border-border">
+									<div className="p-6 border-b border-border">
+										<CardTitle className="flex items-center gap-2">
+											<Music className="w-5 h-5 text-primary" />
+											Top Tracks
+										</CardTitle>
+									</div>
+								</div>
+								<div>
+									<div className="p-6 border-b border-border">
+										<CardTitle className="flex items-center gap-2">
+											<Clock className="w-5 h-5 text-primary" />
+											Recently Played
+										</CardTitle>
+									</div>
+								</div>
+
+								{/* Rows */}
+								{Array.from({ length: 5 }).map((_, rowIndex) => (
+									<React.Fragment key={`spotify-stats-row-${rowIndex + 1}`}>
+										{/* Top Artists Row */}
+										<div className="border-r border-border">
+											<AnimatedFadeIn delay={0.1 + rowIndex * 0.1}>
+												<div className="p-4 border-b border-border last:border-b-0">
+													{stats.topArtists[rowIndex] ? (
+														<div className="flex items-center gap-3">
+															<div className="relative">
+																<Image
+																	src={
+																		stats.topArtists[rowIndex].images[0]?.url ||
+																		"/placeholder-artist.png"
+																	}
+																	alt={stats.topArtists[rowIndex].name}
+																	width={48}
+																	height={48}
+																	className="w-12 h-12 rounded-full object-cover"
+																/>
+																<Badge
+																	variant="secondary"
+																	className="absolute -top-1 -right-1 w-5 h-5 p-0 flex items-center justify-center text-xs"
+																>
+																	{rowIndex + 1}
+																</Badge>
+															</div>
+															<div className="flex-1 min-w-0">
+																<h4 className="font-medium truncate">
+																	{stats.topArtists[rowIndex].name}
+																</h4>
+																<p className="text-sm text-muted-foreground truncate">
+																	{stats.topArtists[rowIndex].genres
+																		.slice(0, 2)
+																		.join(", ")}
+																</p>
+															</div>
+															<a
+																href={
+																	stats.topArtists[rowIndex].external_urls
+																		.spotify
+																}
+																target="_blank"
+																rel="noopener noreferrer"
+																className="text-primary hover:text-primary/80 transition-colors"
+															>
+																<Music className="w-4 h-4" />
+															</a>
+														</div>
+													) : (
+														<div className="h-16 flex items-center justify-center text-muted-foreground">
+															—
+														</div>
+													)}
+												</div>
+											</AnimatedFadeIn>
+										</div>
+
+										{/* Top Tracks Row */}
+										<div className="border-r border-border">
+											<AnimatedFadeIn delay={0.2 + rowIndex * 0.1}>
+												<div className="p-4 border-b border-border last:border-b-0">
+													{stats.topTracks[rowIndex] ? (
+														<div className="flex items-center gap-3">
+															<div className="relative">
+																<Image
+																	src={
+																		stats.topTracks[rowIndex].album.images[0]
+																			?.url || "/placeholder-album.png"
+																	}
+																	alt={stats.topTracks[rowIndex].album.name}
+																	width={48}
+																	height={48}
+																	className="w-12 h-12 rounded object-cover"
+																/>
+																<Badge
+																	variant="secondary"
+																	className="absolute -top-1 -right-1 w-5 h-5 p-0 flex items-center justify-center text-xs"
+																>
+																	{rowIndex + 1}
+																</Badge>
+															</div>
+															<div className="flex-1 min-w-0">
+																<h4 className="font-medium truncate">
+																	{stats.topTracks[rowIndex].name}
+																</h4>
+																<p className="text-sm text-muted-foreground truncate">
+																	{stats.topTracks[rowIndex].artists
+																		.map((a) => a.name)
+																		.join(", ")}
+																</p>
+															</div>
+															<a
+																href={
+																	stats.topTracks[rowIndex].external_urls
+																		.spotify
+																}
+																target="_blank"
+																rel="noopener noreferrer"
+																className="text-primary hover:text-primary/80 transition-colors"
+															>
+																<Music className="w-4 h-4" />
+															</a>
+														</div>
+													) : (
+														<div className="h-16 flex items-center justify-center text-muted-foreground">
+															—
+														</div>
+													)}
+												</div>
+											</AnimatedFadeIn>
+										</div>
+
+										{/* Recently Played Row */}
+										<div>
+											<AnimatedFadeIn delay={0.3 + rowIndex * 0.1}>
+												<div className="p-4 border-b border-border last:border-b-0">
+													{stats.recentlyPlayed[rowIndex] ? (
+														<div className="flex items-center gap-3">
+															<Image
+																src={
+																	stats.recentlyPlayed[rowIndex].track.album
+																		.images[0]?.url || "/placeholder-album.png"
+																}
+																alt={
+																	stats.recentlyPlayed[rowIndex].track.album
+																		.name
+																}
+																width={48}
+																height={48}
+																className="w-12 h-12 rounded object-cover"
+															/>
+															<div className="flex-1 min-w-0">
+																<h4 className="font-medium truncate">
+																	{stats.recentlyPlayed[rowIndex].track.name}
+																</h4>
+																<p className="text-sm text-muted-foreground truncate">
+																	{stats.recentlyPlayed[rowIndex].track.artists
+																		.map((a) => a.name)
+																		.join(", ")}
+																</p>
+																<p className="text-xs text-muted-foreground">
+																	{new Date(
+																		stats.recentlyPlayed[rowIndex].played_at,
+																	).toLocaleDateString()}
+																</p>
+															</div>
+															<a
+																href={
+																	stats.recentlyPlayed[rowIndex].track
+																		.external_urls.spotify
+																}
+																target="_blank"
+																rel="noopener noreferrer"
+																className="text-primary hover:text-primary/80 transition-colors"
+															>
+																<Music className="w-4 h-4" />
+															</a>
+														</div>
+													) : (
+														<div className="h-16 flex items-center justify-center text-muted-foreground">
+															—
+														</div>
+													)}
+												</div>
+											</AnimatedFadeIn>
+										</div>
+									</React.Fragment>
+								))}
+							</div>
+						</CardContent>
+					</Card>
 				</div>
 			</div>
 		</section>

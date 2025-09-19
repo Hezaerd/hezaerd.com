@@ -18,8 +18,6 @@ const nextConfig: NextConfig = {
             '@radix-ui/react-progress',
             '@radix-ui/react-slot',
             '@radix-ui/react-tabs',
-            'sonner',
-            'motion',
         ]
     },
     logging: {

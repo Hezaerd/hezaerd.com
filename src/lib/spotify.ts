@@ -39,58 +39,62 @@ async function getSpotifyAccessToken(): Promise<string> {
 }
 
 // Cache top artists for 1 hour since they don't change frequently
-export const getTopArtists = cache(async (timeRange: TimeRange): Promise<SpotifyArtist[]> => {
-	try {
-		const accessToken = await getSpotifyAccessToken();
+export const getTopArtists = cache(
+	async (timeRange: TimeRange): Promise<SpotifyArtist[]> => {
+		try {
+			const accessToken = await getSpotifyAccessToken();
 
-		const response = await fetch(
-			`https://api.spotify.com/v1/me/top/artists?time_range=${timeRange}&limit=10`,
-			{
-				headers: {
-					Authorization: `Bearer ${accessToken}`,
+			const response = await fetch(
+				`https://api.spotify.com/v1/me/top/artists?time_range=${timeRange}&limit=10`,
+				{
+					headers: {
+						Authorization: `Bearer ${accessToken}`,
+					},
+					next: { revalidate: 3600 }, // Cache for 1 hour
 				},
-				next: { revalidate: 3600 }, // Cache for 1 hour
+			);
+
+			if (!response.ok) {
+				throw new Error(`Failed to fetch top artists: ${response.status}`);
 			}
-		);
 
-		if (!response.ok) {
-			throw new Error(`Failed to fetch top artists: ${response.status}`);
+			const data: SpotifyTopArtistsResponse = await response.json();
+			return data.items;
+		} catch (error) {
+			console.error("Error fetching top artists:", error);
+			return [];
 		}
-
-		const data: SpotifyTopArtistsResponse = await response.json();
-		return data.items;
-	} catch (error) {
-		console.error("Error fetching top artists:", error);
-		return [];
-	}
-});
+	},
+);
 
 // Cache top tracks for 1 hour since they don't change frequently
-export const getTopTracks = cache(async (timeRange: TimeRange): Promise<SpotifyTrack[]> => {
-	try {
-		const accessToken = await getSpotifyAccessToken();
+export const getTopTracks = cache(
+	async (timeRange: TimeRange): Promise<SpotifyTrack[]> => {
+		try {
+			const accessToken = await getSpotifyAccessToken();
 
-		const response = await fetch(
-			`https://api.spotify.com/v1/me/top/tracks?time_range=${timeRange}&limit=10`,
-			{
-				headers: {
-					Authorization: `Bearer ${accessToken}`,
+			const response = await fetch(
+				`https://api.spotify.com/v1/me/top/tracks?time_range=${timeRange}&limit=10`,
+				{
+					headers: {
+						Authorization: `Bearer ${accessToken}`,
+					},
+					next: { revalidate: 3600 }, // Cache for 1 hour
 				},
-				next: { revalidate: 3600 }, // Cache for 1 hour
+			);
+
+			if (!response.ok) {
+				throw new Error(`Failed to fetch top tracks: ${response.status}`);
 			}
-		);
 
-		if (!response.ok) {
-			throw new Error(`Failed to fetch top tracks: ${response.status}`);
+			const data: SpotifyTopTracksResponse = await response.json();
+			return data.items;
+		} catch (error) {
+			console.error("Error fetching top tracks:", error);
+			return [];
 		}
-
-		const data: SpotifyTopTracksResponse = await response.json();
-		return data.items;
-	} catch (error) {
-		console.error("Error fetching top tracks:", error);
-		return [];
-	}
-});
+	},
+);
 
 // No caching for recently played since it should be real-time
 export const getRecentlyPlayed = cache(async () => {
@@ -104,7 +108,7 @@ export const getRecentlyPlayed = cache(async () => {
 					Authorization: `Bearer ${accessToken}`,
 				},
 				next: { revalidate: 300 }, // Cache for 5 minutes only
-			}
+			},
 		);
 
 		if (!response.ok) {

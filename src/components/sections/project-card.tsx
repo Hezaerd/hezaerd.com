@@ -1,7 +1,6 @@
 "use client";
 
 import { FolderGit2, Mail, User, Wrench } from "lucide-react";
-import { motion } from "motion/react";
 import Image from "next/image";
 import { useRef, useState } from "react";
 
@@ -54,35 +53,23 @@ export function ProjectCard({
 
 	return (
 		<div className="flex-[0_0_100%] min-w-0 px-2 md:flex-[0_0_50%] lg:flex-[0_0_33.333%]">
-			<motion.div
-				className="bg-card rounded-lg shadow-lg overflow-hidden border border-border cursor-pointer h-full flex flex-col"
+			<button
+				type="button"
+				className="bg-card rounded-lg shadow-lg overflow-hidden border border-border cursor-pointer h-full flex flex-col hover:shadow-xl transition-shadow duration-300 text-left"
 				onClick={handleClick}
-				onHoverStart={handleMouseEnter}
-				onHoverEnd={handleMouseLeave}
-				whileHover={{
-					y: -12,
-					boxShadow:
-						"0 25px 50px -12px rgba(0, 0, 0, 0.15), 0 20px 25px -5px rgba(0, 0, 0, 0.1)",
-					transition: { duration: 0.3, ease: "easeOut" },
-				}}
-				whileTap={{ scale: 0.98 }}
+				onMouseEnter={handleMouseEnter}
+				onMouseLeave={handleMouseLeave}
 			>
-				<motion.div
-					className="h-40 relative overflow-hidden flex-shrink-0"
-					animate={{
-						scale: isHovered ? 1.05 : 1,
-					}}
-					transition={{ duration: 0.2 }}
-				>
+				<div className="h-40 relative overflow-hidden flex-shrink-0">
 					{project.previewImage ? (
 						<>
 							{/* Preview Image */}
-							<motion.div
-								className="w-full h-full object-cover object-center"
-								animate={{
-									opacity: isHovered && project.previewVideo ? 0 : 1,
-								}}
-								transition={{ duration: 0.3 }}
+							<div
+								className={`w-full h-full object-cover object-center transition-opacity duration-300 ${
+									isHovered && project.previewVideo
+										? "opacity-0"
+										: "opacity-100"
+								}`}
 							>
 								<Image
 									src={project.previewImage}
@@ -92,64 +79,53 @@ export function ProjectCard({
 									sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
 									priority={index < 3}
 								/>
-							</motion.div>
+							</div>
 
 							{/* Preview Video (shown on hover) */}
 							{project.previewVideo && (
-								<motion.video
+								<video
 									ref={videoRef}
 									src={project.previewVideo}
-									className="absolute inset-0 w-full h-full object-cover object-center"
+									className={`absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-300 ${
+										isHovered ? "opacity-100" : "opacity-0"
+									}`}
 									muted
 									loop
 									playsInline
-									initial={{ opacity: 0 }}
-									animate={{
-										opacity: isHovered ? 1 : 0,
-									}}
-									transition={{ duration: 0.3 }}
 								/>
 							)}
 
 							{/* Highlight overlay with low opacity on hover */}
-							<motion.div
-								className="absolute inset-0 bg-black/20 flex items-center justify-center"
-								animate={{
-									opacity: isHovered ? 0.1 : 0.3,
-								}}
-								transition={{ duration: 0.3 }}
+							<div
+								className={`absolute inset-0 bg-black/20 flex items-center justify-center transition-opacity duration-300 ${
+									isHovered ? "opacity-10" : "opacity-30"
+								}`}
 							>
 								<span className="text-white text-lg font-bold p-4 text-center drop-shadow-lg">
 									{project.highlight || project.title}
 								</span>
-							</motion.div>
+							</div>
 						</>
 					) : (
 						/* Fallback to original gradient design */
-						<motion.div
-							className="h-full bg-gradient-to-br from-primary via-primary/90 to-primary/70 flex items-center justify-center text-primary-foreground text-lg font-bold p-4 text-center"
-							animate={{
-								filter: isHovered ? "brightness(0.9)" : "brightness(1)",
-							}}
-							transition={{ duration: 0.2 }}
+						<div
+							className={`h-full bg-gradient-to-br from-primary via-primary/90 to-primary/70 flex items-center justify-center text-primary-foreground text-lg font-bold p-4 text-center transition-all duration-200 ${
+								isHovered ? "brightness-90" : "brightness-100"
+							}`}
 						>
 							{project.highlight || project.title}
-						</motion.div>
+						</div>
 					)}
-				</motion.div>
+				</div>
 				<div className="p-4 flex flex-col flex-grow min-h-0">
-					<motion.h3
-						className="text-lg font-semibold text-card-foreground mb-2 flex items-center gap-2 flex-shrink-0"
-						animate={{
-							color: isHovered
-								? "hsl(var(--primary))"
-								: "hsl(var(--card-foreground))",
-						}}
-						transition={{ duration: 0.2 }}
+					<h3
+						className={`text-lg font-semibold mb-2 flex items-center gap-2 flex-shrink-0 transition-colors duration-200 ${
+							isHovered ? "text-primary" : "text-card-foreground"
+						}`}
 					>
 						<FolderGit2 className="w-4 h-4 text-primary" />
 						{project.title}
-					</motion.h3>
+					</h3>
 					<p className="text-muted-foreground mb-3 text-sm line-clamp-3 flex-grow">
 						{project.description}
 					</p>
@@ -174,18 +150,15 @@ export function ProjectCard({
 					<div className="flex-shrink-0">
 						<span className="text-xs text-primary font-medium relative inline-block">
 							Click to view details →
-							<motion.div
-								className="absolute bottom-0 left-0 h-0.5 bg-primary w-full"
-								animate={{
-									scaleX: isHovered ? 1 : 0,
-								}}
-								style={{ originX: 0 }}
-								transition={{ duration: 0.3, ease: "easeOut" }}
+							<div
+								className={`absolute bottom-0 left-0 h-0.5 bg-primary w-full transition-transform duration-300 origin-left ${
+									isHovered ? "scale-x-100" : "scale-x-0"
+								}`}
 							/>
 						</span>
 					</div>
 				</div>
-			</motion.div>
+			</button>
 		</div>
 	);
 }

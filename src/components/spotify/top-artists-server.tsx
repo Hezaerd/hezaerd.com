@@ -31,7 +31,10 @@ export async function TopArtistsServer({ timeRange }: TopArtistsServerProps) {
 							<div className="flex items-center gap-3 p-2 rounded-lg hover:bg-muted/50 transition-colors">
 								<div className="relative">
 									<Image
-										src={topArtists[index].images[0]?.url || "/placeholder-artist.png"}
+										src={
+											topArtists[index].images[0]?.url ||
+											"/placeholder-artist.png"
+										}
 										alt={topArtists[index].name}
 										width={48}
 										height={48}
@@ -45,7 +48,9 @@ export async function TopArtistsServer({ timeRange }: TopArtistsServerProps) {
 									</Badge>
 								</div>
 								<div className="flex-1 min-w-0">
-									<h4 className="font-medium truncate">{topArtists[index].name}</h4>
+									<h4 className="font-medium truncate">
+										{topArtists[index].name}
+									</h4>
 									<p className="text-sm text-muted-foreground truncate">
 										{topArtists[index].genres.slice(0, 2).join(", ")}
 									</p>

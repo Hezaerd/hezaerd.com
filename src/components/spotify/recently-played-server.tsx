@@ -24,19 +24,28 @@ export async function RecentlyPlayedServer() {
 						{recentlyPlayed[index] ? (
 							<div className="flex items-center gap-3 p-2 rounded-lg hover:bg-muted/50 transition-colors">
 								<Image
-									src={recentlyPlayed[index].track.album.images[0]?.url || "/placeholder-album.png"}
+									src={
+										recentlyPlayed[index].track.album.images[0]?.url ||
+										"/placeholder-album.png"
+									}
 									alt={recentlyPlayed[index].track.album.name}
 									width={48}
 									height={48}
 									className="w-12 h-12 rounded object-cover"
 								/>
 								<div className="flex-1 min-w-0">
-									<h4 className="font-medium truncate">{recentlyPlayed[index].track.name}</h4>
+									<h4 className="font-medium truncate">
+										{recentlyPlayed[index].track.name}
+									</h4>
 									<p className="text-sm text-muted-foreground truncate">
-										{recentlyPlayed[index].track.artists.map((a) => a.name).join(", ")}
+										{recentlyPlayed[index].track.artists
+											.map((a) => a.name)
+											.join(", ")}
 									</p>
 									<p className="text-xs text-muted-foreground">
-										{new Date(recentlyPlayed[index].played_at).toLocaleDateString()}
+										{new Date(
+											recentlyPlayed[index].played_at,
+										).toLocaleDateString()}
 									</p>
 								</div>
 								<a

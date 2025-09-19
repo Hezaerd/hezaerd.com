@@ -1,29 +1,31 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { AnimatedFadeIn } from "@/components/ui/animated-wrapper";
 import { Button } from "@/components/ui/button";
 import type { TimeRange } from "@/types/spotify";
 
-const TIME_RANGES: { value: TimeRange; label: string; description: string }[] = [
-	{
-		value: "short_term",
-		label: "Last 4 weeks",
-		description: "Top of the month",
-	},
-	{
-		value: "medium_term",
-		label: "Last 6 months",
-		description: "Last 6 months",
-	},
-	{ value: "long_term", label: "All time", description: "Forever" },
-];
+const TIME_RANGES: { value: TimeRange; label: string; description: string }[] =
+	[
+		{
+			value: "short_term",
+			label: "Last 4 weeks",
+			description: "Top of the month",
+		},
+		{
+			value: "medium_term",
+			label: "Last 6 months",
+			description: "Last 6 months",
+		},
+		{ value: "long_term", label: "All time", description: "Forever" },
+	];
 
 interface SpotifyTimeRangeSelectorProps {
 	currentTimeRange: TimeRange;
 }
 
-export function SpotifyTimeRangeSelector({ currentTimeRange }: SpotifyTimeRangeSelectorProps) {
+export function SpotifyTimeRangeSelector({
+	currentTimeRange,
+}: SpotifyTimeRangeSelectorProps) {
 	const router = useRouter();
 	const searchParams = useSearchParams();
 
@@ -34,7 +36,7 @@ export function SpotifyTimeRangeSelector({ currentTimeRange }: SpotifyTimeRangeS
 	};
 
 	return (
-		<AnimatedFadeIn className="flex flex-wrap justify-center gap-2">
+		<div className="flex flex-wrap justify-center gap-2">
 			{TIME_RANGES.map((range) => (
 				<Button
 					key={range.value}
@@ -46,6 +48,6 @@ export function SpotifyTimeRangeSelector({ currentTimeRange }: SpotifyTimeRangeS
 					<span className="text-xs opacity-70">{range.description}</span>
 				</Button>
 			))}
-		</AnimatedFadeIn>
+		</div>
 	);
 }

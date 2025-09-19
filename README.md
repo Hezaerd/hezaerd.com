@@ -18,7 +18,6 @@ A modern, responsive portfolio website built with Next.js 15, showcasing my work
 - **[TypeScript](https://www.typescriptlang.org/)** - Type-safe development
 - **[Tailwind CSS](https://tailwindcss.com/)** - Utility-first styling
 - **[shadcn/ui](https://ui.shadcn.com/)** - Modern UI component library
-- **[Motion](https://motion.dev/)** - Smooth animations
 - **[Bun](https://bun.sh/)** - Fast JavaScript runtime and package manager
 - **[Biome](https://biomejs.dev/)** - Fast formatter and linter
 
