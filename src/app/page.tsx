@@ -10,6 +10,7 @@ import {
 	Resume,
 } from "@/components/sections";
 import { SpotifyStatsClient } from "@/components/sections/spotify-stats-client";
+import { BackToTop } from "@/components/ui/back-to-top";
 import { SECTION_IDS } from "@/lib/sections";
 
 export const experimental_ppr = true;
@@ -36,6 +37,7 @@ export default async function Home({ searchParams }: HomeProps) {
 			<SpotifyStatsClient />
 
 			<Footer />
+			<BackToTop />
 		</div>
 	);
 }
