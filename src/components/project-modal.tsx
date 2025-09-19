@@ -11,6 +11,7 @@ import {
 	Wrench,
 } from "lucide-react";
 import Image from "next/image";
+import { FaItchIo, FaSteam } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
@@ -19,6 +20,7 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from "@/components/ui/dialog";
+import { Modrinth } from "@/components/ui/icons/modrinth";
 import type { Project } from "@/data/projects";
 
 interface ProjectModalProps {
@@ -51,6 +53,38 @@ export function ProjectModal({
 			videoElement.currentTime = initialVideoTime;
 		}
 	};
+
+	// Helper function to get better button labels based on project type
+	const getButtonLabels = () => {
+		const hasGitHub = project.sourcesUrl?.includes("github.com");
+		const hasItch = project.releaseUrl?.includes("itch.io");
+		const hasSteam = project.releaseUrl?.includes("steam");
+		const hasModrinth = project.releaseUrl?.includes("modrinth.com");
+
+		const sourceLabel = hasGitHub ? "View on GitHub" : "View Source Code";
+		let releaseLabel = "View Project";
+		let releaseDescription = "Visit the project page";
+		let releaseIcon = <ExternalLink className="w-4 h-4" />;
+
+		if (hasItch) {
+			releaseLabel = "Play on Itch.io";
+			releaseDescription = "Play the game in your browser or download";
+			releaseIcon = <FaItchIo className="w-4 h-4" />;
+		} else if (hasSteam) {
+			releaseLabel = "View on Steam";
+			releaseDescription = "Check out the Steam store page";
+			releaseIcon = <FaSteam className="w-4 h-4" />;
+		} else if (hasModrinth) {
+			releaseLabel = "Download Mod";
+			releaseDescription = "Get the mod from Modrinth";
+			releaseIcon = <Modrinth className="w-4 h-4" />;
+		}
+
+		return { sourceLabel, releaseLabel, releaseDescription, releaseIcon };
+	};
+
+	const { sourceLabel, releaseLabel, releaseDescription, releaseIcon } =
+		getButtonLabels();
 	return (
 		<Dialog open={isOpen} onOpenChange={onClose}>
 			<DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto p-0">
@@ -96,6 +130,33 @@ export function ProjectModal({
 							<Wrench className="w-16 h-16 text-muted-foreground" />
 						</div>
 					)}
+
+					{/* Prominent Action Buttons Overlay */}
+					{(project.sourcesUrl || project.releaseUrl) && (
+						<div className="absolute bottom-4 right-4 flex gap-2">
+							{project.releaseUrl && (
+								<Button
+									size="default"
+									className="shadow-lg backdrop-blur-sm bg-primary/90 hover:bg-primary text-primary-foreground font-medium"
+									onClick={handleReleaseClick}
+								>
+									<span className="mr-2">{releaseIcon}</span>
+									{releaseLabel}
+								</Button>
+							)}
+							{project.sourcesUrl && (
+								<Button
+									variant="secondary"
+									size="default"
+									className="shadow-lg backdrop-blur-sm bg-secondary/90 hover:bg-secondary/80 font-medium"
+									onClick={handleSourcesClick}
+								>
+									<Github className="w-4 h-4 mr-2" />
+									{sourceLabel}
+								</Button>
+							)}
+						</div>
+					)}
 				</div>
 
 				{/* Content with padding */}
@@ -111,6 +172,59 @@ export function ProjectModal({
 					</DialogHeader>
 
 					<div className="space-y-6">
+						{/* Enhanced Action Section */}
+						{(project.sourcesUrl || project.releaseUrl) && (
+							<div className="bg-secondary/30 rounded-lg p-4 border border-secondary">
+								<h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+									<ExternalLink className="w-5 h-5 text-primary" />
+									Project Links
+								</h3>
+								<div className="space-y-3">
+									{project.releaseUrl && (
+										<div className="flex items-center justify-between p-3 bg-background rounded-lg border">
+											<div className="flex-1">
+												<div className="font-medium text-foreground">
+													{releaseLabel}
+												</div>
+												<div className="text-sm text-muted-foreground">
+													{releaseDescription}
+												</div>
+											</div>
+											<Button
+												size="sm"
+												className="ml-3 flex items-center gap-2"
+												onClick={handleReleaseClick}
+											>
+												{releaseIcon}
+												Visit
+											</Button>
+										</div>
+									)}
+									{project.sourcesUrl && (
+										<div className="flex items-center justify-between p-3 bg-background rounded-lg border">
+											<div className="flex-1">
+												<div className="font-medium text-foreground">
+													{sourceLabel}
+												</div>
+												<div className="text-sm text-muted-foreground">
+													Explore the source code and implementation details
+												</div>
+											</div>
+											<Button
+												variant="outline"
+												size="sm"
+												className="ml-3 flex items-center gap-2"
+												onClick={handleSourcesClick}
+											>
+												<Github className="w-4 h-4" />
+												View
+											</Button>
+										</div>
+									)}
+								</div>
+							</div>
+						)}
+
 						{/* Project Details Grid */}
 						<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
 							{project.duration && (
@@ -147,33 +261,6 @@ export function ProjectModal({
 								</div>
 							)}
 						</div>
-
-						{/* Action Buttons */}
-						{(project.sourcesUrl || project.releaseUrl) && (
-							<div className="flex gap-3">
-								{project.sourcesUrl && (
-									<Button
-										variant="outline"
-										size="sm"
-										className="flex items-center gap-2"
-										onClick={handleSourcesClick}
-									>
-										<Github className="w-4 h-4" />
-										View Sources
-									</Button>
-								)}
-								{project.releaseUrl && (
-									<Button
-										size="sm"
-										className="flex items-center gap-2"
-										onClick={handleReleaseClick}
-									>
-										<ExternalLink className="w-4 h-4" />
-										Play
-									</Button>
-								)}
-							</div>
-						)}
 
 						{/* Technologies */}
 						{project.technologies && project.technologies.length > 0 && (
