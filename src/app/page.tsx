@@ -8,8 +8,8 @@ import {
 	Hero,
 	Projects,
 	Resume,
-	SpotifyStats,
 } from "@/components/sections";
+import { SpotifyStatsClient } from "@/components/sections/spotify-stats-client";
 import { SECTION_IDS } from "@/lib/sections";
 
 export const experimental_ppr = true;
@@ -33,7 +33,7 @@ export default async function Home({ searchParams }: HomeProps) {
 				<GithubStats id={SECTION_IDS.githubStats} />
 			</Suspense>
 
-			<SpotifyStats searchParams={resolvedSearchParams} />
+			<SpotifyStatsClient />
 
 			<Footer />
 		</div>

@@ -2,11 +2,13 @@
 
 import { Clock, Music, Users } from "lucide-react";
 import Image from "next/image";
+import { useRouter, useSearchParams } from "next/navigation";
 import React, { useCallback, useEffect, useState } from "react";
 import { AnimatedFadeIn } from "@/components/ui/animated-wrapper";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { SECTION_IDS } from "@/lib/sections";
 import type { SpotifyStats, TimeRange } from "@/types/spotify";
 
 const TIME_RANGES: { value: TimeRange; label: string; description: string }[] =
@@ -25,10 +27,18 @@ const TIME_RANGES: { value: TimeRange; label: string; description: string }[] =
 	];
 
 export function SpotifyStatsClient() {
+	const router = useRouter();
+	const searchParams = useSearchParams();
 	const [stats, setStats] = useState<SpotifyStats | null>(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
-	const [timeRange, setTimeRange] = useState<TimeRange>("medium_term");
+
+	// Initialize time range from URL parameters or default
+	const urlTimeRange = searchParams.get("timeRange") as TimeRange;
+	const initialTimeRange = urlTimeRange && ["short_term", "medium_term", "long_term"].includes(urlTimeRange)
+		? urlTimeRange
+		: "medium_term";
+	const [timeRange, setTimeRange] = useState<TimeRange>(initialTimeRange);
 
 	const fetchSpotifyStats = useCallback(async (range: TimeRange) => {
 		setLoading(true);
@@ -66,9 +76,23 @@ export function SpotifyStatsClient() {
 		}
 	}, []);
 
+	// Update time range when URL parameters change
+	useEffect(() => {
+		const urlTimeRange = searchParams.get("timeRange") as TimeRange;
+		if (urlTimeRange && ["short_term", "medium_term", "long_term"].includes(urlTimeRange) && urlTimeRange !== timeRange) {
+			setTimeRange(urlTimeRange);
+		}
+	}, [searchParams, timeRange]);
+
 	useEffect(() => {
 		fetchSpotifyStats(timeRange);
 	}, [timeRange, fetchSpotifyStats]);
+
+	const handleTimeRangeChange = (newTimeRange: TimeRange) => {
+		const params = new URLSearchParams(searchParams.toString());
+		params.set("timeRange", newTimeRange);
+		router.push(`/?${params.toString()}`, { scroll: false });
+	};
 
 	if (loading) {
 		return (
@@ -126,14 +150,24 @@ export function SpotifyStatsClient() {
 	if (!stats) return null;
 
 	return (
-		<div className="space-y-8">
-			{/* Time Range Selector */}
-			<AnimatedFadeIn className="flex flex-wrap justify-center gap-2">
+		<section
+			id={SECTION_IDS.spotifyStats}
+			className="py-16 px-4 sm:px-6 lg:px-8 bg-card"
+		>
+			<div className="max-w-7xl mx-auto">
+				<AnimatedFadeIn className="text-3xl sm:text-4xl font-bold text-center text-card-foreground mb-12 flex items-center justify-center gap-2">
+					<Music className="w-7 h-7 text-primary" />
+					My Music Taste
+				</AnimatedFadeIn>
+
+				<div className="space-y-8">
+					{/* Time Range Selector */}
+					<AnimatedFadeIn className="flex flex-wrap justify-center gap-2">
 				{TIME_RANGES.map((range) => (
 					<Button
 						key={range.value}
 						variant={timeRange === range.value ? "default" : "outline"}
-						onClick={() => setTimeRange(range.value)}
+						onClick={() => handleTimeRangeChange(range.value)}
 						className="flex flex-col items-center gap-1 h-auto py-3 px-4"
 					>
 						<span className="font-medium">{range.label}</span>
@@ -309,6 +343,8 @@ export function SpotifyStatsClient() {
 					</div>
 				</CardContent>
 			</Card>
-		</div>
+				</div>
+			</div>
+		</section>
 	);
 }
