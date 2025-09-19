@@ -1,4 +1,4 @@
-import { Briefcase, FileText, Github, Home, User } from "lucide-react";
+import { Briefcase, FileText, Github, Home, Music, User } from "lucide-react";
 
 export const SECTION_IDS = {
 	home: "home",
@@ -6,6 +6,7 @@ export const SECTION_IDS = {
 	projects: "projects",
 	resume: "resume",
 	githubStats: "github-stats",
+	spotifyStats: "spotify-stats",
 } as const;
 
 export const NAVIGATION_ITEMS = [
@@ -38,5 +39,11 @@ export const NAVIGATION_ITEMS = [
 		href: `#${SECTION_IDS.githubStats}`,
 		icon: Github,
 		id: SECTION_IDS.githubStats,
+	},
+	{
+		name: "Music",
+		href: `#${SECTION_IDS.spotifyStats}`,
+		icon: Music,
+		id: SECTION_IDS.spotifyStats,
 	},
 ] as const;

@@ -8,6 +8,7 @@ import {
 	Hero,
 	Projects,
 	Resume,
+	SpotifyStats,
 } from "@/components/sections";
 import { SECTION_IDS } from "@/lib/sections";
 
@@ -25,6 +26,8 @@ export default function Home() {
 			<Suspense fallback={<GitHubStatsSkeleton />}>
 				<GithubStats id={SECTION_IDS.githubStats} />
 			</Suspense>
+
+			<SpotifyStats />
 
 			<Footer />
 		</div>

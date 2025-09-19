@@ -4,3 +4,4 @@ export { GithubStats } from "./github-stats";
 export { Hero } from "./hero";
 export { Projects } from "./projects";
 export { Resume } from "./resume";
+export { SpotifyStats } from "./spotify-stats";
