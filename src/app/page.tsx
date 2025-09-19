@@ -14,7 +14,11 @@ import { SECTION_IDS } from "@/lib/sections";
 
 export const experimental_ppr = true;
 
-export default function Home() {
+interface HomeProps {
+	searchParams?: { [key: string]: string | string[] | undefined };
+}
+
+export default function Home({ searchParams }: HomeProps) {
 	return (
 		<div className="min-h-screen bg-background">
 			<Navbar />
@@ -27,7 +31,7 @@ export default function Home() {
 				<GithubStats id={SECTION_IDS.githubStats} />
 			</Suspense>
 
-			<SpotifyStats />
+			<SpotifyStats searchParams={searchParams} />
 
 			<Footer />
 		</div>
