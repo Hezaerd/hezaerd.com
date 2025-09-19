@@ -69,7 +69,7 @@ export function ProjectModal({
 		if (hasItch) {
 			releaseLabel = "Play on Itch.io";
 			releaseDescription = "Play the game in your browser or download";
-			releaseIcon = <FaItchIo className="w-4 h-4" />;
+			releaseIcon = <FaItchIo className="w-4 h-4" color="#fa5c5c" />;
 		} else if (hasSteam) {
 			releaseLabel = "View on Steam";
 			releaseDescription = "Check out the Steam store page";
@@ -77,7 +77,7 @@ export function ProjectModal({
 		} else if (hasModrinth) {
 			releaseLabel = "Download Mod";
 			releaseDescription = "Get the mod from Modrinth";
-			releaseIcon = <Modrinth className="w-4 h-4" />;
+			releaseIcon = <Modrinth className="w-4 h-4" color="#1bd16d"/>;
 		}
 
 		return { sourceLabel, releaseLabel, releaseDescription, releaseIcon };
