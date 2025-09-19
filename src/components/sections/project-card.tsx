@@ -65,7 +65,7 @@ export function ProjectCard({
 						<>
 							{/* Preview Image */}
 							<div
-								className={`w-full h-full object-cover object-center transition-opacity duration-300 ${
+								className={`absolute inset-0 w-full h-full transition-opacity duration-300 ${
 									isHovered && project.previewVideo
 										? "opacity-0"
 										: "opacity-100"
