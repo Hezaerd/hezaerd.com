@@ -94,17 +94,6 @@ export function ProjectCard({
 									playsInline
 								/>
 							)}
-
-							{/* Highlight overlay with low opacity on hover */}
-							<div
-								className={`absolute inset-0 bg-black/20 flex items-center justify-center transition-opacity duration-300 ${
-									isHovered ? "opacity-10" : "opacity-30"
-								}`}
-							>
-								<span className="text-white text-lg font-bold p-4 text-center drop-shadow-lg">
-									{project.highlight || project.title}
-								</span>
-							</div>
 						</>
 					) : (
 						/* Fallback to original gradient design */
