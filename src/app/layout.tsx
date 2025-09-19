@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { AnalyticsProvider } from "@/components/providers/analytics-provider";
 import { ThemeProvider } from "@/components/theme/theme-provider";
+import { generateDefaultOGImageUrl } from "@/lib/og-utils";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -42,12 +43,21 @@ export const metadata: Metadata = {
 		title: "Hezaerd - Software Engineer",
 		description:
 			"Passionate about building high-performance software solutions, ranging from game engines, game development tools, to full-stack applications. Specialized in C++ and C#",
+		images: [
+			{
+				url: generateDefaultOGImageUrl(),
+				width: 1200,
+				height: 630,
+				alt: "Hezaerd - Software Engineer",
+			},
+		],
 	},
 	twitter: {
 		card: "summary_large_image",
 		title: "Hezaerd - Software Engineer",
 		description:
 			"Passionate about building high-performance software solutions, ranging from game engines, game development tools, to full-stack applications. Specialized in C++ and C#",
+		images: [generateDefaultOGImageUrl()],
 	},
 	robots: {
 		index: true,
