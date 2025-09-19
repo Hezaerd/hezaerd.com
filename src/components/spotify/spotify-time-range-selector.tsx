@@ -30,7 +30,7 @@ export function SpotifyTimeRangeSelector({ currentTimeRange }: SpotifyTimeRangeS
 	const handleTimeRangeChange = (timeRange: TimeRange) => {
 		const params = new URLSearchParams(searchParams.toString());
 		params.set("timeRange", timeRange);
-		router.push(`#spotify-stats?${params.toString()}`, { scroll: false });
+		router.push(`/?${params.toString()}`, { scroll: false });
 	};
 
 	return (
