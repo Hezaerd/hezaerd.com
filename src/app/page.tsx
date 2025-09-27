@@ -10,13 +10,13 @@ import {
 	Resume,
 } from "@/components/sections";
 import { SpotifyStatsClient } from "@/components/sections/spotify-stats-client";
+import { SpotifyStatsSkeleton } from "@/components/spotify/spotify-stats-skeleton";
 import { BackToTop } from "@/components/ui/back-to-top";
 import { SECTION_IDS } from "@/lib/sections";
 
 export const experimental_ppr = true;
 
 export default async function Home() {
-
 	return (
 		<div className="min-h-screen bg-background">
 			<Navbar />
@@ -29,7 +29,9 @@ export default async function Home() {
 				<GithubStats id={SECTION_IDS.githubStats} />
 			</Suspense>
 
-			<SpotifyStatsClient />
+			<Suspense fallback={<SpotifyStatsSkeleton />}>
+				<SpotifyStatsClient />
+			</Suspense>
 
 			<Footer />
 			<BackToTop />
