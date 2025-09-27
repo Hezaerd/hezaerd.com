@@ -21,7 +21,7 @@ export const projects: Project[] = [
 		title: "Stellar Suplex",
 		description:
 			"Mobile action rhythm game where gameplay and visuals dynamically react to music in real-time",
-		tags: ["Game"],
+		tags: ["Game", "Unity"],
 		highlight: "Stellar Suplex",
 		previewImage: "/images/stellar-suplex.jpg",
 		previewVideo: "/videos/stellar-suplex.mp4",
@@ -53,7 +53,7 @@ export const projects: Project[] = [
 		title: "Los Pingheros",
 		description:
 			"Los Pingheros is a chaotic 8-player arena brawler set in a snowy Mexican world, where penguins battle to be the last one standing.",
-		tags: ["Game"],
+		tags: ["Game", "Unity"],
 		highlight: "Los Pingheros",
 		previewImage: "/images/los-pingheros.jpg",
 		previewVideo: "/videos/los-pingheros.webm",
@@ -89,7 +89,7 @@ export const projects: Project[] = [
 		title: "Coloris",
 		description:
 			"Coloris is a 2D platformer where you play a specter gaining colorful powers to navigate a monochromatic world and uncover its secrets.",
-		tags: ["Game"],
+		tags: ["Game", "Unity"],
 		highlight: "Coloris",
 		previewImage: "/images/coloris.jpg",
 		previewVideo: "/videos/coloris.mp4",
@@ -114,6 +114,33 @@ export const projects: Project[] = [
 		duration: "4 days",
 		teamSize: "6 developers",
 		role: "Programmer",
+	},
+	{
+		title: "Kokopelli",
+		description:
+			"Kokopelli is a turn-based RPG taking place in Albuquerque, USA. You embody the member of a Spirit Brigade in charge of befriending spirits in a world in which humans and spirits live in harmony.",
+		tags: ["Game", "Unreal Engine 4"],
+		highlight: "Kokopelli",
+		previewImage: "/images/kokopelli.jpg",
+		previewVideo: "/videos/kokopelli.mp4",
+		longDescription:
+			"Kokopelli is a turn-based RPG taking place in Albuquerque, USA. You embody the member of a Spirit Brigade in charge of befriending spirits in a world in which humans and spirits live in harmony.",
+		features: [
+			"Car controller",
+			"Immersive audio",
+			"Turn-based combat",
+			"Custom AI enemies",
+		],
+		challenges: [
+			"Graphical optimization on Unreal Engine 4",
+			"Immersive and dynamic audio system with FMOD",
+			"Turn-based combat AI system with a custom behavior tree",
+		],
+		technologies: ["C++", "Unreal Engine 4", "FMOD", "Perforce", "Hack'n'Plan"],
+		releaseUrl: "https://jaythil.itch.io/kokopelli",
+		duration: "3 months",
+		teamSize: "18 developers",
+		role: "Programmer & Gameplay Programmer",
 	},
 	{
 		title: "Better Axolotl",
@@ -144,7 +171,7 @@ export const projects: Project[] = [
 		title: "Hezaerd.com",
 		description:
 			"If you're reading this, you probably already know what this is. :)",
-		tags: ["Web"],
+		tags: ["Web", "Next.JS"],
 		highlight: "Hezaerd.com",
 		previewImage: "/images/hezaerd-com.jpg",
 		features: [
@@ -182,7 +209,7 @@ export const projects: Project[] = [
 		title: "yleoture.com",
 		description:
 			"SEO optimized landing page for an independant acupuncturist to showcase her services and her practice",
-		tags: ["Web"],
+		tags: ["Web", "Next.JS"],
 		highlight: "yleoture.com",
 		previewImage: "/images/yleoture.jpg",
 		features: [
