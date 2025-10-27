@@ -1,7 +1,4 @@
-export { About } from "./about";
-export { Footer } from "./footer";
-export { GithubStats } from "./github-stats";
-export { Hero } from "./hero";
-export { Projects } from "./projects";
-export { Resume } from "./resume";
-export { SpotifyStats } from "./spotify-stats";
+export { ConnectSection } from "./connect-section";
+export { HeroSection } from "./hero-section";
+export { ProjectsSection } from "./projects-section";
+export { WorkSection } from "./work-section";
