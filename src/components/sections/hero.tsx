@@ -21,7 +21,7 @@ export function Hero() {
           {/* Tagline */}
           <StaggerItem>
             <p className="text-lg md:text-xl text-muted-foreground font-sans max-w-md">
-              Game Programmer
+              Software Engineer
             </p>
           </StaggerItem>
 
