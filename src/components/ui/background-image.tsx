@@ -29,13 +29,13 @@ export function BackgroundImage({
       )}
 
       {/* Gradient overlay for depth */}
-      <div className="absolute inset-0 z-10 bg-gradient-to-t from-background/80 via-background/20 to-transparent" />
+      <div className="absolute inset-0 z-10 bg-linear-to-t from-background/80 via-background/20 to-transparent" />
 
       {/* Background image */}
       <img
         src={src}
         alt={alt}
-        className="absolute inset-0 h-full w-full object-cover brightness-[0.4] saturate-[1.2]"
+        className="absolute inset-0 h-full w-full object-cover brightness-[0.4] saturate-[1.2] select-none pointer-events-none"
       />
 
       {children}
