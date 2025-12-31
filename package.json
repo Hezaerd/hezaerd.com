@@ -25,6 +25,7 @@
     "@tanstack/router-plugin": "^1.132.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "motion": "^12.23.26",
     "nitro": "latest",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
