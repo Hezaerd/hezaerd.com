@@ -5,22 +5,25 @@
 @import '@fontsource-variable/cormorant-garamond';
 
 @custom-variant dark (&:is(.dark *));
+@custom-variant light (&:is(.light *));
 
-:root {
+/* Dark theme - Moody Forest (default) */
+:root,
+.dark {
   --background: oklch(0.1 0.025 155); /* Dark green-tinted */
   --foreground: oklch(0.95 0.01 120); /* Misty morning light through trees */
   --card: oklch(0.18 0.04 150 / 0.4); /* Moss on stone - the glass cards */
   --card-foreground: oklch(0.98 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.141 0.005 285.823);
+  --popover: oklch(0.15 0.03 150);
+  --popover-foreground: oklch(0.95 0.01 120);
   --primary: oklch(0.55 0.18 145); /* Living green - for accents and CTAs */
   --primary-foreground: oklch(0.98 0.02 140); /* Fern tips catching light */
-  --secondary: oklch(0.967 0.001 286.375);
-  --secondary-foreground: oklch(0.21 0.006 285.885);
+  --secondary: oklch(0.25 0.04 150);
+  --secondary-foreground: oklch(0.9 0.02 140);
   --muted: oklch(0.2 0.03 155 / 0.6); /* Forest shadow */
   --muted-foreground: oklch(0.65 0.05 150); /* Forest shadow */
-  --accent: oklch(0.967 0.001 286.375);
-  --accent-foreground: oklch(0.21 0.006 285.885);
+  --accent: oklch(0.25 0.04 150);
+  --accent-foreground: oklch(0.9 0.02 140);
   --destructive: oklch(0.577 0.245 27.325);
   --border: oklch(1 0 0 / 0.08); /* Subtle lichen border */
   --input: oklch(1 0 0 / 0.15);
@@ -31,14 +34,49 @@
   --chart-4: oklch(0.6 0.1 185);
   --chart-5: oklch(0.51 0.09 186);
   --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.141 0.005 285.823);
-  --sidebar-primary: oklch(0.6 0.1 185);
-  --sidebar-primary-foreground: oklch(0.98 0.01 181);
-  --sidebar-accent: oklch(0.967 0.001 286.375);
-  --sidebar-accent-foreground: oklch(0.21 0.006 285.885);
-  --sidebar-border: oklch(0.92 0.004 286.32);
-  --sidebar-ring: oklch(0.705 0.015 286.067);
+  --sidebar: oklch(0.12 0.03 155);
+  --sidebar-foreground: oklch(0.95 0.01 120);
+  --sidebar-primary: oklch(0.55 0.18 145);
+  --sidebar-primary-foreground: oklch(0.98 0.02 140);
+  --sidebar-accent: oklch(0.2 0.04 150);
+  --sidebar-accent-foreground: oklch(0.9 0.02 140);
+  --sidebar-border: oklch(1 0 0 / 0.1);
+  --sidebar-ring: oklch(0.7 0.15 160);
+}
+
+/* Light theme - Sunny Forest */
+.light {
+  --background: oklch(0.97 0.01 130); /* Dappled sunlight */
+  --foreground: oklch(0.2 0.04 150); /* Deep forest floor */
+  --card: oklch(1 0 0 / 0.6); /* Sun-bleached wood */
+  --card-foreground: oklch(0.15 0.04 150);
+  --popover: oklch(0.98 0.005 130);
+  --popover-foreground: oklch(0.2 0.04 150);
+  --primary: oklch(0.45 0.15 145); /* Rich moss green */
+  --primary-foreground: oklch(0.98 0.01 140);
+  --secondary: oklch(0.92 0.02 130);
+  --secondary-foreground: oklch(0.25 0.04 150);
+  --muted: oklch(0.94 0.015 130 / 0.8); /* Morning mist */
+  --muted-foreground: oklch(0.45 0.04 150);
+  --accent: oklch(0.92 0.02 130);
+  --accent-foreground: oklch(0.25 0.04 150);
+  --destructive: oklch(0.55 0.22 25);
+  --border: oklch(0.3 0.05 150 / 0.15); /* Bark texture */
+  --input: oklch(0.3 0.05 150 / 0.1);
+  --ring: oklch(0.5 0.12 145);
+  --chart-1: oklch(0.55 0.15 145);
+  --chart-2: oklch(0.5 0.14 150);
+  --chart-3: oklch(0.45 0.12 155);
+  --chart-4: oklch(0.4 0.1 160);
+  --chart-5: oklch(0.35 0.08 165);
+  --sidebar: oklch(0.96 0.01 130);
+  --sidebar-foreground: oklch(0.2 0.04 150);
+  --sidebar-primary: oklch(0.45 0.15 145);
+  --sidebar-primary-foreground: oklch(0.98 0.01 140);
+  --sidebar-accent: oklch(0.92 0.02 130);
+  --sidebar-accent-foreground: oklch(0.25 0.04 150);
+  --sidebar-border: oklch(0.3 0.05 150 / 0.1);
+  --sidebar-ring: oklch(0.5 0.12 145);
 }
 
 @theme inline {
@@ -106,7 +144,9 @@
 }
 
 @layer utilities {
-  .glass {
+  /* Dark theme glass */
+  .dark .glass,
+  :root .glass {
     background: oklch(0.2 0.03 150 / 0.25);
     backdrop-filter: blur(12px) saturate(1.2);
     -webkit-backdrop-filter: blur(12px) saturate(1.2);
@@ -116,10 +156,31 @@
       inset 0 1px 0 oklch(1 0 0 / 0.05);
   }
 
-  .glass-moss {
+  /* Light theme glass */
+  .light .glass {
+    background: oklch(1 0 0 / 0.7);
+    backdrop-filter: blur(12px) saturate(1.2);
+    -webkit-backdrop-filter: blur(12px) saturate(1.2);
+    border: 1px solid oklch(0.3 0.05 150 / 0.1);
+    box-shadow:
+      0 4px 30px oklch(0.3 0.05 150 / 0.1),
+      inset 0 1px 0 oklch(1 0 0 / 0.5);
+  }
+
+  /* Dark theme moss glass */
+  .dark .glass-moss,
+  :root .glass-moss {
     background: oklch(0.25 0.06 145 / 0.3);
     backdrop-filter: blur(16px) saturate(1.3);
     -webkit-backdrop-filter: blur(16px) saturate(1.3);
     border: 1px solid oklch(0.5 0.1 145 / 0.2);
+  }
+
+  /* Light theme moss glass */
+  .light .glass-moss {
+    background: oklch(0.45 0.12 145 / 0.15);
+    backdrop-filter: blur(16px) saturate(1.3);
+    -webkit-backdrop-filter: blur(16px) saturate(1.3);
+    border: 1px solid oklch(0.45 0.12 145 / 0.25);
   }
 }

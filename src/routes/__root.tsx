@@ -1,6 +1,7 @@
-import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router'
-
-import appCss from '../styles.css?url'
+import { HeadContent, Outlet, Scripts, createRootRoute } from '@tanstack/react-router';
+import { ThemeProvider } from '@/components/providers/theme-provider';
+import { getThemeFn } from '@/fn/theme';
+import appCss from '../styles.css?url';
 
 export const Route = createRootRoute({
   head: () => ({
@@ -13,7 +14,7 @@ export const Route = createRootRoute({
         content: 'width=device-width, initial-scale=1',
       },
       {
-        title: 'TanStack Start Starter',
+        title: 'Hezaerd - Game Programmer',
       },
     ],
     links: [
@@ -24,12 +25,28 @@ export const Route = createRootRoute({
     ],
   }),
 
+  beforeLoad: async () => {
+    const theme = await getThemeFn();
+    return { theme };
+  },
+
+  component: RootComponent,
   shellComponent: RootDocument,
-})
+});
+
+function RootComponent() {
+  const { theme } = Route.useRouteContext();
+
+  return (
+    <ThemeProvider theme={theme}>
+      <Outlet />
+    </ThemeProvider>
+  );
+}
 
 function RootDocument({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className="dark">
       <head>
         <HeadContent />
       </head>
@@ -38,5 +55,5 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <Scripts />
       </body>
     </html>
-  )
+  );
 }

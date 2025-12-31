@@ -6,7 +6,7 @@ import { EDUCATION, EXPERIENCE, ME, SKILLS, SOCIALS } from '@/data';
 
 export function About() {
   return (
-    <Section size="fullscreen" layout="centered" className="overflow-hidden">
+    <Section id="about" size="fullscreen" layout="centered" className="overflow-hidden">
       <div className="relative z-20 container mx-auto px-6">
         <StaggerContainer className="grid gap-6 lg:grid-cols-12 lg:gap-8">
           <StaggerItem className="lg:col-span-7">
