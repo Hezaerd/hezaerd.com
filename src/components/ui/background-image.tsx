@@ -2,16 +2,12 @@ import type * as React from 'react';
 import { useTheme } from '@/components/providers/theme-provider';
 import { cn } from '@/lib/utils';
 
-export type BackgroundTheme = 'moody-forest' | 'sunny-forest';
-
-const THEME_IMAGES: Record<BackgroundTheme, string> = {
-  'moody-forest': '/images/forest-moody.jpg',
-  'sunny-forest': '/images/forest-sunny.jpg',
-};
+const THEME_IMAGES = {
+  dark: '/images/forest-moody.jpg',
+  light: '/images/forest-sunny.jpg',
+} as const;
 
 interface BackgroundImageProps extends React.ComponentProps<'div'> {
-  src?: string;
-  theme?: BackgroundTheme;
   alt?: string;
   overlay?: boolean;
   overlayClassName?: string;
@@ -21,8 +17,6 @@ interface BackgroundImageProps extends React.ComponentProps<'div'> {
 }
 
 export function BackgroundImage({
-  src,
-  theme,
   alt = 'Background image',
   overlay = true,
   overlayClassName,
@@ -32,16 +26,6 @@ export function BackgroundImage({
   ...props
 }: BackgroundImageProps) {
   const { theme: uiTheme } = useTheme();
-
-  // Use theme image if provided, otherwise fall back to src
-  const imageSrc = theme ? THEME_IMAGES[theme] : src;
-
-  if (!imageSrc) {
-    console.warn('BackgroundImage: No src or theme provided');
-    return null;
-  }
-
-  // Adjust image styling based on UI theme
   const isDark = uiTheme === 'dark';
 
   return (
@@ -67,13 +51,25 @@ export function BackgroundImage({
         )}
       />
 
-      {/* Background image */}
+      {/* Both images rendered - crossfade with opacity */}
       <img
-        src={imageSrc}
+        src={THEME_IMAGES.dark}
         alt={alt}
         className={cn(
-          'absolute inset-0 h-full w-full object-cover select-none pointer-events-none transition-all duration-500',
-          isDark ? 'brightness-[0.4] saturate-[1.2]' : 'brightness-[0.85] saturate-[1.1]',
+          'absolute inset-0 h-full w-full object-cover select-none pointer-events-none',
+          'transition-opacity duration-700 ease-in-out',
+          'brightness-[0.4] saturate-[1.2]',
+          isDark ? 'opacity-100' : 'opacity-0',
+        )}
+      />
+      <img
+        src={THEME_IMAGES.light}
+        alt={alt}
+        className={cn(
+          'absolute inset-0 h-full w-full object-cover select-none pointer-events-none',
+          'transition-opacity duration-700 ease-in-out',
+          'brightness-[0.85] saturate-[1.1]',
+          isDark ? 'opacity-0' : 'opacity-100',
         )}
       />
 

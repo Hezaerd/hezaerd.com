@@ -8,7 +8,7 @@ export const Route = createFileRoute('/')({ component: App });
 function App() {
   return (
     <>
-      <BackgroundImage theme="moody-forest" alt="Forest background" fixed />
+      <BackgroundImage alt="Forest background" fixed />
       <Navbar />
       <Hero />
       <About />
