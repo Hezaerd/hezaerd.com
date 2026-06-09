@@ -51,7 +51,7 @@ export function Navbar() {
                 type="button"
                 onClick={() => scrollToSection(item.id)}
                 className={cn(
-                  "rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                  "inline-flex h-9 items-center rounded-md px-4 py-2 text-sm font-medium transition-colors",
                   activeSection === item.id
                     ? "text-primary"
                     : "text-foreground hover:bg-accent hover:text-accent-foreground",
@@ -75,7 +75,7 @@ export function Navbar() {
 
         <Button
           onClick={() => window.open("mailto:hezaerd@hezaerd.com", "_blank")}
-          className="shrink-0 shadow-lg hover:shadow-xl"
+          className="h-9 shrink-0 px-4 shadow-lg hover:shadow-xl"
         >
           Get In Touch
         </Button>
