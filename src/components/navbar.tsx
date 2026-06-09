@@ -1,6 +1,9 @@
+import { DiscordIcon, Mail01Icon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useActiveSection } from "@/hooks/use-active-section";
 import { useSlidingUnderline } from "@/hooks/use-sliding-underline";
 import { DEFAULT_SECTION, navigation, sectionHref, type SectionId } from "@/lib/navigation";
@@ -12,6 +15,7 @@ function scrollToSection(id: SectionId) {
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
+  const [contactOpen, setContactOpen] = useState(false);
   const activeSection = useActiveSection(DEFAULT_SECTION);
   const { navListRef, setItemRef, underline } = useSlidingUnderline(activeSection);
 
@@ -73,12 +77,46 @@ export function Navbar() {
           />
         </ul>
 
-        <Button
-          onClick={() => window.open("mailto:hezaerd@hezaerd.com", "_blank")}
-          className="h-9 shrink-0 px-4 shadow-lg hover:shadow-xl"
-        >
-          Get In Touch
-        </Button>
+        <Popover open={contactOpen} onOpenChange={setContactOpen}>
+          <PopoverTrigger
+            render={
+              <Button className="h-9 shrink-0 px-4 shadow-lg hover:shadow-xl">Get In Touch</Button>
+            }
+          />
+          <PopoverContent align="end" sideOffset={8} className="w-56 p-2">
+            <p className="text-muted-foreground px-2 py-1.5 text-xs font-medium">
+              How would you like to reach out?
+            </p>
+            <div className="flex flex-col gap-1">
+              <Button
+                variant="ghost"
+                className="w-full justify-start gap-2"
+                onClick={() => setContactOpen(false)}
+                render={
+                  <a href={`mailto:hezaerd@hezaerd.com`}>
+                    <HugeiconsIcon icon={Mail01Icon} size={16} />
+                    Email
+                  </a>
+                }
+              />
+              <Button
+                variant="ghost"
+                className="w-full justify-start gap-2"
+                onClick={() => {
+                  window.open(
+                    "https://discord.com/users/225942632050720768",
+                    "_blank",
+                    "noopener,noreferrer",
+                  );
+                  setContactOpen(false);
+                }}
+              >
+                <HugeiconsIcon icon={DiscordIcon} size={16} />
+                Discord
+              </Button>
+            </div>
+          </PopoverContent>
+        </Popover>
       </div>
     </nav>
   );
