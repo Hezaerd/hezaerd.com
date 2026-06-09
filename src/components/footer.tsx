@@ -1,13 +1,32 @@
-import {
-  GithubIcon,
-  DiscordIcon,
-  SpotifyIcon,
-  ExternalLinkIcon,
-  ExternalLink,
-} from "@hugeicons/core-free-icons";
+import { GithubIcon, DiscordIcon, SpotifyIcon, ExternalLinkIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
+import { motion, useReducedMotion } from "motion/react";
 
 import { Button } from "./ui/button";
+
+const MotionButton = motion.create(Button);
+
+const socialHoverTransition = {
+  type: "spring" as const,
+  stiffness: 700,
+  damping: 32,
+  mass: 0.4,
+};
+
+const creditLinkVariants = {
+  rest: {},
+  hover: {},
+};
+
+const creditIconVariants = {
+  rest: { x: 0, y: 0 },
+  hover: { x: 2, y: -2 },
+};
+
+const creditUnderlineVariants = {
+  rest: { scaleX: 0 },
+  hover: { scaleX: 1 },
+};
 
 const socials = [
   { name: "Github", url: "https://github.com/hezaerd", icon: GithubIcon },
@@ -21,6 +40,7 @@ const socials = [
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
+  const prefersReducedMotion = useReducedMotion();
 
   return (
     <footer className="bg-card border-border border-t px-4 py-12 sm:px-6 lg:px-8">
@@ -32,29 +52,49 @@ export function Footer() {
             </p>
             <p className="text-muted-foreground flex items-center justify-center gap-1 text-sm md:justify-start">
               Portfolio crafted by{" "}
-              <a
+              <motion.a
                 href="https://hezaerd.com"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-primary hover:text-primary/80 flex items-center gap-1 font-medium transition-colors duration-200"
+                initial="rest"
+                whileHover={prefersReducedMotion ? undefined : "hover"}
+                variants={creditLinkVariants}
               >
-                Hezaerd
-                <HugeiconsIcon icon={ExternalLinkIcon} size={16} />
-              </a>
+                <span className="relative inline-block">
+                  Hezaerd
+                  <motion.span
+                    aria-hidden
+                    className="bg-primary absolute inset-x-0 -bottom-px h-px origin-left"
+                    variants={creditUnderlineVariants}
+                    transition={{ duration: 0.2, ease: "easeOut" }}
+                  />
+                </span>
+                <motion.span
+                  className="inline-flex"
+                  variants={creditIconVariants}
+                  transition={socialHoverTransition}
+                >
+                  <HugeiconsIcon icon={ExternalLinkIcon} size={16} />
+                </motion.span>
+              </motion.a>
             </p>
           </div>
 
           <div className="flex gap-4">
             {socials.map((social) => (
-              <Button
+              <MotionButton
                 key={social.name}
                 variant="ghost"
                 size="icon"
                 onClick={() => window.open(social.url, "_blank")}
-                className="hover:bg-accent hover:text-accent-foreground transition-colors duration-200"
+                className="hover:bg-accent hover:text-accent-foreground transition-[color,background-color,box-shadow]"
+                whileHover={prefersReducedMotion ? undefined : { scale: 1.1 }}
+                whileTap={prefersReducedMotion ? undefined : { scale: 0.95 }}
+                transition={socialHoverTransition}
               >
                 <HugeiconsIcon icon={social.icon} size={24} />
-              </Button>
+              </MotionButton>
             ))}
           </div>
         </div>
