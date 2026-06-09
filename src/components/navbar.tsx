@@ -6,12 +6,13 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useActiveSection } from "@/hooks/use-active-section";
-import { DEFAULT_SECTION, navigation, scrollToSection } from "@/lib/navigation";
+import { DEFAULT_SECTION, navigation, scrollToSection, type SectionId } from "@/lib/navigation";
 import { cn } from "@/lib/utils";
 
 const NAV_UNDERLINE_LAYOUT_ID = "nav-underline";
+const NAV_PILL_LAYOUT_ID = "nav-pill";
 
-const navUnderlineTransition = {
+const navMotionTransition = {
   type: "spring" as const,
   stiffness: 400,
   damping: 35,
@@ -21,8 +22,10 @@ export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [contactOpen, setContactOpen] = useState(false);
   const [hasMounted, setHasMounted] = useState(false);
+  const [hoveredId, setHoveredId] = useState<SectionId | null>(null);
   const activeSection = useActiveSection(DEFAULT_SECTION);
   const prefersReducedMotion = useReducedMotion();
+  const highlightedId = hoveredId ?? activeSection;
 
   useEffect(() => {
     setHasMounted(true);
@@ -54,37 +57,70 @@ export function Navbar() {
         </button>
 
         <LayoutGroup id="navbar">
-          <ul className="absolute left-1/2 flex max-w-[calc(100%-12rem)] -translate-x-1/2 gap-1 overflow-x-auto md:max-w-none">
-            {navigation.map((item) => (
-              <li key={item.id} className="relative shrink-0">
-                <button
-                  type="button"
-                  onClick={() => scrollToSection(item.id)}
-                  className={cn(
-                    "inline-flex h-9 items-center rounded-md px-4 py-2 text-sm font-medium transition-colors",
-                    activeSection === item.id
-                      ? "text-primary"
-                      : "text-foreground hover:bg-accent hover:text-accent-foreground",
-                  )}
-                >
-                  {item.label}
-                </button>
+          <ul
+            className="absolute left-1/2 flex max-w-[calc(100%-12rem)] -translate-x-1/2 gap-1 overflow-x-auto md:max-w-none"
+            onMouseLeave={() => setHoveredId(null)}
+          >
+            {navigation.map((item) => {
+              const isActive = activeSection === item.id;
+              const isHovered = hoveredId === item.id;
+              const isHighlighted = highlightedId === item.id;
 
-                {activeSection === item.id && (
-                  <motion.span
-                    layoutId={NAV_UNDERLINE_LAYOUT_ID}
-                    layout
-                    aria-hidden
-                    className="bg-primary pointer-events-none absolute inset-x-0 bottom-0 h-0.5 rounded-full"
-                    transition={
-                      prefersReducedMotion || !hasMounted
-                        ? { duration: 0 }
-                        : navUnderlineTransition
-                    }
-                  />
-                )}
-              </li>
-            ))}
+              return (
+                <li key={item.id} className="shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => scrollToSection(item.id)}
+                    onMouseEnter={() => setHoveredId(item.id)}
+                    className={cn(
+                      "flex h-16 items-center transition-colors",
+                      isActive
+                        ? "text-primary"
+                        : isHovered
+                          ? "text-accent-foreground"
+                          : "text-foreground",
+                    )}
+                  >
+                    <span className="relative inline-flex h-9 items-center rounded-md px-4 py-2 text-sm font-medium">
+                      <span className="relative z-10">{item.label}</span>
+
+                      {isHighlighted && (
+                        <motion.span
+                          layoutId={NAV_PILL_LAYOUT_ID}
+                          layout
+                          aria-hidden
+                          initial={prefersReducedMotion || !hasMounted ? false : { opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          className={cn(
+                            "pointer-events-none absolute inset-0 rounded-md",
+                            isHovered ? "bg-accent" : "bg-primary/10",
+                          )}
+                          transition={
+                            prefersReducedMotion || !hasMounted
+                              ? { duration: 0 }
+                              : navMotionTransition
+                          }
+                        />
+                      )}
+
+                      {isActive && (
+                        <motion.span
+                          layoutId={NAV_UNDERLINE_LAYOUT_ID}
+                          layout
+                          aria-hidden
+                          className="bg-primary pointer-events-none absolute inset-x-0 bottom-0 z-10 h-0.5 rounded-full"
+                          transition={
+                            prefersReducedMotion || !hasMounted
+                              ? { duration: 0 }
+                              : navMotionTransition
+                          }
+                        />
+                      )}
+                    </span>
+                  </button>
+                </li>
+              );
+            })}
           </ul>
         </LayoutGroup>
 
