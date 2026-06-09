@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
+import { HeroSection } from "@/components/hero-section";
 import { Section } from "@/components/section";
 
 export const Route = createFileRoute("/")({ component: Home });
@@ -7,9 +8,7 @@ export const Route = createFileRoute("/")({ component: Home });
 function Home() {
   return (
     <main>
-      <Section id="home" className="flex min-h-screen flex-col items-center justify-center p-8">
-        <h1 className="text-center text-4xl font-bold">Hezaerd</h1>
-      </Section>
+      <HeroSection />
       <Section id="about" className="flex min-h-screen flex-col items-center justify-center p-8">
         <h2 className="text-center text-3xl font-bold">About</h2>
       </Section>

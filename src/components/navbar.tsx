@@ -6,12 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useActiveSection } from "@/hooks/use-active-section";
 import { useSlidingUnderline } from "@/hooks/use-sliding-underline";
-import { DEFAULT_SECTION, navigation, sectionHref, type SectionId } from "@/lib/navigation";
+import { DEFAULT_SECTION, navigation, scrollToSection } from "@/lib/navigation";
 import { cn } from "@/lib/utils";
-
-function scrollToSection(id: SectionId) {
-  document.querySelector(sectionHref(id))?.scrollIntoView({ behavior: "smooth" });
-}
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
