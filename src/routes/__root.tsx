@@ -1,6 +1,7 @@
 /// <reference types="vite/client" />
 import { HeadContent, Outlet, Scripts, createRootRoute } from "@tanstack/react-router";
 
+import { BackToTop } from "@/components/back-to-top";
 import { Footer } from "@/components/footer";
 import { Navbar } from "@/components/navbar";
 
@@ -56,6 +57,7 @@ function RootLayout() {
       <Navbar />
       <Outlet />
       <Footer />
+      <BackToTop />
     </>
   );
 }
