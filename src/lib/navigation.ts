@@ -18,3 +18,7 @@ export function sectionHref(id: SectionId): `#${SectionId}` {
 export function isSectionId(value: string): value is SectionId {
   return navigation.some((item) => item.id === value);
 }
+
+export function scrollToSection(id: SectionId) {
+  document.querySelector(sectionHref(id))?.scrollIntoView({ behavior: "smooth" });
+}
