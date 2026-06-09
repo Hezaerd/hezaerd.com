@@ -1,0 +1,37 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "printWidth": 100,
+  "tabWidth": 2,
+  "useTabs": false,
+  "semi": true,
+  "singleQuote": false,
+  "trailingComma": "all",
+  "endOfLine": "lf",
+  "sortImports": {
+    "customGroups": [
+      {
+        "groupName": "tanstack",
+        "elementNamePattern": ["@tanstack/**"]
+      }
+    ],
+    "groups": [
+      "type",
+      "builtin",
+      "external",
+      "tanstack",
+      "internal",
+      ["parent", "sibling", "index"]
+    ],
+    "newlinesBetween": true
+  },
+  "ignorePatterns": [
+    "node_modules/**",
+    "dist/**",
+    "build/**",
+    ".output/**",
+    ".tanstack/**",
+    "**/*.gen.ts",
+    "bun.lock"
+  ],
+  "sortTailwindcss": true
+}
