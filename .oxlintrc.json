@@ -1,0 +1,67 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": [
+    "eslint",
+    "typescript",
+    "unicorn",
+    "oxc",
+    "react",
+    "import",
+    "jsx-a11y",
+    "promise",
+    "node"
+  ],
+  "categories": {
+    "correctness": "error",
+    "suspicious": "warn"
+  },
+  "env": {
+    "builtin": true
+  },
+  "settings": {
+    "react": {
+      "version": "19.2",
+      "linkComponents": [
+        {
+          "name": "Link",
+          "linkAttribute": "to"
+        }
+      ]
+    }
+  },
+  "rules": {
+    "eslint/no-unused-vars": "off",
+    "eslint/no-underscore-dangle": [
+      "warn",
+      {
+        "allow": ["__APP_BUILD_ID__"]
+      }
+    ],
+    "import/no-default-export": "error",
+    "react/react-in-jsx-scope": "off",
+    "typescript/consistent-type-imports": [
+      "error",
+      {
+        "prefer": "type-imports",
+        "fixStyle": "separate-type-imports"
+      }
+    ]
+  },
+  "ignorePatterns": [
+    "node_modules/**",
+    "dist/**",
+    "build/**",
+    ".output/**",
+    ".tanstack/**",
+    "**/*.gen.ts",
+    "bun.lock"
+  ],
+  "overrides": [
+    {
+      "files": ["vite.config.ts", "**/*.config.{ts,js,mjs,cjs}", "**/server.{ts,js}"],
+      "rules": {
+        "import/no-default-export": "off"
+      }
+    }
+  ]
+}
