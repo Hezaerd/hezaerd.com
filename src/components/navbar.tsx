@@ -1,19 +1,32 @@
 import { DiscordIcon, Mail01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
+import { LayoutGroup, motion, useReducedMotion } from "motion/react";
 import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useActiveSection } from "@/hooks/use-active-section";
-import { useSlidingUnderline } from "@/hooks/use-sliding-underline";
 import { DEFAULT_SECTION, navigation, scrollToSection } from "@/lib/navigation";
 import { cn } from "@/lib/utils";
+
+const NAV_UNDERLINE_LAYOUT_ID = "nav-underline";
+
+const navUnderlineTransition = {
+  type: "spring" as const,
+  stiffness: 400,
+  damping: 35,
+};
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [contactOpen, setContactOpen] = useState(false);
+  const [hasMounted, setHasMounted] = useState(false);
   const activeSection = useActiveSection(DEFAULT_SECTION);
-  const { navListRef, setItemRef, underline } = useSlidingUnderline(activeSection);
+  const prefersReducedMotion = useReducedMotion();
+
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
@@ -40,38 +53,40 @@ export function Navbar() {
           Hezaerd
         </button>
 
-        <ul
-          ref={navListRef}
-          className="absolute left-1/2 flex max-w-[calc(100%-12rem)] -translate-x-1/2 gap-1 overflow-x-auto md:max-w-none"
-        >
-          {navigation.map((item) => (
-            <li key={item.id} className="shrink-0">
-              <button
-                ref={setItemRef(item.id)}
-                type="button"
-                onClick={() => scrollToSection(item.id)}
-                className={cn(
-                  "inline-flex h-9 items-center rounded-md px-4 py-2 text-sm font-medium transition-colors",
-                  activeSection === item.id
-                    ? "text-primary"
-                    : "text-foreground hover:bg-accent hover:text-accent-foreground",
-                )}
-              >
-                {item.label}
-              </button>
-            </li>
-          ))}
+        <LayoutGroup id="navbar">
+          <ul className="absolute left-1/2 flex max-w-[calc(100%-12rem)] -translate-x-1/2 gap-1 overflow-x-auto md:max-w-none">
+            {navigation.map((item) => (
+              <li key={item.id} className="relative shrink-0">
+                <button
+                  type="button"
+                  onClick={() => scrollToSection(item.id)}
+                  className={cn(
+                    "inline-flex h-9 items-center rounded-md px-4 py-2 text-sm font-medium transition-colors",
+                    activeSection === item.id
+                      ? "text-primary"
+                      : "text-foreground hover:bg-accent hover:text-accent-foreground",
+                  )}
+                >
+                  {item.label}
+                </button>
 
-          <div
-            aria-hidden
-            className="bg-primary pointer-events-none absolute bottom-0 h-0.5 rounded-full transition-all duration-300 ease-out"
-            style={{
-              left: underline.left,
-              width: underline.width,
-              transform: "translateY(-2px)",
-            }}
-          />
-        </ul>
+                {activeSection === item.id && (
+                  <motion.span
+                    layoutId={NAV_UNDERLINE_LAYOUT_ID}
+                    layout
+                    aria-hidden
+                    className="bg-primary pointer-events-none absolute inset-x-0 bottom-0 h-0.5 rounded-full"
+                    transition={
+                      prefersReducedMotion || !hasMounted
+                        ? { duration: 0 }
+                        : navUnderlineTransition
+                    }
+                  />
+                )}
+              </li>
+            ))}
+          </ul>
+        </LayoutGroup>
 
         <Popover open={contactOpen} onOpenChange={setContactOpen}>
           <PopoverTrigger
