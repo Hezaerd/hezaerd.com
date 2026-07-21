@@ -7,43 +7,33 @@ import { Navbar } from "@/components/navbar";
 
 import appCss from "../app.css?url";
 
+const title = "Hezaerd — Personal portfolio";
+const description =
+  "Personal archive of projects, experiments, résumé, and creative work by Hezaerd.";
+
 export const Route = createRootRoute({
   head: () => ({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
-      { title: "Hezaerd - Software Engineer" },
-      {
-        name: "description",
-        content:
-          "Passionate about building high-performance software solutions, ranging from game engines, game development tools, to full-stack applications.",
-      },
+      { title },
+      { name: "description", content: description },
       {
         name: "keywords",
         content: "software engineer,game developer,game engine,full stack,minecraft modding",
       },
-
-      // Open Graph
-      { property: "og:title", content: "Hezaerd - Software Engineer" },
-      {
-        property: "og:description",
-        content:
-          "Passionate about building high-performance software solutions, ranging from game engines, game development tools, to full-stack applications.",
-      },
+      { property: "og:title", content: title },
+      { property: "og:description", content: description },
       { property: "og:type", content: "website" },
-
-      // Twitter
+      { property: "og:url", content: "https://portfolio.hezaerd.com" },
       { name: "twitter:card", content: "summary" },
-      { name: "twitter:title", content: "Hezaerd - Software Engineer" },
-      {
-        name: "twitter:description",
-        content:
-          "Passionate about building high-performance software solutions, ranging from game engines, game development tools, to full-stack applications.",
-      },
-      { name: "twitter:image", content: "https://hezaerd.com/og-image.png" },
+      { name: "twitter:title", content: title },
+      { name: "twitter:description", content: description },
+      { name: "twitter:image", content: "https://portfolio.hezaerd.com/og-image.png" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
+      { rel: "canonical", href: "https://portfolio.hezaerd.com" },
       { rel: "author", href: "https://hezaerd.com" },
     ],
   }),

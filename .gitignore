@@ -4,10 +4,12 @@ dist
 dist-ssr
 *.local
 .env
+.env.local
 .nitro
 .tanstack
 .wrangler
 .output
 .vinxi
+.turbo
 __unconfig*
 todos.json
