@@ -1,0 +1,62 @@
+import { Briefcase01Icon, GraduateMaleIcon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
+
+import { education, workExperience } from "@/data/experience";
+
+import { Section } from "./section";
+
+export function ResumeSection() {
+  return (
+    <Section id="resume" className="bg-card px-4 py-16 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl">
+        <h2 className="text-card-foreground mb-12 flex items-center justify-center gap-2 text-center text-3xl font-bold sm:text-4xl">
+          <HugeiconsIcon icon={Briefcase01Icon} size={28} className="text-primary" />
+          Experience & Education
+        </h2>
+        <div className="grid gap-12 md:grid-cols-2">
+          <div>
+            <h3 className="text-card-foreground mb-6 flex items-center gap-2 text-2xl font-semibold">
+              <HugeiconsIcon icon={Briefcase01Icon} size={20} className="text-primary" />
+              Work Experience
+            </h3>
+            <div className="space-y-6">
+              {workExperience.map((exp) => (
+                <div
+                  key={`${exp.company}-${exp.title}`}
+                  className={
+                    exp.color === "primary" ? "border-primary border-l-4 pl-6" : "border-accent border-l-4 pl-6"
+                  }
+                >
+                  <h4 className="text-card-foreground text-lg font-semibold">{exp.title}</h4>
+                  <p className={exp.color === "primary" ? "text-primary" : "text-accent-foreground"}>
+                    {exp.company} • {exp.period}
+                  </p>
+                  <p className="text-muted-foreground mt-2">{exp.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div>
+            <h3 className="text-card-foreground mb-6 flex items-center gap-2 text-2xl font-semibold">
+              <HugeiconsIcon icon={GraduateMaleIcon} size={20} className="text-primary" />
+              Education
+            </h3>
+            <div className="space-y-6">
+              {education.map((edu) => (
+                <div key={`${edu.school}-${edu.degree}`} className="border-secondary border-l-4 pl-6">
+                  <h4 className="text-card-foreground text-lg font-semibold">{edu.degree}</h4>
+                  <p className="text-secondary-foreground">
+                    {edu.school} • {edu.period}
+                  </p>
+                  {edu.description ? (
+                    <p className="text-muted-foreground mt-2">{edu.description}</p>
+                  ) : null}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </Section>
+  );
+}
