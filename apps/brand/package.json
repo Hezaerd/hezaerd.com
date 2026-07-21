@@ -9,7 +9,6 @@
   },
   "dependencies": {
     "@fontsource-variable/inter": "^5.2.8",
-    "@hezaerd/content": "workspace:*",
     "@hezaerd/ui": "workspace:*",
     "@tailwindcss/vite": "^4.1.18",
     "@tanstack/react-router": "latest",
