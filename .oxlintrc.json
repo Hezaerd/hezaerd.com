@@ -58,7 +58,14 @@
   ],
   "overrides": [
     {
-      "files": ["vite.config.ts", "**/*.config.{ts,js,mjs,cjs}", "**/server.{ts,js}"],
+      "files": [
+        "vite.config.ts",
+        "**/vite.config.ts",
+        "vercel.ts",
+        "**/vercel.ts",
+        "**/*.config.{ts,js,mjs,cjs}",
+        "**/server.{ts,js}"
+      ],
       "rules": {
         "import/no-default-export": "off"
       }
