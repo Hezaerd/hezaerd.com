@@ -8,7 +8,7 @@ honor its STOP conditions, and update your row when done.
 
 | Plan | Title | Priority | Effort | Depends on | Status |
 |------|-------|----------|--------|------------|--------|
-| 001 | Rebuild portfolio archive and realign Brand Work | P1 | L | — | TODO |
+| 001 | Rebuild portfolio archive and realign Brand Work | P1 | L | — | DONE |
 
 ## Dependency notes
 
