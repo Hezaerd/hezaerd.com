@@ -22,9 +22,13 @@
     "format": "oxfmt . --check",
     "format:fix": "oxfmt .",
     "typecheck": "turbo run typecheck",
-    "check": "bun run lint && bun run format && bun run typecheck"
+    "check": "bun run lint && bun run format && bun run typecheck",
+    "prepare": "husky"
   },
   "devDependencies": {
+    "@commitlint/cli": "^21.2.1",
+    "@commitlint/config-conventional": "^21.2.0",
+    "husky": "^9.1.7",
     "oxfmt": "^0.54.0",
     "oxlint": "^1.69.0",
     "turbo": "^2.5.4",
