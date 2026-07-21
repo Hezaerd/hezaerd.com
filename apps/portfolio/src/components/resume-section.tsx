@@ -24,11 +24,15 @@ export function ResumeSection() {
                 <div
                   key={`${exp.company}-${exp.title}`}
                   className={
-                    exp.color === "primary" ? "border-primary border-l-4 pl-6" : "border-accent border-l-4 pl-6"
+                    exp.color === "primary"
+                      ? "border-primary border-l-4 pl-6"
+                      : "border-accent border-l-4 pl-6"
                   }
                 >
                   <h4 className="text-card-foreground text-lg font-semibold">{exp.title}</h4>
-                  <p className={exp.color === "primary" ? "text-primary" : "text-accent-foreground"}>
+                  <p
+                    className={exp.color === "primary" ? "text-primary" : "text-accent-foreground"}
+                  >
                     {exp.company} • {exp.period}
                   </p>
                   <p className="text-muted-foreground mt-2">{exp.description}</p>
@@ -43,7 +47,10 @@ export function ResumeSection() {
             </h3>
             <div className="space-y-6">
               {education.map((edu) => (
-                <div key={`${edu.school}-${edu.degree}`} className="border-secondary border-l-4 pl-6">
+                <div
+                  key={`${edu.school}-${edu.degree}`}
+                  className="border-secondary border-l-4 pl-6"
+                >
                   <h4 className="text-card-foreground text-lg font-semibold">{edu.degree}</h4>
                   <p className="text-secondary-foreground">
                     {edu.school} • {edu.period}

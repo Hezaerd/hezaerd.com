@@ -11,11 +11,10 @@ Monorepo for the public Hezaerd brand site and personal portfolio.
 
 ## Packages
 
-| Package            | Purpose                  |
-| ------------------ | ------------------------ |
-| `@hezaerd/ui`      | Shared tokens / `cn`     |
-| `@hezaerd/config`  | Shared TypeScript base   |
-| `@hezaerd/content` | Typed case-study content |
+| Package           | Purpose                |
+| ----------------- | ---------------------- |
+| `@hezaerd/ui`     | Shared tokens / `cn`   |
+| `@hezaerd/config` | Shared TypeScript base |
 
 ## Commands
 

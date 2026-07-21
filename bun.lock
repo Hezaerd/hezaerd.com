@@ -18,7 +18,6 @@
       "name": "@hezaerd/brand",
       "dependencies": {
         "@fontsource-variable/inter": "^5.2.8",
-        "@hezaerd/content": "workspace:*",
         "@hezaerd/ui": "workspace:*",
         "@tailwindcss/vite": "^4.1.18",
         "@tanstack/react-router": "latest",
@@ -70,12 +69,6 @@
     },
     "packages/config": {
       "name": "@hezaerd/config",
-    },
-    "packages/content": {
-      "name": "@hezaerd/content",
-      "devDependencies": {
-        "typescript": "catalog:",
-      },
     },
     "packages/ui": {
       "name": "@hezaerd/ui",
@@ -266,8 +259,6 @@
     "@hezaerd/brand": ["@hezaerd/brand@workspace:apps/brand"],
 
     "@hezaerd/config": ["@hezaerd/config@workspace:packages/config"],
-
-    "@hezaerd/content": ["@hezaerd/content@workspace:packages/content"],
 
     "@hezaerd/portfolio": ["@hezaerd/portfolio@workspace:apps/portfolio"],
 

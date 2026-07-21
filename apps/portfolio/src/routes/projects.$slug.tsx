@@ -40,6 +40,7 @@ function ProjectDetailPage() {
               muted
               playsInline
               poster={project.previewImage}
+              aria-label={`${project.title} preview`}
             >
               <source src={project.previewVideo} />
             </video>

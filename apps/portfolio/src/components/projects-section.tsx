@@ -1,5 +1,6 @@
 import { Folder01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
+
 import { Link } from "@tanstack/react-router";
 
 import { getProjects } from "@/data/projects";
@@ -26,7 +27,7 @@ export function ProjectsSection() {
               <Link
                 to="/projects/$slug"
                 params={{ slug: project.slug }}
-                className="border-border bg-card hover:shadow-xl group flex h-full flex-col overflow-hidden rounded-lg border shadow-lg transition-shadow"
+                className="border-border bg-card group flex h-full flex-col overflow-hidden rounded-lg border shadow-lg transition-shadow hover:shadow-xl"
               >
                 <div className="relative h-40 shrink-0 overflow-hidden">
                   {project.previewImage ? (

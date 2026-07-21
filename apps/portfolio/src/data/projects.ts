@@ -130,12 +130,7 @@ export const projects: Project[] = [
     previewVideo: "/videos/kokopelli.mp4",
     longDescription:
       "Kokopelli is a turn-based RPG taking place in Albuquerque, USA. You embody the member of a Spirit Brigade in charge of befriending spirits in a world in which humans and spirits live in harmony.",
-    features: [
-      "Car controller",
-      "Immersive audio",
-      "Turn-based combat",
-      "Custom AI enemies",
-    ],
+    features: ["Car controller", "Immersive audio", "Turn-based combat", "Custom AI enemies"],
     challenges: [
       "Graphical optimization on Unreal Engine 4",
       "Immersive and dynamic audio system with FMOD",
