@@ -1,10 +1,15 @@
 {
   "name": "hezaerd",
   "private": true,
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
+  "workspaces": {
+    "packages": [
+      "apps/*",
+      "packages/*"
+    ],
+    "catalog": {
+      "typescript": "^7.0.2"
+    }
+  },
   "scripts": {
     "dev": "turbo run dev",
     "dev:brand": "turbo run dev --filter=@hezaerd/brand",
@@ -23,7 +28,7 @@
     "oxfmt": "^0.54.0",
     "oxlint": "^1.69.0",
     "turbo": "^2.5.4",
-    "typescript": "^6.0.2"
+    "typescript": "catalog:"
   },
   "packageManager": "bun@1.2.19"
 }
