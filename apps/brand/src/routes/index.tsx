@@ -1,13 +1,11 @@
-import { getBrandCaseStudies } from "@hezaerd/content";
-
 import { createFileRoute, Link } from "@tanstack/react-router";
 
-import { site } from "@/lib/site";
+import { getWork } from "@/data/work";
 
 export const Route = createFileRoute("/")({ component: HomePage });
 
 function HomePage() {
-  const featured = getBrandCaseStudies();
+  const featured = getWork();
 
   return (
     <main>
@@ -68,21 +66,29 @@ function HomePage() {
           </Link>
         </div>
         <ul className="divide-border mt-10 divide-y">
-          {featured.map((study) => (
+          {featured.map((item) => (
             <li
-              key={study.slug}
+              key={item.slug}
               className="flex flex-col gap-2 py-8 md:flex-row md:items-baseline md:justify-between"
             >
               <div>
-                <h3 className="text-xl font-medium">{study.title}</h3>
-                <p className="text-muted-foreground mt-2 max-w-2xl text-sm">{study.summary}</p>
+                <h3 className="text-xl font-medium">{item.title}</h3>
+                <p className="text-muted-foreground mt-2 max-w-2xl text-sm">{item.description}</p>
               </div>
-              <a
-                href={`${site.portfolioUrl}${study.portfolioPath}`}
-                className="text-primary shrink-0 text-sm font-medium"
-              >
-                Case study
-              </a>
+              {item.releaseUrl ? (
+                <a
+                  href={item.releaseUrl}
+                  className="text-primary shrink-0 text-sm font-medium"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Visit live site
+                </a>
+              ) : (
+                <Link to="/work" className="text-primary shrink-0 text-sm font-medium">
+                  View work
+                </Link>
+              )}
             </li>
           ))}
         </ul>
