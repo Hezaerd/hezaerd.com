@@ -3,8 +3,6 @@ export const navigation = [
   { id: "about", label: "About" },
   { id: "projects", label: "Projects" },
   { id: "resume", label: "Resume" },
-  { id: "github", label: "GitHub" },
-  { id: "music", label: "Music" },
 ] as const satisfies readonly { id: string; label: string }[];
 
 export type SectionId = (typeof navigation)[number]["id"];

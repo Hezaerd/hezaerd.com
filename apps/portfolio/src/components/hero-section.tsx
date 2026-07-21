@@ -27,7 +27,7 @@ export function HeroSection() {
             View my projects
           </Button>
 
-          <Button variant="outline" size="lg">
+          <Button variant="outline" size="lg" onClick={() => scrollToSection("resume")}>
             <HugeiconsIcon icon={Download01Icon} size={16} />
             Grab my resume
           </Button>
