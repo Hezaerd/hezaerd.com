@@ -1,8 +1,6 @@
-import { getBrandCaseStudies } from "@hezaerd/content";
-
 import { createFileRoute } from "@tanstack/react-router";
 
-import { site } from "@/lib/site";
+import { getWork } from "@/data/work";
 
 export const Route = createFileRoute("/work")({
   head: () => ({
@@ -10,7 +8,7 @@ export const Route = createFileRoute("/work")({
       { title: "Work — Hezaerd" },
       {
         name: "description",
-        content: "Selected commercial work and outcomes. Full case studies live on the portfolio.",
+        content: "Selected client work and commercial outcomes.",
       },
     ],
     links: [{ rel: "canonical", href: "https://hezaerd.com/work" }],
@@ -19,37 +17,36 @@ export const Route = createFileRoute("/work")({
 });
 
 function WorkPage() {
-  const studies = getBrandCaseStudies();
+  const items = getWork();
 
   return (
     <main className="mx-auto max-w-6xl px-6 py-20">
       <h1 className="text-4xl font-semibold tracking-tight">Work</h1>
       <p className="text-muted-foreground mt-4 max-w-2xl text-lg">
-        A curated commercial showcase. Deep dives, experiments, and personal projects live on{" "}
-        <a href={site.portfolioUrl} className="text-primary">
-          portfolio.hezaerd.com
-        </a>
-        .
+        Real client engagements. Live sites and outcomes from commercial work.
       </p>
 
       <ul className="divide-border mt-14 divide-y">
-        {studies.map((study) => (
-          <li key={study.slug} className="py-10">
+        {items.map((item) => (
+          <li key={item.slug} className="py-10">
             <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
               <div>
-                <h2 className="text-2xl font-semibold">{study.title}</h2>
-                <p className="text-muted-foreground mt-2 max-w-2xl">{study.summary}</p>
+                <h2 className="text-2xl font-semibold">{item.title}</h2>
+                <p className="text-muted-foreground mt-2 max-w-2xl">{item.description}</p>
                 <p className="text-muted-foreground mt-4 text-sm">
-                  {study.role} · {study.tags.join(" · ")}
+                  {[item.role, ...item.tags].filter(Boolean).join(" · ")}
                 </p>
               </div>
-              <a
-                href={`${site.portfolioUrl}${study.portfolioPath}`}
-                className="text-primary shrink-0 text-sm font-medium"
-                rel="noopener noreferrer"
-              >
-                Full case study
-              </a>
+              {item.releaseUrl ? (
+                <a
+                  href={item.releaseUrl}
+                  className="text-primary shrink-0 text-sm font-medium"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Visit live site
+                </a>
+              ) : null}
             </div>
           </li>
         ))}
