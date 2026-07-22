@@ -1,5 +1,6 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
 
+import { Reveal, RevealItem, RevealStagger } from "@/components/reveal";
 import { getProject } from "@/data/projects";
 
 export const Route = createFileRoute("/projects/$slug")({
@@ -26,38 +27,48 @@ function ProjectDetailPage() {
 
   return (
     <main className="mx-auto max-w-4xl px-6 py-24">
-      <Link to="/" hash="projects" className="text-primary mb-8 inline-block text-sm font-medium">
-        ← Back to projects
-      </Link>
+      <Reveal>
+        <Link to="/" hash="projects" className="text-primary mb-8 inline-block text-sm font-medium">
+          ← Back to projects
+        </Link>
+      </Reveal>
 
       {project.previewVideo || project.previewImage ? (
-        <div className="bg-secondary/30 mb-8 h-64 overflow-hidden rounded-lg md:h-80">
-          {project.previewVideo ? (
-            <video
-              className="h-full w-full object-cover"
-              autoPlay
-              loop
-              muted
-              playsInline
-              poster={project.previewImage}
-              aria-label={`${project.title} preview`}
-            >
-              <source src={project.previewVideo} />
-            </video>
-          ) : (
-            <img
-              src={project.previewImage}
-              alt={project.title}
-              className="h-full w-full object-cover"
-            />
-          )}
-        </div>
+        <Reveal delay={0.04}>
+          <div className="bg-secondary/30 mb-8 h-64 overflow-hidden rounded-lg md:h-80">
+            {project.previewVideo ? (
+              <video
+                className="h-full w-full object-cover"
+                autoPlay
+                loop
+                muted
+                playsInline
+                poster={project.previewImage}
+                aria-label={`${project.title} preview`}
+              >
+                <source src={project.previewVideo} />
+              </video>
+            ) : (
+              <img
+                src={project.previewImage}
+                alt={project.title}
+                className="h-full w-full object-cover"
+              />
+            )}
+          </div>
+        </Reveal>
       ) : null}
 
-      <h1 className="font-display text-4xl font-bold tracking-tight">{project.title}</h1>
-      <p className="text-muted-foreground mt-4 text-lg">
-        {project.longDescription || project.description}
-      </p>
+      <RevealStagger>
+        <RevealItem>
+          <h1 className="font-display text-4xl font-bold tracking-tight">{project.title}</h1>
+        </RevealItem>
+        <RevealItem>
+          <p className="text-muted-foreground mt-4 text-lg">
+            {project.longDescription || project.description}
+          </p>
+        </RevealItem>
+      </RevealStagger>
 
       <div className="mt-8 flex flex-wrap gap-3">
         {project.releaseUrl ? (

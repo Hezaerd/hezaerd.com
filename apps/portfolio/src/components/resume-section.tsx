@@ -3,25 +3,30 @@ import { HugeiconsIcon } from "@hugeicons/react";
 
 import { education, workExperience } from "@/data/experience";
 
+import { Reveal, RevealItem, RevealStagger } from "./reveal";
 import { Section } from "./section";
 
 export function ResumeSection() {
   return (
     <Section id="resume" className="bg-card px-4 py-16 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
-        <h2 className="font-display text-card-foreground mb-12 flex items-center justify-center gap-2 text-center text-3xl font-bold tracking-tight sm:text-4xl">
-          <HugeiconsIcon icon={Briefcase01Icon} size={28} className="text-primary" />
-          Experience & Education
-        </h2>
+        <Reveal>
+          <h2 className="font-display text-card-foreground mb-12 flex items-center justify-center gap-2 text-center text-3xl font-bold tracking-tight sm:text-4xl">
+            <HugeiconsIcon icon={Briefcase01Icon} size={28} className="text-primary" />
+            Experience & Education
+          </h2>
+        </Reveal>
         <div className="grid gap-12 md:grid-cols-2">
           <div>
-            <h3 className="text-card-foreground mb-6 flex items-center gap-2 text-2xl font-semibold">
-              <HugeiconsIcon icon={Briefcase01Icon} size={20} className="text-primary" />
-              Work Experience
-            </h3>
-            <div className="space-y-6">
+            <Reveal>
+              <h3 className="text-card-foreground mb-6 flex items-center gap-2 text-2xl font-semibold">
+                <HugeiconsIcon icon={Briefcase01Icon} size={20} className="text-primary" />
+                Work Experience
+              </h3>
+            </Reveal>
+            <RevealStagger className="space-y-6">
               {workExperience.map((exp) => (
-                <div
+                <RevealItem
                   key={`${exp.company}-${exp.title}`}
                   className={
                     exp.color === "primary"
@@ -42,18 +47,20 @@ export function ResumeSection() {
                     {exp.company} • {exp.period}
                   </p>
                   <p className="text-muted-foreground mt-2">{exp.description}</p>
-                </div>
+                </RevealItem>
               ))}
-            </div>
+            </RevealStagger>
           </div>
           <div>
-            <h3 className="text-card-foreground mb-6 flex items-center gap-2 text-2xl font-semibold">
-              <HugeiconsIcon icon={GraduateMaleIcon} size={20} className="text-primary" />
-              Education
-            </h3>
-            <div className="space-y-6">
+            <Reveal delay={0.05}>
+              <h3 className="text-card-foreground mb-6 flex items-center gap-2 text-2xl font-semibold">
+                <HugeiconsIcon icon={GraduateMaleIcon} size={20} className="text-primary" />
+                Education
+              </h3>
+            </Reveal>
+            <RevealStagger className="space-y-6">
               {education.map((edu) => (
-                <div
+                <RevealItem
                   key={`${edu.school}-${edu.degree}`}
                   className="border-secondary border-l-4 pl-6"
                 >
@@ -66,9 +73,9 @@ export function ResumeSection() {
                   {edu.description ? (
                     <p className="text-muted-foreground mt-2">{edu.description}</p>
                   ) : null}
-                </div>
+                </RevealItem>
               ))}
-            </div>
+            </RevealStagger>
           </div>
         </div>
       </div>

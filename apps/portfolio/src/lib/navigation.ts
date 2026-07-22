@@ -1,3 +1,5 @@
+import { scrollBehavior } from "@/lib/motion";
+
 export const navigation = [
   { id: "home", label: "Home" },
   { id: "about", label: "About" },
@@ -18,5 +20,5 @@ export function isSectionId(value: string): value is SectionId {
 }
 
 export function scrollToSection(id: SectionId) {
-  document.querySelector(sectionHref(id))?.scrollIntoView({ behavior: "smooth" });
+  document.querySelector(sectionHref(id))?.scrollIntoView({ behavior: scrollBehavior() });
 }

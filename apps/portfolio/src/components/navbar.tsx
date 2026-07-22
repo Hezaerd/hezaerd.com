@@ -41,10 +41,10 @@ export function Navbar() {
   return (
     <nav
       className={cn(
-        "fixed inset-x-0 top-0 z-50 transition-all duration-300",
+        "fixed inset-x-0 top-0 z-50 transition-[background-color,border-color,box-shadow,backdrop-filter] duration-(--duration-ui) ease-out motion-reduce:transition-none",
         scrolled
           ? "border-b border-border bg-background/80 shadow-lg backdrop-blur-md"
-          : "bg-transparent",
+          : "border-b border-transparent bg-transparent",
       )}
     >
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">

@@ -1,29 +1,50 @@
 import { Download01Icon, Folder01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
+import { motion, useReducedMotion } from "motion/react";
 
+import { heroContainerVariants, heroItemVariants } from "@/lib/motion";
 import { scrollToSection } from "@/lib/navigation";
 
 import { Section } from "./section";
 import { Button } from "./ui/button";
 
 export function HeroSection() {
+  const prefersReducedMotion = useReducedMotion();
+
   return (
     <Section id="home" className="flex h-screen items-center justify-center px-4 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-7xl text-center">
-        <div className="font-display text-foreground mb-2 text-4xl font-bold tracking-tight sm:text-6xl">
+      <motion.div
+        className="mx-auto max-w-7xl text-center"
+        initial={prefersReducedMotion ? false : "hidden"}
+        animate="show"
+        variants={prefersReducedMotion ? undefined : heroContainerVariants}
+      >
+        <motion.div
+          className="font-display text-foreground mb-2 text-4xl font-bold tracking-tight sm:text-6xl"
+          variants={prefersReducedMotion ? undefined : heroItemVariants}
+        >
           Hezaerd
-        </div>
+        </motion.div>
 
-        <div className="font-mono text-primary mb-6 text-sm font-medium tracking-[0.2em] uppercase sm:text-base">
+        <motion.div
+          className="font-mono text-primary mb-6 text-sm font-medium tracking-[0.2em] uppercase sm:text-base"
+          variants={prefersReducedMotion ? undefined : heroItemVariants}
+        >
           Software Engineer
-        </div>
+        </motion.div>
 
-        <div className="text-muted-foreground mx-auto mb-8 max-w-3xl text-lg sm:text-xl">
+        <motion.div
+          className="text-muted-foreground mx-auto mb-8 max-w-3xl text-lg sm:text-xl"
+          variants={prefersReducedMotion ? undefined : heroItemVariants}
+        >
           Passionate about building high-performance software solutions, ranging from game engines,
           to games, to tools, to full-stack applications.
-        </div>
+        </motion.div>
 
-        <div className="flex flex-col justify-center gap-4 sm:flex-row">
+        <motion.div
+          className="flex flex-col justify-center gap-4 sm:flex-row"
+          variants={prefersReducedMotion ? undefined : heroItemVariants}
+        >
           <Button size="lg" onClick={() => scrollToSection("projects")}>
             <HugeiconsIcon icon={Folder01Icon} size={16} />
             View my projects
@@ -33,8 +54,8 @@ export function HeroSection() {
             <HugeiconsIcon icon={Download01Icon} size={16} />
             Grab my resume
           </Button>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     </Section>
   );
 }
