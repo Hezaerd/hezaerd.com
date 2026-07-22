@@ -1,11 +1,11 @@
 # Portfolio
 
-The person site for Hezaerd the individual: maker home with Projects, About, and Resume. Craft signals like GitHub and Music may return later; they are not required for the first rebuild.
+The person site for Hezaerd the individual: maker home with Projects, About, Resume, and Music. Craft signals like GitHub may return later.
 
 ## Language
 
 **Portfolio**:
-The person site / maker archive — Projects, About, and Resume. Not company client Work; hire-the-practice CTAs belong on Brand.
+The person site / maker archive — Projects, About, Resume, and Music. Not company client Work; hire-the-practice CTAs belong on Brand.
 _Avoid_: Brand site, commercial brochure, client pitch deck
 
 **Project**:
@@ -19,6 +19,10 @@ _Avoid_: Practice, company, agency voice on this site
 **Resume**:
 The person’s experience and education on Portfolio — for employers and collaborators hiring the individual, not the practice’s Services page.
 _Avoid_: Duplicating Brand Services as a résumé
+
+**Music**:
+Live listening signal from Spotify — currently playing, top artists/tracks (by time range), and recently played — as part of the maker home, not a separate product surface.
+_Avoid_: Shipping a public OAuth helper page; exposing Spotify secrets to the client
 
 **Project detail**:
 An addressable view of a single Project, reached from the Projects section of the maker home — shareable as its own place, not only a modal overlay.
