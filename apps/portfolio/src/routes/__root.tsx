@@ -1,5 +1,6 @@
 /// <reference types="vite/client" />
-import { HeadContent, Outlet, Scripts, createRootRoute } from "@tanstack/react-router";
+import type { QueryClient } from "@tanstack/react-query";
+import { HeadContent, Outlet, Scripts, createRootRouteWithContext } from "@tanstack/react-router";
 
 import { BackToTop } from "@/components/back-to-top";
 import { Footer } from "@/components/footer";
@@ -7,11 +8,15 @@ import { Navbar } from "@/components/navbar";
 
 import appCss from "../app.css?url";
 
+export type RouterContext = {
+  queryClient: QueryClient;
+};
+
 const title = "Hezaerd — Personal portfolio";
 const description =
   "Personal archive of projects, experiments, résumé, and creative work by Hezaerd.";
 
-export const Route = createRootRoute({
+export const Route = createRootRouteWithContext<RouterContext>()({
   head: () => ({
     meta: [
       { charSet: "utf-8" },
