@@ -3,6 +3,9 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useEffect, useState } from "react";
 
+import { useCanHover } from "@/hooks/use-can-hover";
+import { scrollBehavior } from "@/lib/motion";
+
 const backToTopTransition = {
   type: "spring" as const,
   stiffness: 500,
@@ -13,13 +16,14 @@ const backToTopTransition = {
 function scrollToTop() {
   window.scrollTo({
     top: 0,
-    behavior: "smooth",
+    behavior: scrollBehavior(),
   });
 }
 
 export function BackToTop() {
   const [isVisible, setIsVisible] = useState(false);
   const prefersReducedMotion = useReducedMotion();
+  const canHover = useCanHover();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -44,11 +48,25 @@ export function BackToTop() {
           className="bg-primary text-primary-foreground focus:ring-primary hover:bg-primary/90 fixed right-6 bottom-6 z-50 rounded-full p-3 shadow-lg hover:shadow-xl focus:ring-2 focus:ring-offset-2 focus:outline-none"
           aria-label="Back to top"
           title="Back to top"
-          initial={prefersReducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: 16 }}
-          whileHover={prefersReducedMotion ? undefined : { scale: 1.05 }}
-          whileTap={prefersReducedMotion ? undefined : { scale: 0.95 }}
+          initial={
+            prefersReducedMotion
+              ? { opacity: 1, transform: "translateY(0px) scale(1)" }
+              : { opacity: 0, transform: "translateY(16px) scale(1)" }
+          }
+          animate={{ opacity: 1, transform: "translateY(0px) scale(1)" }}
+          exit={
+            prefersReducedMotion
+              ? { opacity: 0 }
+              : { opacity: 0, transform: "translateY(16px) scale(1)" }
+          }
+          whileHover={
+            prefersReducedMotion || !canHover
+              ? undefined
+              : { transform: "translateY(0px) scale(1.05)" }
+          }
+          whileTap={
+            prefersReducedMotion ? undefined : { transform: "translateY(0px) scale(0.95)" }
+          }
           transition={prefersReducedMotion ? { duration: 0 } : backToTopTransition}
         >
           <HugeiconsIcon icon={ArrowUp01Icon} size={20} />

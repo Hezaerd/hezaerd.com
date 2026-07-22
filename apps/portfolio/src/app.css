@@ -49,6 +49,11 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --default-transition-timing-function: var(--ease-out);
+  --duration-press: 160ms;
+  --duration-ui: 200ms;
 }
 
 :root {
@@ -105,5 +110,27 @@
   button:not(:disabled),
   [role="button"]:not(:disabled) {
     cursor: pointer;
+  }
+}
+
+@layer utilities {
+  .project-card-media {
+    transition: transform var(--duration-ui) var(--ease-out);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .group\/project:hover .project-card-media {
+      transform: scale(1.03);
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-card-media {
+    transition: none;
+  }
+
+  .group\/project:hover .project-card-media {
+    transform: none;
   }
 }

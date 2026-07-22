@@ -2,6 +2,8 @@ import { GithubIcon, DiscordIcon, SpotifyIcon, ExternalLinkIcon } from "@hugeico
 import { HugeiconsIcon } from "@hugeicons/react";
 import { motion, useReducedMotion } from "motion/react";
 
+import { useCanHover } from "@/hooks/use-can-hover";
+
 import { Button } from "./ui/button";
 
 const MotionButton = motion.create(Button);
@@ -19,13 +21,13 @@ const creditLinkVariants = {
 };
 
 const creditIconVariants = {
-  rest: { x: 0, y: 0 },
-  hover: { x: 2, y: -2 },
+  rest: { transform: "translate(0px, 0px)" },
+  hover: { transform: "translate(2px, -2px)" },
 };
 
 const creditUnderlineVariants = {
-  rest: { scaleX: 0 },
-  hover: { scaleX: 1 },
+  rest: { transform: "scaleX(0)" },
+  hover: { transform: "scaleX(1)" },
 };
 
 const socials = [
@@ -41,6 +43,8 @@ const socials = [
 export function Footer() {
   const currentYear = new Date().getFullYear();
   const prefersReducedMotion = useReducedMotion();
+  const canHover = useCanHover();
+  const allowHoverMotion = !prefersReducedMotion && canHover;
 
   return (
     <footer className="bg-card border-border border-t px-4 py-12 sm:px-6 lg:px-8">
@@ -56,9 +60,9 @@ export function Footer() {
                 href="https://hezaerd.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-primary hover:text-primary/80 flex items-center gap-1 font-medium transition-colors duration-200"
+                className="text-primary hover:text-primary/80 flex items-center gap-1 font-medium transition-colors duration-(--duration-ui) ease-out"
                 initial="rest"
-                whileHover={prefersReducedMotion ? undefined : "hover"}
+                whileHover={allowHoverMotion ? "hover" : undefined}
                 variants={creditLinkVariants}
               >
                 <span className="font-display relative inline-block">
@@ -67,7 +71,7 @@ export function Footer() {
                     aria-hidden
                     className="bg-primary absolute inset-x-0 -bottom-px h-px origin-left"
                     variants={creditUnderlineVariants}
-                    transition={{ duration: 0.2, ease: "easeOut" }}
+                    transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] }}
                   />
                 </span>
                 <motion.span
@@ -88,9 +92,13 @@ export function Footer() {
                 variant="ghost"
                 size="icon"
                 onClick={() => window.open(social.url, "_blank")}
-                className="hover:bg-accent hover:text-accent-foreground transition-[color,background-color,box-shadow]"
-                whileHover={prefersReducedMotion ? undefined : { scale: 1.1 }}
-                whileTap={prefersReducedMotion ? undefined : { scale: 0.95 }}
+                className="hover:bg-accent hover:text-accent-foreground transition-[color,background-color,box-shadow] duration-(--duration-ui) ease-out"
+                whileHover={
+                  allowHoverMotion ? { transform: "scale(1.1)" } : undefined
+                }
+                whileTap={
+                  prefersReducedMotion ? undefined : { transform: "scale(0.95)" }
+                }
                 transition={socialHoverTransition}
               >
                 <HugeiconsIcon icon={social.icon} size={24} />
