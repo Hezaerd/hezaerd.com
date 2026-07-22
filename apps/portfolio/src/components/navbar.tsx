@@ -40,6 +40,7 @@ export function Navbar() {
 
   return (
     <nav
+      style={{ viewTransitionName: "site-nav" }}
       className={cn(
         "fixed inset-x-0 top-0 z-50 transition-[background-color,border-color,box-shadow,backdrop-filter] duration-(--duration-ui) ease-out motion-reduce:transition-none",
         scrolled
