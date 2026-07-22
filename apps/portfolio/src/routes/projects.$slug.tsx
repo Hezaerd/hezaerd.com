@@ -7,6 +7,10 @@ import {
   clearPreviewPlaybackTime,
   getPreviewPlaybackTime,
 } from "@/lib/preview-playback";
+import {
+  armProjectMediaTransition,
+  projectMediaTransitionName,
+} from "@/lib/view-transitions";
 
 export const Route = createFileRoute("/projects/$slug")({
   component: ProjectDetailPage,
@@ -20,6 +24,11 @@ function ProjectDetailPage() {
 
   useEffect(() => {
     clearPreviewPlaybackTime(slug);
+  }, [slug]);
+
+  // Keep the shared media name armed so returning to the grid can reverse-morph.
+  useEffect(() => {
+    armProjectMediaTransition(slug);
   }, [slug]);
 
   if (!project) {
@@ -45,43 +54,44 @@ function ProjectDetailPage() {
       </Reveal>
 
       {project.previewVideo || project.previewImage ? (
-        <Reveal delay={0.04}>
-          <div className="bg-secondary/30 mb-8 h-64 overflow-hidden rounded-lg md:h-80">
-            {project.previewVideo ? (
-              <video
-                ref={(element) => {
-                  if (!element || hasSeekedRef.current || initialVideoTime <= 0) return;
+        <div
+          className="bg-secondary/30 mb-8 h-64 overflow-hidden rounded-lg md:h-80"
+          style={{ viewTransitionName: projectMediaTransitionName(project.slug) }}
+        >
+          {project.previewVideo ? (
+            <video
+              ref={(element) => {
+                if (!element || hasSeekedRef.current || initialVideoTime <= 0) return;
 
-                  const seek = () => {
-                    element.currentTime = initialVideoTime;
-                    hasSeekedRef.current = true;
-                  };
+                const seek = () => {
+                  element.currentTime = initialVideoTime;
+                  hasSeekedRef.current = true;
+                };
 
-                  if (element.readyState >= 1) {
-                    seek();
-                  } else {
-                    element.addEventListener("loadedmetadata", seek, { once: true });
-                  }
-                }}
-                className="h-full w-full object-cover"
-                autoPlay
-                loop
-                muted
-                playsInline
-                poster={project.previewImage}
-                aria-label={`${project.title} preview`}
-              >
-                <source src={project.previewVideo} />
-              </video>
-            ) : (
-              <img
-                src={project.previewImage}
-                alt={project.title}
-                className="h-full w-full object-cover"
-              />
-            )}
-          </div>
-        </Reveal>
+                if (element.readyState >= 1) {
+                  seek();
+                } else {
+                  element.addEventListener("loadedmetadata", seek, { once: true });
+                }
+              }}
+              className="h-full w-full object-cover"
+              autoPlay
+              loop
+              muted
+              playsInline
+              poster={project.previewImage}
+              aria-label={`${project.title} preview`}
+            >
+              <source src={project.previewVideo} />
+            </video>
+          ) : (
+            <img
+              src={project.previewImage}
+              alt={project.title}
+              className="h-full w-full object-cover"
+            />
+          )}
+        </div>
       ) : null}
 
       <RevealStagger>

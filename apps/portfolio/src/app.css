@@ -119,8 +119,32 @@
   }
 }
 
+/* Shared-element morphs (card media ↔ project banner) + page crossfade. */
+::view-transition-group(*) {
+  animation-duration: 0.4s;
+  animation-timing-function: var(--ease-in-out);
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.28s;
+  animation-timing-function: var(--ease-out);
+}
+
+/* Keep chrome stable — named on both routes via root layout. */
+::view-transition-group(site-nav),
+::view-transition-group(site-footer) {
+  animation-duration: 0s;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .project-card-media {
     transition: none;
+  }
+
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
   }
 }

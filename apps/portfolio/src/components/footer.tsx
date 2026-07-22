@@ -47,7 +47,10 @@ export function Footer() {
   const allowHoverMotion = !prefersReducedMotion && canHover;
 
   return (
-    <footer className="bg-card border-border border-t px-4 py-12 sm:px-6 lg:px-8">
+    <footer
+      style={{ viewTransitionName: "site-footer" }}
+      className="bg-card border-border border-t px-4 py-12 sm:px-6 lg:px-8"
+    >
       <div className="mx-auto max-w-7xl">
         <div className="flex flex-col items-center justify-between gap-6 md:flex-row">
           <div className="text-center md:text-left">

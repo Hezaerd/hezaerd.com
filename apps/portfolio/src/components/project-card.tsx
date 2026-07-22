@@ -1,17 +1,24 @@
 import { Link } from "@tanstack/react-router";
 import { useReducedMotion } from "motion/react";
-import { useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 
 import type { Project } from "@/data/projects";
 import { useCanHover } from "@/hooks/use-can-hover";
 import { setPreviewPlaybackTime } from "@/lib/preview-playback";
 import { cn } from "@/lib/utils";
+import {
+  armProjectMediaTransition,
+  clearProjectMediaTransition,
+  getPendingProjectMediaSlug,
+  projectMediaTransitionName,
+} from "@/lib/view-transitions";
 
 interface ProjectCardProps {
   project: Project;
 }
 
 export function ProjectCard({ project }: ProjectCardProps) {
+  const mediaRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isHovered, setIsHovered] = useState(false);
   const [shouldLoadVideo, setShouldLoadVideo] = useState(false);
@@ -20,6 +27,26 @@ export function ProjectCard({ project }: ProjectCardProps) {
   const allowHoverVideo =
     Boolean(project.previewVideo) && canHover && !prefersReducedMotion;
   const showVideo = allowHoverVideo && isHovered;
+  const hasMedia = Boolean(project.previewImage || project.previewVideo);
+
+  // Re-attach the shared name when returning from the detail page (reverse morph).
+  useLayoutEffect(() => {
+    if (!hasMedia || !mediaRef.current) return;
+    if (getPendingProjectMediaSlug() !== project.slug) return;
+
+    const media = mediaRef.current;
+    media.style.viewTransitionName = projectMediaTransitionName(project.slug);
+
+    const clearName = () => {
+      if (media.style.viewTransitionName) {
+        media.style.viewTransitionName = "";
+      }
+      clearProjectMediaTransition();
+    };
+
+    const timeout = window.setTimeout(clearName, 500);
+    return () => window.clearTimeout(timeout);
+  }, [hasMedia, project.slug]);
 
   const handlePointerEnter = () => {
     if (!allowHoverVideo) return;
@@ -49,6 +76,12 @@ export function ProjectCard({ project }: ProjectCardProps) {
   const handleClick = () => {
     const time = videoRef.current?.currentTime ?? 0;
     setPreviewPlaybackTime(project.slug, time);
+
+    if (!hasMedia || !mediaRef.current) return;
+
+    // Must be set synchronously so the old VT snapshot includes this name.
+    armProjectMediaTransition(project.slug);
+    mediaRef.current.style.viewTransitionName = projectMediaTransitionName(project.slug);
   };
 
   return (
@@ -60,7 +93,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
       onPointerLeave={handlePointerLeave}
       className="border-border bg-card group/project flex h-full flex-col overflow-hidden rounded-lg border shadow-lg transition-shadow duration-(--duration-ui) ease-out hover:shadow-xl"
     >
-      <div className="relative h-40 shrink-0 overflow-hidden">
+      <div ref={mediaRef} className="relative h-40 shrink-0 overflow-hidden">
         {project.previewImage ? (
           <>
             <img
