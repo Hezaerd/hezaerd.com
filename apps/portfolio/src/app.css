@@ -115,22 +115,12 @@
 
 @layer utilities {
   .project-card-media {
-    transition: transform var(--duration-ui) var(--ease-out);
-  }
-
-  @media (hover: hover) and (pointer: fine) {
-    .group\/project:hover .project-card-media {
-      transform: scale(1.03);
-    }
+    transition: opacity var(--duration-ui) var(--ease-out);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .project-card-media {
     transition: none;
-  }
-
-  .group\/project:hover .project-card-media {
-    transform: none;
   }
 }
