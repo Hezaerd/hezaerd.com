@@ -40,7 +40,7 @@ function ContactPage() {
 
   return (
     <main className="mx-auto max-w-2xl px-6 py-20">
-      <h1 className="text-4xl font-semibold tracking-tight">Contact</h1>
+      <h1 className="font-display text-4xl font-semibold tracking-tight">Contact</h1>
       <p className="text-muted-foreground mt-4 text-lg">
         Share enough context for a useful first reply. Prefer email?{" "}
         <a href={`mailto:${site.contactEmail}`} className="text-primary">

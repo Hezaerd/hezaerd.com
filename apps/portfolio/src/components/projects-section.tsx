@@ -16,7 +16,7 @@ export function ProjectsSection() {
       className="flex min-h-screen flex-col items-center justify-center px-4 py-16 sm:px-6 lg:px-8"
     >
       <div className="mx-auto w-full max-w-7xl">
-        <h2 className="text-foreground mb-10 flex items-center justify-center gap-2 text-center text-3xl font-bold sm:text-4xl">
+        <h2 className="font-display text-foreground mb-10 flex items-center justify-center gap-2 text-center text-3xl font-bold tracking-tight sm:text-4xl">
           <HugeiconsIcon icon={Folder01Icon} size={28} className="text-primary" />
           Featured Projects
         </h2>
@@ -43,7 +43,7 @@ export function ProjectsSection() {
                   )}
                 </div>
                 <div className="flex flex-grow flex-col p-4">
-                  <h3 className="text-card-foreground group-hover:text-primary mb-2 text-lg font-semibold transition-colors">
+                  <h3 className="font-display text-card-foreground group-hover:text-primary mb-2 text-lg font-semibold tracking-tight transition-colors">
                     {project.title}
                   </h3>
                   <p className="text-muted-foreground mb-3 line-clamp-3 flex-grow text-sm">
@@ -53,7 +53,7 @@ export function ProjectsSection() {
                     {project.tags.slice(0, 3).map((tag) => (
                       <span
                         key={tag}
-                        className="bg-secondary text-secondary-foreground rounded-full px-2 py-1 text-xs"
+                        className="font-mono bg-secondary text-secondary-foreground rounded-md px-2 py-1 text-xs"
                       >
                         {tag}
                       </span>

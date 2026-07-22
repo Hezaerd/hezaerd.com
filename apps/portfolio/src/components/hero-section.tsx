@@ -10,9 +10,11 @@ export function HeroSection() {
   return (
     <Section id="home" className="flex h-screen items-center justify-center px-4 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl text-center">
-        <div className="text-foreground mb-2 text-4xl font-bold sm:text-6xl">Hezaerd</div>
+        <div className="font-display text-foreground mb-2 text-4xl font-bold tracking-tight sm:text-6xl">
+          Hezaerd
+        </div>
 
-        <div className="text-primary mb-6 text-xl font-semibold tracking-widest uppercase sm:text-2xl">
+        <div className="font-mono text-primary mb-6 text-sm font-medium tracking-[0.2em] uppercase sm:text-base">
           Software Engineer
         </div>
 

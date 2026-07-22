@@ -18,7 +18,7 @@ export const Route = createFileRoute("/services")({
 function ServicesPage() {
   return (
     <main className="mx-auto max-w-6xl px-6 py-20">
-      <h1 className="text-4xl font-semibold tracking-tight">Services</h1>
+      <h1 className="font-display text-4xl font-semibold tracking-tight">Services</h1>
       <p className="text-muted-foreground mt-4 max-w-2xl text-lg">
         Clear engagements for teams that need senior execution without a permanent headcount
         commitment.

@@ -61,7 +61,7 @@ export function Footer() {
                 whileHover={prefersReducedMotion ? undefined : "hover"}
                 variants={creditLinkVariants}
               >
-                <span className="relative inline-block">
+                <span className="font-display relative inline-block">
                   Hezaerd
                   <motion.span
                     aria-hidden

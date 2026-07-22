@@ -20,7 +20,7 @@ export const Route = createFileRoute("/about")({
 function AboutPage() {
   return (
     <main className="mx-auto max-w-3xl px-6 py-20">
-      <h1 className="text-4xl font-semibold tracking-tight">About</h1>
+      <h1 className="font-display text-4xl font-semibold tracking-tight">About</h1>
       <div className="text-muted-foreground mt-8 space-y-5 text-lg leading-relaxed">
         <p>
           I am Hezaerd — a software engineer who cares about systems that stay fast under pressure
