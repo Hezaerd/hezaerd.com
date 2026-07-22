@@ -9,7 +9,7 @@ export function ResumeSection() {
   return (
     <Section id="resume" className="bg-card px-4 py-16 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
-        <h2 className="text-card-foreground mb-12 flex items-center justify-center gap-2 text-center text-3xl font-bold sm:text-4xl">
+        <h2 className="font-display text-card-foreground mb-12 flex items-center justify-center gap-2 text-center text-3xl font-bold tracking-tight sm:text-4xl">
           <HugeiconsIcon icon={Briefcase01Icon} size={28} className="text-primary" />
           Experience & Education
         </h2>
@@ -29,9 +29,15 @@ export function ResumeSection() {
                       : "border-accent border-l-4 pl-6"
                   }
                 >
-                  <h4 className="text-card-foreground text-lg font-semibold">{exp.title}</h4>
+                  <h4 className="font-display text-card-foreground text-lg font-semibold tracking-tight">
+                    {exp.title}
+                  </h4>
                   <p
-                    className={exp.color === "primary" ? "text-primary" : "text-accent-foreground"}
+                    className={
+                      exp.color === "primary"
+                        ? "font-mono text-primary text-sm"
+                        : "font-mono text-accent-foreground text-sm"
+                    }
                   >
                     {exp.company} • {exp.period}
                   </p>
@@ -51,8 +57,10 @@ export function ResumeSection() {
                   key={`${edu.school}-${edu.degree}`}
                   className="border-secondary border-l-4 pl-6"
                 >
-                  <h4 className="text-card-foreground text-lg font-semibold">{edu.degree}</h4>
-                  <p className="text-secondary-foreground">
+                  <h4 className="font-display text-card-foreground text-lg font-semibold tracking-tight">
+                    {edu.degree}
+                  </h4>
+                  <p className="font-mono text-secondary-foreground text-sm">
                     {edu.school} • {edu.period}
                   </p>
                   {edu.description ? (

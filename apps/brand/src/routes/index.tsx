@@ -10,7 +10,9 @@ function HomePage() {
   return (
     <main>
       <section className="mx-auto flex min-h-[calc(100vh-4rem)] max-w-6xl flex-col justify-center px-6 py-24">
-        <p className="text-primary mb-4 text-sm font-medium tracking-[0.2em] uppercase">Hezaerd</p>
+        <p className="font-mono text-primary mb-4 text-sm font-medium tracking-[0.2em] uppercase">
+          Hezaerd
+        </p>
         <h1 className="font-display max-w-3xl text-5xl leading-[1.05] font-semibold tracking-tight sm:text-6xl">
           Software that earns its place in production.
         </h1>
@@ -60,7 +62,7 @@ function HomePage() {
 
       <section className="mx-auto max-w-6xl px-6 py-20">
         <div className="flex items-end justify-between gap-4">
-          <h2 className="text-3xl font-semibold tracking-tight">Selected outcomes</h2>
+          <h2 className="font-display text-3xl font-semibold tracking-tight">Selected outcomes</h2>
           <Link to="/work" className="text-primary text-sm font-medium">
             All work
           </Link>
@@ -96,7 +98,7 @@ function HomePage() {
 
       <section className="mx-auto max-w-6xl px-6 pb-24">
         <div className="bg-muted rounded-2xl px-8 py-12 md:px-12">
-          <h2 className="text-3xl font-semibold tracking-tight">Ready when you are</h2>
+          <h2 className="font-display text-3xl font-semibold tracking-tight">Ready when you are</h2>
           <p className="text-muted-foreground mt-4 max-w-xl text-sm leading-relaxed">
             Tell me what you are building, where it hurts, and what success looks like. I will reply
             with fit, timeline, and next steps.

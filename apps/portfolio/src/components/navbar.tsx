@@ -51,7 +51,7 @@ export function Navbar() {
         <button
           type="button"
           onClick={() => scrollToSection("home")}
-          className="text-primary hover:text-primary/80 shrink-0 text-2xl font-bold transition-colors"
+          className="font-display text-primary hover:text-primary/80 shrink-0 text-2xl font-bold tracking-tight transition-colors"
         >
           Hezaerd
         </button>

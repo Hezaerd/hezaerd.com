@@ -13,9 +13,9 @@ function ProjectDetailPage() {
   if (!project) {
     return (
       <main className="mx-auto max-w-3xl px-6 py-24">
-        <h1 className="text-3xl font-bold">Project not found</h1>
+        <h1 className="font-display text-3xl font-bold tracking-tight">Project not found</h1>
         <p className="text-muted-foreground mt-4">
-          No project matches <span className="font-mono">{slug}</span>.
+          No project matches <span className="font-mono text-sm">{slug}</span>.
         </p>
         <Link to="/" hash="projects" className="text-primary mt-8 inline-block text-sm font-medium">
           ← Back to projects
@@ -54,7 +54,7 @@ function ProjectDetailPage() {
         </div>
       ) : null}
 
-      <h1 className="text-4xl font-bold tracking-tight">{project.title}</h1>
+      <h1 className="font-display text-4xl font-bold tracking-tight">{project.title}</h1>
       <p className="text-muted-foreground mt-4 text-lg">
         {project.longDescription || project.description}
       </p>
@@ -86,19 +86,19 @@ function ProjectDetailPage() {
         {project.duration ? (
           <div className="bg-secondary/50 rounded-lg p-3">
             <dt className="text-sm font-medium">Duration</dt>
-            <dd className="text-muted-foreground text-sm">{project.duration}</dd>
+            <dd className="font-mono text-muted-foreground text-sm">{project.duration}</dd>
           </div>
         ) : null}
         {project.teamSize ? (
           <div className="bg-secondary/50 rounded-lg p-3">
             <dt className="text-sm font-medium">Team size</dt>
-            <dd className="text-muted-foreground text-sm">{project.teamSize}</dd>
+            <dd className="font-mono text-muted-foreground text-sm">{project.teamSize}</dd>
           </div>
         ) : null}
         {project.role ? (
           <div className="bg-secondary/50 rounded-lg p-3">
             <dt className="text-sm font-medium">Role</dt>
-            <dd className="text-muted-foreground text-sm">{project.role}</dd>
+            <dd className="font-mono text-muted-foreground text-sm">{project.role}</dd>
           </div>
         ) : null}
       </dl>
@@ -110,7 +110,7 @@ function ProjectDetailPage() {
             {project.technologies.map((tech) => (
               <li
                 key={tech}
-                className="bg-primary/10 text-primary border-primary/20 rounded-full border px-3 py-1 text-sm"
+                className="font-mono bg-primary/10 text-primary border-primary/20 rounded-md border px-3 py-1 text-xs"
               >
                 {tech}
               </li>
@@ -155,7 +155,7 @@ function ProjectDetailPage() {
           {project.tags.map((tag) => (
             <li
               key={tag}
-              className="bg-secondary text-secondary-foreground rounded-full px-3 py-1 text-sm"
+              className="font-mono bg-secondary text-secondary-foreground rounded-md px-3 py-1 text-xs"
             >
               {tag}
             </li>
