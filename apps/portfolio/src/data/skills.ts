@@ -1,12 +1,10 @@
 export const skills: string[] = [
+  "TypeScript",
+  "React",
   "C#",
   "C++",
-  "Java",
-  "TypeScript",
-  "Python",
   "Unity",
-  "Unreal Engine",
+  "Unreal Engines",
   "Wwise",
-  "Git",
-  "Perforce",
+  "FMOD"
 ];
