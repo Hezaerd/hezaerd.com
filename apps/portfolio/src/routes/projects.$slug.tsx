@@ -1,7 +1,12 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
+import { useEffect, useRef, useState } from "react";
 
 import { Reveal, RevealItem, RevealStagger } from "@/components/reveal";
 import { getProject } from "@/data/projects";
+import {
+  clearPreviewPlaybackTime,
+  getPreviewPlaybackTime,
+} from "@/lib/preview-playback";
 
 export const Route = createFileRoute("/projects/$slug")({
   component: ProjectDetailPage,
@@ -10,6 +15,12 @@ export const Route = createFileRoute("/projects/$slug")({
 function ProjectDetailPage() {
   const { slug } = Route.useParams();
   const project = getProject(slug);
+  const [initialVideoTime] = useState(() => getPreviewPlaybackTime(slug));
+  const hasSeekedRef = useRef(false);
+
+  useEffect(() => {
+    clearPreviewPlaybackTime(slug);
+  }, [slug]);
 
   if (!project) {
     return (
@@ -38,6 +49,20 @@ function ProjectDetailPage() {
           <div className="bg-secondary/30 mb-8 h-64 overflow-hidden rounded-lg md:h-80">
             {project.previewVideo ? (
               <video
+                ref={(element) => {
+                  if (!element || hasSeekedRef.current || initialVideoTime <= 0) return;
+
+                  const seek = () => {
+                    element.currentTime = initialVideoTime;
+                    hasSeekedRef.current = true;
+                  };
+
+                  if (element.readyState >= 1) {
+                    seek();
+                  } else {
+                    element.addEventListener("loadedmetadata", seek, { once: true });
+                  }
+                }}
                 className="h-full w-full object-cover"
                 autoPlay
                 loop
