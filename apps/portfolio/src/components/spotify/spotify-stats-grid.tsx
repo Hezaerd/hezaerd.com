@@ -47,14 +47,20 @@ function StatsColumn({
   children: ReactNode;
 }) {
   return (
-    <div className={bordered ? "border-border md:border-r" : undefined}>
+    <div
+      className={
+        bordered
+          ? "border-border flex h-full flex-col md:border-r"
+          : "flex h-full flex-col"
+      }
+    >
       <div className="border-border border-b p-6">
         <h3 className="flex items-center gap-2 text-lg font-semibold">
           <HugeiconsIcon icon={icon} size={20} className="text-primary" />
           {title}
         </h3>
       </div>
-      {children}
+      <div className="flex min-h-0 flex-1 flex-col">{children}</div>
     </div>
   );
 }
@@ -165,7 +171,7 @@ function RecentlyPlayedRows() {
   const { data: recentlyPlayed } = useSuspenseQuery(recentlyPlayedQueryOptions);
 
   return (
-    <div className="space-y-3 p-4">
+    <div className="flex h-full flex-col justify-between p-4">
       {Array.from({ length: VISIBLE_COUNT }).map((_, index) => {
         const item = recentlyPlayed[index];
         if (!item) {
