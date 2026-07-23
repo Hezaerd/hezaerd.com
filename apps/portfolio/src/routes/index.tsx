@@ -11,15 +11,24 @@ import {
   topArtistsQueryOptions,
   topTracksQueryOptions,
 } from "@/lib/spotify-queries";
-import { DEFAULT_TIME_RANGE } from "@/types/spotify";
+import { DEFAULT_TIME_RANGE, TIME_RANGES } from "@/types/spotify";
 
 export const Route = createFileRoute("/")({
   loader: async ({ context }) => {
+    const { queryClient } = context;
+
+    // Warm the other ranges in the background
+    for (const range of TIME_RANGES) {
+      if (range.value === DEFAULT_TIME_RANGE) continue;
+      void queryClient.prefetchQuery(topArtistsQueryOptions(range.value));
+      void queryClient.prefetchQuery(topTracksQueryOptions(range.value));
+    }
+
     await Promise.all([
-      context.queryClient.ensureQueryData(currentlyPlayingQueryOptions),
-      context.queryClient.ensureQueryData(topArtistsQueryOptions(DEFAULT_TIME_RANGE)),
-      context.queryClient.ensureQueryData(topTracksQueryOptions(DEFAULT_TIME_RANGE)),
-      context.queryClient.ensureQueryData(recentlyPlayedQueryOptions),
+      queryClient.ensureQueryData(currentlyPlayingQueryOptions),
+      queryClient.ensureQueryData(topArtistsQueryOptions(DEFAULT_TIME_RANGE)),
+      queryClient.ensureQueryData(topTracksQueryOptions(DEFAULT_TIME_RANGE)),
+      queryClient.ensureQueryData(recentlyPlayedQueryOptions),
     ]);
   },
   component: Home,
