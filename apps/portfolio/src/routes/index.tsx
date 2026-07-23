@@ -5,15 +5,30 @@ import { HeroSection } from "@/components/hero-section";
 import { MusicSection } from "@/components/music-section";
 import { ProjectsSection } from "@/components/projects-section";
 import { ResumeSection } from "@/components/resume-section";
+import { jsonLdScript, pageHead } from "@/lib/seo";
+import { site } from "@/lib/site";
 import {
   currentlyPlayingQueryOptions,
   recentlyPlayedQueryOptions,
   topArtistsQueryOptions,
   topTracksQueryOptions,
 } from "@/lib/spotify-queries";
+import { homeJsonLd } from "@/lib/structured-data";
 import { DEFAULT_TIME_RANGE, TIME_RANGES } from "@/types/spotify";
 
 export const Route = createFileRoute("/")({
+  head: () => {
+    const head = pageHead({
+      title: site.title,
+      description: site.description,
+      path: "/",
+    });
+
+    return {
+      ...head,
+      scripts: [jsonLdScript(homeJsonLd())],
+    };
+  },
   loader: async ({ context }) => {
     const { queryClient } = context;
 
