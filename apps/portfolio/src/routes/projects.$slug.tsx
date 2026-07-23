@@ -9,18 +9,45 @@ import {
   clearPreviewPlaybackTime,
   getPreviewPlaybackTime,
 } from "@/lib/preview-playback";
+import { jsonLdScript, pageHead } from "@/lib/seo";
+import { site } from "@/lib/site";
+import { projectJsonLd } from "@/lib/structured-data";
 import {
   armProjectMediaTransition,
   projectMediaTransitionName,
 } from "@/lib/view-transitions";
 
 export const Route = createFileRoute("/projects/$slug")({
+  loader: ({ params }) => getProject(params.slug),
+  head: ({ params, loaderData }) => {
+    const project = loaderData ?? getProject(params.slug);
+
+    if (!project) {
+      return pageHead({
+        title: `Project not found — ${site.name}`,
+        description: site.description,
+        path: `/projects/${params.slug}`,
+      });
+    }
+
+    const head = pageHead({
+      title: `${project.title} — ${site.name}`,
+      description: project.description,
+      path: `/projects/${project.slug}`,
+      image: project.previewImage,
+    });
+
+    return {
+      ...head,
+      scripts: [jsonLdScript(projectJsonLd(project))],
+    };
+  },
   component: ProjectDetailPage,
 });
 
 function ProjectDetailPage() {
   const { slug } = Route.useParams();
-  const project = getProject(slug);
+  const project = Route.useLoaderData() ?? getProject(slug);
   const [initialVideoTime] = useState(() => getPreviewPlaybackTime(slug));
   const hasSeekedRef = useRef(false);
 
