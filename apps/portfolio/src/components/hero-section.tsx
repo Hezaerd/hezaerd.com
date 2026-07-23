@@ -46,12 +46,12 @@ export function HeroSection() {
           variants={prefersReducedMotion ? undefined : heroItemVariants}
         >
           <Button size="lg" onClick={() => scrollToSection("projects")}>
-            <HugeiconsIcon icon={Folder01Icon} size={16} />
+            <HugeiconsIcon icon={Folder01Icon} data-icon="inline-start" />
             View my projects
           </Button>
 
           <Button variant="outline" size="lg" onClick={() => scrollToSection("resume")}>
-            <HugeiconsIcon icon={Download01Icon} size={16} />
+            <HugeiconsIcon icon={Download01Icon} data-icon="inline-start" />
             Grab my resume
           </Button>
         </motion.div>

@@ -1,4 +1,7 @@
-import { Button } from "@hezaerd/ui/components/button";
+import {
+  ToggleGroup,
+  ToggleGroupItem,
+} from "@hezaerd/ui/components/toggle-group";
 
 import { TIME_RANGES, type TimeRange } from "@/types/spotify";
 
@@ -9,19 +12,27 @@ type TimeRangeSelectorProps = {
 
 export function TimeRangeSelector({ value, onChange }: TimeRangeSelectorProps) {
   return (
-    <div className="flex flex-wrap justify-center gap-2">
+    <ToggleGroup
+      value={[value]}
+      onValueChange={(next) => {
+        const selected = next[0];
+        if (selected) onChange(selected as TimeRange);
+      }}
+      variant="outline"
+      spacing={2}
+      className="mx-auto flex-wrap justify-center"
+    >
       {TIME_RANGES.map((range) => (
-        <Button
+        <ToggleGroupItem
           key={range.value}
-          type="button"
-          variant={value === range.value ? "default" : "outline"}
-          onClick={() => onChange(range.value)}
+          value={range.value}
+          aria-label={range.label}
           className="h-auto flex-col items-center gap-1 px-4 py-3"
         >
           <span className="font-medium">{range.label}</span>
           <span className="text-xs opacity-70">{range.description}</span>
-        </Button>
+        </ToggleGroupItem>
       ))}
-    </div>
+    </ToggleGroup>
   );
 }

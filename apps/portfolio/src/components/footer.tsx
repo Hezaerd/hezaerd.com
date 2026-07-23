@@ -99,7 +99,7 @@ export function Footer() {
                 whileTap={prefersReducedMotion ? undefined : { transform: "scale(0.95)" }}
                 transition={socialHoverTransition}
               >
-                <HugeiconsIcon icon={social.icon} size={24} />
+                <HugeiconsIcon icon={social.icon} />
               </MotionButton>
             ))}
           </div>

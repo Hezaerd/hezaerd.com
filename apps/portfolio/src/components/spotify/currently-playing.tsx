@@ -1,3 +1,5 @@
+import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from "@hezaerd/ui/components/empty";
+import { Spinner } from "@hezaerd/ui/components/spinner";
 import { MusicNote03Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useQuery } from "@tanstack/react-query";
@@ -10,7 +12,7 @@ export function CurrentlyPlaying() {
   if (isLoading) {
     return (
       <div className="text-muted-foreground flex items-center justify-center gap-2 text-sm">
-        <HugeiconsIcon icon={MusicNote03Icon} size={16} className="animate-pulse" />
+        <Spinner />
         <span>Loading…</span>
       </div>
     );
@@ -18,10 +20,14 @@ export function CurrentlyPlaying() {
 
   if (!track) {
     return (
-      <div className="text-muted-foreground flex items-center justify-center gap-2 text-sm">
-        <HugeiconsIcon icon={MusicNote03Icon} size={16} />
-        <span>Not playing</span>
-      </div>
+      <Empty className="border-none p-2">
+        <EmptyHeader>
+          <EmptyMedia variant="icon">
+            <HugeiconsIcon icon={MusicNote03Icon} />
+          </EmptyMedia>
+          <EmptyTitle>Not playing</EmptyTitle>
+        </EmptyHeader>
+      </Empty>
     );
   }
 

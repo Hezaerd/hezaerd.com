@@ -1,10 +1,13 @@
+import { Skeleton } from "@hezaerd/ui/components/skeleton";
+import { cn } from "@hezaerd/ui/lib/utils";
+
 function SkeletonRow({ rounded = "rounded" }: { rounded?: string }) {
   return (
     <div className="flex items-center gap-3 p-2">
-      <div className={`bg-muted size-12 animate-pulse ${rounded}`} />
-      <div className="flex-1 space-y-2">
-        <div className="bg-muted h-4 w-3/4 animate-pulse rounded" />
-        <div className="bg-muted h-3 w-1/2 animate-pulse rounded" />
+      <Skeleton className={cn("size-12", rounded)} />
+      <div className="flex flex-1 flex-col gap-2">
+        <Skeleton className="h-4 w-3/4" />
+        <Skeleton className="h-3 w-1/2" />
       </div>
     </div>
   );
@@ -16,7 +19,7 @@ type ColumnRowsSkeletonProps = {
 
 export function ColumnRowsSkeleton({ rounded = "rounded" }: ColumnRowsSkeletonProps) {
   return (
-    <div className="space-y-3 p-4">
+    <div className="flex flex-col gap-3 p-4">
       {Array.from({ length: 5 }).map((_, index) => (
         <SkeletonRow key={index} rounded={rounded} />
       ))}
