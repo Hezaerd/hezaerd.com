@@ -25,8 +25,8 @@ export const projects: Project[] = [
       "Mobile action rhythm game where gameplay and visuals dynamically react to music in real-time",
     tags: ["Game", "Unity"],
     highlight: "Stellar Suplex",
-    previewImage: "/images/stellar-suplex.jpg",
-    previewVideo: "/videos/stellar-suplex.mp4",
+    previewImage: "/images/stellar-suplex.avif",
+    previewVideo: "/videos/stellar-suplex.webm",
     longDescription:
       "An innovative mobile action rhythm game that seamlessly integrates Wwise as a secondary game engine for real-time audio processing. As the lead programmer on a 16-developer team, I architected a scalable codebase and designed a sophisticated system that processes Wwise audio events in real-time, making the entire game world - from gameplay mechanics to visual effects - react dynamically to the rhythm and intensity of the music.",
     features: [
@@ -58,7 +58,7 @@ export const projects: Project[] = [
       "Los Pingheros is a chaotic 8-player arena brawler set in a snowy Mexican world, where penguins battle to be the last one standing.",
     tags: ["Game", "Unity"],
     highlight: "Los Pingheros",
-    previewImage: "/images/los-pingheros.jpg",
+    previewImage: "/images/los-pingheros.avif",
     previewVideo: "/videos/los-pingheros.webm",
     longDescription:
       "As a programmer on 'Los Pingheros,' I developed a real-time Twitch integration that allows streamers and their audience to interact with the game. This involved creating a responsive Twitch overlay, a Node.js backend to manage interactions, and a WebSocket communication system to seamlessly connect the overlay with the Unity game. My work enabled viewers to appear as spectator 'pingheros' in-game and optimized the backend to minimize latency for a dynamic, engaging experience.",
@@ -95,8 +95,8 @@ export const projects: Project[] = [
       "Coloris is a 2D platformer where you play a specter gaining colorful powers to navigate a monochromatic world and uncover its secrets.",
     tags: ["Game", "Unity"],
     highlight: "Coloris",
-    previewImage: "/images/coloris.jpg",
-    previewVideo: "/videos/coloris.mp4",
+    previewImage: "/images/coloris.avif",
+    previewVideo: "/videos/coloris.webm",
     longDescription:
       "Coloris is a 4-day game jam project where I served as the sole programmer. In this 2D platformer, players embody a specter exploring a black and white world, acquiring new colorful powers that enable interaction with the environment and progression. Drawing inspiration from 'Hollow Knight' and 'Celeste', I implemented polished platforming mechanics like coyote time, dash, and wall jump. I also focused on a clean codebase architecture using Scriptable Objects for game data management and ensured configurable controls for game designers, all while supporting an engaging mini-lore.",
     features: [
@@ -126,8 +126,8 @@ export const projects: Project[] = [
       "Kokopelli is a turn-based RPG taking place in Albuquerque, USA. You embody the member of a Spirit Brigade in charge of befriending spirits in a world in which humans and spirits live in harmony.",
     tags: ["Game", "Unreal Engine 4"],
     highlight: "Kokopelli",
-    previewImage: "/images/kokopelli.jpg",
-    previewVideo: "/videos/kokopelli.mp4",
+    previewImage: "/images/kokopelli.avif",
+    previewVideo: "/videos/kokopelli.webm",
     longDescription:
       "Kokopelli is a turn-based RPG taking place in Albuquerque, USA. You embody the member of a Spirit Brigade in charge of befriending spirits in a world in which humans and spirits live in harmony.",
     features: ["Car controller", "Immersive audio", "Turn-based combat", "Custom AI enemies"],
@@ -149,7 +149,7 @@ export const projects: Project[] = [
       "This mod enhances the axolotl to be a fully tameable, interactive pet that can even join you on your shoulders!",
     tags: ["Minecraft", "Modding"],
     highlight: "Better Axolotl",
-    previewImage: "/images/better-axolotl.jpg",
+    previewImage: "/images/better-axolotl.avif",
     longDescription:
       "This mod enhances the axolotl to be a fully tameable, give them a brand new refreshed AI and make them cuter than ever by allowing to pick them up and put them on your shoulders!",
     features: [
@@ -175,7 +175,7 @@ export const projects: Project[] = [
       "Building my own website — the site that sells the company, and the portfolio that archives the craft behind it.",
     tags: ["Web", "TypeScript"],
     highlight: "Hezaerd.com",
-    previewImage: "/images/hezaerd-com.jpg",
+    previewImage: "/images/hezaerd-com.avif",
     longDescription:
       "Hezaerd.com is a maker project: shipping the public company presence and personal archive from one monorepo. Brand carries services and real client Work; Portfolio holds projects, about, and résumé. The collections stay disjoint with app-local data — no shared content package and no dual listing. The product is the site itself: clear boundaries, honest craft, and a surface that sells Hezaerd without turning personal projects into commercial case studies.",
     features: [
