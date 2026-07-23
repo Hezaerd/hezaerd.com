@@ -3,6 +3,7 @@ import { Download01Icon, Folder01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { motion, useReducedMotion } from "motion/react";
 
+import { personalInfo } from "@/data/personal-info";
 import { heroContainerVariants, heroItemVariants } from "@/lib/motion";
 import { scrollToSection } from "@/lib/navigation";
 
@@ -23,22 +24,21 @@ export function HeroSection() {
           className="font-display text-foreground mb-2 text-4xl font-bold tracking-tight sm:text-6xl"
           variants={prefersReducedMotion ? undefined : heroItemVariants}
         >
-          Hezaerd
+          {personalInfo.name}
         </motion.div>
 
         <motion.div
-          className="text-primary mb-6 font-mono text-sm font-medium tracking-[0.2em] uppercase sm:text-base"
+          className="text-primary mb-6 font-mono text-sm font-medium tracking-wide sm:text-base"
           variants={prefersReducedMotion ? undefined : heroItemVariants}
         >
-          Software Engineer
+          {personalInfo.role}
         </motion.div>
 
         <motion.div
           className="text-muted-foreground mx-auto mb-8 max-w-3xl text-lg sm:text-xl"
           variants={prefersReducedMotion ? undefined : heroItemVariants}
         >
-          Passionate about building high-performance software solutions, ranging from game engines,
-          to games, to tools, to full-stack applications.
+          {personalInfo.hero}
         </motion.div>
 
         <motion.div
