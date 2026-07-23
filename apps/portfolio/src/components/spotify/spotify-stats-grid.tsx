@@ -4,6 +4,18 @@ import {
   UserMultipleIcon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react";
+import { Avatar, AvatarFallback, AvatarImage } from "@hezaerd/ui/components/avatar";
+import { Badge } from "@hezaerd/ui/components/badge";
+import { Button } from "@hezaerd/ui/components/button";
+import {
+  Item,
+  ItemActions,
+  ItemContent,
+  ItemDescription,
+  ItemGroup,
+  ItemMedia,
+  ItemTitle,
+} from "@hezaerd/ui/components/item";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Suspense, type ReactNode } from "react";
 
@@ -23,9 +35,12 @@ type SpotifyStatsGridProps = {
 
 function RankBadge({ rank }: { rank: number }) {
   return (
-    <span className="bg-secondary text-secondary-foreground absolute -top-1 -right-1 flex size-5 items-center justify-center rounded text-[10px] font-medium">
+    <Badge
+      variant="secondary"
+      className="absolute -top-1 -right-1 size-5 justify-center rounded px-0 text-[10px]"
+    >
       {rank}
-    </span>
+    </Badge>
   );
 }
 
@@ -65,11 +80,31 @@ function StatsColumn({
   );
 }
 
+function SpotifyLinkButton({
+  href,
+  label,
+}: {
+  href: string;
+  label: string;
+}) {
+  return (
+    <Button
+      variant="ghost"
+      size="icon-sm"
+      render={
+        <a href={href} target="_blank" rel="noopener noreferrer" aria-label={label} />
+      }
+    >
+      <HugeiconsIcon icon={MusicNote03Icon} />
+    </Button>
+  );
+}
+
 function TopArtistsRows({ timeRange }: { timeRange: TimeRange }) {
   const { data: topArtists } = useSuspenseQuery(topArtistsQueryOptions(timeRange));
 
   return (
-    <div className="space-y-3 p-4">
+    <ItemGroup className="gap-3 p-4">
       {Array.from({ length: VISIBLE_COUNT }).map((_, index) => {
         const artist = topArtists[index];
         if (!artist) {
@@ -77,43 +112,32 @@ function TopArtistsRows({ timeRange }: { timeRange: TimeRange }) {
         }
 
         return (
-          <div
-            key={artist.id}
-            className="hover:bg-muted/50 flex items-center gap-3 rounded-lg p-2 transition-colors"
-          >
-            <div className="relative shrink-0">
-              {artist.imageUrl ? (
-                <img
-                  src={artist.imageUrl}
-                  alt={artist.name}
-                  width={48}
-                  height={48}
-                  className="size-12 rounded-full object-cover"
-                />
-              ) : (
-                <span className="bg-muted flex size-12 items-center justify-center rounded-full" />
-              )}
+          <Item key={artist.id} className="flex-nowrap hover:bg-muted/50">
+            <ItemMedia className="relative size-12 overflow-visible">
+              <Avatar className="size-12">
+                {artist.imageUrl ? (
+                  <AvatarImage src={artist.imageUrl} alt={artist.name} />
+                ) : null}
+                <AvatarFallback />
+              </Avatar>
               <RankBadge rank={index + 1} />
-            </div>
-            <div className="min-w-0 flex-1">
-              <h4 className="truncate font-medium">{artist.name}</h4>
-              <p className="text-muted-foreground truncate text-sm">
+            </ItemMedia>
+            <ItemContent className="min-w-0">
+              <ItemTitle className="w-full min-w-0 truncate">{artist.name}</ItemTitle>
+              <ItemDescription className="truncate">
                 {artist.genres.join(", ") || "Artist"}
-              </p>
-            </div>
-            <a
-              href={artist.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-primary hover:text-primary/80 transition-colors"
-              aria-label={`Open ${artist.name} on Spotify`}
-            >
-              <HugeiconsIcon icon={MusicNote03Icon} size={16} />
-            </a>
-          </div>
+              </ItemDescription>
+            </ItemContent>
+            <ItemActions className="shrink-0">
+              <SpotifyLinkButton
+                href={artist.url}
+                label={`Open ${artist.name} on Spotify`}
+              />
+            </ItemActions>
+          </Item>
         );
       })}
-    </div>
+    </ItemGroup>
   );
 }
 
@@ -121,7 +145,7 @@ function TopTracksRows({ timeRange }: { timeRange: TimeRange }) {
   const { data: topTracks } = useSuspenseQuery(topTracksQueryOptions(timeRange));
 
   return (
-    <div className="space-y-3 p-4">
+    <ItemGroup className="gap-3 p-4">
       {Array.from({ length: VISIBLE_COUNT }).map((_, index) => {
         const track = topTracks[index];
         if (!track) {
@@ -129,41 +153,33 @@ function TopTracksRows({ timeRange }: { timeRange: TimeRange }) {
         }
 
         return (
-          <div
-            key={track.id}
-            className="hover:bg-muted/50 flex items-center gap-3 rounded-lg p-2 transition-colors"
-          >
-            <div className="relative shrink-0">
+          <Item key={track.id} className="flex-nowrap hover:bg-muted/50">
+            <ItemMedia className="relative size-12 overflow-visible">
               {track.imageUrl ? (
                 <img
                   src={track.imageUrl}
                   alt={track.albumName}
-                  width={48}
-                  height={48}
-                  className="size-12 rounded object-cover"
+                  className="size-full rounded-sm object-cover"
                 />
               ) : (
-                <span className="bg-muted flex size-12 items-center justify-center rounded" />
+                <span className="bg-muted size-full rounded-sm" />
               )}
               <RankBadge rank={index + 1} />
-            </div>
-            <div className="min-w-0 flex-1">
-              <h4 className="truncate font-medium">{track.name}</h4>
-              <p className="text-muted-foreground truncate text-sm">{track.artists}</p>
-            </div>
-            <a
-              href={track.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-primary hover:text-primary/80 transition-colors"
-              aria-label={`Open ${track.name} on Spotify`}
-            >
-              <HugeiconsIcon icon={MusicNote03Icon} size={16} />
-            </a>
-          </div>
+            </ItemMedia>
+            <ItemContent className="min-w-0">
+              <ItemTitle className="w-full min-w-0 truncate">{track.name}</ItemTitle>
+              <ItemDescription className="truncate">{track.artists}</ItemDescription>
+            </ItemContent>
+            <ItemActions className="shrink-0">
+              <SpotifyLinkButton
+                href={track.url}
+                label={`Open ${track.name} on Spotify`}
+              />
+            </ItemActions>
+          </Item>
         );
       })}
-    </div>
+    </ItemGroup>
   );
 }
 
@@ -171,7 +187,7 @@ function RecentlyPlayedRows() {
   const { data: recentlyPlayed } = useSuspenseQuery(recentlyPlayedQueryOptions);
 
   return (
-    <div className="flex h-full flex-col justify-between p-4">
+    <ItemGroup className="gap-3 p-4">
       {Array.from({ length: VISIBLE_COUNT }).map((_, index) => {
         const item = recentlyPlayed[index];
         if (!item) {
@@ -179,41 +195,32 @@ function RecentlyPlayedRows() {
         }
 
         return (
-          <div
-            key={item.id}
-            className="hover:bg-muted/50 flex items-center gap-3 rounded-lg p-2 transition-colors"
-          >
-            {item.imageUrl ? (
-              <img
-                src={item.imageUrl}
-                alt={item.name}
-                width={48}
-                height={48}
-                className="size-12 shrink-0 rounded object-cover"
+          <Item key={item.id} className="flex-nowrap hover:bg-muted/50">
+            <ItemMedia className="size-12 overflow-hidden rounded-sm">
+              {item.imageUrl ? (
+                <img
+                  src={item.imageUrl}
+                  alt={item.name}
+                  className="size-full object-cover"
+                />
+              ) : (
+                <span className="bg-muted size-full" />
+              )}
+            </ItemMedia>
+            <ItemContent className="min-w-0">
+              <ItemTitle className="w-full min-w-0 truncate">{item.name}</ItemTitle>
+              <ItemDescription className="truncate">{item.artists}</ItemDescription>
+            </ItemContent>
+            <ItemActions className="shrink-0">
+              <SpotifyLinkButton
+                href={item.url}
+                label={`Open ${item.name} on Spotify`}
               />
-            ) : (
-              <span className="bg-muted flex size-12 shrink-0 items-center justify-center rounded" />
-            )}
-            <div className="min-w-0 flex-1">
-              <h4 className="truncate font-medium">{item.name}</h4>
-              <p className="text-muted-foreground truncate text-sm">{item.artists}</p>
-              <p className="text-muted-foreground text-xs">
-                {new Date(item.playedAt).toLocaleDateString()}
-              </p>
-            </div>
-            <a
-              href={item.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-primary hover:text-primary/80 transition-colors"
-              aria-label={`Open ${item.name} on Spotify`}
-            >
-              <HugeiconsIcon icon={MusicNote03Icon} size={16} />
-            </a>
-          </div>
+            </ItemActions>
+          </Item>
         );
       })}
-    </div>
+    </ItemGroup>
   );
 }
 

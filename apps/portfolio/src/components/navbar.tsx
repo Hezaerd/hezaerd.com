@@ -1,5 +1,12 @@
 import { Button } from "@hezaerd/ui/components/button";
-import { Popover, PopoverContent, PopoverTrigger } from "@hezaerd/ui/components/popover";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "@hezaerd/ui/components/dropdown-menu";
 import { cn } from "@hezaerd/ui/lib/utils";
 import { DiscordIcon, Mail01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
@@ -20,7 +27,6 @@ const navMotionTransition = {
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
-  const [contactOpen, setContactOpen] = useState(false);
   const [hasMounted, setHasMounted] = useState(false);
   const [hoveredId, setHoveredId] = useState<SectionId | null>(null);
   const activeSection = useActiveSection(DEFAULT_SECTION);
@@ -125,46 +131,32 @@ export function Navbar() {
           </ul>
         </LayoutGroup>
 
-        <Popover open={contactOpen} onOpenChange={setContactOpen}>
-          <PopoverTrigger
-            render={
-              <Button className="h-9 shrink-0 px-4 shadow-lg hover:shadow-xl">Get In Touch</Button>
-            }
+        <DropdownMenu>
+          <DropdownMenuTrigger
+            render={<Button className="h-9 shrink-0 px-4 shadow-lg hover:shadow-xl">Get In Touch</Button>}
           />
-          <PopoverContent align="end" sideOffset={8} className="w-56 p-2">
-            <p className="text-muted-foreground px-2 py-1.5 text-xs font-medium">
-              How would you like to reach out?
-            </p>
-            <div className="flex flex-col gap-1">
-              <Button
-                variant="ghost"
-                className="w-full justify-start gap-2"
-                onClick={() => setContactOpen(false)}
-                render={
-                  <a href={`mailto:hezaerd@hezaerd.com`}>
-                    <HugeiconsIcon icon={Mail01Icon} size={16} />
-                    Email
-                  </a>
-                }
-              />
-              <Button
-                variant="ghost"
-                className="w-full justify-start gap-2"
+          <DropdownMenuContent align="end" sideOffset={8} className="w-56">
+            <DropdownMenuGroup>
+              <DropdownMenuLabel>How would you like to reach out?</DropdownMenuLabel>
+              <DropdownMenuItem render={<a href="mailto:hezaerd@hezaerd.com" />}>
+                <HugeiconsIcon icon={Mail01Icon} />
+                Email
+              </DropdownMenuItem>
+              <DropdownMenuItem
                 onClick={() => {
                   window.open(
                     "https://discord.com/users/225942632050720768",
                     "_blank",
                     "noopener,noreferrer",
                   );
-                  setContactOpen(false);
                 }}
               >
-                <HugeiconsIcon icon={DiscordIcon} size={16} />
+                <HugeiconsIcon icon={DiscordIcon} />
                 Discord
-              </Button>
-            </div>
-          </PopoverContent>
-        </Popover>
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </nav>
   );

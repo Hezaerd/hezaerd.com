@@ -1,5 +1,6 @@
 import type { Project } from "@/data/projects";
 
+import { Badge } from "@hezaerd/ui/components/badge";
 import { cn } from "@hezaerd/ui/lib/utils";
 import { useReducedMotion } from "motion/react";
 import { useLayoutEffect, useRef, useState } from "react";
@@ -145,12 +146,9 @@ export function ProjectCard({ project }: ProjectCardProps) {
         </p>
         <div className="mb-3 flex flex-wrap gap-1">
           {project.tags.slice(0, 3).map((tag) => (
-            <span
-              key={tag}
-              className="bg-secondary text-secondary-foreground rounded-md px-2 py-1 font-mono text-xs"
-            >
+            <Badge key={tag} variant="secondary" className="font-mono">
               {tag}
-            </span>
+            </Badge>
           ))}
         </div>
         <span className="text-primary text-xs font-medium">View details →</span>

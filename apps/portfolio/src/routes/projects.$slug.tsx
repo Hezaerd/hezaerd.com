@@ -1,3 +1,5 @@
+import { Badge } from "@hezaerd/ui/components/badge";
+import { Button } from "@hezaerd/ui/components/button";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 
@@ -107,24 +109,23 @@ function ProjectDetailPage() {
 
       <div className="mt-8 flex flex-wrap gap-3">
         {project.releaseUrl ? (
-          <a
-            href={project.releaseUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-md px-4 py-2 text-sm font-medium"
+          <Button
+            render={
+              <a href={project.releaseUrl} target="_blank" rel="noopener noreferrer" />
+            }
           >
             View release
-          </a>
+          </Button>
         ) : null}
         {project.sourcesUrl ? (
-          <a
-            href={project.sourcesUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="border-border hover:bg-accent rounded-md border px-4 py-2 text-sm font-medium"
+          <Button
+            variant="outline"
+            render={
+              <a href={project.sourcesUrl} target="_blank" rel="noopener noreferrer" />
+            }
           >
             View source
-          </a>
+          </Button>
         ) : null}
       </div>
 
@@ -154,11 +155,10 @@ function ProjectDetailPage() {
           <h2 className="mb-3 text-lg font-semibold">Technologies & tools</h2>
           <ul className="flex flex-wrap gap-2">
             {project.technologies.map((tech) => (
-              <li
-                key={tech}
-                className="font-mono bg-primary/10 text-primary border-primary/20 rounded-md border px-3 py-1 text-xs"
-              >
-                {tech}
+              <li key={tech}>
+                <Badge variant="outline" className="font-mono">
+                  {tech}
+                </Badge>
               </li>
             ))}
           </ul>
@@ -199,11 +199,10 @@ function ProjectDetailPage() {
         <h2 className="mb-3 text-lg font-semibold">Tags</h2>
         <ul className="flex flex-wrap gap-2">
           {project.tags.map((tag) => (
-            <li
-              key={tag}
-              className="font-mono bg-secondary text-secondary-foreground rounded-md px-3 py-1 text-xs"
-            >
-              {tag}
+            <li key={tag}>
+              <Badge variant="secondary" className="font-mono">
+                {tag}
+              </Badge>
             </li>
           ))}
         </ul>

@@ -1,3 +1,4 @@
+import { Button } from "@hezaerd/ui/components/button";
 import { ArrowUp01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
@@ -5,6 +6,8 @@ import { useEffect, useState } from "react";
 
 import { useCanHover } from "@/hooks/use-can-hover";
 import { scrollBehavior } from "@/lib/motion";
+
+const MotionButton = motion.create(Button);
 
 const backToTopTransition = {
   type: "spring" as const,
@@ -42,10 +45,10 @@ export function BackToTop() {
   return (
     <AnimatePresence>
       {isVisible && (
-        <motion.button
-          type="button"
+        <MotionButton
+          size="icon-lg"
           onClick={scrollToTop}
-          className="bg-primary text-primary-foreground focus:ring-primary hover:bg-primary/90 fixed right-6 bottom-6 z-50 rounded-full p-3 shadow-lg hover:shadow-xl focus:ring-2 focus:ring-offset-2 focus:outline-none"
+          className="fixed right-6 bottom-6 z-50 shadow-lg"
           aria-label="Back to top"
           title="Back to top"
           initial={
@@ -69,8 +72,8 @@ export function BackToTop() {
           }
           transition={prefersReducedMotion ? { duration: 0 } : backToTopTransition}
         >
-          <HugeiconsIcon icon={ArrowUp01Icon} size={20} />
-        </motion.button>
+          <HugeiconsIcon icon={ArrowUp01Icon} />
+        </MotionButton>
       )}
     </AnimatePresence>
   );
