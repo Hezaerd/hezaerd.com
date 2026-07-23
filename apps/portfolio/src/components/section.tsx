@@ -1,6 +1,6 @@
 import type { SectionId } from "@/lib/navigation";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@hezaerd/ui/lib/utils";
 
 type SectionProps = {
   id: SectionId;

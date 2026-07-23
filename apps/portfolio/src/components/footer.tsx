@@ -1,10 +1,9 @@
+import { Button } from "@hezaerd/ui/components/button";
 import { GithubIcon, DiscordIcon, SpotifyIcon, ExternalLinkIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { motion, useReducedMotion } from "motion/react";
 
 import { useCanHover } from "@/hooks/use-can-hover";
-
-import { Button } from "./ui/button";
 
 const MotionButton = motion.create(Button);
 
@@ -96,12 +95,8 @@ export function Footer() {
                 size="icon"
                 onClick={() => window.open(social.url, "_blank")}
                 className="hover:bg-accent hover:text-accent-foreground transition-[color,background-color,box-shadow] duration-(--duration-ui) ease-out"
-                whileHover={
-                  allowHoverMotion ? { transform: "scale(1.1)" } : undefined
-                }
-                whileTap={
-                  prefersReducedMotion ? undefined : { transform: "scale(0.95)" }
-                }
+                whileHover={allowHoverMotion ? { transform: "scale(1.1)" } : undefined}
+                whileTap={prefersReducedMotion ? undefined : { transform: "scale(0.95)" }}
                 transition={socialHoverTransition}
               >
                 <HugeiconsIcon icon={social.icon} size={24} />

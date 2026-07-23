@@ -1,13 +1,13 @@
+import { Button } from "@hezaerd/ui/components/button";
+import { Popover, PopoverContent, PopoverTrigger } from "@hezaerd/ui/components/popover";
+import { cn } from "@hezaerd/ui/lib/utils";
 import { DiscordIcon, Mail01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { LayoutGroup, motion, useReducedMotion } from "motion/react";
 import { useEffect, useState } from "react";
 
-import { Button } from "@/components/ui/button";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useActiveSection } from "@/hooks/use-active-section";
 import { DEFAULT_SECTION, navigation, scrollToSection, type SectionId } from "@/lib/navigation";
-import { cn } from "@/lib/utils";
 
 const NAV_UNDERLINE_LAYOUT_ID = "nav-underline";
 const NAV_PILL_LAYOUT_ID = "nav-pill";
