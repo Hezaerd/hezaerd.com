@@ -1,11 +1,13 @@
-import { Link } from "@tanstack/react-router";
+import type { Project } from "@/data/projects";
+
+import { cn } from "@hezaerd/ui/lib/utils";
 import { useReducedMotion } from "motion/react";
 import { useLayoutEffect, useRef, useState } from "react";
 
-import type { Project } from "@/data/projects";
+import { Link } from "@tanstack/react-router";
+
 import { useCanHover } from "@/hooks/use-can-hover";
 import { setPreviewPlaybackTime } from "@/lib/preview-playback";
-import { cn } from "@/lib/utils";
 import {
   armProjectMediaTransition,
   clearProjectMediaTransition,
@@ -24,8 +26,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
   const [shouldLoadVideo, setShouldLoadVideo] = useState(false);
   const canHover = useCanHover();
   const prefersReducedMotion = useReducedMotion();
-  const allowHoverVideo =
-    Boolean(project.previewVideo) && canHover && !prefersReducedMotion;
+  const allowHoverVideo = Boolean(project.previewVideo) && canHover && !prefersReducedMotion;
   const showVideo = allowHoverVideo && isHovered;
   const hasMedia = Boolean(project.previewImage || project.previewVideo);
 
@@ -146,7 +147,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
           {project.tags.slice(0, 3).map((tag) => (
             <span
               key={tag}
-              className="font-mono bg-secondary text-secondary-foreground rounded-md px-2 py-1 text-xs"
+              className="bg-secondary text-secondary-foreground rounded-md px-2 py-1 font-mono text-xs"
             >
               {tag}
             </span>

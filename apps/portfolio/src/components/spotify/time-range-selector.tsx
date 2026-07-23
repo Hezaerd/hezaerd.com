@@ -1,4 +1,5 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@hezaerd/ui/components/button";
+
 import { TIME_RANGES, type TimeRange } from "@/types/spotify";
 
 type TimeRangeSelectorProps = {

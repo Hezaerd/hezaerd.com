@@ -1,3 +1,4 @@
+import { Button } from "@hezaerd/ui/components/button";
 import { Download01Icon, Folder01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { motion, useReducedMotion } from "motion/react";
@@ -6,7 +7,6 @@ import { heroContainerVariants, heroItemVariants } from "@/lib/motion";
 import { scrollToSection } from "@/lib/navigation";
 
 import { Section } from "./section";
-import { Button } from "./ui/button";
 
 export function HeroSection() {
   const prefersReducedMotion = useReducedMotion();
@@ -27,7 +27,7 @@ export function HeroSection() {
         </motion.div>
 
         <motion.div
-          className="font-mono text-primary mb-6 text-sm font-medium tracking-[0.2em] uppercase sm:text-base"
+          className="text-primary mb-6 font-mono text-sm font-medium tracking-[0.2em] uppercase sm:text-base"
           variants={prefersReducedMotion ? undefined : heroItemVariants}
         >
           Software Engineer
