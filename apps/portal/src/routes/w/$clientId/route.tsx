@@ -1,6 +1,11 @@
 import { useAuth } from "@workos/authkit-tanstack-react-start/client";
 
-import { Link, Outlet, createFileRoute, notFound } from "@tanstack/react-router";
+import {
+  Link,
+  Outlet,
+  createFileRoute,
+  notFound,
+} from "@tanstack/react-router";
 
 import { ClientWorkspaceShell } from "@/components/shell/client-workspace-shell";
 import { getClient } from "@/lib/portal-fixtures";

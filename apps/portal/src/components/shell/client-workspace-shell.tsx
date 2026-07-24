@@ -44,12 +44,20 @@ const featureAreas: WorkspaceArea[] = [
   { label: "Website", segment: "website", feature: "website" },
 ];
 
-export function ClientWorkspaceShell({ client, email, children }: ClientWorkspaceShellProps) {
-  const pathname = useRouterState({ select: (state) => state.location.pathname });
+export function ClientWorkspaceShell({
+  client,
+  email,
+  children,
+}: ClientWorkspaceShellProps) {
+  const pathname = useRouterState({
+    select: (state) => state.location.pathname,
+  });
   const showSwitcher = isOperatorRole();
   const areas = [
     ...coreAreas,
-    ...featureAreas.filter((area) => (area.feature ? client.features[area.feature] : true)),
+    ...featureAreas.filter((area) =>
+      area.feature ? client.features[area.feature] : true,
+    ),
   ];
 
   function isAreaActive(segment: WorkspaceArea["segment"]) {
@@ -68,7 +76,9 @@ export function ClientWorkspaceShell({ client, email, children }: ClientWorkspac
             <p className="text-primary font-mono text-xs font-medium tracking-[0.2em] uppercase">
               Client Workspace
             </p>
-            <p className="font-display text-sm font-semibold tracking-tight">{client.name}</p>
+            <p className="font-display text-sm font-semibold tracking-tight">
+              {client.name}
+            </p>
           </div>
         </SidebarHeader>
         <SidebarContent>
@@ -80,7 +90,11 @@ export function ClientWorkspaceShell({ client, email, children }: ClientWorkspac
                     <SidebarMenuButton
                       render={
                         <Link
-                          to={area.segment === "" ? "/w/$clientId" : `/w/$clientId/${area.segment}`}
+                          to={
+                            area.segment === ""
+                              ? "/w/$clientId"
+                              : `/w/$clientId/${area.segment}`
+                          }
                           params={{ clientId: client.id }}
                         />
                       }
@@ -99,7 +113,12 @@ export function ClientWorkspaceShell({ client, email, children }: ClientWorkspac
           <SidebarMenu>
             <SidebarMenuItem>
               <SidebarMenuButton
-                render={<Link to="/w/$clientId/message" params={{ clientId: client.id }} />}
+                render={
+                  <Link
+                    to="/w/$clientId/message"
+                    params={{ clientId: client.id }}
+                  />
+                }
                 isActive={pathname.startsWith(`/w/${client.id}/message`)}
                 tooltip="Message Hezaerd"
               >
@@ -115,7 +134,9 @@ export function ClientWorkspaceShell({ client, email, children }: ClientWorkspac
           <Separator orientation="vertical" className="mr-1 h-4" />
           {showSwitcher ? <WorkspaceSwitcher currentClient={client} /> : null}
           <div className="flex flex-1 items-center justify-end gap-3">
-            <p className="text-muted-foreground hidden text-sm sm:block">{email}</p>
+            <p className="text-muted-foreground hidden text-sm sm:block">
+              {email}
+            </p>
             <Link
               to="/signout"
               className="border-border hover:bg-accent rounded-md border px-3 py-2 text-sm font-medium"
@@ -124,7 +145,9 @@ export function ClientWorkspaceShell({ client, email, children }: ClientWorkspac
             </Link>
           </div>
         </header>
-        <main className="flex flex-1 flex-col gap-6 p-4 md:p-8">{children}</main>
+        <main className="flex flex-1 flex-col gap-6 p-4 md:p-8">
+          {children}
+        </main>
       </SidebarInset>
     </SidebarProvider>
   );

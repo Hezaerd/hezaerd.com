@@ -17,7 +17,9 @@ function ClientMessagePage() {
   return (
     <div className="flex max-w-xl flex-col gap-6">
       <div>
-        <h1 className="font-display text-2xl font-semibold tracking-tight">Message Hezaerd</h1>
+        <h1 className="font-display text-2xl font-semibold tracking-tight">
+          Message Hezaerd
+        </h1>
         <p className="text-muted-foreground mt-2 text-sm leading-relaxed">
           A lightweight note to the practice — not a helpdesk ticket.
         </p>

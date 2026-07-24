@@ -1,6 +1,11 @@
 import { useAuth } from "@workos/authkit-tanstack-react-start/client";
 
-import { Link, Outlet, createFileRoute, redirect } from "@tanstack/react-router";
+import {
+  Link,
+  Outlet,
+  createFileRoute,
+  redirect,
+} from "@tanstack/react-router";
 
 import { OperatorShell } from "@/components/shell/operator-shell";
 import { getClientWorkspaceHomeParams, isClientRole } from "@/lib/portal-role";

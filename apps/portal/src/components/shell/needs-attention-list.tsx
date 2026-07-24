@@ -1,7 +1,17 @@
 import type { NeedsAttentionItem } from "@/lib/portal-fixtures";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@hezaerd/ui/components/card";
-import { Empty, EmptyDescription, EmptyHeader, EmptyTitle } from "@hezaerd/ui/components/empty";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@hezaerd/ui/components/card";
+import {
+  Empty,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyTitle,
+} from "@hezaerd/ui/components/empty";
 
 import { Link } from "@tanstack/react-router";
 
@@ -16,7 +26,8 @@ export function NeedsAttentionList({ items }: NeedsAttentionListProps) {
         <EmptyHeader>
           <EmptyTitle>You&apos;re all caught up.</EmptyTitle>
           <EmptyDescription>
-            Nothing needs your attention right now. Check back when something lands.
+            Nothing needs your attention right now. Check back when something
+            lands.
           </EmptyDescription>
         </EmptyHeader>
       </Empty>
@@ -31,7 +42,9 @@ export function NeedsAttentionList({ items }: NeedsAttentionListProps) {
             <CardTitle>{item.title}</CardTitle>
           </CardHeader>
           <CardContent className="flex flex-col gap-3">
-            <p className="text-muted-foreground text-sm leading-relaxed">{item.description}</p>
+            <p className="text-muted-foreground text-sm leading-relaxed">
+              {item.description}
+            </p>
             <Link
               to={`/w/$clientId/${item.area}`}
               params={{ clientId: item.clientId }}

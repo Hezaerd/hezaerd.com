@@ -96,6 +96,52 @@ export function getFirstClient(): PortalClient {
   return clients[0]!;
 }
 
+function featureUnlockItem(
+  clientId: string,
+  feature: ClientFeature,
+): NeedsAttentionItem {
+  return {
+    id: `${clientId}-${feature}-unlock`,
+    title:
+      feature === "website"
+        ? "Website is ready to explore"
+        : "Insights is ready to explore",
+    description:
+      feature === "website"
+        ? "Review editable fields and publish when you are ready."
+        : "See visitors, top pages, and one plain-language takeaway.",
+    clientId,
+    area: feature,
+    kind: "feature",
+  };
+}
+
+export function setClientFeature(
+  clientId: string,
+  feature: ClientFeature,
+  enabled: boolean,
+): PortalClient | undefined {
+  const client = getClient(clientId);
+  if (!client) {
+    return undefined;
+  }
+
+  client.features[feature] = enabled;
+
+  const unlockId = `${clientId}-${feature}-unlock`;
+  if (enabled) {
+    if (!client.needsAttention.some((item) => item.id === unlockId)) {
+      client.needsAttention.push(featureUnlockItem(clientId, feature));
+    }
+  } else {
+    client.needsAttention = client.needsAttention.filter(
+      (item) => item.id !== unlockId,
+    );
+  }
+
+  return client;
+}
+
 export function formatCurrency(amount: number): string {
   return new Intl.NumberFormat("en-US", {
     style: "currency",

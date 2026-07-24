@@ -18,7 +18,9 @@ type WorkspaceSwitcherProps = {
 };
 
 export function WorkspaceSwitcher({ currentClient }: WorkspaceSwitcherProps) {
-  const otherClients = listClients().filter((client) => client.id !== currentClient.id);
+  const otherClients = listClients().filter(
+    (client) => client.id !== currentClient.id,
+  );
 
   return (
     <DropdownMenu>
@@ -29,14 +31,18 @@ export function WorkspaceSwitcher({ currentClient }: WorkspaceSwitcherProps) {
         <DropdownMenuGroup>
           <DropdownMenuLabel>Workspace Switcher</DropdownMenuLabel>
           <DropdownMenuItem
-            render={<Link to="/w/$clientId" params={{ clientId: currentClient.id }} />}
+            render={
+              <Link to="/w/$clientId" params={{ clientId: currentClient.id }} />
+            }
           >
             {currentClient.name}
           </DropdownMenuItem>
           {otherClients.map((client) => (
             <DropdownMenuItem
               key={client.id}
-              render={<Link to="/w/$clientId" params={{ clientId: client.id }} />}
+              render={
+                <Link to="/w/$clientId" params={{ clientId: client.id }} />
+              }
             >
               {client.name}
             </DropdownMenuItem>
@@ -44,7 +50,9 @@ export function WorkspaceSwitcher({ currentClient }: WorkspaceSwitcherProps) {
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem render={<Link to="/op" />}>Back to Operator Home</DropdownMenuItem>
+          <DropdownMenuItem render={<Link to="/op" />}>
+            Back to Operator Home
+          </DropdownMenuItem>
         </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>

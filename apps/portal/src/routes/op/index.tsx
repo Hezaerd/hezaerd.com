@@ -1,5 +1,10 @@
 import { Button } from "@hezaerd/ui/components/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@hezaerd/ui/components/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@hezaerd/ui/components/card";
 
 import { Link, createFileRoute } from "@tanstack/react-router";
 
@@ -19,7 +24,9 @@ function OperatorHomePage() {
 
       <section className="flex flex-col gap-4">
         <div>
-          <h2 className="font-display text-lg font-semibold tracking-tight">Clients</h2>
+          <h2 className="font-display text-lg font-semibold tracking-tight">
+            Clients
+          </h2>
           <p className="text-muted-foreground mt-1 text-sm">
             Open a Client Workspace or manage the Client record.
           </p>
@@ -30,19 +37,31 @@ function OperatorHomePage() {
               <CardHeader className="flex-row items-center justify-between gap-4">
                 <div>
                   <CardTitle>{client.name}</CardTitle>
-                  <p className="text-muted-foreground text-sm">{client.contactEmail}</p>
+                  <p className="text-muted-foreground text-sm">
+                    {client.contactEmail}
+                  </p>
                 </div>
                 <div className="flex flex-wrap gap-2">
                   <Button
                     variant="outline"
                     size="sm"
-                    render={<Link to="/op/clients/$clientId" params={{ clientId: client.id }} />}
+                    render={
+                      <Link
+                        to="/op/clients/$clientId"
+                        params={{ clientId: client.id }}
+                      />
+                    }
                   >
                     Client record
                   </Button>
                   <Button
                     size="sm"
-                    render={<Link to="/w/$clientId" params={{ clientId: client.id }} />}
+                    render={
+                      <Link
+                        to="/w/$clientId"
+                        params={{ clientId: client.id }}
+                      />
+                    }
                   >
                     Open workspace
                   </Button>
@@ -51,7 +70,8 @@ function OperatorHomePage() {
               <CardContent>
                 <p className="text-muted-foreground text-sm">
                   {client.needsAttention.length} item
-                  {client.needsAttention.length === 1 ? "" : "s"} waiting in workspace
+                  {client.needsAttention.length === 1 ? "" : "s"} waiting in
+                  workspace
                 </p>
               </CardContent>
             </Card>

@@ -1,5 +1,10 @@
 import { Button } from "@hezaerd/ui/components/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@hezaerd/ui/components/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@hezaerd/ui/components/card";
 
 import { Link, createFileRoute } from "@tanstack/react-router";
 
@@ -15,7 +20,9 @@ function ClientDirectoryPage() {
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="font-display text-2xl font-semibold tracking-tight">Clients</h1>
+        <h1 className="font-display text-2xl font-semibold tracking-tight">
+          Clients
+        </h1>
         <p className="text-muted-foreground mt-2 text-sm leading-relaxed">
           Identity, Feature toggles, and workspace entry for each Client.
         </p>
@@ -26,9 +33,18 @@ function ClientDirectoryPage() {
             <CardHeader className="flex-row items-center justify-between gap-4">
               <div>
                 <CardTitle>{client.name}</CardTitle>
-                <p className="text-muted-foreground text-sm">{client.contactEmail}</p>
+                <p className="text-muted-foreground text-sm">
+                  {client.contactEmail}
+                </p>
               </div>
-              <Button render={<Link to="/op/clients/$clientId" params={{ clientId: client.id }} />}>
+              <Button
+                render={
+                  <Link
+                    to="/op/clients/$clientId"
+                    params={{ clientId: client.id }}
+                  />
+                }
+              >
                 View record
               </Button>
             </CardHeader>
