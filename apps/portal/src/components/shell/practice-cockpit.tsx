@@ -1,3 +1,4 @@
+import NumberFlow, { NumberFlowGroup, type Format } from "@number-flow/react";
 import {
   AnalyticsUpIcon,
   Briefcase01Icon,
@@ -6,8 +7,9 @@ import {
   Target01Icon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react";
+import { useEffect, useState } from "react";
 
-import { formatCurrency, type PracticeCockpitStats } from "@/lib/portal-fixtures";
+import { type PracticeCockpitStats } from "@/lib/portal-fixtures";
 
 type PracticeCockpitProps = {
   stats: PracticeCockpitStats;
@@ -16,18 +18,25 @@ type PracticeCockpitProps = {
 type TileConfig = {
   key: keyof PracticeCockpitStats;
   label: string;
-  format: (value: number) => string;
+  format?: Format;
   icon: IconSvgElement;
   iconBg: string;
   iconColor: string;
   highlight?: boolean;
 };
 
+const emptyStats: PracticeCockpitStats = {
+  openInvoiceTotal: 0,
+  paidThisMonth: 0,
+  clientsWaiting: 0,
+  activeClients: 0,
+};
+
 const tiles: TileConfig[] = [
   {
     key: "openInvoiceTotal",
     label: "Factures ouvertes",
-    format: (v) => formatCurrency(v),
+    format: { style: "currency", currency: "EUR", maximumFractionDigits: 0 },
     icon: DollarSquareIcon,
     iconBg: "bg-primary/10",
     iconColor: "text-primary",
@@ -36,7 +45,7 @@ const tiles: TileConfig[] = [
   {
     key: "paidThisMonth",
     label: "Encaissé ce mois",
-    format: (v) => formatCurrency(v),
+    format: { style: "currency", currency: "EUR", maximumFractionDigits: 0 },
     icon: MoneyBag01Icon,
     iconBg: "bg-muted",
     iconColor: "text-muted-foreground",
@@ -44,7 +53,6 @@ const tiles: TileConfig[] = [
   {
     key: "clientsWaiting",
     label: "En attente de vous",
-    format: (v) => String(v),
     icon: Target01Icon,
     iconBg: "bg-muted",
     iconColor: "text-muted-foreground",
@@ -52,7 +60,6 @@ const tiles: TileConfig[] = [
   {
     key: "activeClients",
     label: "Clients actifs",
-    format: (v) => String(v),
     icon: Briefcase01Icon,
     iconBg: "bg-muted",
     iconColor: "text-muted-foreground",
@@ -60,6 +67,12 @@ const tiles: TileConfig[] = [
 ];
 
 export function PracticeCockpit({ stats }: PracticeCockpitProps) {
+  const [live, setLive] = useState(emptyStats);
+
+  useEffect(() => {
+    setLive(stats);
+  }, [stats]);
+
   return (
     <section className="flex flex-col gap-4">
       <div className="flex items-start justify-between">
@@ -75,34 +88,38 @@ export function PracticeCockpit({ stats }: PracticeCockpitProps) {
         </div>
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-        {tiles.map((tile) => (
-          <div
-            key={tile.key}
-            className={`border-border relative flex flex-col gap-3 rounded-xl border px-4 py-4 transition-colors ${
-              tile.highlight ? "bg-primary/5 border-primary/20" : "bg-muted/20 hover:bg-muted/30"
-            }`}
-          >
-            <div className="flex items-start justify-between">
-              <div className={`flex h-8 w-8 items-center justify-center rounded-lg ${tile.iconBg}`}>
-                <HugeiconsIcon icon={tile.icon} size={15} className={tile.iconColor} />
+      <NumberFlowGroup>
+        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          {tiles.map((tile) => (
+            <div
+              key={tile.key}
+              className={`border-border relative flex flex-col gap-3 rounded-xl border px-4 py-4 transition-colors ${
+                tile.highlight ? "bg-primary/5 border-primary/20" : "bg-muted/20 hover:bg-muted/30"
+              }`}
+            >
+              <div className="flex items-start justify-between">
+                <div className={`flex h-8 w-8 items-center justify-center rounded-lg ${tile.iconBg}`}>
+                  <HugeiconsIcon icon={tile.icon} size={15} className={tile.iconColor} />
+                </div>
+              </div>
+              <div>
+                <NumberFlow
+                  value={live[tile.key]}
+                  locales="fr-FR"
+                  format={tile.format}
+                  className={`font-display text-3xl font-semibold tracking-tight tabular-nums ${
+                    tile.highlight ? "text-primary" : ""
+                  }`}
+                  style={{ lineHeight: 0.85 }}
+                />
+                <p className="text-muted-foreground mt-1 text-xs font-medium tracking-wide uppercase">
+                  {tile.label}
+                </p>
               </div>
             </div>
-            <div>
-              <p
-                className={`font-display text-3xl font-semibold tracking-tight ${
-                  tile.highlight ? "text-primary" : ""
-                }`}
-              >
-                {tile.format(stats[tile.key])}
-              </p>
-              <p className="text-muted-foreground mt-1 text-xs font-medium tracking-wide uppercase">
-                {tile.label}
-              </p>
-            </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      </NumberFlowGroup>
     </section>
   );
 }
