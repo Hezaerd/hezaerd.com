@@ -1,3 +1,5 @@
+import { TooltipProvider } from "@hezaerd/ui/components/tooltip";
+
 /// <reference types="vite/client" />
 import { HeadContent, Outlet, Scripts, createRootRoute } from "@tanstack/react-router";
 
@@ -26,7 +28,9 @@ export const Route = createRootRoute({
 function RootLayout() {
   return (
     <PortalConvexProvider>
-      <Outlet />
+      <TooltipProvider>
+        <Outlet />
+      </TooltipProvider>
     </PortalConvexProvider>
   );
 }
