@@ -20,7 +20,7 @@ type TileConfig = {
   key: keyof PracticeCockpitStats;
   label: string;
   format: (value: number) => string;
-  icon: React.ComponentType;
+  icon: IconSvgElement;
   iconBg: string;
   iconColor: string;
   highlight?: boolean;

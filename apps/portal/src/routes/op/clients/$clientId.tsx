@@ -5,7 +5,7 @@ import {
   AlertCircleIcon,
   Setting07Icon,
 } from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react";
+import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react";
 
 import { Button } from "@hezaerd/ui/components/button";
 import { Switch } from "@hezaerd/ui/components/switch";
@@ -151,7 +151,7 @@ function FeatureToggleRow({
   checked,
   onCheckedChange,
 }: {
-  icon: React.ComponentType;
+  icon: IconSvgElement;
   label: string;
   description: string;
   checked: boolean;

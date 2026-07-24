@@ -1,5 +1,3 @@
-import { useAuth } from "@workos/authkit-tanstack-react-start/client";
-
 import {
   Link,
   Outlet,
@@ -9,6 +7,7 @@ import {
 
 import { ClientWorkspaceShell } from "@/components/shell/client-workspace-shell";
 import { getClient } from "@/lib/portal-fixtures";
+import { usePortalAuth } from "@/lib/use-portal-auth";
 
 export const Route = createFileRoute("/w/$clientId")({
   loader: ({ params }) => {
@@ -23,7 +22,7 @@ export const Route = createFileRoute("/w/$clientId")({
 
 function ClientWorkspaceLayout() {
   const { client } = Route.useLoaderData();
-  const { user, loading } = useAuth();
+  const { user, loading } = usePortalAuth();
 
   if (loading) {
     return (
