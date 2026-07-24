@@ -10,11 +10,13 @@ honor its STOP conditions, and update your row when done.
 | ---- | ---------------------------------------------------------------------- | -------- | ------ | ---------- | ------ |
 | 001  | Rebuild portfolio archive and realign Brand Work                       | P1       | L      | —          | DONE   |
 | 002  | Ship Portal dual-shell dashboard UI (Operator Home + Client Workspace) | P1       | L      | —          | DONE   |
+| 003  | Wire Portal Client + access to Convex (replace fixtures)               | P1       | L      | 002        | TODO   |
 
 ## Dependency notes
 
 - **001** (DONE): Brand ↔ Portfolio content boundaries; unrelated to Portal.
-- **002**: Implements the Portal UX decided in `apps/portal/CONTEXT.md` (dual hard-switch shells, nav, fixtures). No dependency on 001. Backend feature plans (Invoices pay, Files storage, Website fields, Insights data) should wait until 002’s shells exist.
+- **002** (DONE): Portal UX shells + fixtures. Backend feature plans wait for honest chrome.
+- **003**: First Portal data-plane slice — Convex `clients`, `users.role` / seat bind, slug URLs, Operator create UI, remove `portal-fixtures` / `VITE_PORTAL_ROLE`. Invoices, Needs Attention persistence, Files, Website fields, Insights, and Message stay follow-ups and should assume 003’s Client model.
 
 ## Findings considered and rejected
 
@@ -25,3 +27,7 @@ honor its STOP conditions, and update your row when done.
 - Building real Convex Client/Invoice/File/CMS tables inside plan 002: rejected — shell + fixtures first; data plane is a follow-up once chrome is honest.
 - Multi-seat Client invites in v1 shell: rejected — CONTEXT.md locks one seat for now.
 - Operator overlay chrome inside Client Workspace: rejected — hard switch + Workspace Switcher only.
+- Starting real data with Needs Attention or Invoices before Client + access: rejected — every route hangs on Client identity/access (grilling 2026-07-24).
+- WorkOS Organizations as Client identity in v1: rejected — app-owned Client + email allowlist Operator grant.
+- Memberships table for v1 one-seat: rejected — `users.clientId` binding is enough until teammates exist.
+- Keeping fixture money tiles mixed with real Client list: rejected — Practice Cockpit must be honest (zeros until Invoices land).
