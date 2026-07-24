@@ -19,7 +19,7 @@ import { DEFAULT_SECTION, navigation, scrollToSection, type SectionId } from "@/
 const NAV_UNDERLINE_LAYOUT_ID = "nav-underline";
 const NAV_PILL_LAYOUT_ID = "nav-pill";
 
-const navMotionTransition = {
+const navIndicatorTransition = {
   type: "spring" as const,
   stiffness: 400,
   damping: 35,
@@ -94,9 +94,8 @@ export function Navbar() {
                       {isHighlighted && (
                         <motion.span
                           layoutId={NAV_PILL_LAYOUT_ID}
-                          layout
                           aria-hidden
-                          initial={prefersReducedMotion || !hasMounted ? false : { opacity: 0 }}
+                          initial={hasMounted || prefersReducedMotion ? false : { opacity: 0 }}
                           animate={{ opacity: 1 }}
                           className={cn(
                             "pointer-events-none absolute inset-0 rounded-md",
@@ -105,7 +104,7 @@ export function Navbar() {
                           transition={
                             prefersReducedMotion || !hasMounted
                               ? { duration: 0 }
-                              : navMotionTransition
+                              : navIndicatorTransition
                           }
                         />
                       )}
@@ -113,13 +112,12 @@ export function Navbar() {
                       {isActive && (
                         <motion.span
                           layoutId={NAV_UNDERLINE_LAYOUT_ID}
-                          layout
                           aria-hidden
                           className="bg-primary pointer-events-none absolute inset-x-0 bottom-0 z-10 h-0.5 rounded-full"
                           transition={
                             prefersReducedMotion || !hasMounted
                               ? { duration: 0 }
-                              : navMotionTransition
+                              : navIndicatorTransition
                           }
                         />
                       )}
