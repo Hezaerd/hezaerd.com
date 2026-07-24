@@ -93,10 +93,14 @@ export function Footer() {
                 key={social.name}
                 variant="ghost"
                 size="icon"
-                onClick={() => window.open(social.url, "_blank")}
+                aria-label={social.name}
+                render={
+                  <a href={social.url} target="_blank" rel="noopener noreferrer" />
+                }
                 className="hover:bg-accent hover:text-accent-foreground transition-[color,background-color,box-shadow] duration-(--duration-ui) ease-out"
-                whileHover={allowHoverMotion ? { transform: "scale(1.1)" } : undefined}
-                whileTap={prefersReducedMotion ? undefined : { transform: "scale(0.95)" }}
+                animate={{ scale: 1 }}
+                whileHover={allowHoverMotion ? { scale: 1.1 } : undefined}
+                whileTap={prefersReducedMotion ? undefined : { scale: 0.95 }}
                 transition={socialHoverTransition}
               >
                 <HugeiconsIcon icon={social.icon} />
