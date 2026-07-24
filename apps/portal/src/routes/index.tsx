@@ -38,7 +38,7 @@ function LoginScreen() {
   return (
     <main className="flex min-h-svh items-center justify-center px-6 py-16">
       <form
-        className="border-border bg-muted/40 w-full max-w-sm rounded-xl border p-8 shadow-[0_0_0_1px_rgb(42_50_44_/_0.4)]"
+        className="border-border bg-muted/40 w-full max-w-sm rounded-xl border p-8"
         action="/api/auth/sign-in"
         method="get"
       >
