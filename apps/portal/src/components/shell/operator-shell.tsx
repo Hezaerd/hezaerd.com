@@ -1,3 +1,11 @@
+import {
+  Home01Icon,
+  Invoice01Icon,
+  Setting07Icon,
+  UserGroupIcon,
+} from "@hugeicons/core-free-icons";
+import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react";
+
 import { Separator } from "@hezaerd/ui/components/separator";
 import {
   Sidebar,
@@ -21,12 +29,18 @@ type OperatorShellProps = {
   children: React.ReactNode;
 };
 
-const navItems = [
-  { label: "Home", to: "/op" },
-  { label: "Clients", to: "/op/clients" },
-  { label: "Invoices", to: "/op/invoices" },
-  { label: "Settings", to: "/op/settings" },
-] as const;
+type NavItem = {
+  label: string;
+  to: "/op" | "/op/clients" | "/op/invoices" | "/op/settings";
+  icon: IconSvgElement;
+};
+
+const navItems: NavItem[] = [
+  { label: "Home", to: "/op", icon: Home01Icon },
+  { label: "Clients", to: "/op/clients", icon: UserGroupIcon },
+  { label: "Invoices", to: "/op/invoices", icon: Invoice01Icon },
+  { label: "Settings", to: "/op/settings", icon: Setting07Icon },
+];
 
 export function OperatorShell({ email, children }: OperatorShellProps) {
   const pathname = useRouterState({
@@ -37,15 +51,23 @@ export function OperatorShell({ email, children }: OperatorShellProps) {
     <SidebarProvider>
       <Sidebar variant="inset">
         <SidebarHeader className="border-border border-b">
-          <div className="flex flex-col gap-1 px-2 py-1">
-            <p className="text-primary font-mono text-xs font-medium tracking-[0.2em] uppercase">
-              Portal
-            </p>
-            <p className="font-display text-sm font-semibold tracking-tight">
-              Operator Home
-            </p>
+          <div className="flex items-center gap-3 px-2 py-2">
+            <div className="bg-primary/15 border-primary/30 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border">
+              <span className="text-primary font-mono text-xs font-semibold tracking-wider">
+                HZ
+              </span>
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="font-display text-sm font-semibold tracking-tight">
+                Hezaerd
+              </p>
+              <p className="text-muted-foreground font-mono text-[10px] font-medium tracking-[0.18em] uppercase">
+                Operator
+              </p>
+            </div>
           </div>
         </SidebarHeader>
+
         <SidebarContent>
           <SidebarGroup>
             <SidebarGroupContent>
@@ -57,10 +79,15 @@ export function OperatorShell({ email, children }: OperatorShellProps) {
                       isActive={
                         item.to === "/op"
                           ? pathname === "/op" || pathname === "/op/"
-                          : pathname.startsWith(item.to)
+                          : pathname.startsWith(item.to as string)
                       }
                       tooltip={item.label}
                     >
+                      <HugeiconsIcon
+                        icon={item.icon}
+                        size={16}
+                        className="shrink-0"
+                      />
                       <span>{item.label}</span>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -69,23 +96,25 @@ export function OperatorShell({ email, children }: OperatorShellProps) {
             </SidebarGroupContent>
           </SidebarGroup>
         </SidebarContent>
+
         <SidebarFooter className="border-border border-t">
-          <p className="text-muted-foreground px-2 py-1 text-xs">
-            Practice operator shell
-          </p>
+          <div className="px-3 py-2">
+            <p className="text-muted-foreground font-mono text-[10px] tracking-wide">
+              Practice Operator
+            </p>
+          </div>
         </SidebarFooter>
       </Sidebar>
+
       <SidebarInset>
         <header className="border-border flex h-14 shrink-0 items-center gap-3 border-b px-4">
-          <SidebarTrigger />
-          <Separator orientation="vertical" className="mr-1 h-4" />
+          <SidebarTrigger className="shrink-0" />
+          <Separator orientation="vertical" className="mr-1 h-4 shrink-0" />
           <div className="flex flex-1 items-center justify-end gap-3">
-            <p className="text-muted-foreground hidden text-sm sm:block">
-              {email}
-            </p>
+            <p className="text-muted-foreground hidden text-sm sm:block">{email}</p>
             <Link
               to="/signout"
-              className="border-border hover:bg-accent rounded-md border px-3 py-2 text-sm font-medium"
+              className="border-border text-muted-foreground hover:text-foreground hover:bg-accent rounded-md border px-3 py-1.5 text-xs font-medium transition-colors"
             >
               Sign out
             </Link>
