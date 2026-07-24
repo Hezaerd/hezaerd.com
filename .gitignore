@@ -13,3 +13,4 @@ dist-ssr
 .turbo
 __unconfig*
 todos.json
+apps/portfolio/scripts/og-fonts/
