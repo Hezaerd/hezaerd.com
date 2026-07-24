@@ -4,47 +4,17 @@
 @import "@fontsource/ibm-plex-mono/400.css";
 @import "@fontsource/ibm-plex-mono/500.css";
 
-/* Portal theme: dark green / cream (overrides shared defaults). */
-:root {
-  --background: #0f1210;
-  --foreground: #f2efe6;
-  --card: #1a1f1c;
-  --card-foreground: #f2efe6;
-  --popover: #1a1f1c;
-  --popover-foreground: #f2efe6;
-  --primary: #d4b483;
-  --primary-foreground: #141814;
-  --secondary: #243028;
-  --secondary-foreground: #f2efe6;
-  --muted: #1a1f1c;
-  --muted-foreground: #a8aea6;
-  --accent: #243028;
-  --accent-foreground: #f2efe6;
-  --destructive: #c45c4a;
-  --border: #2a322c;
-  --input: #2a322c;
-  --ring: #d4b483;
-  --sidebar: #141814;
-  --sidebar-foreground: #f2efe6;
-  --sidebar-primary: #d4b483;
-  --sidebar-primary-foreground: #141814;
-  --sidebar-accent: #243028;
-  --sidebar-accent-foreground: #f2efe6;
-  --sidebar-border: #2a322c;
-  --sidebar-ring: #d4b483;
-}
-
 @layer base {
   body {
     background-image:
       radial-gradient(
         ellipse 80% 50% at 10% -10%,
-        rgb(212 180 131 / 0.12),
+        color-mix(in oklch, var(--primary) 12%, transparent),
         transparent
       ),
       radial-gradient(
         ellipse 60% 40% at 90% 0%,
-        rgb(80 110 90 / 0.18),
+        color-mix(in oklch, var(--secondary) 28%, transparent),
         transparent
       );
     background-attachment: fixed;
