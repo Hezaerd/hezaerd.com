@@ -177,7 +177,7 @@ export function ClientWorkspaceShell({
       <SidebarInset>
         <header className="border-border flex h-14 shrink-0 items-center gap-3 border-b px-4">
           <SidebarTrigger className="shrink-0" />
-          <Separator orientation="vertical" className="mr-1 h-4 shrink-0" />
+          <Separator orientation="vertical" className="mr-1 shrink-0 self-stretch" />
           {showSwitcher ? <WorkspaceSwitcher currentClient={client} /> : null}
           <div className="flex flex-1 items-center justify-end gap-3">
             <p className="text-muted-foreground hidden text-sm sm:block">{email}</p>
