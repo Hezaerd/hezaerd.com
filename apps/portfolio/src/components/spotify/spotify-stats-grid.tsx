@@ -91,6 +91,7 @@ function SpotifyLinkButton({
     <Button
       variant="ghost"
       size="icon-sm"
+      nativeButton={false}
       render={
         <a href={href} target="_blank" rel="noopener noreferrer" aria-label={label} />
       }

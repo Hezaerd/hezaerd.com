@@ -94,6 +94,7 @@ export function Footer() {
                 variant="ghost"
                 size="icon"
                 aria-label={social.name}
+                nativeButton={false}
                 render={
                   <a href={social.url} target="_blank" rel="noopener noreferrer" />
                 }
