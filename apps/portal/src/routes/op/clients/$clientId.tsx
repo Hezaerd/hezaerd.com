@@ -67,7 +67,7 @@ function ClientRecordPage() {
         {attentionCount > 0 && (
           <div className="flex shrink-0 items-center gap-1.5 rounded-full bg-amber-500/10 px-3 py-1.5 font-mono text-xs font-semibold text-amber-400">
             <HugeiconsIcon icon={AlertCircleIcon} size={12} />
-            {attentionCount} item{attentionCount === 1 ? "" : "s"} waiting
+            {attentionCount} élément{attentionCount === 1 ? "" : "s"} en attente
           </div>
         )}
       </div>
@@ -78,25 +78,25 @@ function ClientRecordPage() {
           <div className="bg-muted flex h-7 w-7 items-center justify-center rounded-lg">
             <HugeiconsIcon icon={Setting07Icon} size={14} className="text-muted-foreground" />
           </div>
-          <h2 className="font-display text-base font-semibold tracking-tight">Features</h2>
+          <h2 className="font-display text-base font-semibold tracking-tight">Fonctionnalités</h2>
         </div>
         <p className="text-muted-foreground text-sm leading-relaxed">
-          Toggle workspace areas beyond Core (Home, Invoices, Files). Changes take effect
-          immediately.
+          Activez les zones au-delà de l&apos;essentiel (Accueil, Factures, Fichiers). Les
+          changements s&apos;appliquent immédiatement.
         </p>
 
         <div className="border-border bg-muted/20 divide-border flex flex-col divide-y overflow-hidden rounded-xl border">
           <FeatureToggleRow
             icon={PieChart01Icon}
-            label="Insights"
-            description="Visitors, top pages, and one plain-language takeaway."
+            label="Statistiques"
+            description="Visiteurs, pages populaires et un enseignement clair."
             checked={client.features.insights}
             onCheckedChange={(checked) => toggleFeature("insights", checked)}
           />
           <FeatureToggleRow
             icon={Globe02Icon}
-            label="Website"
-            description="Guided editable fields with Preview before Publish."
+            label="Site web"
+            description="Champs guidés avec aperçu avant publication."
             checked={client.features.website}
             onCheckedChange={(checked) => toggleFeature("website", checked)}
           />
@@ -105,22 +105,22 @@ function ClientRecordPage() {
 
       {/* Workspace section */}
       <section className="flex flex-col gap-3">
-        <h2 className="font-display text-base font-semibold tracking-tight">Workspace</h2>
+        <h2 className="font-display text-base font-semibold tracking-tight">Espace</h2>
         <div className="border-border bg-muted/20 flex items-center justify-between gap-4 rounded-xl border px-5 py-4">
           <div>
-            <p className="text-sm font-medium">Open Client Workspace</p>
+            <p className="text-sm font-medium">Ouvrir l&apos;espace client</p>
             <p className="text-muted-foreground mt-0.5 text-sm">
-              Work in the same areas the client sees.{" "}
+              Travaillez dans les mêmes zones que le client.{" "}
               {attentionCount > 0 && (
                 <span className="font-medium text-amber-400">
-                  {attentionCount} item{attentionCount === 1 ? "" : "s"} need
-                  {attentionCount === 1 ? "s" : ""} attention.
+                  {attentionCount} élément{attentionCount === 1 ? "" : "s"} demande
+                  {attentionCount === 1 ? "" : "nt"} votre attention.
                 </span>
               )}
             </p>
           </div>
           <Button render={<Link to="/w/$clientId" params={{ clientId: client.id }} />}>
-            Open workspace
+            Ouvrir l&apos;espace
             <HugeiconsIcon icon={ArrowRight01Icon} size={14} />
           </Button>
         </div>

@@ -83,7 +83,7 @@ export function DashboardChrome({
               to="/signout"
               className="border-border text-muted-foreground hover:text-foreground hover:bg-accent rounded-md border px-3 py-1.5 text-xs font-medium transition-colors"
             >
-              Sign out
+              Déconnexion
             </Link>
           </div>
         </header>

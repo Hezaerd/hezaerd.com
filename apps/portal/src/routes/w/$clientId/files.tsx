@@ -17,17 +17,17 @@ function ClientFilesPage() {
           <div className="bg-muted flex h-8 w-8 items-center justify-center rounded-lg">
             <HugeiconsIcon icon={File01Icon} size={16} className="text-muted-foreground" />
           </div>
-          <h1 className="font-display text-2xl font-semibold tracking-tight">Files</h1>
+          <h1 className="font-display text-2xl font-semibold tracking-tight">Fichiers</h1>
         </div>
         <p className="text-muted-foreground mt-1 text-sm leading-relaxed">
-          Requested assets and your shared project folder.
+          Éléments demandés et dossier partagé du projet.
         </p>
       </div>
 
       {/* Requested assets section */}
       <section className="flex flex-col gap-3">
         <h2 className="font-display text-muted-foreground text-sm font-semibold tracking-tight tracking-wider uppercase">
-          Requests
+          Demandes
         </h2>
 
         {/* File request card */}
@@ -38,15 +38,15 @@ function ClientFilesPage() {
           <div className="min-w-0 flex-1">
             <p className="font-display text-sm font-semibold tracking-tight">Logo SVG</p>
             <p className="text-muted-foreground mt-0.5 text-sm leading-relaxed">
-              Upload a vector logo for the website refresh. Accepted formats: SVG, AI, EPS.
+              Envoyez un logo vectoriel pour la refonte du site. Formats acceptés : SVG, AI, EPS.
             </p>
             <Button variant="outline" size="sm" className="mt-3">
               <HugeiconsIcon icon={CloudUploadIcon} size={14} />
-              Upload file
+              Envoyer le fichier
             </Button>
           </div>
           <span className="shrink-0 rounded-md bg-amber-500/10 px-2 py-0.5 font-mono text-[10px] font-semibold text-amber-400">
-            Pending
+            En attente
           </span>
         </div>
       </section>
@@ -54,16 +54,18 @@ function ClientFilesPage() {
       {/* Shared folder section */}
       <section className="flex flex-col gap-3">
         <h2 className="font-display text-muted-foreground text-sm font-semibold tracking-tight tracking-wider uppercase">
-          Shared folder
+          Dossier partagé
         </h2>
 
         <div className="border-border bg-muted/10 flex flex-col items-center justify-center gap-2 rounded-xl border py-10 text-center">
           <div className="bg-muted flex h-9 w-9 items-center justify-center rounded-full">
             <HugeiconsIcon icon={FolderUploadIcon} size={16} className="text-muted-foreground" />
           </div>
-          <p className="font-display text-sm font-semibold tracking-tight">No shared files yet</p>
+          <p className="font-display text-sm font-semibold tracking-tight">
+            Aucun fichier partagé pour l&apos;instant
+          </p>
           <p className="text-muted-foreground max-w-xs text-sm leading-relaxed">
-            Uploaded files and documents shared by Hezaerd will appear here.
+            Les fichiers envoyés et les documents partagés par Hezaerd apparaîtront ici.
           </p>
         </div>
       </section>

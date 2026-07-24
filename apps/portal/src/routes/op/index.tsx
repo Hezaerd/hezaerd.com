@@ -24,7 +24,7 @@ function OperatorHomePage() {
   const clients = listClients();
 
   const now = new Date();
-  const dateStr = now.toLocaleDateString("en-US", {
+  const dateStr = now.toLocaleDateString("fr-FR", {
     weekday: "long",
     month: "long",
     day: "numeric",
@@ -37,9 +37,9 @@ function OperatorHomePage() {
         <p className="text-muted-foreground font-mono text-xs tracking-[0.18em] uppercase">
           {dateStr}
         </p>
-        <h1 className="font-display text-2xl font-semibold tracking-tight">Good to be back.</h1>
+        <h1 className="font-display text-2xl font-semibold tracking-tight">Bon retour.</h1>
         <p className="text-muted-foreground mt-1 text-sm leading-relaxed">
-          Here&apos;s a snapshot of your practice and your clients&apos; workspaces.
+          Voici un aperçu de votre activité et des espaces de vos clients.
         </p>
       </div>
 
@@ -52,11 +52,11 @@ function OperatorHomePage() {
           <div>
             <h2 className="font-display text-xl font-semibold tracking-tight">Clients</h2>
             <p className="text-muted-foreground mt-0.5 text-sm">
-              Open a workspace or manage the client record.
+              Ouvrez un espace ou gérez la fiche client.
             </p>
           </div>
           <Button variant="outline" size="sm" render={<Link to="/op/clients" />}>
-            All clients
+            Tous les clients
             <HugeiconsIcon icon={ArrowRight01Icon} size={14} />
           </Button>
         </div>
@@ -66,9 +66,9 @@ function OperatorHomePage() {
             const initials = getClientInitials(client.name);
             const attentionCount = client.needsAttention.length;
             const featureList = [
-              "Core",
-              client.features.insights ? "Insights" : null,
-              client.features.website ? "Website" : null,
+              "Essentiel",
+              client.features.insights ? "Statistiques" : null,
+              client.features.website ? "Site web" : null,
             ].filter(Boolean);
 
             return (
@@ -92,7 +92,7 @@ function OperatorHomePage() {
                     {attentionCount > 0 && (
                       <span className="flex items-center gap-1 rounded-full bg-amber-500/10 px-2 py-0.5 font-mono text-[10px] font-semibold text-amber-400">
                         <HugeiconsIcon icon={AlertCircleIcon} size={10} />
-                        {attentionCount} waiting
+                        {attentionCount} en attente
                       </span>
                     )}
                   </div>
@@ -116,13 +116,13 @@ function OperatorHomePage() {
                     size="sm"
                     render={<Link to="/op/clients/$clientId" params={{ clientId: client.id }} />}
                   >
-                    Record
+                    Fiche
                   </Button>
                   <Button
                     size="sm"
                     render={<Link to="/w/$clientId" params={{ clientId: client.id }} />}
                   >
-                    Workspace
+                    Espace
                     <HugeiconsIcon icon={ArrowRight01Icon} size={13} />
                   </Button>
                 </div>

@@ -27,17 +27,17 @@ function ClientInsightsPage() {
           <div className="bg-muted flex h-8 w-8 items-center justify-center rounded-lg">
             <HugeiconsIcon icon={PieChart01Icon} size={16} className="text-muted-foreground" />
           </div>
-          <h1 className="font-display text-2xl font-semibold tracking-tight">Insights</h1>
+          <h1 className="font-display text-2xl font-semibold tracking-tight">Statistiques</h1>
         </div>
         <p className="text-muted-foreground mt-1 text-sm leading-relaxed">
-          Three plain truths about your website — no noise, just signal.
+          Trois enseignements clairs sur votre site — sans bruit, juste le signal.
         </p>
       </div>
 
       {/* Stats row */}
       <section className="flex flex-col gap-3">
         <h2 className="font-display text-muted-foreground text-sm font-semibold tracking-tight tracking-wider uppercase">
-          Last 30 days
+          30 derniers jours
         </h2>
         <div className="grid gap-3 sm:grid-cols-3">
           {/* Visitors */}
@@ -46,14 +46,14 @@ function ClientInsightsPage() {
               <HugeiconsIcon icon={AnalyticsUpIcon} size={15} className="text-primary" />
             </div>
             <div>
-              <p className="font-display text-3xl font-semibold tracking-tight">1,284</p>
+              <p className="font-display text-3xl font-semibold tracking-tight">1 284</p>
               <p className="text-muted-foreground mt-1 text-xs font-medium tracking-wider uppercase">
-                Visitors
+                Visiteurs
               </p>
             </div>
             <div className="flex items-center gap-1 text-emerald-400">
               <HugeiconsIcon icon={ArrowUpRight01Icon} size={12} />
-              <span className="font-mono text-[10px] font-semibold">+12% vs last month</span>
+              <span className="font-mono text-[10px] font-semibold">+12 % vs mois dernier</span>
             </div>
           </div>
 
@@ -63,13 +63,13 @@ function ClientInsightsPage() {
               <HugeiconsIcon icon={PieChart01Icon} size={15} className="text-muted-foreground" />
             </div>
             <div>
-              <p className="font-display text-sm font-semibold tracking-tight">Top pages</p>
+              <p className="font-display text-sm font-semibold tracking-tight">Pages populaires</p>
               <p className="text-muted-foreground mt-1 text-xs font-medium tracking-wider uppercase">
-                By visits
+                Par visites
               </p>
             </div>
             <div className="mt-auto flex flex-col gap-1.5">
-              {["Home", "Menu", "Reservations"].map((page, i) => (
+              {["Accueil", "Menu", "Réservations"].map((page, i) => (
                 <div key={page} className="flex items-center justify-between">
                   <span className="text-sm">{page}</span>
                   <span className="text-muted-foreground font-mono text-xs">#{i + 1}</span>
@@ -84,14 +84,14 @@ function ClientInsightsPage() {
               <HugeiconsIcon icon={AnalyticsUpIcon} size={15} className="text-primary" />
             </div>
             <div>
-              <p className="font-display text-sm font-semibold tracking-tight">Takeaway</p>
+              <p className="font-display text-sm font-semibold tracking-tight">Enseignement</p>
               <p className="text-muted-foreground mt-1 text-xs font-medium tracking-wider uppercase">
-                Plain-language
+                En clair
               </p>
             </div>
             <p className="mt-auto text-sm leading-relaxed">
-              Reservation page visits climbed — consider highlighting weekend slots on your Home
-              page.
+              Les visites de la page réservations ont augmenté — mettez en avant les créneaux du
+              week-end sur votre page d&apos;accueil.
             </p>
           </div>
         </div>

@@ -16,7 +16,7 @@ function ClientHomePage() {
   }
 
   const now = new Date();
-  const dateStr = now.toLocaleDateString("en-US", {
+  const dateStr = now.toLocaleDateString("fr-FR", {
     weekday: "long",
     month: "long",
     day: "numeric",
@@ -32,19 +32,19 @@ function ClientHomePage() {
           {dateStr}
         </p>
         <h1 className="font-display text-2xl font-semibold tracking-tight">
-          Welcome back, {client.name.split(" ")[0]}.
+          Bon retour, {client.name.split(" ")[0]}.
         </h1>
         {attentionCount > 0 ? (
           <p className="text-muted-foreground mt-1 text-sm leading-relaxed">
-            You have{" "}
+            Vous avez{" "}
             <span className="text-foreground font-medium">
-              {attentionCount} item{attentionCount === 1 ? "" : "s"}
+              {attentionCount} élément{attentionCount === 1 ? "" : "s"}
             </span>{" "}
-            that need{attentionCount === 1 ? "s" : ""} your attention below.
+            qui demande{attentionCount === 1 ? "" : "nt"} votre attention ci-dessous.
           </p>
         ) : (
           <p className="text-muted-foreground mt-1 text-sm leading-relaxed">
-            Everything&apos;s up to date. Your project is progressing well.
+            Tout est à jour. Votre projet avance bien.
           </p>
         )}
       </div>
@@ -52,7 +52,9 @@ function ClientHomePage() {
       {/* Needs Attention Section */}
       <div className="flex flex-col gap-3">
         <div className="flex items-center justify-between">
-          <h2 className="font-display text-base font-semibold tracking-tight">Needs Attention</h2>
+          <h2 className="font-display text-base font-semibold tracking-tight">
+            À traiter
+          </h2>
           {attentionCount > 0 && (
             <span className="bg-primary/10 text-primary border-primary/20 rounded-full border px-2.5 py-0.5 font-mono text-[10px] font-semibold tabular-nums">
               {attentionCount}

@@ -12,7 +12,7 @@ function PortalHome() {
   if (loading) {
     return (
       <main className="flex min-h-svh items-center justify-center px-6">
-        <p className="text-muted-foreground font-mono text-sm">Loading…</p>
+        <p className="text-muted-foreground font-mono text-sm">Chargement…</p>
       </main>
     );
   }
@@ -37,18 +37,18 @@ function LoginScreen() {
         method="get"
       >
         <p className="text-primary mb-3 font-mono text-xs font-medium tracking-[0.2em] uppercase">
-          Portal
+          Portail
         </p>
-        <h1 className="font-display text-2xl font-semibold tracking-tight">Sign in</h1>
+        <h1 className="font-display text-2xl font-semibold tracking-tight">Connexion</h1>
         <p className="text-muted-foreground mt-2 text-sm leading-relaxed">
-          Invite-only portal for Operators and Clients. No self-registration.
+          Portail sur invitation pour les opérateurs et les clients. Pas d&apos;inscription libre.
         </p>
 
         <button
           type="submit"
           className="bg-primary text-primary-foreground hover:bg-primary/90 mt-8 w-full rounded-md px-4 py-2.5 text-sm font-medium transition-colors"
         >
-          Continue to sign in
+          Continuer vers la connexion
         </button>
       </form>
     </main>

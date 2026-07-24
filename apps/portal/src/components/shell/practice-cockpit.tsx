@@ -26,7 +26,7 @@ type TileConfig = {
 const tiles: TileConfig[] = [
   {
     key: "openInvoiceTotal",
-    label: "Open invoices",
+    label: "Factures ouvertes",
     format: (v) => formatCurrency(v),
     icon: DollarSquareIcon,
     iconBg: "bg-primary/10",
@@ -35,7 +35,7 @@ const tiles: TileConfig[] = [
   },
   {
     key: "paidThisMonth",
-    label: "Paid this month",
+    label: "Encaissé ce mois",
     format: (v) => formatCurrency(v),
     icon: MoneyBag01Icon,
     iconBg: "bg-muted",
@@ -43,7 +43,7 @@ const tiles: TileConfig[] = [
   },
   {
     key: "clientsWaiting",
-    label: "Waiting on you",
+    label: "En attente de vous",
     format: (v) => String(v),
     icon: Target01Icon,
     iconBg: "bg-muted",
@@ -51,7 +51,7 @@ const tiles: TileConfig[] = [
   },
   {
     key: "activeClients",
-    label: "Active clients",
+    label: "Clients actifs",
     format: (v) => String(v),
     icon: Briefcase01Icon,
     iconBg: "bg-muted",
@@ -64,14 +64,14 @@ export function PracticeCockpit({ stats }: PracticeCockpitProps) {
     <section className="flex flex-col gap-4">
       <div className="flex items-start justify-between">
         <div>
-          <h2 className="font-display text-xl font-semibold tracking-tight">Practice Cockpit</h2>
+          <h2 className="font-display text-xl font-semibold tracking-tight">Tableau de bord</h2>
           <p className="text-muted-foreground mt-1 text-sm leading-relaxed">
-            A live snapshot of your freelance practice.
+            Un aperçu en direct de votre activité freelance.
           </p>
         </div>
         <div className="bg-muted/30 text-muted-foreground flex items-center gap-1.5 rounded-lg px-3 py-1.5">
           <HugeiconsIcon icon={AnalyticsUpIcon} size={13} />
-          <span className="font-mono text-[10px] font-medium tracking-wide uppercase">Live</span>
+          <span className="font-mono text-[10px] font-medium tracking-wide uppercase">En direct</span>
         </div>
       </div>
 

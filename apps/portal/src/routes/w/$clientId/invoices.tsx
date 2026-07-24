@@ -22,17 +22,18 @@ function ClientInvoicesPage() {
           <div className="bg-muted flex h-8 w-8 items-center justify-center rounded-lg">
             <HugeiconsIcon icon={Invoice01Icon} size={16} className="text-muted-foreground" />
           </div>
-          <h1 className="font-display text-2xl font-semibold tracking-tight">Invoices</h1>
+          <h1 className="font-display text-2xl font-semibold tracking-tight">Factures</h1>
         </div>
         <p className="text-muted-foreground mt-1 text-sm leading-relaxed">
-          Unpaid invoices are shown first. Paid history is archived below.
+          Les factures impayées apparaissent en premier. L&apos;historique des paiements est
+          archivé en dessous.
         </p>
       </div>
 
       {/* Unpaid section */}
       <section className="flex flex-col gap-3">
         <h2 className="font-display text-muted-foreground text-sm font-semibold tracking-tight tracking-wider uppercase">
-          Due
+          À payer
         </h2>
 
         {/* Invoice card */}
@@ -43,13 +44,13 @@ function ClientInvoicesPage() {
                 <HugeiconsIcon icon={ReceiptDollarIcon} size={16} className="text-primary" />
               </div>
               <div>
-                <p className="font-display text-sm font-semibold tracking-tight">Invoice #1042</p>
-                <p className="text-muted-foreground mt-0.5 text-sm">Monthly retainer</p>
+                <p className="font-display text-sm font-semibold tracking-tight">Facture n°1042</p>
+                <p className="text-muted-foreground mt-0.5 text-sm">Forfait mensuel</p>
               </div>
             </div>
             <div className="shrink-0 text-right">
               <p className="font-display text-primary text-xl font-semibold tracking-tight">
-                $2,400
+                2 400 €
               </p>
             </div>
           </div>
@@ -57,9 +58,9 @@ function ClientInvoicesPage() {
           <div className="mt-4 flex items-center justify-between gap-4">
             <div className="flex items-center gap-1.5 text-amber-400">
               <HugeiconsIcon icon={TimeQuarterPassIcon} size={13} />
-              <span className="font-mono text-xs font-medium">Due in 5 days</span>
+              <span className="font-mono text-xs font-medium">Échéance dans 5 jours</span>
             </div>
-            <Button size="sm">Pay invoice</Button>
+            <Button size="sm">Payer la facture</Button>
           </div>
         </div>
       </section>
@@ -67,7 +68,7 @@ function ClientInvoicesPage() {
       {/* Paid history section */}
       <section className="flex flex-col gap-3">
         <h2 className="font-display text-muted-foreground text-sm font-semibold tracking-tight tracking-wider uppercase">
-          Paid history
+          Historique des paiements
         </h2>
 
         <div className="border-border bg-muted/10 flex flex-col items-center justify-center gap-2 rounded-xl border py-10 text-center">
@@ -78,9 +79,11 @@ function ClientInvoicesPage() {
               className="text-muted-foreground"
             />
           </div>
-          <p className="font-display text-sm font-semibold tracking-tight">No paid invoices yet</p>
+          <p className="font-display text-sm font-semibold tracking-tight">
+            Aucune facture payée pour l&apos;instant
+          </p>
           <p className="text-muted-foreground max-w-xs text-sm leading-relaxed">
-            Earlier paid invoices will appear here once a payment is processed.
+            Les factures payées apparaîtront ici une fois le paiement traité.
           </p>
         </div>
       </section>
