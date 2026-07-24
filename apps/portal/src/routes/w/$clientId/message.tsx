@@ -30,11 +30,9 @@ function ClientMessagePage() {
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-3">
-          <label htmlFor="message-body" className="sr-only">
-            Message to Hezaerd
-          </label>
           <textarea
             id="message-body"
+            aria-label="Message to Hezaerd"
             className="border-border bg-background min-h-32 w-full rounded-lg border px-3 py-2 text-sm"
             placeholder="What should Hezaerd know?"
           />
