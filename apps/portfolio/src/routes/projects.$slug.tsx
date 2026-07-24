@@ -137,6 +137,7 @@ function ProjectDetailPage() {
       <div className="mt-8 flex flex-wrap gap-3">
         {project.releaseUrl ? (
           <Button
+            nativeButton={false}
             render={
               <a href={project.releaseUrl} target="_blank" rel="noopener noreferrer" />
             }
@@ -147,6 +148,7 @@ function ProjectDetailPage() {
         {project.sourcesUrl ? (
           <Button
             variant="outline"
+            nativeButton={false}
             render={
               <a href={project.sourcesUrl} target="_blank" rel="noopener noreferrer" />
             }

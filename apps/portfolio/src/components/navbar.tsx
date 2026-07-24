@@ -136,7 +136,10 @@ export function Navbar() {
           <DropdownMenuContent align="end" sideOffset={8} className="w-56">
             <DropdownMenuGroup>
               <DropdownMenuLabel>How would you like to reach out?</DropdownMenuLabel>
-              <DropdownMenuItem render={<a href="mailto:hezaerd@hezaerd.com" />}>
+              <DropdownMenuItem
+                nativeButton={false}
+                render={<a href="mailto:hezaerd@hezaerd.com" />}
+              >
                 <HugeiconsIcon icon={Mail01Icon} />
                 Email
               </DropdownMenuItem>
