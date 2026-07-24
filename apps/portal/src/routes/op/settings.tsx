@@ -16,10 +16,10 @@ function OperatorSettingsPage() {
           <div className="bg-muted flex h-8 w-8 items-center justify-center rounded-lg">
             <HugeiconsIcon icon={Setting07Icon} size={16} className="text-muted-foreground" />
           </div>
-          <h1 className="font-display text-2xl font-semibold tracking-tight">Settings</h1>
+          <h1 className="font-display text-2xl font-semibold tracking-tight">Paramètres</h1>
         </div>
         <p className="text-muted-foreground mt-1 text-sm leading-relaxed">
-          Practice configuration and preferences — coming soon.
+          Configuration et préférences — bientôt disponible.
         </p>
       </div>
 
@@ -27,9 +27,10 @@ function OperatorSettingsPage() {
         <div className="bg-muted flex h-10 w-10 items-center justify-center rounded-full">
           <HugeiconsIcon icon={Setting07Icon} size={18} className="text-muted-foreground" />
         </div>
-        <p className="font-display mt-1 text-sm font-semibold tracking-tight">Nothing here yet</p>
+        <p className="font-display mt-1 text-sm font-semibold tracking-tight">Rien ici pour l&apos;instant</p>
         <p className="text-muted-foreground max-w-xs text-sm leading-relaxed">
-          Practice-level settings — billing, branding, and notifications — will live here.
+          Les paramètres de l&apos;activité — facturation, identité visuelle et notifications —
+          vivront ici.
         </p>
       </div>
     </div>

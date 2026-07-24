@@ -28,32 +28,32 @@ type KindConfig = {
 const kindConfig: Record<NeedsAttentionKind, KindConfig> = {
   invoice: {
     icon: DollarCircleIcon,
-    label: "Invoice",
-    ctaLabel: "Pay now",
+    label: "Facture",
+    ctaLabel: "Payer",
     accentClass: "border-l-primary/60",
     iconBgClass: "bg-primary/10",
     iconColorClass: "text-primary",
   },
   file: {
     icon: File01Icon,
-    label: "File request",
-    ctaLabel: "Upload file",
+    label: "Fichier demandé",
+    ctaLabel: "Envoyer le fichier",
     accentClass: "border-l-border",
     iconBgClass: "bg-muted",
     iconColorClass: "text-muted-foreground",
   },
   website: {
     icon: Globe02Icon,
-    label: "Website",
-    ctaLabel: "Review changes",
+    label: "Site web",
+    ctaLabel: "Relire les changements",
     accentClass: "border-l-border",
     iconBgClass: "bg-muted",
     iconColorClass: "text-muted-foreground",
   },
   feature: {
     icon: SparklesIcon,
-    label: "New feature",
-    ctaLabel: "Explore",
+    label: "Nouvelle fonctionnalité",
+    ctaLabel: "Découvrir",
     accentClass: "border-l-primary/40",
     iconBgClass: "bg-primary/10",
     iconColorClass: "text-primary",
@@ -66,11 +66,11 @@ export function NeedsAttentionList({ items }: NeedsAttentionListProps) {
       <Empty className="border-border bg-muted/20 rounded-xl border py-12">
         <EmptyHeader>
           <EmptyTitle className="font-display text-base font-semibold tracking-tight">
-            All clear.
+            Tout est à jour.
           </EmptyTitle>
           <EmptyDescription className="text-muted-foreground max-w-xs text-sm leading-relaxed">
-            Nothing needs your attention right now. You&apos;ll see action items here as your
-            project progresses.
+            Rien ne demande votre attention pour le moment. Les actions à traiter apparaîtront ici
+            au fil du projet.
           </EmptyDescription>
         </EmptyHeader>
       </Empty>

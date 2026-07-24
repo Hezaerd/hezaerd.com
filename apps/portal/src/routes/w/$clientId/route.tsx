@@ -22,7 +22,7 @@ function ClientWorkspaceLayout() {
   if (loading) {
     return (
       <main className="flex min-h-svh items-center justify-center px-6">
-        <p className="text-muted-foreground font-mono text-sm">Loading…</p>
+        <p className="text-muted-foreground font-mono text-sm">Chargement…</p>
       </main>
     );
   }
@@ -31,9 +31,9 @@ function ClientWorkspaceLayout() {
     return (
       <main className="flex min-h-svh items-center justify-center px-6">
         <p className="text-muted-foreground text-sm">
-          Sign in to reach your Client Workspace.{" "}
+          Connectez-vous pour accéder à votre espace client.{" "}
           <Link to="/" className="text-primary font-medium hover:underline">
-            Back to login
+            Retour à la connexion
           </Link>
         </p>
       </main>

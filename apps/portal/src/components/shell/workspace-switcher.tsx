@@ -26,7 +26,7 @@ export function WorkspaceSwitcher({ currentClient }: WorkspaceSwitcherProps) {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" className="w-56">
         <DropdownMenuGroup>
-          <DropdownMenuLabel>Switch client</DropdownMenuLabel>
+          <DropdownMenuLabel>Changer de client</DropdownMenuLabel>
           <DropdownMenuItem
             render={<Link to="/w/$clientId" params={{ clientId: currentClient.id }} />}
           >

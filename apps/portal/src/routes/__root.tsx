@@ -7,8 +7,8 @@ import { PortalConvexProvider } from "@/components/convex-provider";
 
 import appCss from "../app.css?url";
 
-const title = "Hezaerd Portal";
-const description = "Dashboard for the Hezaerd freelance software business.";
+const title = "Portail Hezaerd";
+const description = "Tableau de bord pour l'activité freelance Hezaerd.";
 
 export const Route = createRootRoute({
   head: () => ({
@@ -40,7 +40,7 @@ function RootLayout() {
 
 function RootDocument({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="fr">
       <head>
         <HeadContent />
       </head>

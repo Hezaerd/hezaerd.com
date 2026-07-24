@@ -40,16 +40,16 @@ const clients: PortalClient[] = [
     needsAttention: [
       {
         id: "river-invoice-1042",
-        title: "Invoice #1042 is unpaid",
-        description: "Monthly retainer — due in 5 days.",
+        title: "La facture n°1042 est impayée",
+        description: "Forfait mensuel — échéance dans 5 jours.",
         clientId: "river-cafe",
         area: "invoices",
         kind: "invoice",
       },
       {
         id: "river-logo",
-        title: "Logo SVG requested",
-        description: "Upload a vector logo for the website refresh.",
+        title: "Logo SVG demandé",
+        description: "Envoyez un logo vectoriel pour la refonte du site.",
         clientId: "river-cafe",
         area: "files",
         kind: "file",
@@ -67,8 +67,8 @@ const clients: PortalClient[] = [
     needsAttention: [
       {
         id: "northside-invoice-1038",
-        title: "Invoice #1038 is unpaid",
-        description: "Website launch milestone — pay to continue.",
+        title: "La facture n°1038 est impayée",
+        description: "Jalon de lancement du site — payez pour continuer.",
         clientId: "northside-yoga",
         area: "invoices",
         kind: "invoice",
@@ -99,11 +99,14 @@ export function getFirstClient(): PortalClient {
 function featureUnlockItem(clientId: string, feature: ClientFeature): NeedsAttentionItem {
   return {
     id: `${clientId}-${feature}-unlock`,
-    title: feature === "website" ? "Website is ready to explore" : "Insights is ready to explore",
+    title:
+      feature === "website"
+        ? "Le site web est prêt à explorer"
+        : "Les statistiques sont prêtes à explorer",
     description:
       feature === "website"
-        ? "Review editable fields and publish when you are ready."
-        : "See visitors, top pages, and one plain-language takeaway.",
+        ? "Relisez les champs modifiables et publiez quand vous êtes prêt."
+        : "Consultez les visiteurs, les pages populaires et un enseignement clair.",
     clientId,
     area: feature,
     kind: "feature",
@@ -135,9 +138,9 @@ export function setClientFeature(
 }
 
 export function formatCurrency(amount: number): string {
-  return new Intl.NumberFormat("en-US", {
+  return new Intl.NumberFormat("fr-FR", {
     style: "currency",
-    currency: "USD",
+    currency: "EUR",
     maximumFractionDigits: 0,
   }).format(amount);
 }

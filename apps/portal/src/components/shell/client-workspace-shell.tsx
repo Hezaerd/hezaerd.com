@@ -32,20 +32,20 @@ type WorkspaceArea = {
 };
 
 const coreAreas: WorkspaceArea[] = [
-  { label: "Home", segment: "", icon: Home01Icon },
-  { label: "Invoices", segment: "invoices", icon: Invoice01Icon },
-  { label: "Files", segment: "files", icon: File01Icon },
+  { label: "Accueil", segment: "", icon: Home01Icon },
+  { label: "Factures", segment: "invoices", icon: Invoice01Icon },
+  { label: "Fichiers", segment: "files", icon: File01Icon },
 ];
 
 const featureAreas: WorkspaceArea[] = [
   {
-    label: "Insights",
+    label: "Statistiques",
     segment: "insights",
     feature: "insights",
     icon: PieChart01Icon,
   },
   {
-    label: "Website",
+    label: "Site web",
     segment: "website",
     feature: "website",
     icon: Globe02Icon,
@@ -86,7 +86,7 @@ export function ClientWorkspaceShell({ client, email, children }: ClientWorkspac
       brand={{
         initials: getClientInitials(client.name),
         title: client.name,
-        subtitle: "Client Portal",
+        subtitle: "Espace client",
       }}
       email={email}
       headerStart={
@@ -97,7 +97,7 @@ export function ClientWorkspaceShell({ client, email, children }: ClientWorkspac
               className="text-muted-foreground hover:text-foreground inline-flex shrink-0 items-center gap-1.5 rounded-md px-2 py-1.5 text-sm font-medium transition-colors"
             >
               <HugeiconsIcon icon={ArrowLeft01Icon} size={16} className="shrink-0" />
-              <span>Operator</span>
+              <span>Opérateur</span>
             </Link>
             <span className="text-border select-none" aria-hidden>
               /
@@ -134,10 +134,10 @@ export function ClientWorkspaceShell({ client, email, children }: ClientWorkspac
             <SidebarMenuButton
               render={<Link to="/w/$clientId/message" params={{ clientId: client.id }} />}
               isActive={pathname.startsWith(`/w/${client.id}/message`)}
-              tooltip="Message Hezaerd"
+              tooltip="Contacter Hezaerd"
             >
               <HugeiconsIcon icon={MessageIcon} size={16} className="shrink-0" />
-              <span>Message Hezaerd</span>
+              <span>Contacter Hezaerd</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>

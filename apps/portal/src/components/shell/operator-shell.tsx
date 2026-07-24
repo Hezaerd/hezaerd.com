@@ -23,10 +23,10 @@ type NavItem = {
 };
 
 const navItems: NavItem[] = [
-  { label: "Home", to: "/op", icon: Home01Icon },
+  { label: "Accueil", to: "/op", icon: Home01Icon },
   { label: "Clients", to: "/op/clients", icon: UserGroupIcon },
-  { label: "Invoices", to: "/op/invoices", icon: Invoice01Icon },
-  { label: "Settings", to: "/op/settings", icon: Setting07Icon },
+  { label: "Factures", to: "/op/invoices", icon: Invoice01Icon },
+  { label: "Paramètres", to: "/op/settings", icon: Setting07Icon },
 ];
 
 export function OperatorShell({ email, children }: OperatorShellProps) {
@@ -39,7 +39,7 @@ export function OperatorShell({ email, children }: OperatorShellProps) {
       brand={{
         initials: "HZ",
         title: "Hezaerd",
-        subtitle: "Operator",
+        subtitle: "Opérateur",
       }}
       email={email}
       nav={navItems.map((item) => (

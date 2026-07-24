@@ -33,7 +33,7 @@ function ClientDirectoryPage() {
           <h1 className="font-display text-2xl font-semibold tracking-tight">Clients</h1>
         </div>
         <p className="text-muted-foreground mt-1 text-sm leading-relaxed">
-          Manage client identities, feature toggles, and workspace access.
+          Gérez les fiches clients, les fonctionnalités et l&apos;accès aux espaces.
         </p>
       </div>
 
@@ -43,9 +43,9 @@ function ClientDirectoryPage() {
           const initials = getClientInitials(client.name);
           const attentionCount = client.needsAttention.length;
           const featureList = [
-            "Core",
-            client.features.insights ? "Insights" : null,
-            client.features.website ? "Website" : null,
+            "Essentiel",
+            client.features.insights ? "Statistiques" : null,
+            client.features.website ? "Site web" : null,
           ].filter(Boolean);
 
           return (
@@ -67,7 +67,7 @@ function ClientDirectoryPage() {
                   {attentionCount > 0 && (
                     <span className="flex items-center gap-1 rounded-full bg-amber-500/10 px-2 py-0.5 font-mono text-[10px] font-semibold text-amber-400">
                       <HugeiconsIcon icon={AlertCircleIcon} size={10} />
-                      {attentionCount} waiting
+                      {attentionCount} en attente
                     </span>
                   )}
                 </div>
@@ -90,7 +90,7 @@ function ClientDirectoryPage() {
                   size="sm"
                   render={<Link to="/op/clients/$clientId" params={{ clientId: client.id }} />}
                 >
-                  View record
+                  Voir la fiche
                   <HugeiconsIcon icon={ArrowRight01Icon} size={13} />
                 </Button>
               </div>

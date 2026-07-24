@@ -17,21 +17,21 @@ function OperatorInvoicesPage() {
           <div className="bg-muted flex h-8 w-8 items-center justify-center rounded-lg">
             <HugeiconsIcon icon={Invoice01Icon} size={16} className="text-muted-foreground" />
           </div>
-          <h1 className="font-display text-2xl font-semibold tracking-tight">Invoices</h1>
+          <h1 className="font-display text-2xl font-semibold tracking-tight">Factures</h1>
         </div>
         <p className="text-muted-foreground mt-1 text-sm leading-relaxed">
-          Practice-wide invoice list and send flow — coming soon.
+          Liste des factures et envoi — bientôt disponible.
         </p>
       </div>
 
       <Empty className="border-border bg-muted/20 rounded-xl border py-12">
         <EmptyHeader>
           <EmptyTitle className="font-display text-base font-semibold tracking-tight">
-            Coming soon
+            Bientôt disponible
           </EmptyTitle>
           <EmptyDescription className="text-muted-foreground max-w-xs text-sm leading-relaxed">
-            Track open and paid invoices across all clients from one place. In the meantime, open
-            individual Client Workspaces.
+            Suivez les factures ouvertes et payées de tous vos clients au même endroit. En
+            attendant, ouvrez les espaces clients individuels.
           </EmptyDescription>
         </EmptyHeader>
       </Empty>
