@@ -1,10 +1,11 @@
-import { Button } from "@hezaerd/ui/components/button";
 import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@hezaerd/ui/components/card";
+  CloudUploadIcon,
+  File01Icon,
+  FolderUploadIcon,
+} from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
+
+import { Button } from "@hezaerd/ui/components/button";
 
 import { createFileRoute } from "@tanstack/react-router";
 
@@ -14,36 +15,69 @@ export const Route = createFileRoute("/w/$clientId/files")({
 
 function ClientFilesPage() {
   return (
-    <div className="flex max-w-2xl flex-col gap-6">
-      <div>
-        <h1 className="font-display text-2xl font-semibold tracking-tight">
-          Files
-        </h1>
-        <p className="text-muted-foreground mt-2 text-sm leading-relaxed">
-          Shared folder plus Operator file requests.
+    <div className="flex max-w-2xl flex-col gap-8">
+      {/* Page header */}
+      <div className="flex flex-col gap-1">
+        <div className="flex items-center gap-2">
+          <div className="bg-muted flex h-8 w-8 items-center justify-center rounded-lg">
+            <HugeiconsIcon icon={File01Icon} size={16} className="text-muted-foreground" />
+          </div>
+          <h1 className="font-display text-2xl font-semibold tracking-tight">
+            Files
+          </h1>
+        </div>
+        <p className="text-muted-foreground mt-1 text-sm leading-relaxed">
+          Requested assets and your shared project folder.
         </p>
       </div>
-      <Card className="bg-muted/20">
-        <CardHeader>
-          <CardTitle>Logo SVG</CardTitle>
-        </CardHeader>
-        <CardContent className="flex flex-col gap-3">
-          <p className="text-muted-foreground text-sm">
-            Requested asset — upload a vector logo for the website refresh.
+
+      {/* Requested assets section */}
+      <section className="flex flex-col gap-3">
+        <h2 className="font-display text-sm font-semibold tracking-tight text-muted-foreground uppercase tracking-wider">
+          Requests
+        </h2>
+
+        {/* File request card */}
+        <div className="border-border bg-muted/20 hover:bg-muted/30 relative flex items-start gap-4 rounded-xl border px-5 py-4 transition-colors">
+          <div className="bg-muted flex h-9 w-9 shrink-0 items-center justify-center rounded-lg mt-0.5">
+            <HugeiconsIcon icon={FolderUploadIcon} size={16} className="text-muted-foreground" />
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className="font-display text-sm font-semibold tracking-tight">
+              Logo SVG
+            </p>
+            <p className="text-muted-foreground mt-0.5 text-sm leading-relaxed">
+              Upload a vector logo for the website refresh. Accepted formats: SVG, AI, EPS.
+            </p>
+            <Button variant="outline" size="sm" className="mt-3">
+              <HugeiconsIcon icon={CloudUploadIcon} size={14} />
+              Upload file
+            </Button>
+          </div>
+          <span className="bg-amber-500/10 text-amber-400 shrink-0 rounded-md px-2 py-0.5 font-mono text-[10px] font-semibold">
+            Pending
+          </span>
+        </div>
+      </section>
+
+      {/* Shared folder section */}
+      <section className="flex flex-col gap-3">
+        <h2 className="font-display text-sm font-semibold tracking-tight text-muted-foreground uppercase tracking-wider">
+          Shared folder
+        </h2>
+
+        <div className="border-border bg-muted/10 flex flex-col items-center justify-center gap-2 rounded-xl border py-10 text-center">
+          <div className="bg-muted flex h-9 w-9 items-center justify-center rounded-full">
+            <HugeiconsIcon icon={FolderUploadIcon} size={16} className="text-muted-foreground" />
+          </div>
+          <p className="font-display text-sm font-semibold tracking-tight">
+            No shared files yet
           </p>
-          <Button variant="outline">Upload file</Button>
-        </CardContent>
-      </Card>
-      <Card className="bg-muted/20">
-        <CardHeader>
-          <CardTitle>Shared folder</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-muted-foreground text-sm">
-            Open uploads and shared files will list here.
+          <p className="text-muted-foreground max-w-xs text-sm leading-relaxed">
+            Uploaded files and documents shared by Hezaerd will appear here.
           </p>
-        </CardContent>
-      </Card>
+        </div>
+      </section>
     </div>
   );
 }
