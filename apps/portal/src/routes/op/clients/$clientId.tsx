@@ -1,5 +1,3 @@
-import type { ClientFeature, NeedsAttentionItem } from "@/lib/portal-fixtures";
-
 import { Button } from "@hezaerd/ui/components/button";
 import {
   Card,
@@ -13,7 +11,11 @@ import { useState } from "react";
 
 import { Link, createFileRoute, notFound } from "@tanstack/react-router";
 
-import { getClient } from "@/lib/portal-fixtures";
+import {
+  getClient,
+  setClientFeature,
+  type ClientFeature,
+} from "@/lib/portal-fixtures";
 
 export const Route = createFileRoute("/op/clients/$clientId")({
   loader: ({ params }) => {
@@ -21,43 +23,34 @@ export const Route = createFileRoute("/op/clients/$clientId")({
     if (!client) {
       throw notFound();
     }
-    return { client };
+    return { clientId: params.clientId };
   },
   component: ClientRecordPage,
 });
 
 function ClientRecordPage() {
-  const { client: initialClient } = Route.useLoaderData();
-  const [features, setFeatures] = useState(initialClient.features);
-  const [needsAttention, setNeedsAttention] = useState(initialClient.needsAttention);
+  const { clientId } = Route.useLoaderData();
+  const [, refresh] = useState(0);
+  const client = getClient(clientId);
+
+  if (!client) {
+    return null;
+  }
 
   function toggleFeature(feature: ClientFeature, enabled: boolean) {
-    setFeatures((current) => ({ ...current, [feature]: enabled }));
-
-    if (enabled) {
-      const unlock: NeedsAttentionItem = {
-        id: `${initialClient.id}-${feature}-unlock`,
-        title:
-          feature === "website" ? "Website is ready to explore" : "Insights is ready to explore",
-        description:
-          feature === "website"
-            ? "Review editable fields and publish when you are ready."
-            : "See visitors, top pages, and one plain-language takeaway.",
-        clientId: initialClient.id,
-        area: feature,
-        kind: "feature",
-      };
-      setNeedsAttention((current) =>
-        current.some((item) => item.id === unlock.id) ? current : [...current, unlock],
-      );
-    }
+    setClientFeature(clientId, feature, enabled);
+    refresh((value) => value + 1);
   }
 
   return (
     <div className="flex max-w-3xl flex-col gap-6">
       <div>
-        <h1 className="font-display text-2xl font-semibold tracking-tight">{initialClient.name}</h1>
-        <p className="text-muted-foreground mt-2 text-sm">{initialClient.contactEmail}</p>
+        <h1 className="font-display text-2xl font-semibold tracking-tight">
+          {client.name}
+        </h1>
+        <p className="text-muted-foreground mt-2 text-sm">
+          {client.contactEmail}
+        </p>
       </div>
 
       <Card className="bg-muted/20">
@@ -71,13 +64,13 @@ function ClientRecordPage() {
           <FeatureToggle
             label="Insights"
             description="Visitors, top pages, and one takeaway."
-            checked={features.insights}
+            checked={client.features.insights}
             onCheckedChange={(checked) => toggleFeature("insights", checked)}
           />
           <FeatureToggle
             label="Website"
             description="Guided editable fields with Preview and Publish."
-            checked={features.website}
+            checked={client.features.website}
             onCheckedChange={(checked) => toggleFeature("website", checked)}
           />
         </CardContent>
@@ -92,10 +85,12 @@ function ClientRecordPage() {
         </CardHeader>
         <CardContent className="flex flex-col gap-3">
           <p className="text-muted-foreground text-sm">
-            {needsAttention.length} Needs Attention item
-            {needsAttention.length === 1 ? "" : "s"} in fixture data.
+            {client.needsAttention.length} Needs Attention item
+            {client.needsAttention.length === 1 ? "" : "s"} in fixture data.
           </p>
-          <Button render={<Link to="/w/$clientId" params={{ clientId: initialClient.id }} />}>
+          <Button
+            render={<Link to="/w/$clientId" params={{ clientId: client.id }} />}
+          >
             Open workspace
           </Button>
         </CardContent>

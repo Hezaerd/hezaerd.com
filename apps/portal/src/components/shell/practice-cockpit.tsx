@@ -1,6 +1,14 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@hezaerd/ui/components/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@hezaerd/ui/components/card";
 
-import { formatCurrency, type PracticeCockpitStats } from "@/lib/portal-fixtures";
+import {
+  formatCurrency,
+  type PracticeCockpitStats,
+} from "@/lib/portal-fixtures";
 
 type PracticeCockpitProps = {
   stats: PracticeCockpitStats;
@@ -33,7 +41,9 @@ export function PracticeCockpit({ stats }: PracticeCockpitProps) {
   return (
     <section className="flex flex-col gap-4">
       <div>
-        <h2 className="font-display text-lg font-semibold tracking-tight">Practice Cockpit</h2>
+        <h2 className="font-display text-lg font-semibold tracking-tight">
+          Practice Cockpit
+        </h2>
         <p className="text-muted-foreground mt-1 text-sm">
           Snapshot of open work across your freelance practice.
         </p>

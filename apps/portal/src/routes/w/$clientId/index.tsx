@@ -18,7 +18,9 @@ function ClientHomePage() {
   return (
     <div className="flex max-w-2xl flex-col gap-4">
       <div>
-        <h1 className="font-display text-2xl font-semibold tracking-tight">Home</h1>
+        <h1 className="font-display text-2xl font-semibold tracking-tight">
+          Home
+        </h1>
         <p className="text-muted-foreground mt-2 text-sm leading-relaxed">
           Needs Attention only — tap through to the relevant Area.
         </p>

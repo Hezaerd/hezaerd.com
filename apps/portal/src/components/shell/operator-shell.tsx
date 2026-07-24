@@ -29,7 +29,9 @@ const navItems = [
 ] as const;
 
 export function OperatorShell({ email, children }: OperatorShellProps) {
-  const pathname = useRouterState({ select: (state) => state.location.pathname });
+  const pathname = useRouterState({
+    select: (state) => state.location.pathname,
+  });
 
   return (
     <SidebarProvider>
@@ -39,7 +41,9 @@ export function OperatorShell({ email, children }: OperatorShellProps) {
             <p className="text-primary font-mono text-xs font-medium tracking-[0.2em] uppercase">
               Portal
             </p>
-            <p className="font-display text-sm font-semibold tracking-tight">Operator Home</p>
+            <p className="font-display text-sm font-semibold tracking-tight">
+              Operator Home
+            </p>
           </div>
         </SidebarHeader>
         <SidebarContent>
@@ -66,7 +70,9 @@ export function OperatorShell({ email, children }: OperatorShellProps) {
           </SidebarGroup>
         </SidebarContent>
         <SidebarFooter className="border-border border-t">
-          <p className="text-muted-foreground px-2 py-1 text-xs">Practice operator shell</p>
+          <p className="text-muted-foreground px-2 py-1 text-xs">
+            Practice operator shell
+          </p>
         </SidebarFooter>
       </Sidebar>
       <SidebarInset>
@@ -74,7 +80,9 @@ export function OperatorShell({ email, children }: OperatorShellProps) {
           <SidebarTrigger />
           <Separator orientation="vertical" className="mr-1 h-4" />
           <div className="flex flex-1 items-center justify-end gap-3">
-            <p className="text-muted-foreground hidden text-sm sm:block">{email}</p>
+            <p className="text-muted-foreground hidden text-sm sm:block">
+              {email}
+            </p>
             <Link
               to="/signout"
               className="border-border hover:bg-accent rounded-md border px-3 py-2 text-sm font-medium"
@@ -83,7 +91,9 @@ export function OperatorShell({ email, children }: OperatorShellProps) {
             </Link>
           </div>
         </header>
-        <main className="flex flex-1 flex-col gap-6 p-4 md:p-6">{children}</main>
+        <main className="flex flex-1 flex-col gap-6 p-4 md:p-6">
+          {children}
+        </main>
       </SidebarInset>
     </SidebarProvider>
   );

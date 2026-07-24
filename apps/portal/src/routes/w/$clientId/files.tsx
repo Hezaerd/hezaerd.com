@@ -1,5 +1,10 @@
 import { Button } from "@hezaerd/ui/components/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@hezaerd/ui/components/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@hezaerd/ui/components/card";
 
 import { createFileRoute } from "@tanstack/react-router";
 
@@ -11,7 +16,9 @@ function ClientFilesPage() {
   return (
     <div className="flex max-w-2xl flex-col gap-6">
       <div>
-        <h1 className="font-display text-2xl font-semibold tracking-tight">Files</h1>
+        <h1 className="font-display text-2xl font-semibold tracking-tight">
+          Files
+        </h1>
         <p className="text-muted-foreground mt-2 text-sm leading-relaxed">
           Shared folder plus Operator file requests.
         </p>

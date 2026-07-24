@@ -1,7 +1,12 @@
 import { TooltipProvider } from "@hezaerd/ui/components/tooltip";
 
 /// <reference types="vite/client" />
-import { HeadContent, Outlet, Scripts, createRootRoute } from "@tanstack/react-router";
+import {
+  HeadContent,
+  Outlet,
+  Scripts,
+  createRootRoute,
+} from "@tanstack/react-router";
 
 import { PortalConvexProvider } from "@/components/convex-provider";
 
@@ -14,7 +19,10 @@ export const Route = createRootRoute({
   head: () => ({
     meta: [
       { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
+      {
+        name: "viewport",
+        content: "width=device-width, initial-scale=1, viewport-fit=cover",
+      },
       { title },
       { name: "description", content: description },
       { name: "robots", content: "noindex, nofollow" },
