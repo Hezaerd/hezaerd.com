@@ -131,7 +131,9 @@ export function Navbar() {
 
         <DropdownMenu>
           <DropdownMenuTrigger
-            render={<Button className="h-9 shrink-0 px-4 shadow-lg hover:shadow-xl">Get In Touch</Button>}
+            render={
+              <Button className="h-9 shrink-0 px-4 shadow-lg hover:shadow-xl">Get In Touch</Button>
+            }
           />
           <DropdownMenuContent align="end" sideOffset={8} className="w-56">
             <DropdownMenuGroup>

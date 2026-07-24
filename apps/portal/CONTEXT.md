@@ -107,4 +107,3 @@ _Avoid_: Ticket, support center, mailto-only as the sole path; full chat product
 **Brand** / **Portfolio**:
 Separate public contexts. Portal may link to them; it does not host their content.
 _Avoid_: Treating Portal as a second marketing homepage
-

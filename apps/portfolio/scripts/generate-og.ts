@@ -85,8 +85,7 @@ async function main() {
           alignItems: "center",
           justifyContent: "center",
           backgroundColor: COLORS.background,
-          backgroundImage:
-            "radial-gradient(ellipse 70% 55% at 50% 45%, #1a1612 0%, #111111 70%)",
+          backgroundImage: "radial-gradient(ellipse 70% 55% at 50% 45%, #1a1612 0%, #111111 70%)",
         },
         children: [
           {
@@ -142,8 +141,7 @@ async function main() {
                       maxWidth: 720,
                       marginTop: 8,
                     },
-                    children:
-                      "Projects, experiments, résumé, and creative work.",
+                    children: "Projects, experiments, résumé, and creative work.",
                   },
                 },
               ],

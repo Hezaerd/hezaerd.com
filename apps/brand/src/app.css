@@ -39,7 +39,7 @@
   }
 
   body {
-    @apply bg-background font-sans text-foreground antialiased;
+    @apply bg-background text-foreground font-sans antialiased;
     background-image:
       radial-gradient(ellipse 80% 50% at 10% -10%, rgb(212 180 131 / 0.12), transparent),
       radial-gradient(ellipse 60% 40% at 90% 0%, rgb(80 110 90 / 0.18), transparent);

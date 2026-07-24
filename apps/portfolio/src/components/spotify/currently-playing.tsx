@@ -2,6 +2,7 @@ import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from "@hezaerd/ui/componen
 import { Spinner } from "@hezaerd/ui/components/spinner";
 import { MusicNote03Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
+
 import { useQuery } from "@tanstack/react-query";
 
 import { currentlyPlayingQueryOptions } from "@/lib/spotify-queries";
@@ -56,7 +57,10 @@ export function CurrentlyPlaying() {
         <span className="text-muted-foreground"> — {track.artists}</span>
       </span>
       {track.isPlaying ? (
-        <span className="bg-primary size-2 shrink-0 animate-pulse rounded-full" aria-label="Playing" />
+        <span
+          className="bg-primary size-2 shrink-0 animate-pulse rounded-full"
+          aria-label="Playing"
+        />
       ) : null}
     </a>
   );

@@ -40,8 +40,8 @@ export function ResumeSection() {
                   <p
                     className={
                       exp.color === "primary"
-                        ? "font-mono text-primary text-sm"
-                        : "font-mono text-accent-foreground text-sm"
+                        ? "text-primary font-mono text-sm"
+                        : "text-accent-foreground font-mono text-sm"
                     }
                   >
                     {exp.company} • {exp.period}
@@ -67,7 +67,7 @@ export function ResumeSection() {
                   <h4 className="font-display text-card-foreground text-lg font-semibold tracking-tight">
                     {edu.degree}
                   </h4>
-                  <p className="font-mono text-secondary-foreground text-sm">
+                  <p className="text-secondary-foreground font-mono text-sm">
                     {edu.school} • {edu.period}
                   </p>
                   {edu.description ? (

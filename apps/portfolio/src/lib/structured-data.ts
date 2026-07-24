@@ -1,5 +1,6 @@
-import { personalInfo } from "@/data/personal-info";
 import type { Project } from "@/data/projects";
+
+import { personalInfo } from "@/data/personal-info";
 import { absoluteOgImage, absoluteUrl, site } from "@/lib/site";
 
 function personNode() {
@@ -40,9 +41,7 @@ export function homeJsonLd() {
 
 export function projectJsonLd(project: Project) {
   const url = absoluteUrl(`/projects/${project.slug}`);
-  const image = project.previewImage
-    ? absoluteUrl(project.previewImage)
-    : absoluteOgImage();
+  const image = project.previewImage ? absoluteUrl(project.previewImage) : absoluteOgImage();
 
   return {
     "@context": "https://schema.org",

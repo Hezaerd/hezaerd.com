@@ -1,3 +1,5 @@
+import type { TimeRange } from "@/types/spotify";
+
 import { queryOptions } from "@tanstack/react-query";
 
 import {
@@ -6,7 +8,6 @@ import {
   getTopArtistsFn,
   getTopTracksFn,
 } from "@/server/spotify";
-import type { TimeRange } from "@/types/spotify";
 
 export const currentlyPlayingQueryOptions = queryOptions({
   queryKey: ["spotify", "now-playing"] as const,

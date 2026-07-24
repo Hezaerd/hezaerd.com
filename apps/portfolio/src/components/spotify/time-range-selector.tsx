@@ -1,7 +1,4 @@
-import {
-  ToggleGroup,
-  ToggleGroupItem,
-} from "@hezaerd/ui/components/toggle-group";
+import { ToggleGroup, ToggleGroupItem } from "@hezaerd/ui/components/toggle-group";
 
 import { TIME_RANGES, type TimeRange } from "@/types/spotify";
 

@@ -35,7 +35,7 @@ export function AboutSection() {
                   {skills.map((skill) => (
                     <RevealItem
                       key={skill}
-                      className="font-mono text-muted-foreground flex items-center gap-2 text-sm"
+                      className="text-muted-foreground flex items-center gap-2 font-mono text-sm"
                     >
                       <span className="bg-primary inline-block h-2 w-2 rounded-full" />
                       {skill}

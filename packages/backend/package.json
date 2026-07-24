@@ -2,15 +2,15 @@
   "name": "@hezaerd/backend",
   "private": true,
   "type": "module",
+  "exports": {
+    "./api": "./convex/_generated/api.js",
+    "./dataModel": "./convex/_generated/dataModel.d.ts"
+  },
   "scripts": {
     "dev": "convex dev",
     "deploy": "convex deploy",
     "codegen": "convex codegen",
     "typecheck": "tsc --noEmit"
-  },
-  "exports": {
-    "./api": "./convex/_generated/api.js",
-    "./dataModel": "./convex/_generated/dataModel.d.ts"
   },
   "dependencies": {
     "@convex-dev/workos-authkit": "^0.2.7",

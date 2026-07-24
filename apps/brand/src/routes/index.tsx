@@ -10,7 +10,7 @@ function HomePage() {
   return (
     <main>
       <section className="mx-auto flex min-h-[calc(100vh-4rem)] max-w-6xl flex-col justify-center px-6 py-24">
-        <p className="font-mono text-primary mb-4 text-sm font-medium tracking-[0.2em] uppercase">
+        <p className="text-primary mb-4 font-mono text-sm font-medium tracking-[0.2em] uppercase">
           Hezaerd
         </p>
         <h1 className="font-display max-w-3xl text-5xl leading-[1.05] font-semibold tracking-tight sm:text-6xl">

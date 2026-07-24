@@ -8,13 +8,13 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@hugeicons/core-free-icons": "^4.2.3",
-    "@hugeicons/react": "^1.1.9",
     "@fontsource-variable/bricolage-grotesque": "^5.3.0",
     "@fontsource-variable/source-sans-3": "^5.3.0",
     "@fontsource/ibm-plex-mono": "^5.3.0",
     "@hezaerd/backend": "workspace:*",
     "@hezaerd/ui": "workspace:*",
+    "@hugeicons/core-free-icons": "^4.2.3",
+    "@hugeicons/react": "^1.1.9",
     "@tailwindcss/vite": "^4.1.18",
     "@tanstack/react-router": "latest",
     "@tanstack/react-start": "latest",

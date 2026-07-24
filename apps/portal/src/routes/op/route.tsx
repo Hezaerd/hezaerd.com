@@ -1,13 +1,8 @@
-import {
-  Link,
-  Outlet,
-  createFileRoute,
-  redirect,
-} from "@tanstack/react-router";
+import { Link, Outlet, createFileRoute, redirect } from "@tanstack/react-router";
 
 import { OperatorShell } from "@/components/shell/operator-shell";
-import { usePortalAuth } from "@/lib/use-portal-auth";
 import { getClientWorkspaceHomeParams, isClientRole } from "@/lib/portal-role";
+import { usePortalAuth } from "@/lib/use-portal-auth";
 
 export const Route = createFileRoute("/op")({
   beforeLoad: () => {

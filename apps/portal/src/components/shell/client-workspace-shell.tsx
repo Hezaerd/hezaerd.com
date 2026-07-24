@@ -1,5 +1,6 @@
 import type { PortalClient } from "@/lib/portal-fixtures";
 
+import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@hezaerd/ui/components/sidebar";
 import {
   File01Icon,
   Globe02Icon,
@@ -9,12 +10,6 @@ import {
   PieChart01Icon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react";
-
-import {
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-} from "@hezaerd/ui/components/sidebar";
 
 import { Link, useRouterState } from "@tanstack/react-router";
 
@@ -65,20 +60,14 @@ function getClientInitials(name: string): string {
     .slice(0, 2);
 }
 
-export function ClientWorkspaceShell({
-  client,
-  email,
-  children,
-}: ClientWorkspaceShellProps) {
+export function ClientWorkspaceShell({ client, email, children }: ClientWorkspaceShellProps) {
   const pathname = useRouterState({
     select: (state) => state.location.pathname,
   });
   const showSwitcher = isOperatorRole();
   const areas = [
     ...coreAreas,
-    ...featureAreas.filter((area) =>
-      area.feature ? client.features[area.feature] : true,
-    ),
+    ...featureAreas.filter((area) => (area.feature ? client.features[area.feature] : true)),
   ];
 
   function isAreaActive(segment: WorkspaceArea["segment"]) {
@@ -99,9 +88,7 @@ export function ClientWorkspaceShell({
         subtitle: "Client Portal",
       }}
       email={email}
-      headerStart={
-        showSwitcher ? <WorkspaceSwitcher currentClient={client} /> : null
-      }
+      headerStart={showSwitcher ? <WorkspaceSwitcher currentClient={client} /> : null}
       nav={areas.map((area) => {
         const active = isAreaActive(area.segment);
         const showDot = area.segment === "" && hasAttention && !active;
@@ -110,11 +97,7 @@ export function ClientWorkspaceShell({
             <SidebarMenuButton
               render={
                 <Link
-                  to={
-                    area.segment === ""
-                      ? "/w/$clientId"
-                      : `/w/$clientId/${area.segment}`
-                  }
+                  to={area.segment === "" ? "/w/$clientId" : `/w/$clientId/${area.segment}`}
                   params={{ clientId: client.id }}
                 />
               }
@@ -123,9 +106,7 @@ export function ClientWorkspaceShell({
             >
               <HugeiconsIcon icon={area.icon} size={16} className="shrink-0" />
               <span>{area.label}</span>
-              {showDot ? (
-                <span className="bg-primary ml-auto h-1.5 w-1.5 rounded-full" />
-              ) : null}
+              {showDot ? <span className="bg-primary ml-auto h-1.5 w-1.5 rounded-full" /> : null}
             </SidebarMenuButton>
           </SidebarMenuItem>
         );
@@ -134,20 +115,11 @@ export function ClientWorkspaceShell({
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton
-              render={
-                <Link
-                  to="/w/$clientId/message"
-                  params={{ clientId: client.id }}
-                />
-              }
+              render={<Link to="/w/$clientId/message" params={{ clientId: client.id }} />}
               isActive={pathname.startsWith(`/w/${client.id}/message`)}
               tooltip="Message Hezaerd"
             >
-              <HugeiconsIcon
-                icon={MessageIcon}
-                size={16}
-                className="shrink-0"
-              />
+              <HugeiconsIcon icon={MessageIcon} size={16} className="shrink-0" />
               <span>Message Hezaerd</span>
             </SidebarMenuButton>
           </SidebarMenuItem>

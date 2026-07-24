@@ -64,20 +64,20 @@ function Dashboard({ email }: { email: string }) {
 
 From `apps/portal/CONTEXT.md` (paraphrased for the executor — still open the file):
 
-| Term | UI rule |
-|------|---------|
-| **Operator Home** | Practice Cockpit (4 tiles) + Client list; hard switch into Workspace |
-| **Client Workspace** | Bound to one **Client**; same Area chrome for Client and Operator-in-workspace |
-| **Workspace Switcher** | Operator-only, top bar; list Clients + “Back to Operator Home”; hidden from Clients |
-| **Shell chrome** | Left sidebar + top bar both shells; Client sparse, Operator denser |
-| **Operator nav** | Home · Clients · Invoices · Settings only |
-| **Client Areas** | Home · Invoices · Files · Insights · Website (last two only if Feature on) |
-| **Client Home** | Needs Attention list only; calm empty = “all caught up” |
-| **Client record** | Operator page: identity, Feature toggles, **Open workspace** CTA — not a mini-workspace |
-| **Core** | Home, Invoices, Files always on |
-| **Feature** | Insights + Website toggled on Client record; Feature unlock = one Needs Attention |
-| **Labels** | Insights (not Analytics), Website (not CMS) |
-| **v1 seats** | One login per Client — no teammate invite UI |
+| Term                   | UI rule                                                                                 |
+| ---------------------- | --------------------------------------------------------------------------------------- |
+| **Operator Home**      | Practice Cockpit (4 tiles) + Client list; hard switch into Workspace                    |
+| **Client Workspace**   | Bound to one **Client**; same Area chrome for Client and Operator-in-workspace          |
+| **Workspace Switcher** | Operator-only, top bar; list Clients + “Back to Operator Home”; hidden from Clients     |
+| **Shell chrome**       | Left sidebar + top bar both shells; Client sparse, Operator denser                      |
+| **Operator nav**       | Home · Clients · Invoices · Settings only                                               |
+| **Client Areas**       | Home · Invoices · Files · Insights · Website (last two only if Feature on)              |
+| **Client Home**        | Needs Attention list only; calm empty = “all caught up”                                 |
+| **Client record**      | Operator page: identity, Feature toggles, **Open workspace** CTA — not a mini-workspace |
+| **Core**               | Home, Invoices, Files always on                                                         |
+| **Feature**            | Insights + Website toggled on Client record; Feature unlock = one Needs Attention       |
+| **Labels**             | Insights (not Analytics), Website (not CMS)                                             |
+| **v1 seats**           | One login per Client — no teammate invite UI                                            |
 
 ### Conventions to match
 
@@ -103,16 +103,16 @@ Document the env var in `apps/portal/.env.example` (name + allowed values only �
 
 ## Commands you will need
 
-| Purpose | Command | Expected on success |
-|---------|---------|---------------------|
-| Install | `bun install` (repo root) | exit 0 |
-| Add UI component | `cd packages/ui && bunx --bun shadcn@latest add <names> -y` | files under `packages/ui/src/components/`; exit 0 |
-| Typecheck portal | `bun run --filter @hezaerd/portal typecheck` | exit 0 |
-| Typecheck ui | `bun run --filter @hezaerd/ui typecheck` | exit 0 |
-| Lint | `bun run lint` (repo root) | exit 0 |
-| Format check | `bun run format` | exit 0 |
-| Dev portal | `bun run dev:portal` | Vite on port 3002 |
-| Commitlint sample | `echo 'feat(portal): add dual-shell dashboard chrome' \| bunx commitlint` | exit 0 |
+| Purpose           | Command                                                                   | Expected on success                               |
+| ----------------- | ------------------------------------------------------------------------- | ------------------------------------------------- |
+| Install           | `bun install` (repo root)                                                 | exit 0                                            |
+| Add UI component  | `cd packages/ui && bunx --bun shadcn@latest add <names> -y`               | files under `packages/ui/src/components/`; exit 0 |
+| Typecheck portal  | `bun run --filter @hezaerd/portal typecheck`                              | exit 0                                            |
+| Typecheck ui      | `bun run --filter @hezaerd/ui typecheck`                                  | exit 0                                            |
+| Lint              | `bun run lint` (repo root)                                                | exit 0                                            |
+| Format check      | `bun run format`                                                          | exit 0                                            |
+| Dev portal        | `bun run dev:portal`                                                      | Vite on port 3002                                 |
+| Commitlint sample | `echo 'feat(portal): add dual-shell dashboard chrome' \| bunx commitlint` | exit 0                                            |
 
 ## Suggested executor toolkit
 
@@ -228,13 +228,13 @@ Create:
 
 Create under `apps/portal/src/components/shell/`:
 
-| File | Responsibility |
-|------|----------------|
-| `operator-shell.tsx` | SidebarProvider + sidebar nav (Home, Clients, Invoices, Settings) + top bar (account email, Sign out) + denser main padding OK |
+| File                         | Responsibility                                                                                                                                                                              |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `operator-shell.tsx`         | SidebarProvider + sidebar nav (Home, Clients, Invoices, Settings) + top bar (account email, Sign out) + denser main padding OK                                                              |
 | `client-workspace-shell.tsx` | Sidebar with Areas filtered by Features; sparse main; top bar shows Client name; if Operator, render Workspace Switcher; footer/persistent **Message Hezaerd** entry (dialog or route stub) |
-| `workspace-switcher.tsx` | Dropdown: current Client, other Clients → navigate `/w/$id`, item “Back to Operator Home” → `/op` |
-| `needs-attention-list.tsx` | Renders list or Empty “You’re all caught up.” Use `@hezaerd/ui/components/empty` |
-| `practice-cockpit.tsx` | Exactly four tiles (labels matching CONTEXT): open invoice total, paid this month, Clients waiting on them, active Clients count |
+| `workspace-switcher.tsx`     | Dropdown: current Client, other Clients → navigate `/w/$id`, item “Back to Operator Home” → `/op`                                                                                           |
+| `needs-attention-list.tsx`   | Renders list or Empty “You’re all caught up.” Use `@hezaerd/ui/components/empty`                                                                                                            |
+| `practice-cockpit.tsx`       | Exactly four tiles (labels matching CONTEXT): open invoice total, paid this month, Clients waiting on them, active Clients count                                                            |
 
 Nav link labels (exact):
 
@@ -251,21 +251,21 @@ Implement file routes (TanStack file routing — after adding files, run dev or 
 
 **Target map:**
 
-| Path | Role | UI |
-|------|------|-----|
-| `/` | both | loading / login (unauth); if auth Operator → redirect `/op`; if auth Client → redirect `/w/<firstFixtureClientId>` |
-| `/op` | Operator | Operator Home: Practice Cockpit + Client list (each row links to Client record or Open workspace) |
-| `/op/clients` | Operator | Client directory (table/list denser) |
+| Path                    | Role     | UI                                                                                                                                                       |
+| ----------------------- | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `/`                     | both     | loading / login (unauth); if auth Operator → redirect `/op`; if auth Client → redirect `/w/<firstFixtureClientId>`                                       |
+| `/op`                   | Operator | Operator Home: Practice Cockpit + Client list (each row links to Client record or Open workspace)                                                        |
+| `/op/clients`           | Operator | Client directory (table/list denser)                                                                                                                     |
 | `/op/clients/$clientId` | Operator | **Client record**: name, Switch toggles Insights/Website (fixture state — React state or module-level mutable fixture OK for v1), CTA **Open workspace** |
-| `/op/invoices` | Operator | Placeholder practice-wide invoices (dense empty or fixture table) — not Client pay-first UI |
-| `/op/settings` | Operator | Minimal placeholder (“Practice settings — coming soon”) |
-| `/w/$clientId` | both | layout = Client Workspace shell |
-| `/w/$clientId/` | both | Client Home = Needs Attention from fixtures |
-| `/w/$clientId/invoices` | both | Pay-first layout: unpaid section with Pay buttons (disabled or `alert` stub), paid collapsed |
-| `/w/$clientId/files` | both | File requests section + open upload dropzone UI stub (no real upload) |
-| `/w/$clientId/insights` | both | Only if Feature on; else redirect Home. Three truths + Takeaway placeholders |
-| `/w/$clientId/website` | both | Only if Feature on; else redirect Home. Guided Editable fields list + Preview/Publish buttons (stub) |
-| `/w/$clientId/message` | both | Lightweight message form stub |
+| `/op/invoices`          | Operator | Placeholder practice-wide invoices (dense empty or fixture table) — not Client pay-first UI                                                              |
+| `/op/settings`          | Operator | Minimal placeholder (“Practice settings — coming soon”)                                                                                                  |
+| `/w/$clientId`          | both     | layout = Client Workspace shell                                                                                                                          |
+| `/w/$clientId/`         | both     | Client Home = Needs Attention from fixtures                                                                                                              |
+| `/w/$clientId/invoices` | both     | Pay-first layout: unpaid section with Pay buttons (disabled or `alert` stub), paid collapsed                                                             |
+| `/w/$clientId/files`    | both     | File requests section + open upload dropzone UI stub (no real upload)                                                                                    |
+| `/w/$clientId/insights` | both     | Only if Feature on; else redirect Home. Three truths + Takeaway placeholders                                                                             |
+| `/w/$clientId/website`  | both     | Only if Feature on; else redirect Home. Guided Editable fields list + Preview/Publish buttons (stub)                                                     |
+| `/w/$clientId/message`  | both     | Lightweight message form stub                                                                                                                            |
 
 Protect `/op/*`: if `getPortalRole() === "client"`, redirect to workspace Home.
 

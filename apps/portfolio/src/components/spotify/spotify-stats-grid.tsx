@@ -1,9 +1,5 @@
-import {
-  Clock01Icon,
-  MusicNote03Icon,
-  UserMultipleIcon,
-} from "@hugeicons/core-free-icons";
-import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react";
+import type { TimeRange } from "@/types/spotify";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@hezaerd/ui/components/avatar";
 import { Badge } from "@hezaerd/ui/components/badge";
 import { Button } from "@hezaerd/ui/components/button";
@@ -16,8 +12,11 @@ import {
   ItemMedia,
   ItemTitle,
 } from "@hezaerd/ui/components/item";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { Clock01Icon, MusicNote03Icon, UserMultipleIcon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react";
 import { Suspense, type ReactNode } from "react";
+
+import { useSuspenseQuery } from "@tanstack/react-query";
 
 import { ColumnRowsSkeleton } from "@/components/spotify/spotify-stats-skeleton";
 import {
@@ -25,7 +24,6 @@ import {
   topArtistsQueryOptions,
   topTracksQueryOptions,
 } from "@/lib/spotify-queries";
-import type { TimeRange } from "@/types/spotify";
 
 const VISIBLE_COUNT = 5;
 
@@ -45,9 +43,7 @@ function RankBadge({ rank }: { rank: number }) {
 }
 
 function EmptyRow() {
-  return (
-    <div className="text-muted-foreground flex h-16 items-center justify-center">—</div>
-  );
+  return <div className="text-muted-foreground flex h-16 items-center justify-center">—</div>;
 }
 
 function StatsColumn({
@@ -64,9 +60,7 @@ function StatsColumn({
   return (
     <div
       className={
-        bordered
-          ? "border-border flex h-full flex-col md:border-r"
-          : "flex h-full flex-col"
+        bordered ? "border-border flex h-full flex-col md:border-r" : "flex h-full flex-col"
       }
     >
       <div className="border-border border-b p-6">
@@ -80,21 +74,13 @@ function StatsColumn({
   );
 }
 
-function SpotifyLinkButton({
-  href,
-  label,
-}: {
-  href: string;
-  label: string;
-}) {
+function SpotifyLinkButton({ href, label }: { href: string; label: string }) {
   return (
     <Button
       variant="ghost"
       size="icon-sm"
       nativeButton={false}
-      render={
-        <a href={href} target="_blank" rel="noopener noreferrer" aria-label={label} />
-      }
+      render={<a href={href} target="_blank" rel="noopener noreferrer" aria-label={label} />}
     >
       <HugeiconsIcon icon={MusicNote03Icon} />
     </Button>
@@ -113,12 +99,10 @@ function TopArtistsRows({ timeRange }: { timeRange: TimeRange }) {
         }
 
         return (
-          <Item key={artist.id} className="flex-nowrap hover:bg-muted/50">
+          <Item key={artist.id} className="hover:bg-muted/50 flex-nowrap">
             <ItemMedia className="relative size-12 overflow-visible">
               <Avatar className="size-12">
-                {artist.imageUrl ? (
-                  <AvatarImage src={artist.imageUrl} alt={artist.name} />
-                ) : null}
+                {artist.imageUrl ? <AvatarImage src={artist.imageUrl} alt={artist.name} /> : null}
                 <AvatarFallback />
               </Avatar>
               <RankBadge rank={index + 1} />
@@ -130,10 +114,7 @@ function TopArtistsRows({ timeRange }: { timeRange: TimeRange }) {
               </ItemDescription>
             </ItemContent>
             <ItemActions className="shrink-0">
-              <SpotifyLinkButton
-                href={artist.url}
-                label={`Open ${artist.name} on Spotify`}
-              />
+              <SpotifyLinkButton href={artist.url} label={`Open ${artist.name} on Spotify`} />
             </ItemActions>
           </Item>
         );
@@ -154,7 +135,7 @@ function TopTracksRows({ timeRange }: { timeRange: TimeRange }) {
         }
 
         return (
-          <Item key={track.id} className="flex-nowrap hover:bg-muted/50">
+          <Item key={track.id} className="hover:bg-muted/50 flex-nowrap">
             <ItemMedia className="relative size-12 overflow-visible">
               {track.imageUrl ? (
                 <img
@@ -172,10 +153,7 @@ function TopTracksRows({ timeRange }: { timeRange: TimeRange }) {
               <ItemDescription className="truncate">{track.artists}</ItemDescription>
             </ItemContent>
             <ItemActions className="shrink-0">
-              <SpotifyLinkButton
-                href={track.url}
-                label={`Open ${track.name} on Spotify`}
-              />
+              <SpotifyLinkButton href={track.url} label={`Open ${track.name} on Spotify`} />
             </ItemActions>
           </Item>
         );
@@ -196,14 +174,10 @@ function RecentlyPlayedRows() {
         }
 
         return (
-          <Item key={item.id} className="flex-nowrap hover:bg-muted/50">
+          <Item key={item.id} className="hover:bg-muted/50 flex-nowrap">
             <ItemMedia className="size-12 overflow-hidden rounded-sm">
               {item.imageUrl ? (
-                <img
-                  src={item.imageUrl}
-                  alt={item.name}
-                  className="size-full object-cover"
-                />
+                <img src={item.imageUrl} alt={item.name} className="size-full object-cover" />
               ) : (
                 <span className="bg-muted size-full" />
               )}
@@ -213,10 +187,7 @@ function RecentlyPlayedRows() {
               <ItemDescription className="truncate">{item.artists}</ItemDescription>
             </ItemContent>
             <ItemActions className="shrink-0">
-              <SpotifyLinkButton
-                href={item.url}
-                label={`Open ${item.name} on Spotify`}
-              />
+              <SpotifyLinkButton href={item.url} label={`Open ${item.name} on Spotify`} />
             </ItemActions>
           </Item>
         );

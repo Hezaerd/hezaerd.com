@@ -1,12 +1,7 @@
 import { TooltipProvider } from "@hezaerd/ui/components/tooltip";
 
 /// <reference types="vite/client" />
-import {
-  HeadContent,
-  Outlet,
-  Scripts,
-  createRootRoute,
-} from "@tanstack/react-router";
+import { HeadContent, Outlet, Scripts, createRootRoute } from "@tanstack/react-router";
 
 import { PortalConvexProvider } from "@/components/convex-provider";
 

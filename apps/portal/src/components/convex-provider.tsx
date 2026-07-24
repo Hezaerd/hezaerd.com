@@ -1,4 +1,8 @@
-import { AuthKitProvider, useAccessToken, useAuth } from "@workos/authkit-tanstack-react-start/client";
+import {
+  AuthKitProvider,
+  useAccessToken,
+  useAuth,
+} from "@workos/authkit-tanstack-react-start/client";
 import { ConvexProviderWithAuth, ConvexReactClient } from "convex/react";
 import { useCallback, useMemo, type ReactNode } from "react";
 

@@ -1,5 +1,6 @@
-import { createCsrfMiddleware, createStart } from "@tanstack/react-start";
 import { authkitMiddleware } from "@workos/authkit-tanstack-react-start";
+
+import { createCsrfMiddleware, createStart } from "@tanstack/react-start";
 
 const csrfMiddleware = createCsrfMiddleware({
   filter: (ctx) => ctx.handlerType === "serverFn",
@@ -14,7 +15,5 @@ const hasWorkOsConfig =
   !!process.env["WORKOS_REDIRECT_URI"];
 
 export const startInstance = createStart(() => ({
-  requestMiddleware: hasWorkOsConfig
-    ? [csrfMiddleware, authkitMiddleware()]
-    : [csrfMiddleware],
+  requestMiddleware: hasWorkOsConfig ? [csrfMiddleware, authkitMiddleware()] : [csrfMiddleware],
 }));

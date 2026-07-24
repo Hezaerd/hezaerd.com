@@ -1,16 +1,19 @@
 {
   "name": "hezaerd",
-  "devDependencies": {
-    "@commitlint/cli": "^21.2.1",
-    "@commitlint/config-conventional": "^21.2.0",
-    "husky": "^9.1.7",
-    "oxfmt": "^0.54.0",
-    "oxlint": "^1.69.0",
-    "turbo": "^2.5.4",
-    "typescript": "catalog:"
-  },
-  "packageManager": "bun@1.2.19",
   "private": true,
+  "workspaces": {
+    "packages": [
+      "apps/*",
+      "packages/*"
+    ],
+    "catalog": {
+      "typescript": "^7.0.2",
+      "react": "^19.2.0",
+      "react-dom": "^19.2.0",
+      "@types/react": "^19.2.0",
+      "@types/react-dom": "^19.2.0"
+    }
+  },
   "scripts": {
     "dev": "turbo run dev",
     "dev:brand": "turbo run dev --filter=@hezaerd/brand",
@@ -30,17 +33,14 @@
     "check": "bun run lint && bun run format && bun run typecheck",
     "prepare": "husky"
   },
-  "workspaces": {
-    "packages": [
-      "apps/*",
-      "packages/*"
-    ],
-    "catalog": {
-      "typescript": "^7.0.2",
-      "react": "^19.2.0",
-      "react-dom": "^19.2.0",
-      "@types/react": "^19.2.0",
-      "@types/react-dom": "^19.2.0"
-    }
-  }
+  "devDependencies": {
+    "@commitlint/cli": "^21.2.1",
+    "@commitlint/config-conventional": "^21.2.0",
+    "husky": "^9.1.7",
+    "oxfmt": "^0.54.0",
+    "oxlint": "^1.69.0",
+    "turbo": "^2.5.4",
+    "typescript": "catalog:"
+  },
+  "packageManager": "bun@1.2.19"
 }

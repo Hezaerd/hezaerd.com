@@ -95,9 +95,9 @@ async function getAccessToken(): Promise<string | null> {
     return null;
   }
 
-  const basicAuth = Buffer.from(
-    `${credentials.clientId}:${credentials.clientSecret}`,
-  ).toString("base64");
+  const basicAuth = Buffer.from(`${credentials.clientId}:${credentials.clientSecret}`).toString(
+    "base64",
+  );
 
   try {
     const response = await fetch("https://accounts.spotify.com/api/token", {

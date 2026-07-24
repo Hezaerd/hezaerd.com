@@ -7,10 +7,7 @@ import {
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react";
 
-import {
-  formatCurrency,
-  type PracticeCockpitStats,
-} from "@/lib/portal-fixtures";
+import { formatCurrency, type PracticeCockpitStats } from "@/lib/portal-fixtures";
 
 type PracticeCockpitProps = {
   stats: PracticeCockpitStats;
@@ -67,18 +64,14 @@ export function PracticeCockpit({ stats }: PracticeCockpitProps) {
     <section className="flex flex-col gap-4">
       <div className="flex items-start justify-between">
         <div>
-          <h2 className="font-display text-xl font-semibold tracking-tight">
-            Practice Cockpit
-          </h2>
+          <h2 className="font-display text-xl font-semibold tracking-tight">Practice Cockpit</h2>
           <p className="text-muted-foreground mt-1 text-sm leading-relaxed">
             A live snapshot of your freelance practice.
           </p>
         </div>
         <div className="bg-muted/30 text-muted-foreground flex items-center gap-1.5 rounded-lg px-3 py-1.5">
           <HugeiconsIcon icon={AnalyticsUpIcon} size={13} />
-          <span className="font-mono text-[10px] font-medium tracking-wide uppercase">
-            Live
-          </span>
+          <span className="font-mono text-[10px] font-medium tracking-wide uppercase">Live</span>
         </div>
       </div>
 
@@ -87,20 +80,12 @@ export function PracticeCockpit({ stats }: PracticeCockpitProps) {
           <div
             key={tile.key}
             className={`border-border relative flex flex-col gap-3 rounded-xl border px-4 py-4 transition-colors ${
-              tile.highlight
-                ? "bg-primary/5 border-primary/20"
-                : "bg-muted/20 hover:bg-muted/30"
+              tile.highlight ? "bg-primary/5 border-primary/20" : "bg-muted/20 hover:bg-muted/30"
             }`}
           >
             <div className="flex items-start justify-between">
-              <div
-                className={`flex h-8 w-8 items-center justify-center rounded-lg ${tile.iconBg}`}
-              >
-                <HugeiconsIcon
-                  icon={tile.icon}
-                  size={15}
-                  className={tile.iconColor}
-                />
+              <div className={`flex h-8 w-8 items-center justify-center rounded-lg ${tile.iconBg}`}>
+                <HugeiconsIcon icon={tile.icon} size={15} className={tile.iconColor} />
               </div>
             </div>
             <div>
