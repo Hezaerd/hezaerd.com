@@ -5,6 +5,9 @@
       "cache": false,
       "persistent": true
     },
+    "deploy": {
+      "cache": false
+    },
     "build": {
       "dependsOn": ["^build"],
       "outputs": [".output/**", "dist/**"]
