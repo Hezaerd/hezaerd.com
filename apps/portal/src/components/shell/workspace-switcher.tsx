@@ -5,7 +5,6 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@hezaerd/ui/components/dropdown-menu";
 
@@ -23,11 +22,11 @@ export function WorkspaceSwitcher({ currentClient }: WorkspaceSwitcherProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger render={<Button variant="outline" size="sm" />}>
-        <span className="max-w-[12rem] truncate">{currentClient.name}</span>
+        <span className="max-w-48 truncate">{currentClient.name}</span>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" className="w-56">
         <DropdownMenuGroup>
-          <DropdownMenuLabel>Workspace Switcher</DropdownMenuLabel>
+          <DropdownMenuLabel>Switch client</DropdownMenuLabel>
           <DropdownMenuItem
             render={<Link to="/w/$clientId" params={{ clientId: currentClient.id }} />}
           >
@@ -41,10 +40,6 @@ export function WorkspaceSwitcher({ currentClient }: WorkspaceSwitcherProps) {
               {client.name}
             </DropdownMenuItem>
           ))}
-        </DropdownMenuGroup>
-        <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          <DropdownMenuItem render={<Link to="/op" />}>Back to Operator Home</DropdownMenuItem>
         </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>
