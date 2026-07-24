@@ -2,8 +2,7 @@ export const site = {
   url: "https://portfolio.hezaerd.com",
   name: "Hezaerd",
   title: "Hezaerd — Personal portfolio",
-  description:
-    "Personal archive of projects, experiments, résumé, and creative work by Hezaerd.",
+  description: "Personal archive of projects, experiments, résumé, and creative work by Hezaerd.",
   keywords: "software engineer,game developer,game engine,full stack,minecraft modding",
   ogImagePath: "/og-image.png",
   authorUrl: "https://hezaerd.com",

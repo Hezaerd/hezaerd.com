@@ -48,15 +48,15 @@ From `apps/portfolio/CONTEXT.md`:
 
 ### Classification of legacy pieces (from `6aaefc5` `src/data/projects.ts`)
 
-| Title | Home | Notes |
-|-------|------|-------|
-| yleoture.com | Brand **Work** | Client project |
-| Stellar Suplex | Portfolio **Project** | End-of-studies |
-| Los Pingheros | Portfolio **Project** | |
-| Coloris | Portfolio **Project** | |
-| Kokopelli | Portfolio **Project** | |
-| Better Axolotls | Portfolio **Project** | |
-| Hezaerd.com | Portfolio **Project** | Meta narrative: building the site that sells the company — update copy accordingly; do **not** list as Brand Work |
+| Title           | Home                  | Notes                                                                                                             |
+| --------------- | --------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| yleoture.com    | Brand **Work**        | Client project                                                                                                    |
+| Stellar Suplex  | Portfolio **Project** | End-of-studies                                                                                                    |
+| Los Pingheros   | Portfolio **Project** |                                                                                                                   |
+| Coloris         | Portfolio **Project** |                                                                                                                   |
+| Kokopelli       | Portfolio **Project** |                                                                                                                   |
+| Better Axolotls | Portfolio **Project** |                                                                                                                   |
+| Hezaerd.com     | Portfolio **Project** | Meta narrative: building the site that sells the company — update copy accordingly; do **not** list as Brand Work |
 
 ### Relevant files today
 
@@ -119,17 +119,17 @@ Brand:
 
 ## Commands you will need
 
-| Purpose | Command | Expected on success |
-|---------|---------|---------------------|
-| Install | `bun install` | exit 0 |
-| Typecheck | `bun run typecheck` | exit 0, all tasks successful |
-| Lint | `bun run lint` | exit 0 |
-| Format check | `bun run format` | exit 0 |
-| Full check | `bun run check` | exit 0 |
-| Build portfolio | `bun run build:portfolio` | exit 0 |
-| Build brand | `bun run build:brand` | exit 0 |
-| Extract legacy file | `git show 6aaefc5:src/data/projects.ts` | prints file |
-| Extract legacy blob | `git show 6aaefc5:public/images/yleoture.jpg > apps/brand/public/images/yleoture.jpg` | file created |
+| Purpose             | Command                                                                               | Expected on success          |
+| ------------------- | ------------------------------------------------------------------------------------- | ---------------------------- |
+| Install             | `bun install`                                                                         | exit 0                       |
+| Typecheck           | `bun run typecheck`                                                                   | exit 0, all tasks successful |
+| Lint                | `bun run lint`                                                                        | exit 0                       |
+| Format check        | `bun run format`                                                                      | exit 0                       |
+| Full check          | `bun run check`                                                                       | exit 0                       |
+| Build portfolio     | `bun run build:portfolio`                                                             | exit 0                       |
+| Build brand         | `bun run build:brand`                                                                 | exit 0                       |
+| Extract legacy file | `git show 6aaefc5:src/data/projects.ts`                                               | prints file                  |
+| Extract legacy blob | `git show 6aaefc5:public/images/yleoture.jpg > apps/brand/public/images/yleoture.jpg` | file created                 |
 
 ## Suggested executor toolkit
 

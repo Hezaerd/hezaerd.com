@@ -1,12 +1,8 @@
+import type { TimeRange } from "@/types/spotify";
+
 import { createServerFn } from "@tanstack/react-start";
 
-import {
-  getCurrentlyPlaying,
-  getRecentlyPlayed,
-  getTopArtists,
-  getTopTracks,
-} from "@/lib/spotify";
-import type { TimeRange } from "@/types/spotify";
+import { getCurrentlyPlaying, getRecentlyPlayed, getTopArtists, getTopTracks } from "@/lib/spotify";
 
 const TIME_RANGES = new Set<TimeRange>(["short_term", "medium_term", "long_term"]);
 

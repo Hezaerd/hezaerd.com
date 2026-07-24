@@ -12,22 +12,8 @@ export default {
     "type-enum": [
       2,
       "always",
-      [
-        "feat",
-        "fix",
-        "docs",
-        "refactor",
-        "test",
-        "chore",
-        "perf",
-        "ci",
-        "build",
-      ],
+      ["feat", "fix", "docs", "refactor", "test", "chore", "perf", "ci", "build"],
     ],
-    "scope-enum": [
-      2,
-      "always",
-      [...workspaceScopes("apps"), ...workspaceScopes("packages")],
-    ],
+    "scope-enum": [2, "always", [...workspaceScopes("apps"), ...workspaceScopes("packages")]],
   },
 };

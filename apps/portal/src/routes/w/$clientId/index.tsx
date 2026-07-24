@@ -52,9 +52,7 @@ function ClientHomePage() {
       {/* Needs Attention Section */}
       <div className="flex flex-col gap-3">
         <div className="flex items-center justify-between">
-          <h2 className="font-display text-base font-semibold tracking-tight">
-            Needs Attention
-          </h2>
+          <h2 className="font-display text-base font-semibold tracking-tight">Needs Attention</h2>
           {attentionCount > 0 && (
             <span className="bg-primary/10 text-primary border-primary/20 rounded-full border px-2.5 py-0.5 font-mono text-[10px] font-semibold tabular-nums">
               {attentionCount}

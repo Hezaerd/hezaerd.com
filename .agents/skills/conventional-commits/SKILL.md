@@ -9,10 +9,10 @@ Allowed `type` and `scope` values live in [`commitlint.config.mjs`](../../../com
 
 ## Craft
 
-| Piece | Rule |
-| --- | --- |
-| **scope** | Workspace package folder (`apps/brand` → `brand`). Omit when the change spans packages or only touches the repo root. |
-| **subject** | Imperative mood, lowercase start, no trailing period. Name the *why* (or outcome), not a file inventory. |
+| Piece       | Rule                                                                                                                  |
+| ----------- | --------------------------------------------------------------------------------------------------------------------- |
+| **scope**   | Workspace package folder (`apps/brand` → `brand`). Omit when the change spans packages or only touches the repo root. |
+| **subject** | Imperative mood, lowercase start, no trailing period. Name the _why_ (or outcome), not a file inventory.              |
 
 ## Examples
 

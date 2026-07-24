@@ -6,5 +6,5 @@ export const skills: string[] = [
   "Unity",
   "Unreal Engines",
   "Wwise",
-  "FMOD"
+  "FMOD",
 ];

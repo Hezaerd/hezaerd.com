@@ -1,7 +1,6 @@
+import { Button } from "@hezaerd/ui/components/button";
 import { AlertCircleIcon, ArrowRight01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
-
-import { Button } from "@hezaerd/ui/components/button";
 
 import { Link, createFileRoute } from "@tanstack/react-router";
 
@@ -38,9 +37,7 @@ function OperatorHomePage() {
         <p className="text-muted-foreground font-mono text-xs tracking-[0.18em] uppercase">
           {dateStr}
         </p>
-        <h1 className="font-display text-2xl font-semibold tracking-tight">
-          Good to be back.
-        </h1>
+        <h1 className="font-display text-2xl font-semibold tracking-tight">Good to be back.</h1>
         <p className="text-muted-foreground mt-1 text-sm leading-relaxed">
           Here&apos;s a snapshot of your practice and your clients&apos; workspaces.
         </p>
@@ -53,18 +50,12 @@ function OperatorHomePage() {
       <section className="flex flex-col gap-4">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="font-display text-xl font-semibold tracking-tight">
-              Clients
-            </h2>
+            <h2 className="font-display text-xl font-semibold tracking-tight">Clients</h2>
             <p className="text-muted-foreground mt-0.5 text-sm">
               Open a workspace or manage the client record.
             </p>
           </div>
-          <Button
-            variant="outline"
-            size="sm"
-            render={<Link to="/op/clients" />}
-          >
+          <Button variant="outline" size="sm" render={<Link to="/op/clients" />}>
             All clients
             <HugeiconsIcon icon={ArrowRight01Icon} size={14} />
           </Button>
@@ -105,9 +96,7 @@ function OperatorHomePage() {
                       </span>
                     )}
                   </div>
-                  <p className="text-muted-foreground mt-0.5 text-xs">
-                    {client.contactEmail}
-                  </p>
+                  <p className="text-muted-foreground mt-0.5 text-xs">{client.contactEmail}</p>
                   <div className="mt-1.5 flex flex-wrap gap-1">
                     {featureList.map((f) => (
                       <span
@@ -125,23 +114,13 @@ function OperatorHomePage() {
                   <Button
                     variant="outline"
                     size="sm"
-                    render={
-                      <Link
-                        to="/op/clients/$clientId"
-                        params={{ clientId: client.id }}
-                      />
-                    }
+                    render={<Link to="/op/clients/$clientId" params={{ clientId: client.id }} />}
                   >
                     Record
                   </Button>
                   <Button
                     size="sm"
-                    render={
-                      <Link
-                        to="/w/$clientId"
-                        params={{ clientId: client.id }}
-                      />
-                    }
+                    render={<Link to="/w/$clientId" params={{ clientId: client.id }} />}
                   >
                     Workspace
                     <HugeiconsIcon icon={ArrowRight01Icon} size={13} />

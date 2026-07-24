@@ -22,13 +22,7 @@ function PortalHome() {
   }
 
   if (isClientRole()) {
-    return (
-      <Navigate
-        to="/w/$clientId"
-        params={getClientWorkspaceHomeParams()}
-        replace
-      />
-    );
+    return <Navigate to="/w/$clientId" params={getClientWorkspaceHomeParams()} replace />;
   }
 
   return <Navigate to="/op" replace />;
@@ -45,9 +39,7 @@ function LoginScreen() {
         <p className="text-primary mb-3 font-mono text-xs font-medium tracking-[0.2em] uppercase">
           Portal
         </p>
-        <h1 className="font-display text-2xl font-semibold tracking-tight">
-          Sign in
-        </h1>
+        <h1 className="font-display text-2xl font-semibold tracking-tight">Sign in</h1>
         <p className="text-muted-foreground mt-2 text-sm leading-relaxed">
           Invite-only portal for Operators and Clients. No self-registration.
         </p>

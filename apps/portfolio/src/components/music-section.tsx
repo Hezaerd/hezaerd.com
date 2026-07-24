@@ -2,11 +2,11 @@ import { MusicNote03Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useState } from "react";
 
+import { Reveal } from "@/components/reveal";
+import { Section } from "@/components/section";
 import { CurrentlyPlaying } from "@/components/spotify/currently-playing";
 import { SpotifyStatsGrid } from "@/components/spotify/spotify-stats-grid";
 import { TimeRangeSelector } from "@/components/spotify/time-range-selector";
-import { Reveal } from "@/components/reveal";
-import { Section } from "@/components/section";
 import { DEFAULT_TIME_RANGE, type TimeRange } from "@/types/spotify";
 
 export function MusicSection() {

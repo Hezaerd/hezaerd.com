@@ -95,9 +95,7 @@ export function Footer() {
                 size="icon"
                 aria-label={social.name}
                 nativeButton={false}
-                render={
-                  <a href={social.url} target="_blank" rel="noopener noreferrer" />
-                }
+                render={<a href={social.url} target="_blank" rel="noopener noreferrer" />}
                 className="hover:bg-accent hover:text-accent-foreground transition-[color,background-color,box-shadow] duration-(--duration-ui) ease-out"
                 animate={{ scale: 1 }}
                 whileHover={allowHoverMotion ? { scale: 1.1 } : undefined}

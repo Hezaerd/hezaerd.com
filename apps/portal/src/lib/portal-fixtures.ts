@@ -96,16 +96,10 @@ export function getFirstClient(): PortalClient {
   return clients[0]!;
 }
 
-function featureUnlockItem(
-  clientId: string,
-  feature: ClientFeature,
-): NeedsAttentionItem {
+function featureUnlockItem(clientId: string, feature: ClientFeature): NeedsAttentionItem {
   return {
     id: `${clientId}-${feature}-unlock`,
-    title:
-      feature === "website"
-        ? "Website is ready to explore"
-        : "Insights is ready to explore",
+    title: feature === "website" ? "Website is ready to explore" : "Insights is ready to explore",
     description:
       feature === "website"
         ? "Review editable fields and publish when you are ready."
@@ -134,9 +128,7 @@ export function setClientFeature(
       client.needsAttention.push(featureUnlockItem(clientId, feature));
     }
   } else {
-    client.needsAttention = client.needsAttention.filter(
-      (item) => item.id !== unlockId,
-    );
+    client.needsAttention = client.needsAttention.filter((item) => item.id !== unlockId);
   }
 
   return client;

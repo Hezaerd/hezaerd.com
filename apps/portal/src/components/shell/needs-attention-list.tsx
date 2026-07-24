@@ -1,5 +1,6 @@
 import type { NeedsAttentionItem, NeedsAttentionKind } from "@/lib/portal-fixtures";
 
+import { Empty, EmptyDescription, EmptyHeader, EmptyTitle } from "@hezaerd/ui/components/empty";
 import {
   ArrowRight01Icon,
   DollarCircleIcon,
@@ -8,13 +9,6 @@ import {
   SparklesIcon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react";
-
-import {
-  Empty,
-  EmptyDescription,
-  EmptyHeader,
-  EmptyTitle,
-} from "@hezaerd/ui/components/empty";
 
 import { Link } from "@tanstack/react-router";
 
@@ -75,7 +69,8 @@ export function NeedsAttentionList({ items }: NeedsAttentionListProps) {
             All clear.
           </EmptyTitle>
           <EmptyDescription className="text-muted-foreground max-w-xs text-sm leading-relaxed">
-            Nothing needs your attention right now. You&apos;ll see action items here as your project progresses.
+            Nothing needs your attention right now. You&apos;ll see action items here as your
+            project progresses.
           </EmptyDescription>
         </EmptyHeader>
       </Empty>
@@ -95,11 +90,7 @@ export function NeedsAttentionList({ items }: NeedsAttentionListProps) {
             <div
               className={`mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${config.iconBgClass}`}
             >
-              <HugeiconsIcon
-                icon={config.icon}
-                size={15}
-                className={config.iconColorClass}
-              />
+              <HugeiconsIcon icon={config.icon} size={15} className={config.iconColorClass} />
             </div>
 
             {/* Content */}
@@ -127,7 +118,7 @@ export function NeedsAttentionList({ items }: NeedsAttentionListProps) {
                 <HugeiconsIcon
                   icon={ArrowRight01Icon}
                   size={13}
-                  className="group-hover:translate-x-0.5 transition-transform"
+                  className="transition-transform group-hover:translate-x-0.5"
                 />
               </Link>
             </div>

@@ -1,12 +1,6 @@
+import { Empty, EmptyDescription, EmptyHeader, EmptyTitle } from "@hezaerd/ui/components/empty";
 import { Invoice01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
-
-import {
-  Empty,
-  EmptyDescription,
-  EmptyHeader,
-  EmptyTitle,
-} from "@hezaerd/ui/components/empty";
 
 import { createFileRoute } from "@tanstack/react-router";
 
@@ -23,9 +17,7 @@ function OperatorInvoicesPage() {
           <div className="bg-muted flex h-8 w-8 items-center justify-center rounded-lg">
             <HugeiconsIcon icon={Invoice01Icon} size={16} className="text-muted-foreground" />
           </div>
-          <h1 className="font-display text-2xl font-semibold tracking-tight">
-            Invoices
-          </h1>
+          <h1 className="font-display text-2xl font-semibold tracking-tight">Invoices</h1>
         </div>
         <p className="text-muted-foreground mt-1 text-sm leading-relaxed">
           Practice-wide invoice list and send flow — coming soon.
@@ -38,7 +30,8 @@ function OperatorInvoicesPage() {
             Coming soon
           </EmptyTitle>
           <EmptyDescription className="text-muted-foreground max-w-xs text-sm leading-relaxed">
-            Track open and paid invoices across all clients from one place. In the meantime, open individual Client Workspaces.
+            Track open and paid invoices across all clients from one place. In the meantime, open
+            individual Client Workspaces.
           </EmptyDescription>
         </EmptyHeader>
       </Empty>

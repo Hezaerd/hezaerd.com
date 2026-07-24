@@ -1,5 +1,6 @@
 import type { Doc } from "../_generated/dataModel";
 import type { MutationCtx, QueryCtx } from "../_generated/server";
+
 import { authKit } from "../auth";
 
 type DbCtx = QueryCtx | MutationCtx;

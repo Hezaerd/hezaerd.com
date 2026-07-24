@@ -66,23 +66,16 @@ export function DashboardChrome({
           </SidebarGroup>
         </SidebarContent>
 
-        {footer ? (
-          <SidebarFooter className="border-border border-t">{footer}</SidebarFooter>
-        ) : null}
+        {footer ? <SidebarFooter className="border-border border-t">{footer}</SidebarFooter> : null}
       </Sidebar>
 
       <SidebarInset>
         <header className="border-border flex h-14 shrink-0 items-center gap-3 border-b px-4">
           <SidebarTrigger className="shrink-0" />
-          <Separator
-            orientation="vertical"
-            className="mr-1 shrink-0 self-stretch"
-          />
+          <Separator orientation="vertical" className="mr-1 shrink-0 self-stretch" />
           {headerStart}
           <div className="flex flex-1 items-center justify-end gap-3">
-            <p className="text-muted-foreground hidden text-sm sm:block">
-              {email}
-            </p>
+            <p className="text-muted-foreground hidden text-sm sm:block">{email}</p>
             <Link
               to="/signout"
               className="border-border text-muted-foreground hover:text-foreground hover:bg-accent rounded-md border px-3 py-1.5 text-xs font-medium transition-colors"

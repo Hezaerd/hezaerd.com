@@ -1,21 +1,16 @@
 import { Badge } from "@hezaerd/ui/components/badge";
 import { Button } from "@hezaerd/ui/components/button";
-import { Link, createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
+
+import { Link, createFileRoute } from "@tanstack/react-router";
 
 import { Reveal, RevealItem, RevealStagger } from "@/components/reveal";
 import { getProject } from "@/data/projects";
-import {
-  clearPreviewPlaybackTime,
-  getPreviewPlaybackTime,
-} from "@/lib/preview-playback";
+import { clearPreviewPlaybackTime, getPreviewPlaybackTime } from "@/lib/preview-playback";
 import { jsonLdScript, pageHead } from "@/lib/seo";
 import { site } from "@/lib/site";
 import { projectJsonLd } from "@/lib/structured-data";
-import {
-  armProjectMediaTransition,
-  projectMediaTransitionName,
-} from "@/lib/view-transitions";
+import { armProjectMediaTransition, projectMediaTransitionName } from "@/lib/view-transitions";
 
 export const Route = createFileRoute("/projects/$slug")({
   loader: ({ params }) => getProject(params.slug),
@@ -138,9 +133,7 @@ function ProjectDetailPage() {
         {project.releaseUrl ? (
           <Button
             nativeButton={false}
-            render={
-              <a href={project.releaseUrl} target="_blank" rel="noopener noreferrer" />
-            }
+            render={<a href={project.releaseUrl} target="_blank" rel="noopener noreferrer" />}
           >
             View release
           </Button>
@@ -149,9 +142,7 @@ function ProjectDetailPage() {
           <Button
             variant="outline"
             nativeButton={false}
-            render={
-              <a href={project.sourcesUrl} target="_blank" rel="noopener noreferrer" />
-            }
+            render={<a href={project.sourcesUrl} target="_blank" rel="noopener noreferrer" />}
           >
             View source
           </Button>
@@ -162,19 +153,19 @@ function ProjectDetailPage() {
         {project.duration ? (
           <div className="bg-secondary/50 rounded-lg p-3">
             <dt className="text-sm font-medium">Duration</dt>
-            <dd className="font-mono text-muted-foreground text-sm">{project.duration}</dd>
+            <dd className="text-muted-foreground font-mono text-sm">{project.duration}</dd>
           </div>
         ) : null}
         {project.teamSize ? (
           <div className="bg-secondary/50 rounded-lg p-3">
             <dt className="text-sm font-medium">Team size</dt>
-            <dd className="font-mono text-muted-foreground text-sm">{project.teamSize}</dd>
+            <dd className="text-muted-foreground font-mono text-sm">{project.teamSize}</dd>
           </div>
         ) : null}
         {project.role ? (
           <div className="bg-secondary/50 rounded-lg p-3">
             <dt className="text-sm font-medium">Role</dt>
-            <dd className="font-mono text-muted-foreground text-sm">{project.role}</dd>
+            <dd className="text-muted-foreground font-mono text-sm">{project.role}</dd>
           </div>
         ) : null}
       </dl>

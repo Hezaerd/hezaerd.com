@@ -15,13 +15,7 @@ function socialShareImage(path?: string): string {
   return absoluteOgImage(path);
 }
 
-export function pageHead({
-  title,
-  description,
-  path,
-  image,
-  type = "website",
-}: PageHeadOptions) {
+export function pageHead({ title, description, path, image, type = "website" }: PageHeadOptions) {
   const url = absoluteUrl(path);
   const ogImage = socialShareImage(image);
 

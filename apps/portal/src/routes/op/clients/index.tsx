@@ -1,11 +1,6 @@
-import {
-  AlertCircleIcon,
-  ArrowRight01Icon,
-  UserGroupIcon,
-} from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react";
-
 import { Button } from "@hezaerd/ui/components/button";
+import { AlertCircleIcon, ArrowRight01Icon, UserGroupIcon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 
 import { Link, createFileRoute } from "@tanstack/react-router";
 
@@ -35,9 +30,7 @@ function ClientDirectoryPage() {
           <div className="bg-muted flex h-8 w-8 items-center justify-center rounded-lg">
             <HugeiconsIcon icon={UserGroupIcon} size={16} className="text-muted-foreground" />
           </div>
-          <h1 className="font-display text-2xl font-semibold tracking-tight">
-            Clients
-          </h1>
+          <h1 className="font-display text-2xl font-semibold tracking-tight">Clients</h1>
         </div>
         <p className="text-muted-foreground mt-1 text-sm leading-relaxed">
           Manage client identities, feature toggles, and workspace access.
@@ -70,9 +63,7 @@ function ClientDirectoryPage() {
               {/* Info */}
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-2">
-                  <p className="font-display text-sm font-semibold tracking-tight">
-                    {client.name}
-                  </p>
+                  <p className="font-display text-sm font-semibold tracking-tight">{client.name}</p>
                   {attentionCount > 0 && (
                     <span className="flex items-center gap-1 rounded-full bg-amber-500/10 px-2 py-0.5 font-mono text-[10px] font-semibold text-amber-400">
                       <HugeiconsIcon icon={AlertCircleIcon} size={10} />
@@ -80,9 +71,7 @@ function ClientDirectoryPage() {
                     </span>
                   )}
                 </div>
-                <p className="text-muted-foreground mt-0.5 text-xs">
-                  {client.contactEmail}
-                </p>
+                <p className="text-muted-foreground mt-0.5 text-xs">{client.contactEmail}</p>
                 <div className="mt-1.5 flex flex-wrap gap-1">
                   {featureList.map((f) => (
                     <span
@@ -99,12 +88,7 @@ function ClientDirectoryPage() {
               <div className="flex shrink-0 flex-wrap gap-2">
                 <Button
                   size="sm"
-                  render={
-                    <Link
-                      to="/op/clients/$clientId"
-                      params={{ clientId: client.id }}
-                    />
-                  }
+                  render={<Link to="/op/clients/$clientId" params={{ clientId: client.id }} />}
                 >
                   View record
                   <HugeiconsIcon icon={ArrowRight01Icon} size={13} />

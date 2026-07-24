@@ -1,8 +1,9 @@
+import type { DataModel } from "./_generated/dataModel";
+
 import { AuthKit, type AuthFunctions } from "@convex-dev/workos-authkit";
 import { v } from "convex/values";
 
 import { components, internal } from "./_generated/api";
-import type { DataModel } from "./_generated/dataModel";
 import { query } from "./_generated/server";
 
 const authFunctions: AuthFunctions = internal.auth;

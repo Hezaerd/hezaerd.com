@@ -9,11 +9,9 @@
  */
 
 const REDIRECT_URI = "http://127.0.0.1:3001/callback";
-const SCOPES = [
-  "user-read-currently-playing",
-  "user-read-recently-played",
-  "user-top-read",
-].join(" ");
+const SCOPES = ["user-read-currently-playing", "user-read-recently-played", "user-top-read"].join(
+  " ",
+);
 
 const clientId = process.env.SPOTIFY_CLIENT_ID;
 const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
