@@ -1,5 +1,3 @@
-import { useAuth } from "@workos/authkit-tanstack-react-start/client";
-
 import {
   Link,
   Outlet,
@@ -8,6 +6,7 @@ import {
 } from "@tanstack/react-router";
 
 import { OperatorShell } from "@/components/shell/operator-shell";
+import { usePortalAuth } from "@/lib/use-portal-auth";
 import { getClientWorkspaceHomeParams, isClientRole } from "@/lib/portal-role";
 
 export const Route = createFileRoute("/op")({
@@ -23,7 +22,7 @@ export const Route = createFileRoute("/op")({
 });
 
 function OperatorLayout() {
-  const { user, loading } = useAuth();
+  const { user, loading } = usePortalAuth();
 
   if (loading) {
     return (
