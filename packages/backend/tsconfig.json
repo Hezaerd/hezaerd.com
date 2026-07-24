@@ -1,0 +1,10 @@
+{
+  "extends": "@hezaerd/config/tsconfig.base.json",
+  "compilerOptions": {
+    "moduleResolution": "Bundler",
+    "jsx": "react-jsx",
+    "skipLibCheck": true,
+    "types": ["node"]
+  },
+  "include": ["convex"]
+}

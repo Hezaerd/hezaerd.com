@@ -7,5 +7,14 @@ import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 
 export default defineConfig({
   resolve: { tsconfigPaths: true },
-  plugins: [nitro(), tailwindcss(), tanstackStart(), viteReact()],
+  plugins: [
+    nitro(),
+    tailwindcss(),
+    tanstackStart({
+      start: {
+        entry: "start.ts",
+      },
+    }),
+    viteReact(),
+  ],
 });

@@ -1,6 +1,8 @@
 /// <reference types="vite/client" />
 import { HeadContent, Outlet, Scripts, createRootRoute } from "@tanstack/react-router";
 
+import { PortalConvexProvider } from "@/components/convex-provider";
+
 import appCss from "../app.css?url";
 
 const title = "Hezaerd Portal";
@@ -22,7 +24,11 @@ export const Route = createRootRoute({
 });
 
 function RootLayout() {
-  return <Outlet />;
+  return (
+    <PortalConvexProvider>
+      <Outlet />
+    </PortalConvexProvider>
+  );
 }
 
 function RootDocument({ children }: { children: React.ReactNode }) {
