@@ -11,6 +11,9 @@
 import type * as auth from "../auth.js";
 import type * as health from "../health.js";
 import type * as http from "../http.js";
+import type * as lib_functions from "../lib/functions.js";
+import type * as lib_users from "../lib/users.js";
+import type * as users from "../users.js";
 
 import type {
   ApiFromModules,
@@ -22,6 +25,9 @@ declare const fullApi: ApiFromModules<{
   auth: typeof auth;
   health: typeof health;
   http: typeof http;
+  "lib/functions": typeof lib_functions;
+  "lib/users": typeof lib_users;
+  users: typeof users;
 }>;
 
 /**

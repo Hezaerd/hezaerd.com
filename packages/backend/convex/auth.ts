@@ -68,6 +68,7 @@ const authUserValidator = v.object({
   metadata: v.record(v.string(), v.any()),
 });
 
+/** WorkOS AuthKit user, or null when unsigned. Prefer `api.users.me` for the app profile. */
 export const getCurrentUser = query({
   args: {},
   returns: v.union(authUserValidator, v.null()),
