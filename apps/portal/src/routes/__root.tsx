@@ -6,7 +6,7 @@ import { PortalConvexProvider } from "@/components/convex-provider";
 import appCss from "../app.css?url";
 
 const title = "Hezaerd Portal";
-const description = "Signed-in Hezaerd tools and account features.";
+const description = "Dashboard for the Hezaerd freelance software business.";
 
 export const Route = createRootRoute({
   head: () => ({
