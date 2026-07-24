@@ -9,7 +9,7 @@ honor its STOP conditions, and update your row when done.
 | Plan | Title | Priority | Effort | Depends on | Status |
 |------|-------|----------|--------|------------|--------|
 | 001 | Rebuild portfolio archive and realign Brand Work | P1 | L | — | DONE |
-| 002 | Ship Portal dual-shell dashboard UI (Operator Home + Client Workspace) | P1 | L | — | TODO |
+| 002 | Ship Portal dual-shell dashboard UI (Operator Home + Client Workspace) | P1 | L | — | DONE |
 
 ## Dependency notes
 
