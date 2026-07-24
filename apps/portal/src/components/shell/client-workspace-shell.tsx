@@ -2,6 +2,7 @@ import type { PortalClient } from "@/lib/portal-fixtures";
 
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@hezaerd/ui/components/sidebar";
 import {
+  ArrowLeft01Icon,
   File01Icon,
   Globe02Icon,
   Home01Icon,
@@ -88,7 +89,23 @@ export function ClientWorkspaceShell({ client, email, children }: ClientWorkspac
         subtitle: "Client Portal",
       }}
       email={email}
-      headerStart={showSwitcher ? <WorkspaceSwitcher currentClient={client} /> : null}
+      headerStart={
+        showSwitcher ? (
+          <div className="flex min-w-0 items-center gap-2">
+            <Link
+              to="/op"
+              className="text-muted-foreground hover:text-foreground inline-flex shrink-0 items-center gap-1.5 rounded-md px-2 py-1.5 text-sm font-medium transition-colors"
+            >
+              <HugeiconsIcon icon={ArrowLeft01Icon} size={16} className="shrink-0" />
+              <span>Operator</span>
+            </Link>
+            <span className="text-border select-none" aria-hidden>
+              /
+            </span>
+            <WorkspaceSwitcher currentClient={client} />
+          </div>
+        ) : null
+      }
       nav={areas.map((area) => {
         const active = isAreaActive(area.segment);
         const showDot = area.segment === "" && hasAttention && !active;
