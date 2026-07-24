@@ -1,4 +1,3 @@
-import { Separator } from "@hezaerd/ui/components/separator";
 import {
   Sidebar,
   SidebarContent,
@@ -9,6 +8,7 @@ import {
   SidebarInset,
   SidebarMenu,
   SidebarProvider,
+  SidebarRail,
   SidebarTrigger,
 } from "@hezaerd/ui/components/sidebar";
 
@@ -39,22 +39,25 @@ export function DashboardChrome({
 }: DashboardChromeProps) {
   return (
     <SidebarProvider>
-      <Sidebar variant="inset">
-        <SidebarHeader className="border-border border-b">
-          <div className="flex items-center gap-3 px-2 py-2">
-            <div className="bg-primary/15 border-primary/30 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border">
-              <span className="text-primary font-mono text-xs font-semibold tracking-wider">
-                {brand.initials}
-              </span>
+      <Sidebar variant="inset" collapsible="icon">
+        <SidebarHeader className="border-border overflow-hidden border-b">
+          <div className="flex items-center gap-2 overflow-hidden transition-[gap] duration-200 ease-linear group-data-[collapsible=icon]:gap-0">
+            <div className="flex min-w-0 max-w-full flex-1 items-center gap-2 overflow-hidden opacity-100 transition-[max-width,opacity,flex-grow] duration-200 ease-linear group-data-[collapsible=icon]:pointer-events-none group-data-[collapsible=icon]:max-w-0 group-data-[collapsible=icon]:grow-0 group-data-[collapsible=icon]:opacity-0">
+              <div className="bg-primary/15 border-primary/30 flex size-8 shrink-0 items-center justify-center rounded-lg border">
+                <span className="text-primary font-mono text-xs font-semibold tracking-wider">
+                  {brand.initials}
+                </span>
+              </div>
+              <div className="min-w-0 flex-1 overflow-hidden">
+                <p className="font-display truncate text-sm font-semibold tracking-tight whitespace-nowrap">
+                  {brand.title}
+                </p>
+                <p className="text-muted-foreground truncate font-mono text-[10px] font-medium tracking-[0.18em] whitespace-nowrap uppercase">
+                  {brand.subtitle}
+                </p>
+              </div>
             </div>
-            <div className="min-w-0 flex-1">
-              <p className="font-display truncate text-sm font-semibold tracking-tight">
-                {brand.title}
-              </p>
-              <p className="text-muted-foreground font-mono text-[10px] font-medium tracking-[0.18em] uppercase">
-                {brand.subtitle}
-              </p>
-            </div>
+            <SidebarTrigger className="hidden size-8 shrink-0 md:flex" />
           </div>
         </SidebarHeader>
 
@@ -67,12 +70,12 @@ export function DashboardChrome({
         </SidebarContent>
 
         {footer ? <SidebarFooter className="border-border border-t">{footer}</SidebarFooter> : null}
+        <SidebarRail />
       </Sidebar>
 
       <SidebarInset>
         <header className="border-border flex h-14 shrink-0 items-center gap-3 border-b px-4">
-          <SidebarTrigger className="shrink-0" />
-          <Separator orientation="vertical" className="mr-1 shrink-0 self-stretch" />
+          <SidebarTrigger className="shrink-0 md:hidden" />
           {headerStart}
           <div className="flex flex-1 items-center justify-end gap-3">
             <p className="text-muted-foreground hidden text-sm sm:block">{email}</p>
