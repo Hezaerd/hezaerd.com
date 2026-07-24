@@ -15,6 +15,7 @@
     "@hezaerd/ui": "workspace:*",
     "@hugeicons/core-free-icons": "^4.2.3",
     "@hugeicons/react": "^1.1.9",
+    "@number-flow/react": "^0.6.2",
     "@tailwindcss/vite": "^4.1.18",
     "@tanstack/react-router": "latest",
     "@tanstack/react-start": "latest",
