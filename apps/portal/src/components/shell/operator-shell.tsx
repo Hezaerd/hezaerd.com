@@ -59,8 +59,8 @@ export function OperatorShell({ email, children }: OperatorShellProps) {
         </SidebarMenuItem>
       ))}
       footer={
-        <div className="px-3 py-2">
-          <p className="text-muted-foreground font-mono text-[10px] tracking-wide">
+        <div className="overflow-hidden px-3 py-2 transition-[opacity,height,padding] duration-200 ease-linear group-data-[collapsible=icon]:h-0 group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:opacity-0">
+          <p className="text-muted-foreground truncate font-mono text-[10px] tracking-wide whitespace-nowrap">
             Practice Operator
           </p>
         </div>
