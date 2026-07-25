@@ -9,6 +9,7 @@
   "scripts": {
     "dev": "convex dev",
     "deploy": "convex deploy",
+    "deploy:portal": "convex deploy --cmd-url-env-var-name VITE_CONVEX_URL --cmd 'cd ../.. && bun run build:portal'",
     "codegen": "convex codegen",
     "typecheck": "tsc --noEmit"
   },
