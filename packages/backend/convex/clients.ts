@@ -37,6 +37,7 @@ export const list = operatorQuery({
   args: {},
   returns: v.array(clientValidator),
   handler: async (ctx) => {
+    const clients = await ctx.db.query("clients").collect();
     return clients.toSorted((a, b) => a.name.localeCompare(b.name, "fr"));
   },
 });
