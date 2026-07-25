@@ -10,13 +10,13 @@ honor its STOP conditions, and update your row when done.
 | ---- | ---------------------------------------------------------------------- | -------- | ------ | ---------- | ------ |
 | 001  | Rebuild portfolio archive and realign Brand Work                       | P1       | L      | —          | DONE   |
 | 002  | Ship Portal dual-shell dashboard UI (Operator Home + Client Workspace) | P1       | L      | —          | DONE   |
-| 003  | Wire Portal Client + access to Convex (replace fixtures)               | P1       | L      | 002        | TODO   |
+| 003  | Wire Portal Client + access to Convex (replace fixtures)               | P1       | L      | 002        | DONE   |
 
 ## Dependency notes
 
 - **001** (DONE): Brand ↔ Portfolio content boundaries; unrelated to Portal.
 - **002** (DONE): Portal UX shells + fixtures. Backend feature plans wait for honest chrome.
-- **003**: First Portal data-plane slice — Convex `clients`, `users.role` / seat bind, slug URLs, Operator create UI, remove `portal-fixtures` / `VITE_PORTAL_ROLE`. Invoices, Needs Attention persistence, Files, Website fields, Insights, and Message stay follow-ups and should assume 003’s Client model.
+- **003** (DONE on `advisor/003-portal-client-access`): First Portal data-plane slice — Convex `clients`, `users.role` / seat bind, slug URLs, Operator create UI, remove `portal-fixtures` / `VITE_PORTAL_ROLE`. Machine checks pass; Step 8 sign-in E2E still needs a human with WorkOS + Convex `OPERATOR_EMAILS`. Invoices, Needs Attention persistence, Files, Website fields, Insights, and Message stay follow-ups and should assume 003’s Client model.
 
 ## Findings considered and rejected
 
