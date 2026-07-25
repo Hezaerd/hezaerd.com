@@ -107,3 +107,15 @@ _Avoid_: Ticket, support center, mailto-only as the sole path; full chat product
 **Brand** / **Portfolio**:
 Separate public contexts. Portal may link to them; it does not host their content.
 _Avoid_: Treating Portal as a second marketing homepage
+
+**Client slug**:
+Stable public key for a Client in Portal URLs (`/w/{slug}`, `/op/clients/{slug}`). Unique among Clients.
+_Avoid_: Using Convex document IDs in Client-facing URLs; treating display name as the route key
+
+**Client seat**:
+The single User login bound to a Client (`users.clientId`). v1: at most one seat per Client; Client may exist before any seat is bound.
+_Avoid_: Membership table, teammate invites, WorkOS Organization as the Client identity (for v1)
+
+**Unlinked Client**:
+Signed-in User with `role=client` and no `clientId` yet (email has not matched a Client `contactEmail`). Sees a not-linked screen, not Operator Home and not a guessed Workspace.
+_Avoid_: Falling back to fixture Clients; treating Unlinked as Operator
