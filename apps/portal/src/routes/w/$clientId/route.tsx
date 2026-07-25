@@ -1,25 +1,22 @@
+import { api } from "@hezaerd/backend/api";
+import { useQuery } from "convex/react";
+
 import { Link, Outlet, createFileRoute, notFound } from "@tanstack/react-router";
 
 import { ClientWorkspaceShell } from "@/components/shell/client-workspace-shell";
-import { getClient } from "@/lib/portal-fixtures";
+import { toPortalClient } from "@/lib/portal-types";
 import { usePortalAuth } from "@/lib/use-portal-auth";
 
 export const Route = createFileRoute("/w/$clientId")({
-  loader: ({ params }) => {
-    const client = getClient(params.clientId);
-    if (!client) {
-      throw notFound();
-    }
-    return { client };
-  },
   component: ClientWorkspaceLayout,
 });
 
 function ClientWorkspaceLayout() {
-  const { client } = Route.useLoaderData();
-  const { user, loading } = usePortalAuth();
+  const { clientId } = Route.useParams();
+  const { user, loading: authLoading } = usePortalAuth();
+  const clientDoc = useQuery(api.clients.getBySlug, { slug: clientId });
 
-  if (loading) {
+  if (authLoading || clientDoc === undefined) {
     return (
       <main className="flex min-h-svh items-center justify-center px-6">
         <p className="text-muted-foreground font-mono text-sm">Chargement…</p>
@@ -39,6 +36,12 @@ function ClientWorkspaceLayout() {
       </main>
     );
   }
+
+  if (clientDoc === null) {
+    throw notFound();
+  }
+
+  const client = toPortalClient(clientDoc);
 
   return (
     <ClientWorkspaceShell client={client} email={user.email}>

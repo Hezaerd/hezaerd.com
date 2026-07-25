@@ -9,7 +9,7 @@ import {
 import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react";
 import { useEffect, useState } from "react";
 
-import { type PracticeCockpitStats } from "@/lib/portal-fixtures";
+import { type PracticeCockpitStats } from "@/lib/portal-types";
 
 type PracticeCockpitProps = {
   stats: PracticeCockpitStats;

@@ -1,7 +1,10 @@
+import { api } from "@hezaerd/backend/api";
+import { useQuery } from "convex/react";
+
 import { createFileRoute } from "@tanstack/react-router";
 
 import { NeedsAttentionList } from "@/components/shell/needs-attention-list";
-import { getClient } from "@/lib/portal-fixtures";
+import { toPortalClient } from "@/lib/portal-types";
 
 export const Route = createFileRoute("/w/$clientId/")({
   component: ClientHomePage,
@@ -9,11 +12,21 @@ export const Route = createFileRoute("/w/$clientId/")({
 
 function ClientHomePage() {
   const { clientId } = Route.useParams();
-  const client = getClient(clientId);
+  const clientDoc = useQuery(api.clients.getBySlug, { slug: clientId });
 
-  if (!client) {
+  if (clientDoc === undefined) {
+    return (
+      <main className="flex min-h-[40vh] items-center justify-center">
+        <p className="text-muted-foreground font-mono text-sm">Chargement…</p>
+      </main>
+    );
+  }
+
+  if (clientDoc === null) {
     return null;
   }
+
+  const client = toPortalClient(clientDoc);
 
   const now = new Date();
   const dateStr = now.toLocaleDateString("fr-FR", {
@@ -22,11 +35,8 @@ function ClientHomePage() {
     day: "numeric",
   });
 
-  const attentionCount = client.needsAttention.length;
-
   return (
     <div className="flex max-w-2xl flex-col gap-8">
-      {/* Header */}
       <div className="flex flex-col gap-1">
         <p className="text-muted-foreground font-mono text-xs tracking-[0.18em] uppercase">
           {dateStr}
@@ -34,34 +44,14 @@ function ClientHomePage() {
         <h1 className="font-display text-2xl font-semibold tracking-tight">
           Bon retour, {client.name.split(" ")[0]}.
         </h1>
-        {attentionCount > 0 ? (
-          <p className="text-muted-foreground mt-1 text-sm leading-relaxed">
-            Vous avez{" "}
-            <span className="text-foreground font-medium">
-              {attentionCount} élément{attentionCount === 1 ? "" : "s"}
-            </span>{" "}
-            qui demande{attentionCount === 1 ? "" : "nt"} votre attention ci-dessous.
-          </p>
-        ) : (
-          <p className="text-muted-foreground mt-1 text-sm leading-relaxed">
-            Tout est à jour. Votre projet avance bien.
-          </p>
-        )}
+        <p className="text-muted-foreground mt-1 text-sm leading-relaxed">
+          Tout est à jour. Votre projet avance bien.
+        </p>
       </div>
 
-      {/* Needs Attention Section */}
       <div className="flex flex-col gap-3">
-        <div className="flex items-center justify-between">
-          <h2 className="font-display text-base font-semibold tracking-tight">
-            À traiter
-          </h2>
-          {attentionCount > 0 && (
-            <span className="bg-primary/10 text-primary border-primary/20 rounded-full border px-2.5 py-0.5 font-mono text-[10px] font-semibold tabular-nums">
-              {attentionCount}
-            </span>
-          )}
-        </div>
-        <NeedsAttentionList items={client.needsAttention} />
+        <h2 className="font-display text-base font-semibold tracking-tight">À traiter</h2>
+        <NeedsAttentionList items={[]} />
       </div>
     </div>
   );

@@ -7,17 +7,31 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@hezaerd/ui/components/dropdown-menu";
+import { api } from "@hezaerd/backend/api";
+import { useQuery } from "convex/react";
 
 import { Link } from "@tanstack/react-router";
 
-import { listClients, type PortalClient } from "@/lib/portal-fixtures";
+import { type PortalClient, toPortalClient } from "@/lib/portal-types";
 
 type WorkspaceSwitcherProps = {
   currentClient: PortalClient;
 };
 
 export function WorkspaceSwitcher({ currentClient }: WorkspaceSwitcherProps) {
-  const otherClients = listClients().filter((client) => client.id !== currentClient.id);
+  const clients = useQuery(api.clients.list);
+
+  if (clients === undefined) {
+    return (
+      <Button variant="outline" size="sm" disabled>
+        <span className="max-w-48 truncate">{currentClient.name}</span>
+      </Button>
+    );
+  }
+
+  const otherClients = clients
+    .map((client) => toPortalClient(client))
+    .filter((client) => client.id !== currentClient.id);
 
   return (
     <DropdownMenu>

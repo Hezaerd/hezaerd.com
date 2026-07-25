@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as OpRouteRouteImport } from './routes/op/route'
 import { Route as SignoutRouteImport } from './routes/signout'
+import { Route as UnlinkedRouteImport } from './routes/unlinked'
 import { Route as OpIndexRouteImport } from './routes/op/index'
 import { Route as OpInvoicesRouteImport } from './routes/op/invoices'
 import { Route as OpSettingsRouteImport } from './routes/op/settings'
@@ -40,6 +41,11 @@ const OpRouteRoute = OpRouteRouteImport.update({
 const SignoutRoute = SignoutRouteImport.update({
   id: '/signout',
   path: '/signout',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UnlinkedRoute = UnlinkedRouteImport.update({
+  id: '/unlinked',
+  path: '/unlinked',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OpIndexRoute = OpIndexRouteImport.update({
@@ -117,6 +123,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/op': typeof OpRouteRouteWithChildren
   '/signout': typeof SignoutRoute
+  '/unlinked': typeof UnlinkedRoute
   '/w/$clientId': typeof WClientIdRouteRouteWithChildren
   '/op/invoices': typeof OpInvoicesRoute
   '/op/settings': typeof OpSettingsRoute
@@ -135,6 +142,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/signout': typeof SignoutRoute
+  '/unlinked': typeof UnlinkedRoute
   '/op/invoices': typeof OpInvoicesRoute
   '/op/settings': typeof OpSettingsRoute
   '/op': typeof OpIndexRoute
@@ -154,6 +162,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/op': typeof OpRouteRouteWithChildren
   '/signout': typeof SignoutRoute
+  '/unlinked': typeof UnlinkedRoute
   '/w/$clientId': typeof WClientIdRouteRouteWithChildren
   '/op/invoices': typeof OpInvoicesRoute
   '/op/settings': typeof OpSettingsRoute
@@ -175,6 +184,7 @@ export interface FileRouteTypes {
     | '/'
     | '/op'
     | '/signout'
+    | '/unlinked'
     | '/w/$clientId'
     | '/op/invoices'
     | '/op/settings'
@@ -193,6 +203,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/signout'
+    | '/unlinked'
     | '/op/invoices'
     | '/op/settings'
     | '/op'
@@ -211,6 +222,7 @@ export interface FileRouteTypes {
     | '/'
     | '/op'
     | '/signout'
+    | '/unlinked'
     | '/w/$clientId'
     | '/op/invoices'
     | '/op/settings'
@@ -231,6 +243,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   OpRouteRoute: typeof OpRouteRouteWithChildren
   SignoutRoute: typeof SignoutRoute
+  UnlinkedRoute: typeof UnlinkedRoute
   WClientIdRouteRoute: typeof WClientIdRouteRouteWithChildren
   ApiAuthCallbackRoute: typeof ApiAuthCallbackRoute
   ApiAuthSignInRoute: typeof ApiAuthSignInRoute
@@ -257,6 +270,13 @@ declare module '@tanstack/react-router' {
       path: '/signout'
       fullPath: '/signout'
       preLoaderRoute: typeof SignoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/unlinked': {
+      id: '/unlinked'
+      path: '/unlinked'
+      fullPath: '/unlinked'
+      preLoaderRoute: typeof UnlinkedRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/op/': {
@@ -405,6 +425,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   OpRouteRoute: OpRouteRouteWithChildren,
   SignoutRoute: SignoutRoute,
+  UnlinkedRoute: UnlinkedRoute,
   WClientIdRouteRoute: WClientIdRouteRouteWithChildren,
   ApiAuthCallbackRoute: ApiAuthCallbackRoute,
   ApiAuthSignInRoute: ApiAuthSignInRoute,

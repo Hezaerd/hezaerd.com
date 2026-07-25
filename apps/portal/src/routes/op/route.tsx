@@ -1,25 +1,18 @@
-import { Link, Outlet, createFileRoute, redirect } from "@tanstack/react-router";
+import { Link, Navigate, Outlet, createFileRoute } from "@tanstack/react-router";
 
 import { OperatorShell } from "@/components/shell/operator-shell";
-import { getClientWorkspaceHomeParams, isClientRole } from "@/lib/portal-role";
+import { usePortalViewer } from "@/lib/portal-role";
 import { usePortalAuth } from "@/lib/use-portal-auth";
 
 export const Route = createFileRoute("/op")({
-  beforeLoad: () => {
-    if (isClientRole()) {
-      throw redirect({
-        to: "/w/$clientId",
-        params: getClientWorkspaceHomeParams(),
-      });
-    }
-  },
   component: OperatorLayout,
 });
 
 function OperatorLayout() {
-  const { user, loading } = usePortalAuth();
+  const { user, loading: authLoading } = usePortalAuth();
+  const viewer = usePortalViewer();
 
-  if (loading) {
+  if (authLoading || (user && viewer.convexConfigured && viewer.loading)) {
     return (
       <main className="flex min-h-svh items-center justify-center px-6">
         <p className="text-muted-foreground font-mono text-sm">Chargement…</p>
@@ -38,6 +31,17 @@ function OperatorLayout() {
         </p>
       </main>
     );
+  }
+
+  if (viewer.convexConfigured && viewer.isClient) {
+    if (viewer.isUnlinked) {
+      return <Navigate to="/unlinked" replace />;
+    }
+    if (viewer.clientSlug) {
+      return (
+        <Navigate to="/w/$clientId" params={{ clientId: viewer.clientSlug }} replace />
+      );
+    }
   }
 
   return (
