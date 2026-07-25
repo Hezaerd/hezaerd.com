@@ -1,4 +1,4 @@
-import type { PortalClient } from "@/lib/portal-fixtures";
+import type { PortalClient } from "@/lib/portal-types";
 
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@hezaerd/ui/components/sidebar";
 import {
@@ -16,7 +16,7 @@ import { Link, useRouterState } from "@tanstack/react-router";
 
 import { DashboardChrome } from "@/components/shell/dashboard-chrome";
 import { WorkspaceSwitcher } from "@/components/shell/workspace-switcher";
-import { isOperatorRole } from "@/lib/portal-role";
+import { usePortalViewer } from "@/lib/portal-role";
 
 type ClientWorkspaceShellProps = {
   client: PortalClient;
@@ -65,7 +65,7 @@ export function ClientWorkspaceShell({ client, email, children }: ClientWorkspac
   const pathname = useRouterState({
     select: (state) => state.location.pathname,
   });
-  const showSwitcher = isOperatorRole();
+  const { isOperator } = usePortalViewer();
   const areas = [
     ...coreAreas,
     ...featureAreas.filter((area) => (area.feature ? client.features[area.feature] : true)),
@@ -79,8 +79,6 @@ export function ClientWorkspaceShell({ client, email, children }: ClientWorkspac
     return pathname.startsWith(`${base}/${segment}`);
   }
 
-  const hasAttention = client.needsAttention.length > 0;
-
   return (
     <DashboardChrome
       brand={{
@@ -90,7 +88,7 @@ export function ClientWorkspaceShell({ client, email, children }: ClientWorkspac
       }}
       email={email}
       headerStart={
-        showSwitcher ? (
+        isOperator ? (
           <div className="flex min-w-0 items-center gap-2">
             <Link
               to="/op"
@@ -108,7 +106,6 @@ export function ClientWorkspaceShell({ client, email, children }: ClientWorkspac
       }
       nav={areas.map((area) => {
         const active = isAreaActive(area.segment);
-        const showDot = area.segment === "" && hasAttention && !active;
         return (
           <SidebarMenuItem key={area.label}>
             <SidebarMenuButton
@@ -123,7 +120,6 @@ export function ClientWorkspaceShell({ client, email, children }: ClientWorkspac
             >
               <HugeiconsIcon icon={area.icon} size={16} className="shrink-0" />
               <span>{area.label}</span>
-              {showDot ? <span className="bg-primary ml-auto h-1.5 w-1.5 rounded-full" /> : null}
             </SidebarMenuButton>
           </SidebarMenuItem>
         );

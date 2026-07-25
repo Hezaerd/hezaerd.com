@@ -6,17 +6,6 @@
  */
 import { useAuth } from "@workos/authkit-tanstack-react-start/client";
 
-const hasWorkOsConfig = !!(
-  import.meta.env.VITE_WORKOS_CLIENT_ID ||
-  // The WORKOS_ vars are server-only; we detect their absence via the
-  // presence of a v0 sandbox marker instead.
-  import.meta.env.VITE_PORTAL_ROLE !== undefined
-);
-
-/**
- * Whether WorkOS is fully configured.  When false we inject a dev user so
- * the portal shells render in the local / v0 sandbox preview.
- */
 const workosConfigured =
   typeof import.meta.env.VITE_WORKOS_CLIENT_ID === "string" &&
   import.meta.env.VITE_WORKOS_CLIENT_ID.length > 0;

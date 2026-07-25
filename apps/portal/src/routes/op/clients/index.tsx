@@ -1,10 +1,14 @@
 import { Button } from "@hezaerd/ui/components/button";
-import { AlertCircleIcon, ArrowRight01Icon, UserGroupIcon } from "@hugeicons/core-free-icons";
+import { Input } from "@hezaerd/ui/components/input";
+import { ArrowRight01Icon, UserGroupIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
+import { api } from "@hezaerd/backend/api";
+import { useMutation, useQuery } from "convex/react";
+import { useState } from "react";
 
-import { Link, createFileRoute } from "@tanstack/react-router";
+import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 
-import { listClients } from "@/lib/portal-fixtures";
+import { toPortalClient } from "@/lib/portal-types";
 
 export const Route = createFileRoute("/op/clients/")({
   component: ClientDirectoryPage,
@@ -20,11 +24,45 @@ function getClientInitials(name: string): string {
 }
 
 function ClientDirectoryPage() {
-  const clients = listClients();
+  const clients = useQuery(api.clients.list);
+  const createClient = useMutation(api.clients.create);
+  const navigate = useNavigate();
+  const [name, setName] = useState("");
+  const [slug, setSlug] = useState("");
+  const [contactEmail, setContactEmail] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+
+  async function handleCreate(event: React.FormEvent) {
+    event.preventDefault();
+    setError(null);
+    setSubmitting(true);
+    try {
+      const created = await createClient({ name, slug, contactEmail });
+      setName("");
+      setSlug("");
+      setContactEmail("");
+      await navigate({
+        to: "/op/clients/$clientId",
+        params: { clientId: created.slug },
+      });
+    } catch (createError) {
+      setError(createError instanceof Error ? createError.message : "Création impossible");
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  if (clients === undefined) {
+    return (
+      <main className="flex min-h-[40vh] items-center justify-center">
+        <p className="text-muted-foreground font-mono text-sm">Chargement…</p>
+      </main>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-8">
-      {/* Page header */}
       <div className="flex flex-col gap-1">
         <div className="flex items-center gap-2">
           <div className="bg-muted flex h-8 w-8 items-center justify-center rounded-lg">
@@ -37,11 +75,57 @@ function ClientDirectoryPage() {
         </p>
       </div>
 
-      {/* Client list */}
+      <section className="border-border bg-muted/20 flex flex-col gap-4 rounded-xl border p-5">
+        <h2 className="font-display text-base font-semibold tracking-tight">Nouveau client</h2>
+        <form className="grid gap-4 sm:grid-cols-3" onSubmit={handleCreate}>
+          <div className="flex flex-col gap-2">
+            <label htmlFor="client-name" className="text-sm font-medium">
+              Nom
+            </label>
+            <Input
+              id="client-name"
+              value={name}
+              onChange={(event) => setName(event.target.value)}
+              required
+            />
+          </div>
+          <div className="flex flex-col gap-2">
+            <label htmlFor="client-slug" className="text-sm font-medium">
+              Slug
+            </label>
+            <Input
+              id="client-slug"
+              value={slug}
+              onChange={(event) => setSlug(event.target.value)}
+              placeholder="river-cafe"
+              required
+            />
+          </div>
+          <div className="flex flex-col gap-2">
+            <label htmlFor="client-email" className="text-sm font-medium">
+              E-mail de contact
+            </label>
+            <Input
+              id="client-email"
+              type="email"
+              value={contactEmail}
+              onChange={(event) => setContactEmail(event.target.value)}
+              required
+            />
+          </div>
+          <div className="sm:col-span-3 flex items-center gap-3">
+            <Button type="submit" disabled={submitting}>
+              Créer le client
+            </Button>
+            {error ? <p className="text-destructive text-sm">{error}</p> : null}
+          </div>
+        </form>
+      </section>
+
       <div className="flex flex-col gap-3">
-        {clients.map((client) => {
+        {clients.map((clientDoc) => {
+          const client = toPortalClient(clientDoc);
           const initials = getClientInitials(client.name);
-          const attentionCount = client.needsAttention.length;
           const featureList = [
             "Essentiel",
             client.features.insights ? "Statistiques" : null,
@@ -53,24 +137,14 @@ function ClientDirectoryPage() {
               key={client.id}
               className="border-border bg-muted/20 hover:bg-muted/30 group relative flex items-center gap-4 rounded-xl border px-5 py-4 transition-colors"
             >
-              {/* Avatar */}
               <div className="bg-primary/10 border-primary/20 flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border">
                 <span className="text-primary font-mono text-xs font-semibold tracking-wider">
                   {initials}
                 </span>
               </div>
 
-              {/* Info */}
               <div className="min-w-0 flex-1">
-                <div className="flex flex-wrap items-center gap-2">
-                  <p className="font-display text-sm font-semibold tracking-tight">{client.name}</p>
-                  {attentionCount > 0 && (
-                    <span className="flex items-center gap-1 rounded-full bg-amber-500/10 px-2 py-0.5 font-mono text-[10px] font-semibold text-amber-400">
-                      <HugeiconsIcon icon={AlertCircleIcon} size={10} />
-                      {attentionCount} en attente
-                    </span>
-                  )}
-                </div>
+                <p className="font-display text-sm font-semibold tracking-tight">{client.name}</p>
                 <p className="text-muted-foreground mt-0.5 text-xs">{client.contactEmail}</p>
                 <div className="mt-1.5 flex flex-wrap gap-1">
                   {featureList.map((f) => (
@@ -84,7 +158,6 @@ function ClientDirectoryPage() {
                 </div>
               </div>
 
-              {/* Actions */}
               <div className="flex shrink-0 flex-wrap gap-2">
                 <Button
                   size="sm"

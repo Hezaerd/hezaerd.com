@@ -1,4 +1,4 @@
-import type { NeedsAttentionItem, NeedsAttentionKind } from "@/lib/portal-fixtures";
+import type { NeedsAttentionItem, NeedsAttentionKind } from "@/lib/portal-types";
 
 import { Empty, EmptyDescription, EmptyHeader, EmptyTitle } from "@hezaerd/ui/components/empty";
 import {

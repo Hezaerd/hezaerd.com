@@ -1,15 +1,15 @@
-import { useAuth } from "@workos/authkit-tanstack-react-start/client";
-
 import { createFileRoute, Navigate } from "@tanstack/react-router";
 
-import { getClientWorkspaceHomeParams, isClientRole } from "@/lib/portal-role";
+import { usePortalViewer } from "@/lib/portal-role";
+import { usePortalAuth } from "@/lib/use-portal-auth";
 
 export const Route = createFileRoute("/")({ component: PortalHome });
 
 function PortalHome() {
-  const { user, loading } = useAuth();
+  const { user, loading: authLoading } = usePortalAuth();
+  const viewer = usePortalViewer();
 
-  if (loading) {
+  if (authLoading || (user && viewer.convexConfigured && viewer.loading)) {
     return (
       <main className="flex min-h-svh items-center justify-center px-6">
         <p className="text-muted-foreground font-mono text-sm">Chargement…</p>
@@ -21,8 +21,28 @@ function PortalHome() {
     return <LoginScreen />;
   }
 
-  if (isClientRole()) {
-    return <Navigate to="/w/$clientId" params={getClientWorkspaceHomeParams()} replace />;
+  if (viewer.convexConfigured) {
+    if (viewer.accessError) {
+      return (
+        <main className="flex min-h-svh items-center justify-center px-6">
+          <p className="text-muted-foreground text-sm">{viewer.accessError}</p>
+        </main>
+      );
+    }
+
+    if (viewer.isOperator) {
+      return <Navigate to="/op" replace />;
+    }
+
+    if (viewer.isUnlinked) {
+      return <Navigate to="/unlinked" replace />;
+    }
+
+    if (viewer.clientSlug) {
+      return (
+        <Navigate to="/w/$clientId" params={{ clientId: viewer.clientSlug }} replace />
+      );
+    }
   }
 
   return <Navigate to="/op" replace />;

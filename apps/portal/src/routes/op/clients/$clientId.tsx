@@ -2,26 +2,19 @@ import { Button } from "@hezaerd/ui/components/button";
 import { Switch } from "@hezaerd/ui/components/switch";
 import {
   ArrowRight01Icon,
-  PieChart01Icon,
   Globe02Icon,
-  AlertCircleIcon,
+  PieChart01Icon,
   Setting07Icon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react";
-import { useState } from "react";
+import { api } from "@hezaerd/backend/api";
+import { useMutation, useQuery } from "convex/react";
 
 import { Link, createFileRoute, notFound } from "@tanstack/react-router";
 
-import { getClient, setClientFeature, type ClientFeature } from "@/lib/portal-fixtures";
+import { type ClientFeature, toPortalClient } from "@/lib/portal-types";
 
 export const Route = createFileRoute("/op/clients/$clientId")({
-  loader: ({ params }) => {
-    const client = getClient(params.clientId);
-    if (!client) {
-      throw notFound();
-    }
-    return { clientId: params.clientId };
-  },
   component: ClientRecordPage,
 });
 
@@ -35,25 +28,31 @@ function getClientInitials(name: string): string {
 }
 
 function ClientRecordPage() {
-  const { clientId } = Route.useLoaderData();
-  const [, refresh] = useState(0);
-  const client = getClient(clientId);
+  const { clientId } = Route.useParams();
+  const clientDoc = useQuery(api.clients.getBySlug, { slug: clientId });
+  const setFeature = useMutation(api.clients.setFeature);
 
-  if (!client) {
-    return null;
+  if (clientDoc === undefined) {
+    return (
+      <main className="flex min-h-[40vh] items-center justify-center">
+        <p className="text-muted-foreground font-mono text-sm">Chargement…</p>
+      </main>
+    );
   }
 
-  function toggleFeature(feature: ClientFeature, enabled: boolean) {
-    setClientFeature(clientId, feature, enabled);
-    refresh((value) => value + 1);
+  if (clientDoc === null) {
+    throw notFound();
   }
 
+  const client = toPortalClient(clientDoc);
   const initials = getClientInitials(client.name);
-  const attentionCount = client.needsAttention.length;
+
+  async function toggleFeature(feature: ClientFeature, enabled: boolean) {
+    await setFeature({ slug: clientId, feature, enabled });
+  }
 
   return (
     <div className="flex max-w-3xl flex-col gap-8">
-      {/* Client identity header */}
       <div className="border-border bg-muted/20 flex items-center gap-4 rounded-xl border px-5 py-5">
         <div className="bg-primary/10 border-primary/20 flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border">
           <span className="text-primary font-mono text-sm font-semibold tracking-wider">
@@ -64,15 +63,8 @@ function ClientRecordPage() {
           <h1 className="font-display text-xl font-semibold tracking-tight">{client.name}</h1>
           <p className="text-muted-foreground mt-0.5 text-sm">{client.contactEmail}</p>
         </div>
-        {attentionCount > 0 && (
-          <div className="flex shrink-0 items-center gap-1.5 rounded-full bg-amber-500/10 px-3 py-1.5 font-mono text-xs font-semibold text-amber-400">
-            <HugeiconsIcon icon={AlertCircleIcon} size={12} />
-            {attentionCount} élément{attentionCount === 1 ? "" : "s"} en attente
-          </div>
-        )}
       </div>
 
-      {/* Features section */}
       <section className="flex flex-col gap-3">
         <div className="flex items-center gap-2">
           <div className="bg-muted flex h-7 w-7 items-center justify-center rounded-lg">
@@ -103,20 +95,13 @@ function ClientRecordPage() {
         </div>
       </section>
 
-      {/* Workspace section */}
       <section className="flex flex-col gap-3">
         <h2 className="font-display text-base font-semibold tracking-tight">Espace</h2>
         <div className="border-border bg-muted/20 flex items-center justify-between gap-4 rounded-xl border px-5 py-4">
           <div>
             <p className="text-sm font-medium">Ouvrir l&apos;espace client</p>
             <p className="text-muted-foreground mt-0.5 text-sm">
-              Travaillez dans les mêmes zones que le client.{" "}
-              {attentionCount > 0 && (
-                <span className="font-medium text-amber-400">
-                  {attentionCount} élément{attentionCount === 1 ? "" : "s"} demande
-                  {attentionCount === 1 ? "" : "nt"} votre attention.
-                </span>
-              )}
+              Travaillez dans les mêmes zones que le client.
             </p>
           </div>
           <Button render={<Link to="/w/$clientId" params={{ clientId: client.id }} />}>
