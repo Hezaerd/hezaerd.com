@@ -20,6 +20,8 @@
 - **Depends on**: plans/002-portal-dual-shell-dashboard.md (DONE — shells + fixtures exist)
 - **Category**: direction
 - **Planned at**: commit `934d8bc`, 2026-07-24
+- **Executed**: branch `advisor/003-portal-client-access` @ `60efdec` (reviewer APPROVE 2026-07-25; Step 8 E2E still human)
+- **Index**: DONE
 
 ## Why this matters
 
