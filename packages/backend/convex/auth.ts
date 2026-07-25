@@ -5,6 +5,8 @@ import { v } from "convex/values";
 
 import { components, internal } from "./_generated/api";
 import { query } from "./_generated/server";
+import { tryBindSeatByEmail } from "./lib/clients";
+import { resolveRole } from "./lib/users";
 
 const authFunctions: AuthFunctions = internal.auth;
 
@@ -15,12 +17,15 @@ export const authKit = new AuthKit<DataModel>(components.workOSAuthKit, {
 export const { authKitEvent } = authKit.events({
   "user.created": async (ctx, event) => {
     const name = [event.data.firstName, event.data.lastName].filter(Boolean).join(" ").trim();
-    await ctx.db.insert("users", {
+    const role = resolveRole(event.data.email);
+    const userId = await ctx.db.insert("users", {
       authId: event.data.id,
       email: event.data.email,
       name: name || event.data.email,
       pictureUrl: event.data.profilePictureUrl ?? undefined,
+      role,
     });
+    await tryBindSeatByEmail(ctx, userId, event.data.email);
   },
   "user.updated": async (ctx, event) => {
     const user = await ctx.db
@@ -32,11 +37,18 @@ export const { authKitEvent } = authKit.events({
       return;
     }
     const name = [event.data.firstName, event.data.lastName].filter(Boolean).join(" ").trim();
+    const emailChanged = user.email !== event.data.email;
+    const role = resolveRole(event.data.email);
+
     await ctx.db.patch(user._id, {
       email: event.data.email,
       name: name || event.data.email,
       pictureUrl: event.data.profilePictureUrl ?? undefined,
+      role,
+      ...(emailChanged ? { clientId: undefined } : {}),
     });
+
+    await tryBindSeatByEmail(ctx, user._id, event.data.email);
   },
   "user.deleted": async (ctx, event) => {
     const user = await ctx.db
