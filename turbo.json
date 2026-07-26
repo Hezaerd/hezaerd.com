@@ -22,11 +22,7 @@
         "CONVEX_DEPLOY_KEY"
       ],
       "passThroughEnv": [
-        "AI_GATEWAY_API_KEY",
-        "TELEGRAM_BOT_TOKEN",
-        "TELEGRAM_WEBHOOK_SECRET_TOKEN",
-        "TELEGRAM_BOT_USERNAME",
-        "TELEGRAM_ALLOWED_USER_IDS"
+        "AI_GATEWAY_API_KEY"
       ]
     },
     "typecheck": {
