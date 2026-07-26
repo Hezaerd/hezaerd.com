@@ -25,5 +25,6 @@ _Avoid_: Session-only `defineState` for cross-session memory; inventing memories
 ## Relationships
 
 - **Bobby → Portal / backend**: Bobby consumes Operator-scoped APIs; Portal remains the workspace UI (ADR-0003 Client Desk).
+- **Bobby ↔ Operator (Telegram)**: Primary phone channel for Operator chat (ADR-0002). Gated by Telegram user id allowlist.
 - **Bobby ↛ Client**: No Client-facing chat channel in v0; communication stays outside Portal.
 - **Bobby ≠ Bonny**: Separate agent/identity later for life OS.
