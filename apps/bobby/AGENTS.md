@@ -1,4 +1,4 @@
-# Clyde (eve Agent App)
+# Bobby (eve Agent App)
 
 Operator business co-pilot. Domain: `CONTEXT.md`. Requires **Node 24**.
 
