@@ -22,7 +22,7 @@ Webhook registration (no Bot token on the laptop needed):
 
 1. Prefer: `POST https://bobby.hezaerd.com/eve/v1/telegram/ensure-webhook`
    — uses Vercel env; only ever points at production (or `TELEGRAM_WEBHOOK_URL`).
-2. Hourly schedule `register-telegram-webhook` self-heals after domain drift.
+2. Daily schedule `register-telegram-webhook` self-heals after domain drift.
 3. Manual Bot API `setWebhook` still works if you have the token locally.
 
 ```bash
