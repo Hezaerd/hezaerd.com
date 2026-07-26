@@ -16,7 +16,9 @@ function ClientDeskInsightsPage() {
         </div>
         <div>
           <h2 className="font-display text-lg font-semibold tracking-tight">Statistiques</h2>
-          <p className="text-muted-foreground text-xs">Côté cabinet — mêmes vérités que le client</p>
+          <p className="text-muted-foreground text-xs">
+            Côté cabinet — mêmes vérités que le client
+          </p>
         </div>
       </div>
       <div className="border-border bg-muted/20 flex min-h-[12rem] items-center justify-center rounded-xl border">

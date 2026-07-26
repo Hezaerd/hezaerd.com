@@ -1,7 +1,7 @@
+import { api } from "@hezaerd/backend/api";
 import { Switch } from "@hezaerd/ui/components/switch";
 import { Globe02Icon, PieChart01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react";
-import { api } from "@hezaerd/backend/api";
 import { useMutation, useQuery } from "convex/react";
 
 import { createFileRoute, notFound } from "@tanstack/react-router";

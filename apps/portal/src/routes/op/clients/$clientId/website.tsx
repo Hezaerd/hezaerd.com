@@ -16,7 +16,9 @@ function ClientDeskWebsitePage() {
         </div>
         <div>
           <h2 className="font-display text-lg font-semibold tracking-tight">Site web</h2>
-          <p className="text-muted-foreground text-xs">Côté cabinet — configuration et champs éditables</p>
+          <p className="text-muted-foreground text-xs">
+            Côté cabinet — configuration et champs éditables
+          </p>
         </div>
       </div>
       <div className="border-border bg-muted/20 flex min-h-[12rem] items-center justify-center rounded-xl border">

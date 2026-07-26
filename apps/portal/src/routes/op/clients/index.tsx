@@ -1,8 +1,8 @@
+import { api } from "@hezaerd/backend/api";
 import { Button } from "@hezaerd/ui/components/button";
 import { Input } from "@hezaerd/ui/components/input";
 import { ArrowRight01Icon, UserGroupIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { api } from "@hezaerd/backend/api";
 import { useMutation, useQuery } from "convex/react";
 import { useState } from "react";
 
@@ -114,7 +114,7 @@ function ClientDirectoryPage() {
               required
             />
           </div>
-          <div className="sm:col-span-3 flex items-center gap-3">
+          <div className="flex items-center gap-3 sm:col-span-3">
             <Button type="submit" disabled={submitting}>
               Créer le client
             </Button>

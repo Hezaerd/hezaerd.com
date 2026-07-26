@@ -1,11 +1,18 @@
 import { api } from "@hezaerd/backend/api";
 import { useQuery } from "convex/react";
 
-import { Link, Navigate, Outlet, createFileRoute, notFound, useRouterState } from "@tanstack/react-router";
+import {
+  Link,
+  Navigate,
+  Outlet,
+  createFileRoute,
+  notFound,
+  useRouterState,
+} from "@tanstack/react-router";
 
 import { ClientWorkspaceShell } from "@/components/shell/client-workspace-shell";
-import { toPortalClient } from "@/lib/portal-types";
 import { usePortalViewer } from "@/lib/portal-role";
+import { toPortalClient } from "@/lib/portal-types";
 import { usePortalAuth } from "@/lib/use-portal-auth";
 
 export const Route = createFileRoute("/w/$clientId")({
@@ -20,9 +27,7 @@ function resolveDeskSegment(pathname: string, clientId: string): DeskSegment | n
   if (!pathname.startsWith(prefix)) return null;
   const parts = pathname.slice(prefix.length).split("/");
   const segment = parts[0] ?? "";
-  return (DESK_SEGMENTS as readonly string[]).includes(segment)
-    ? (segment as DeskSegment)
-    : null;
+  return (DESK_SEGMENTS as readonly string[]).includes(segment) ? (segment as DeskSegment) : null;
 }
 
 function ClientWorkspaceLayout() {
@@ -56,13 +61,7 @@ function ClientWorkspaceLayout() {
   if (viewer.isOperator) {
     const segment = resolveDeskSegment(pathname, clientId);
     if (segment) {
-      return (
-        <Navigate
-          to={`/op/clients/$clientId/${segment}`}
-          params={{ clientId }}
-          replace
-        />
-      );
+      return <Navigate to={`/op/clients/$clientId/${segment}`} params={{ clientId }} replace />;
     }
     return <Navigate to="/op/clients/$clientId" params={{ clientId }} replace />;
   }
