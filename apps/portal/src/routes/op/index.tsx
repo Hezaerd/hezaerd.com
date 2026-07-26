@@ -49,7 +49,7 @@ function OperatorHomePage() {
         </p>
         <h1 className="font-display text-2xl font-semibold tracking-tight">Bon retour.</h1>
         <p className="text-muted-foreground mt-1 text-sm leading-relaxed">
-          Voici un aperçu de votre activité et des espaces de vos clients.
+          Voici un aperçu de votre activité et des bureaux clients.
         </p>
       </div>
 
@@ -60,7 +60,7 @@ function OperatorHomePage() {
           <div>
             <h2 className="font-display text-xl font-semibold tracking-tight">Clients</h2>
             <p className="text-muted-foreground mt-0.5 text-sm">
-              Ouvrez un espace ou gérez la fiche client.
+              Ouvrez le bureau de chaque client.
             </p>
           </div>
           <Button variant="outline" size="sm" render={<Link to="/op/clients" />}>
@@ -107,17 +107,10 @@ function OperatorHomePage() {
 
                 <div className="flex shrink-0 flex-wrap gap-2">
                   <Button
-                    variant="outline"
                     size="sm"
                     render={<Link to="/op/clients/$clientId" params={{ clientId: client.id }} />}
                   >
-                    Fiche
-                  </Button>
-                  <Button
-                    size="sm"
-                    render={<Link to="/w/$clientId" params={{ clientId: client.id }} />}
-                  >
-                    Espace
+                    Ouvrir
                     <HugeiconsIcon icon={ArrowRight01Icon} size={13} />
                   </Button>
                 </div>

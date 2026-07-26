@@ -71,7 +71,8 @@ function ClientDirectoryPage() {
           <h1 className="font-display text-2xl font-semibold tracking-tight">Clients</h1>
         </div>
         <p className="text-muted-foreground mt-1 text-sm leading-relaxed">
-          Gérez les fiches clients, les fonctionnalités et l&apos;accès aux espaces.
+          Ouvrez le bureau de chaque client pour gérer son dossier, ses fonctionnalités et son
+          activité.
         </p>
       </div>
 
@@ -163,7 +164,7 @@ function ClientDirectoryPage() {
                   size="sm"
                   render={<Link to="/op/clients/$clientId" params={{ clientId: client.id }} />}
                 >
-                  Voir la fiche
+                  Ouvrir le bureau
                   <HugeiconsIcon icon={ArrowRight01Icon} size={13} />
                 </Button>
               </div>
