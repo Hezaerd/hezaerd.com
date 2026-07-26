@@ -19,6 +19,7 @@ use this channel.
 ## Consequences
 
 Requires BotFather bot + `TELEGRAM_BOT_TOKEN` + `TELEGRAM_WEBHOOK_SECRET_TOKEN`
-on the Vercel project, and a one-time `setWebhook` to
-`https://<bobby-host>/eve/v1/telegram`. WhatsApp / native iOS remain out of
-scope until a second Operator surface is justified.
+on the Vercel project, and `setWebhook` to
+`https://bobby.hezaerd.com/eve/v1/telegram` (re-run after domain changes).
+WhatsApp / native iOS remain out of scope until a second Operator surface is
+justified.
