@@ -1,7 +1,7 @@
+import { api } from "@hezaerd/backend/api";
 import { Button } from "@hezaerd/ui/components/button";
 import { ArrowRight01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { api } from "@hezaerd/backend/api";
 import { useQuery } from "convex/react";
 
 import { Link, createFileRoute } from "@tanstack/react-router";
@@ -107,17 +107,10 @@ function OperatorHomePage() {
 
                 <div className="flex shrink-0 flex-wrap gap-2">
                   <Button
-                    variant="outline"
                     size="sm"
                     render={<Link to="/op/clients/$clientId" params={{ clientId: client.id }} />}
                   >
-                    Fiche
-                  </Button>
-                  <Button
-                    size="sm"
-                    render={<Link to="/w/$clientId" params={{ clientId: client.id }} />}
-                  >
-                    Espace
+                    Bureau client
                     <HugeiconsIcon icon={ArrowRight01Icon} size={13} />
                   </Button>
                 </div>

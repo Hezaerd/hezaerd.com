@@ -1,15 +1,13 @@
 import { createFileRoute, Navigate } from "@tanstack/react-router";
 
-import { usePortalViewer } from "@/lib/portal-role";
-import { usePortalAuth } from "@/lib/use-portal-auth";
+import { usePortalSession } from "@/lib/portal-session";
 
 export const Route = createFileRoute("/")({ component: PortalHome });
 
 function PortalHome() {
-  const { user, loading: authLoading } = usePortalAuth();
-  const viewer = usePortalViewer();
+  const { home } = usePortalSession();
 
-  if (authLoading || (user && viewer.convexConfigured && viewer.loading)) {
+  if (home.kind === "loading") {
     return (
       <main className="flex min-h-svh items-center justify-center px-6">
         <p className="text-muted-foreground font-mono text-sm">Chargement…</p>
@@ -17,35 +15,27 @@ function PortalHome() {
     );
   }
 
-  if (!user) {
+  if (home.kind === "login") {
     return <LoginScreen />;
   }
 
-  if (viewer.convexConfigured) {
-    if (viewer.accessError) {
-      return (
-        <main className="flex min-h-svh items-center justify-center px-6">
-          <p className="text-muted-foreground text-sm">{viewer.accessError}</p>
-        </main>
-      );
-    }
-
-    if (viewer.isOperator) {
-      return <Navigate to="/op" replace />;
-    }
-
-    if (viewer.isUnlinked) {
-      return <Navigate to="/unlinked" replace />;
-    }
-
-    if (viewer.clientSlug) {
-      return (
-        <Navigate to="/w/$clientId" params={{ clientId: viewer.clientSlug }} replace />
-      );
-    }
+  if (home.kind === "error") {
+    return (
+      <main className="flex min-h-svh items-center justify-center px-6">
+        <p className="text-muted-foreground text-sm">{home.message}</p>
+      </main>
+    );
   }
 
-  return <Navigate to="/op" replace />;
+  if (home.kind === "operator-home") {
+    return <Navigate to="/op" replace />;
+  }
+
+  if (home.kind === "unlinked") {
+    return <Navigate to="/unlinked" replace />;
+  }
+
+  return <Navigate to="/w/$clientId" params={{ clientId: home.slug }} replace />;
 }
 
 function LoginScreen() {
