@@ -1,16 +1,10 @@
-import { Button } from "@hezaerd/ui/components/button";
-import { Switch } from "@hezaerd/ui/components/switch";
-import {
-  ArrowRight01Icon,
-  Globe02Icon,
-  PieChart01Icon,
-  Setting07Icon,
-} from "@hugeicons/core-free-icons";
-import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react";
 import { api } from "@hezaerd/backend/api";
+import { Switch } from "@hezaerd/ui/components/switch";
+import { Globe02Icon, PieChart01Icon, Setting07Icon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react";
 import { useMutation, useQuery } from "convex/react";
 
-import { Link, createFileRoute, notFound } from "@tanstack/react-router";
+import { createFileRoute, notFound } from "@tanstack/react-router";
 
 import { type ClientFeature, toPortalClient } from "@/lib/portal-types";
 
@@ -92,22 +86,6 @@ function ClientRecordPage() {
             checked={client.features.website}
             onCheckedChange={(checked) => toggleFeature("website", checked)}
           />
-        </div>
-      </section>
-
-      <section className="flex flex-col gap-3">
-        <h2 className="font-display text-base font-semibold tracking-tight">Espace</h2>
-        <div className="border-border bg-muted/20 flex items-center justify-between gap-4 rounded-xl border px-5 py-4">
-          <div>
-            <p className="text-sm font-medium">Ouvrir l&apos;espace client</p>
-            <p className="text-muted-foreground mt-0.5 text-sm">
-              Travaillez dans les mêmes zones que le client.
-            </p>
-          </div>
-          <Button render={<Link to="/w/$clientId" params={{ clientId: client.id }} />}>
-            Ouvrir l&apos;espace
-            <HugeiconsIcon icon={ArrowRight01Icon} size={14} />
-          </Button>
         </div>
       </section>
     </div>

@@ -1,20 +1,32 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, Navigate } from "@tanstack/react-router";
 
-import { usePortalAuth } from "@/lib/use-portal-auth";
+import { usePortalSession } from "@/lib/portal-session";
 
 export const Route = createFileRoute("/unlinked")({
   component: UnlinkedPage,
 });
 
 function UnlinkedPage() {
-  const { user, loading } = usePortalAuth();
+  const { home, authUser } = usePortalSession();
 
-  if (loading) {
+  if (home.kind === "loading") {
     return (
       <main className="flex min-h-svh items-center justify-center px-6">
         <p className="text-muted-foreground font-mono text-sm">Chargement…</p>
       </main>
     );
+  }
+
+  if (home.kind === "login") {
+    return <Navigate to="/" replace />;
+  }
+
+  if (home.kind === "operator-home") {
+    return <Navigate to="/op" replace />;
+  }
+
+  if (home.kind === "client-home") {
+    return <Navigate to="/w/$clientId" params={{ clientId: home.slug }} replace />;
   }
 
   return (
@@ -27,8 +39,8 @@ function UnlinkedPage() {
           Espace pas encore prêt
         </h1>
         <p className="text-muted-foreground mt-3 text-sm leading-relaxed">
-          Vous êtes connecté{user?.email ? ` en tant que ${user.email}` : ""}, mais votre espace
-          client n&apos;est pas encore lié. Contactez Hezaerd pour finaliser l&apos;accès.
+          Vous êtes connecté{authUser?.email ? ` en tant que ${authUser.email}` : ""}, mais votre
+          espace client n&apos;est pas encore lié. Contactez Hezaerd pour finaliser l&apos;accès.
         </p>
         <p className="text-muted-foreground mt-4 text-sm">
           <a href="mailto:hezaerd@hezaerd.com" className="text-primary font-medium hover:underline">
