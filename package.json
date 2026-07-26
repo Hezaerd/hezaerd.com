@@ -27,7 +27,7 @@
     "build:portfolio": "turbo run build --filter=@hezaerd/portfolio",
     "build:portal": "turbo run build --filter=@hezaerd/portal",
     "build:bobby": "turbo run build --filter=@hezaerd/bobby",
-    "build:portal:vercel": "bun run --filter @hezaerd/backend ensure-workos-redirect-uris && if [ -n \"$CONVEX_DEPLOY_KEY\" ]; then bun run --filter @hezaerd/backend deploy:portal; else bun run build:portal; fi",
+    "build:portal:vercel": "if [ -n \"$CONVEX_DEPLOY_KEY\" ]; then bun run --filter @hezaerd/backend deploy:portal; else bun run build:portal; fi",
     "deploy:backend": "bun run --filter @hezaerd/backend deploy",
     "lint": "oxlint .",
     "lint:fix": "oxlint . --fix",

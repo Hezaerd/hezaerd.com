@@ -4,6 +4,7 @@
   "aiFiles": {
     "enabled": false
   },
+  "_comment": "Optional Convex AuthKit auto-configure. Portal uses the WorkOS Dashboard Redirects page instead (stable custom domains). Copy into convex.json only if you want CLI-driven redirects/CORS.",
   "authKit": {
     "dev": {
       "configure": {
@@ -21,15 +22,9 @@
     },
     "preview": {
       "configure": {
-        "redirectUris": [
-          "https://dev.portal.hezaerd.com/api/auth/callback",
-          "https://${buildEnv.VERCEL_BRANCH_URL}/api/auth/callback"
-        ],
+        "redirectUris": ["https://dev.portal.hezaerd.com/api/auth/callback"],
         "appHomepageUrl": "https://dev.portal.hezaerd.com",
-        "corsOrigins": [
-          "https://dev.portal.hezaerd.com",
-          "https://${buildEnv.VERCEL_BRANCH_URL}"
-        ]
+        "corsOrigins": ["https://dev.portal.hezaerd.com"]
       }
     },
     "prod": {

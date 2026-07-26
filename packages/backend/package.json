@@ -10,7 +10,6 @@
     "dev": "convex dev",
     "deploy": "convex deploy",
     "deploy:portal": "convex deploy --cmd-url-env-var-name VITE_CONVEX_URL --cmd 'cd ../.. && bun run build:portal'",
-    "ensure-workos-redirect-uris": "bun ./scripts/ensure-workos-redirect-uris.ts",
     "codegen": "convex codegen",
     "typecheck": "tsc --noEmit"
   },
