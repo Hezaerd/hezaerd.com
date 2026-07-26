@@ -1,8 +1,12 @@
 /**
- * Registers WorkOS redirect URIs + CORS origins for the current API key.
- * Safe to run on every Vercel portal build.
+ * Registers WorkOS redirect URIs, CORS origins, and app homepage URL
+ * for the current API key. Safe to run on every Vercel portal build.
  *
  * Skips when credentials are missing (local builds without WorkOS).
+ *
+ * Note: WorkOS "Sign-in endpoint" (initiate_login_uri) is dashboard-only.
+ * Forgot-password / AuthKit-initiated flows redirect there — keep it on the
+ * public site URL, not localhost (see apps/portal/.env.example).
  */
 
 type RedirectUri = {
@@ -25,10 +29,17 @@ type ListResponse<T> = {
 
 const REDIRECT_API = "https://api.workos.com/user_management/redirect_uris";
 const CORS_API = "https://api.workos.com/user_management/cors_origins";
+const HOMEPAGE_API = "https://api.workos.com/user_management/app_homepage_url";
 
-function collectDesired(): { redirectUris: string[]; corsOrigins: string[] } {
+function collectDesired(): {
+  redirectUris: string[];
+  corsOrigins: string[];
+  homepageUrl: string | null;
+  signInEndpoint: string | null;
+} {
   const redirectUris = new Set<string>();
   const corsOrigins = new Set<string>();
+  let homepageUrl: string | null = null;
 
   const redirect = process.env["WORKOS_REDIRECT_URI"]?.trim();
   if (redirect) {
@@ -44,9 +55,17 @@ function collectDesired(): { redirectUris: string[]; corsOrigins: string[] } {
   if (siteUrl) {
     redirectUris.add(`${siteUrl}/api/auth/callback`);
     corsOrigins.add(siteUrl);
+    homepageUrl = siteUrl;
   }
 
-  return { redirectUris: [...redirectUris], corsOrigins: [...corsOrigins] };
+  const signInEndpoint = siteUrl ? `${siteUrl}/api/auth/sign-in` : null;
+
+  return {
+    redirectUris: [...redirectUris],
+    corsOrigins: [...corsOrigins],
+    homepageUrl,
+    signInEndpoint,
+  };
 }
 
 async function listAll<T extends { id: string }>(
@@ -99,7 +118,7 @@ async function createResource(
   }
 
   const text = await res.text();
-  if (res.status === 400 || res.status === 409) {
+  if (res.status === 400 || res.status === 409 || res.status === 422) {
     console.log(`workos: ${label} already present or rejected (${res.status})`);
     console.log(text);
     return;
@@ -108,9 +127,34 @@ async function createResource(
   throw new Error(`create ${label} failed: ${res.status} ${text}`);
 }
 
+async function putHomepageUrl(apiKey: string, url: string): Promise<void> {
+  const res = await fetch(HOMEPAGE_API, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ url }),
+  });
+
+  if (res.ok) {
+    console.log(`workos: set app homepage URL ${url}`);
+    return;
+  }
+
+  const text = await res.text();
+  if (res.status === 422) {
+    console.log(`workos: app homepage URL rejected (422): ${url}`);
+    console.log(text);
+    return;
+  }
+
+  throw new Error(`set app homepage URL failed: ${res.status} ${text}`);
+}
+
 async function main(): Promise<void> {
   const apiKey = process.env["WORKOS_API_KEY"]?.trim();
-  const { redirectUris, corsOrigins } = collectDesired();
+  const { redirectUris, corsOrigins, homepageUrl, signInEndpoint } = collectDesired();
 
   if (!apiKey || redirectUris.length === 0) {
     console.log("workos: skip ensure-redirect-uris (missing WORKOS_API_KEY or redirect URI)");
@@ -137,6 +181,17 @@ async function main(): Promise<void> {
       continue;
     }
     await createResource(apiKey, CORS_API, { origin }, `CORS origin ${origin}`);
+  }
+
+  if (homepageUrl) {
+    await putHomepageUrl(apiKey, homepageUrl);
+  }
+
+  if (signInEndpoint) {
+    // WorkOS has no public API for initiate_login_uri — surface the required value.
+    console.log(
+      `workos: ensure Sign-in endpoint (dashboard → Redirects) is: ${signInEndpoint}`,
+    );
   }
 }
 
