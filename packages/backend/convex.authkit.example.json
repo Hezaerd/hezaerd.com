@@ -7,9 +7,12 @@
   "authKit": {
     "dev": {
       "configure": {
-        "redirectUris": ["http://localhost:3002/api/auth/callback"],
+        "redirectUris": [
+          "http://localhost:3002/api/auth/callback",
+          "https://dev.portal.hezaerd.com/api/auth/callback"
+        ],
         "appHomepageUrl": "http://localhost:3002",
-        "corsOrigins": ["http://localhost:3002"]
+        "corsOrigins": ["http://localhost:3002", "https://dev.portal.hezaerd.com"]
       },
       "localEnvVars": {
         "WORKOS_CLIENT_ID": "${authEnv.WORKOS_CLIENT_ID}",
@@ -18,17 +21,23 @@
     },
     "preview": {
       "configure": {
-        "redirectUris": ["https://${buildEnv.VERCEL_BRANCH_URL}/api/auth/callback"],
-        "appHomepageUrl": "https://${buildEnv.VERCEL_PROJECT_PRODUCTION_URL}",
-        "corsOrigins": ["https://${buildEnv.VERCEL_BRANCH_URL}"]
+        "redirectUris": [
+          "https://dev.portal.hezaerd.com/api/auth/callback",
+          "https://${buildEnv.VERCEL_BRANCH_URL}/api/auth/callback"
+        ],
+        "appHomepageUrl": "https://dev.portal.hezaerd.com",
+        "corsOrigins": [
+          "https://dev.portal.hezaerd.com",
+          "https://${buildEnv.VERCEL_BRANCH_URL}"
+        ]
       }
     },
     "prod": {
       "environmentType": "production",
       "configure": {
-        "redirectUris": ["https://${buildEnv.VERCEL_PROJECT_PRODUCTION_URL}/api/auth/callback"],
-        "appHomepageUrl": "https://${buildEnv.VERCEL_PROJECT_PRODUCTION_URL}",
-        "corsOrigins": ["https://${buildEnv.VERCEL_PROJECT_PRODUCTION_URL}"]
+        "redirectUris": ["https://portal.hezaerd.com/api/auth/callback"],
+        "appHomepageUrl": "https://portal.hezaerd.com",
+        "corsOrigins": ["https://portal.hezaerd.com"]
       }
     }
   }
