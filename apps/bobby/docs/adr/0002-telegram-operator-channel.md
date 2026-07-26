@@ -19,7 +19,9 @@ use this channel.
 ## Consequences
 
 Requires BotFather bot + `TELEGRAM_BOT_TOKEN` + `TELEGRAM_WEBHOOK_SECRET_TOKEN`
-on the Vercel project, and `setWebhook` to
-`https://bobby.hezaerd.com/eve/v1/telegram` (re-run after domain changes).
+on the Vercel project. Webhook URL is
+`https://bobby.hezaerd.com/eve/v1/telegram`, registered via
+`POST /eve/v1/telegram/ensure-webhook` or the hourly
+`register-telegram-webhook` schedule (not only a laptop `setWebhook`).
 WhatsApp / native iOS remain out of scope until a second Operator surface is
 justified.

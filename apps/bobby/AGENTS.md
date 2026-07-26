@@ -16,16 +16,15 @@ Env (Vercel project `bobby`, Production + Preview):
 - `TELEGRAM_ALLOWED_USER_IDS` — your Telegram numeric user id (comma-separated)
 - `TELEGRAM_BOT_USERNAME` — bot username without `@` (optional; needed for groups)
 
-Production host: `https://bobby.hezaerd.com`. After any domain change, re-run
-`setWebhook` (Eve does not call it for you). Old hosts like
-`clyde-delta-nine.vercel.app` stop receiving updates.
+Production host: `https://bobby.hezaerd.com`.
+
+Webhook registration (no Bot token on the laptop needed):
+
+1. Prefer: `POST https://bobby.hezaerd.com/eve/v1/telegram/ensure-webhook`
+   — uses Vercel env; only ever points at production (or `TELEGRAM_WEBHOOK_URL`).
+2. Hourly schedule `register-telegram-webhook` self-heals after domain drift.
+3. Manual Bot API `setWebhook` still works if you have the token locally.
 
 ```bash
-curl -X POST "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/setWebhook" \
-  -H "Content-Type: application/json" \
-  -d '{"url":"https://bobby.hezaerd.com/eve/v1/telegram",
-       "secret_token":"'"$TELEGRAM_WEBHOOK_SECRET_TOKEN"'",
-       "allowed_updates":["message","callback_query"]}'
+curl -X POST "https://bobby.hezaerd.com/eve/v1/telegram/ensure-webhook"
 ```
-
-Verify: `curl -sS "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/getWebhookInfo" | jq .`
