@@ -2,12 +2,10 @@ import type { PortalClient } from "@/lib/portal-types";
 
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@hezaerd/ui/components/sidebar";
 import {
-  ArrowLeft01Icon,
   File01Icon,
   Globe02Icon,
   Home01Icon,
   Invoice01Icon,
-  MessageIcon,
   PieChart01Icon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react";
@@ -15,8 +13,6 @@ import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react";
 import { Link, useRouterState } from "@tanstack/react-router";
 
 import { DashboardChrome } from "@/components/shell/dashboard-chrome";
-import { WorkspaceSwitcher } from "@/components/shell/workspace-switcher";
-import { usePortalViewer } from "@/lib/portal-role";
 
 type ClientWorkspaceShellProps = {
   client: PortalClient;
@@ -65,7 +61,6 @@ export function ClientWorkspaceShell({ client, email, children }: ClientWorkspac
   const pathname = useRouterState({
     select: (state) => state.location.pathname,
   });
-  const { isOperator } = usePortalViewer();
   const areas = [
     ...coreAreas,
     ...featureAreas.filter((area) => (area.feature ? client.features[area.feature] : true)),
@@ -87,23 +82,6 @@ export function ClientWorkspaceShell({ client, email, children }: ClientWorkspac
         subtitle: "Espace client",
       }}
       email={email}
-      headerStart={
-        isOperator ? (
-          <div className="flex min-w-0 items-center gap-2">
-            <Link
-              to="/op"
-              className="text-muted-foreground hover:text-foreground inline-flex shrink-0 items-center gap-1.5 rounded-md px-2 py-1.5 text-sm font-medium transition-colors"
-            >
-              <HugeiconsIcon icon={ArrowLeft01Icon} size={16} className="shrink-0" />
-              <span>Opérateur</span>
-            </Link>
-            <span className="text-border select-none" aria-hidden>
-              /
-            </span>
-            <WorkspaceSwitcher currentClient={client} />
-          </div>
-        ) : null
-      }
       nav={areas.map((area) => {
         const active = isAreaActive(area.segment);
         return (
@@ -124,20 +102,6 @@ export function ClientWorkspaceShell({ client, email, children }: ClientWorkspac
           </SidebarMenuItem>
         );
       })}
-      footer={
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton
-              render={<Link to="/w/$clientId/message" params={{ clientId: client.id }} />}
-              isActive={pathname.startsWith(`/w/${client.id}/message`)}
-              tooltip="Contacter Hezaerd"
-            >
-              <HugeiconsIcon icon={MessageIcon} size={16} className="shrink-0" />
-              <span>Contacter Hezaerd</span>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      }
     >
       {children}
     </DashboardChrome>
