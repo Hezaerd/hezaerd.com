@@ -11,9 +11,8 @@ import {
 } from "@tanstack/react-router";
 
 import { ClientWorkspaceShell } from "@/components/shell/client-workspace-shell";
-import { usePortalViewer } from "@/lib/portal-role";
+import { usePortalSession } from "@/lib/portal-session";
 import { toPortalClient } from "@/lib/portal-types";
-import { usePortalAuth } from "@/lib/use-portal-auth";
 
 export const Route = createFileRoute("/w/$clientId")({
   component: ClientWorkspaceLayout,
@@ -32,12 +31,14 @@ function resolveDeskSegment(pathname: string, clientId: string): DeskSegment | n
 
 function ClientWorkspaceLayout() {
   const { clientId } = Route.useParams();
-  const { user, loading: authLoading } = usePortalAuth();
-  const viewer = usePortalViewer();
-  const clientDoc = useQuery(api.clients.getBySlug, { slug: clientId });
+  const session = usePortalSession();
+  const gate = session.workspaceGateFor(clientId);
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
-  if (authLoading || clientDoc === undefined || (viewer.convexConfigured && viewer.loading)) {
+  const shouldLoadClient = gate.kind === "load-client";
+  const clientDoc = useQuery(api.clients.getBySlug, shouldLoadClient ? { slug: clientId } : "skip");
+
+  if (gate.kind === "loading") {
     return (
       <main className="flex min-h-svh items-center justify-center px-6">
         <p className="text-muted-foreground font-mono text-sm">Chargement…</p>
@@ -45,7 +46,7 @@ function ClientWorkspaceLayout() {
     );
   }
 
-  if (!user) {
+  if (gate.kind === "login") {
     return (
       <main className="flex min-h-svh items-center justify-center px-6">
         <p className="text-muted-foreground text-sm">
@@ -58,12 +59,22 @@ function ClientWorkspaceLayout() {
     );
   }
 
-  if (viewer.isOperator) {
-    const segment = resolveDeskSegment(pathname, clientId);
+  if (gate.kind === "operator-desk") {
+    const segment = resolveDeskSegment(pathname, gate.slug);
     if (segment) {
-      return <Navigate to={`/op/clients/$clientId/${segment}`} params={{ clientId }} replace />;
+      return (
+        <Navigate to={`/op/clients/$clientId/${segment}`} params={{ clientId: gate.slug }} replace />
+      );
     }
-    return <Navigate to="/op/clients/$clientId" params={{ clientId }} replace />;
+    return <Navigate to="/op/clients/$clientId" params={{ clientId: gate.slug }} replace />;
+  }
+
+  if (clientDoc === undefined) {
+    return (
+      <main className="flex min-h-svh items-center justify-center px-6">
+        <p className="text-muted-foreground font-mono text-sm">Chargement…</p>
+      </main>
+    );
   }
 
   if (clientDoc === null) {
@@ -71,9 +82,10 @@ function ClientWorkspaceLayout() {
   }
 
   const client = toPortalClient(clientDoc);
+  const email = session.authUser?.email ?? "";
 
   return (
-    <ClientWorkspaceShell client={client} email={user.email}>
+    <ClientWorkspaceShell client={client} email={email}>
       <Outlet />
     </ClientWorkspaceShell>
   );
