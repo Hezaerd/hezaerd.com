@@ -1,15 +1,14 @@
-import { api } from "@hezaerd/backend/api";
 import type { Id } from "@hezaerd/backend/dataModel";
 import { Invoice01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { useMutation } from "convex/react";
 
 import { createFileRoute } from "@tanstack/react-router";
 
 import { InvoiceCreateForm } from "@/components/invoices/invoice-create-form";
 import { OperatorInvoiceRow } from "@/components/invoices/operator-invoice-row";
 import { invoicesByClientQuery } from "@/lib/convex-queries";
+import { useInvoiceMutations } from "@/lib/convex-optimistic";
 import type { PortalInvoice } from "@/lib/portal-types";
 
 export const Route = createFileRoute("/op/clients/$clientId/invoices")({
@@ -19,10 +18,7 @@ export const Route = createFileRoute("/op/clients/$clientId/invoices")({
 function ClientDeskInvoicesPage() {
   const { clientId } = Route.useParams();
   const { data: invoices } = useSuspenseQuery(invoicesByClientQuery(clientId));
-  const createInvoice = useMutation(api.invoices.create);
-  const sendInvoice = useMutation(api.invoices.send);
-  const cancelInvoice = useMutation(api.invoices.cancel);
-  const markPaidBankWire = useMutation(api.invoices.markPaidBankWire);
+  const { createInvoice, sendInvoice, cancelInvoice, markPaidBankWire } = useInvoiceMutations();
 
   return (
     <div className="flex max-w-3xl flex-col gap-6">

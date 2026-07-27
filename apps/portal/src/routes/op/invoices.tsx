@@ -1,15 +1,14 @@
-import { api } from "@hezaerd/backend/api";
 import type { Id } from "@hezaerd/backend/dataModel";
 import { Empty, EmptyDescription, EmptyHeader, EmptyTitle } from "@hezaerd/ui/components/empty";
 import { Invoice01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { useMutation } from "convex/react";
 
 import { Link, createFileRoute } from "@tanstack/react-router";
 
 import { OperatorInvoiceRow } from "@/components/invoices/operator-invoice-row";
 import { invoicesAllQuery } from "@/lib/convex-queries";
+import { useInvoiceMutations } from "@/lib/convex-optimistic";
 import type { PortalInvoice } from "@/lib/portal-types";
 
 export const Route = createFileRoute("/op/invoices")({
@@ -18,9 +17,7 @@ export const Route = createFileRoute("/op/invoices")({
 
 function OperatorInvoicesPage() {
   const { data: invoices } = useSuspenseQuery(invoicesAllQuery);
-  const sendInvoice = useMutation(api.invoices.send);
-  const cancelInvoice = useMutation(api.invoices.cancel);
-  const markPaidBankWire = useMutation(api.invoices.markPaidBankWire);
+  const { sendInvoice, cancelInvoice, markPaidBankWire } = useInvoiceMutations();
 
   const openInvoices = invoices.filter((invoice) => invoice.status === "open");
   const otherInvoices = invoices.filter((invoice) => invoice.status !== "open");

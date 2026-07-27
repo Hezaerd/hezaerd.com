@@ -1,13 +1,12 @@
-import { api } from "@hezaerd/backend/api";
 import { Switch } from "@hezaerd/ui/components/switch";
 import { Globe02Icon, PieChart01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { useMutation } from "convex/react";
 
 import { Link, createFileRoute, notFound } from "@tanstack/react-router";
 
 import { clientBySlugQuery, waitingOnClientQuery } from "@/lib/convex-queries";
+import { useSetFeatureMutation } from "@/lib/convex-optimistic";
 import { type ClientFeature, toPortalClient } from "@/lib/portal-types";
 
 export const Route = createFileRoute("/op/clients/$clientId/")({
@@ -18,7 +17,7 @@ function ClientDeskIndexPage() {
   const { clientId } = Route.useParams();
   const { data: clientDoc } = useSuspenseQuery(clientBySlugQuery(clientId));
   const { data: waitingOnClient } = useSuspenseQuery(waitingOnClientQuery(clientId));
-  const setFeature = useMutation(api.clients.setFeature);
+  const setFeature = useSetFeatureMutation();
 
   if (clientDoc === null) {
     throw notFound();
@@ -26,8 +25,8 @@ function ClientDeskIndexPage() {
 
   const client = toPortalClient(clientDoc);
 
-  async function toggleFeature(feature: ClientFeature, enabled: boolean) {
-    await setFeature({ slug: clientId, feature, enabled });
+  function toggleFeature(feature: ClientFeature, enabled: boolean) {
+    void setFeature({ slug: clientId, feature, enabled });
   }
 
   return (
