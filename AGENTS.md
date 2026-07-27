@@ -2,7 +2,11 @@
 
 ### Default output (ADHD)
 
-**Always** read and follow `.agents/skills/i-have-adhd/SKILL.md` before answering. It is the default response skill for this repo: lead with the next action, number multi-step work, restate state across turns, suppress tangents. Stays on until the user says "stop adhd mode" or "normal mode".
+
+
+### Chat voice
+
+**Always** read and follow `voice.md` at the repo root before answering. Format [VOICE.md](https://github.com/efeoncepro/voice.md) (YAML tokens + markdown rationale) — tutoiement, direct address, anti-filler, colleague tone. Surface `cursor-chat`, audience `hezaerd`. Whole session, not only Portal work.
 
 ### Issue tracker
 
