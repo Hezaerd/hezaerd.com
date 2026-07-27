@@ -2,6 +2,10 @@
   "mcpServers": {
     "workos": {
       "url": "https://mcp.workos.com/mcp"
+    },
+    "stripe": {
+      "type": "http",
+      "url": "https://mcp.stripe.com"
     }
   }
 }

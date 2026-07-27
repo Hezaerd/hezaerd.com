@@ -42,16 +42,29 @@ export const list = operatorQuery({
   },
 });
 
-/** Practice Cockpit tile values. Money and waiting counts are zero until Invoices ship. */
+/** Practice Cockpit tile values. */
 export const stats = operatorQuery({
   args: {},
   returns: cockpitStatsValidator,
   handler: async (ctx) => {
-    const clients = await ctx.db.query("clients").collect();
+    const [clients, openInvoices, paidInvoices] = await Promise.all([
+      ctx.db.query("clients").collect(),
+      ctx.db.query("invoices").withIndex("by_status", (q) => q.eq("status", "open")).collect(),
+      ctx.db.query("invoices").withIndex("by_status", (q) => q.eq("status", "paid")).collect(),
+    ]);
+
+    const monthStart = new Date(new Date().getFullYear(), new Date().getMonth(), 1).getTime();
+    const paidThisMonth = paidInvoices
+      .filter((invoice) => invoice.payment && invoice.payment.paidAt >= monthStart)
+      .reduce((sum, invoice) => sum + invoice.amountCents, 0);
+
+    const openInvoiceTotal = openInvoices.reduce((sum, invoice) => sum + invoice.amountCents, 0);
+    const clientsWaiting = new Set(openInvoices.map((invoice) => invoice.clientId)).size;
+
     return {
-      openInvoiceTotal: 0,
-      paidThisMonth: 0,
-      clientsWaiting: 0,
+      openInvoiceTotal: openInvoiceTotal / 100,
+      paidThisMonth: paidThisMonth / 100,
+      clientsWaiting,
       activeClients: clients.length,
     };
   },

@@ -1,5 +1,6 @@
 import { v } from "convex/values";
 
+import { internalQuery, query } from "./_generated/server";
 import { authedMutation, authedQuery } from "./lib/functions";
 import { tryBindSeatByEmail } from "./lib/clients";
 import { enrichUserWithClient, resolveRole } from "./lib/users";
@@ -42,5 +43,21 @@ export const ensureAccess = authedMutation({
     }
 
     return await enrichUserWithClient(ctx, updated);
+  },
+});
+
+/** Resolve app user from WorkOS auth id (for actions). */
+export const getByAuthId = internalQuery({
+  args: { authId: v.string() },
+  returns: v.union(portalUserValidator, v.null()),
+  handler: async (ctx, args) => {
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_authId", (q) => q.eq("authId", args.authId))
+      .unique();
+    if (!user) {
+      return null;
+    }
+    return await enrichUserWithClient(ctx, user);
   },
 });

@@ -1,0 +1,119 @@
+import { Button } from "@hezaerd/ui/components/button";
+import { Input } from "@hezaerd/ui/components/input";
+import { useState } from "react";
+
+import { parseDateInputValue, parseEuroInputToCents } from "@/lib/invoice-format";
+
+type InvoiceCreateFormProps = {
+  onCreate: (input: {
+    label: string;
+    amountCents: number;
+    dueDate?: number;
+    send: boolean;
+  }) => Promise<void>;
+};
+
+export function InvoiceCreateForm({ onCreate }: InvoiceCreateFormProps) {
+  const [label, setLabel] = useState("");
+  const [amount, setAmount] = useState("");
+  const [dueDate, setDueDate] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState<"draft" | "send" | null>(null);
+
+  async function handleSubmit(send: boolean) {
+    setError(null);
+    const amountCents = parseEuroInputToCents(amount);
+    if (!label.trim()) {
+      setError("Libellé requis");
+      return;
+    }
+    if (amountCents === null) {
+      setError("Montant invalide");
+      return;
+    }
+
+    setSubmitting(send ? "send" : "draft");
+    try {
+      await onCreate({
+        label: label.trim(),
+        amountCents,
+        dueDate: parseDateInputValue(dueDate),
+        send,
+      });
+      setLabel("");
+      setAmount("");
+      setDueDate("");
+    } catch (createError) {
+      setError(createError instanceof Error ? createError.message : "Création impossible");
+    } finally {
+      setSubmitting(null);
+    }
+  }
+
+  return (
+    <section className="border-border bg-muted/20 flex flex-col gap-4 rounded-xl border p-5">
+      <div>
+        <h3 className="font-display text-base font-semibold tracking-tight">Nouvelle facture</h3>
+        <p className="text-muted-foreground mt-1 text-sm">
+          Créez et envoyez, ou enregistrez un brouillon à finaliser plus tard.
+        </p>
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-3">
+        <div className="flex flex-col gap-2 sm:col-span-2">
+          <label htmlFor="invoice-label" className="text-sm font-medium">
+            Libellé
+          </label>
+          <Input
+            id="invoice-label"
+            value={label}
+            onChange={(event) => setLabel(event.target.value)}
+            placeholder="Forfait mensuel"
+          />
+        </div>
+        <div className="flex flex-col gap-2">
+          <label htmlFor="invoice-amount" className="text-sm font-medium">
+            Montant (€)
+          </label>
+          <Input
+            id="invoice-amount"
+            inputMode="decimal"
+            value={amount}
+            onChange={(event) => setAmount(event.target.value)}
+            placeholder="2400"
+          />
+        </div>
+        <div className="flex flex-col gap-2">
+          <label htmlFor="invoice-due-date" className="text-sm font-medium">
+            Échéance
+          </label>
+          <Input
+            id="invoice-due-date"
+            type="date"
+            value={dueDate}
+            onChange={(event) => setDueDate(event.target.value)}
+          />
+        </div>
+      </div>
+
+      <div className="flex flex-wrap items-center gap-3">
+        <Button
+          type="button"
+          disabled={submitting !== null}
+          onClick={() => void handleSubmit(true)}
+        >
+          {submitting === "send" ? "Envoi…" : "Créer et envoyer"}
+        </Button>
+        <Button
+          type="button"
+          variant="outline"
+          disabled={submitting !== null}
+          onClick={() => void handleSubmit(false)}
+        >
+          {submitting === "draft" ? "Enregistrement…" : "Enregistrer brouillon"}
+        </Button>
+        {error ? <p className="text-destructive text-sm">{error}</p> : null}
+      </div>
+    </section>
+  );
+}

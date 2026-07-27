@@ -28,6 +28,32 @@ export type PracticeCockpitStats = {
   activeClients: number;
 };
 
+export type InvoiceStatus = "draft" | "open" | "paid" | "cancelled";
+
+export type PaymentMethod = "stripe" | "bank_wire";
+
+export type PortalInvoicePayment = {
+  method: PaymentMethod;
+  paidAt: number;
+  stripeSessionId?: string;
+  transferRef?: string;
+};
+
+/** Invoice row from Convex — use `_id` as the stable key in UI. */
+export type PortalInvoice = {
+  _id: string;
+  number: number;
+  label: string;
+  amountCents: number;
+  currency: "eur";
+  status: InvoiceStatus;
+  dueDate?: number;
+  openedAt?: number;
+  payment?: PortalInvoicePayment;
+  clientSlug?: string;
+  clientName?: string;
+};
+
 export function toPortalClient(client: {
   slug: string;
   name: string;
