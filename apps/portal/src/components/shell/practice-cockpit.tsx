@@ -32,6 +32,18 @@ const emptyStats: PracticeCockpitStats = {
   activeClients: 0,
 };
 
+function statsEqual(a: PracticeCockpitStats, b: PracticeCockpitStats): boolean {
+  return (
+    a.openInvoiceTotal === b.openInvoiceTotal &&
+    a.paidThisMonth === b.paidThisMonth &&
+    a.clientsWaiting === b.clientsWaiting &&
+    a.activeClients === b.activeClients
+  );
+}
+
+/** UI-only: intro count-up runs once per session; stats come from React Query. */
+let hasIntroAnimated = false;
+
 const tiles: TileConfig[] = [
   {
     key: "openInvoiceTotal",
@@ -67,10 +79,16 @@ const tiles: TileConfig[] = [
 ];
 
 export function PracticeCockpit({ stats }: PracticeCockpitProps) {
-  const [live, setLive] = useState(emptyStats);
+  const [live, setLive] = useState(() => (hasIntroAnimated ? stats : emptyStats));
 
   useEffect(() => {
-    setLive(stats);
+    if (!hasIntroAnimated) {
+      hasIntroAnimated = true;
+      setLive(stats);
+      return;
+    }
+
+    setLive((prev) => (statsEqual(prev, stats) ? prev : stats));
   }, [stats]);
 
   return (
