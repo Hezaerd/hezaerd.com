@@ -2,10 +2,11 @@ import { api } from "@hezaerd/backend/api";
 import { Button } from "@hezaerd/ui/components/button";
 import { ArrowRight01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { useQuery } from "convex/react";
+import { useQuery } from "convex-helpers/react/cache";
 
 import { Link, createFileRoute } from "@tanstack/react-router";
 
+import { OperatorHomeSkeleton } from "@/components/shell/operator-home-skeleton";
 import { PracticeCockpit } from "@/components/shell/practice-cockpit";
 import { toPortalClient } from "@/lib/portal-types";
 
@@ -34,11 +35,7 @@ function OperatorHomePage() {
   });
 
   if (clients === undefined || stats === undefined) {
-    return (
-      <main className="flex min-h-[40vh] items-center justify-center">
-        <p className="text-muted-foreground font-mono text-sm">Chargement…</p>
-      </main>
-    );
+    return <OperatorHomeSkeleton />;
   }
 
   return (
