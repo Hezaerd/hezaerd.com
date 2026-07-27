@@ -1,8 +1,9 @@
 import { Button } from "@hezaerd/ui/components/button";
+import { DatePicker } from "@hezaerd/ui/components/date-picker";
 import { Input } from "@hezaerd/ui/components/input";
 import { useState } from "react";
 
-import { parseDateInputValue, parseEuroInputToCents } from "@/lib/invoice-format";
+import { parseDateInputValue, parseEuroInputToCents, toDateInputValue } from "@/lib/invoice-format";
 
 type InvoiceCreateFormProps = {
   onCreate: (input: {
@@ -16,7 +17,7 @@ type InvoiceCreateFormProps = {
 export function InvoiceCreateForm({ onCreate }: InvoiceCreateFormProps) {
   const [label, setLabel] = useState("");
   const [amount, setAmount] = useState("");
-  const [dueDate, setDueDate] = useState("");
+  const [dueDate, setDueDate] = useState<Date | undefined>();
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState<"draft" | "send" | null>(null);
 
@@ -37,12 +38,12 @@ export function InvoiceCreateForm({ onCreate }: InvoiceCreateFormProps) {
       await onCreate({
         label: label.trim(),
         amountCents,
-        dueDate: parseDateInputValue(dueDate),
+        dueDate: dueDate ? parseDateInputValue(toDateInputValue(dueDate.getTime())) : undefined,
         send,
       });
       setLabel("");
       setAmount("");
-      setDueDate("");
+      setDueDate(undefined);
     } catch (createError) {
       setError(createError instanceof Error ? createError.message : "Création impossible");
     } finally {
@@ -87,11 +88,11 @@ export function InvoiceCreateForm({ onCreate }: InvoiceCreateFormProps) {
           <label htmlFor="invoice-due-date" className="text-sm font-medium">
             Échéance
           </label>
-          <Input
+          <DatePicker
             id="invoice-due-date"
-            type="date"
             value={dueDate}
-            onChange={(event) => setDueDate(event.target.value)}
+            onChange={setDueDate}
+            placeholder="jj/mm/aaaa"
           />
         </div>
       </div>

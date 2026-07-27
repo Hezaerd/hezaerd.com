@@ -3,11 +3,13 @@ import { Button } from "@hezaerd/ui/components/button";
 import { Input } from "@hezaerd/ui/components/input";
 import { ArrowRight01Icon, UserGroupIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { useMutation, useQuery } from "convex/react";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { useMutation } from "convex/react";
 import { useState } from "react";
 
 import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 
+import { clientsListQuery } from "@/lib/convex-queries";
 import { toPortalClient } from "@/lib/portal-types";
 
 export const Route = createFileRoute("/op/clients/")({
@@ -24,7 +26,7 @@ function getClientInitials(name: string): string {
 }
 
 function ClientDirectoryPage() {
-  const clients = useQuery(api.clients.list);
+  const { data: clients } = useSuspenseQuery(clientsListQuery);
   const createClient = useMutation(api.clients.create);
   const navigate = useNavigate();
   const [name, setName] = useState("");
@@ -51,14 +53,6 @@ function ClientDirectoryPage() {
     } finally {
       setSubmitting(false);
     }
-  }
-
-  if (clients === undefined) {
-    return (
-      <main className="flex min-h-[40vh] items-center justify-center">
-        <p className="text-muted-foreground font-mono text-sm">Chargement…</p>
-      </main>
-    );
   }
 
   return (

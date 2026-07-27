@@ -1,16 +1,27 @@
 import { TooltipProvider } from "@hezaerd/ui/components/tooltip";
 
 /// <reference types="vite/client" />
-import { HeadContent, Outlet, Scripts, createRootRoute } from "@tanstack/react-router";
+import {
+  HeadContent,
+  Outlet,
+  Scripts,
+  createRootRouteWithContext,
+} from "@tanstack/react-router";
 
 import { PortalConvexProvider } from "@/components/convex-provider";
+import { loadWorkosInitialAuth, type WorkosInitialAuth } from "@/lib/workos-auth";
+import type { RouterContext } from "@/router";
 
 import appCss from "../app.css?url";
 
 const title = "Portail Hezaerd";
 const description = "Tableau de bord pour l'activité freelance Hezaerd.";
 
-export const Route = createRootRoute({
+export const Route = createRootRouteWithContext<RouterContext>()({
+  loader: async (): Promise<{ initialAuth?: WorkosInitialAuth }> => {
+    const initialAuth = await loadWorkosInitialAuth();
+    return { initialAuth };
+  },
   head: () => ({
     meta: [
       { charSet: "utf-8" },
@@ -29,8 +40,10 @@ export const Route = createRootRoute({
 });
 
 function RootLayout() {
+  const { initialAuth } = Route.useLoaderData();
+
   return (
-    <PortalConvexProvider>
+    <PortalConvexProvider initialAuth={initialAuth}>
       <TooltipProvider>
         <Outlet />
       </TooltipProvider>

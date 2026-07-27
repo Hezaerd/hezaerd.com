@@ -2,10 +2,12 @@ import { api } from "@hezaerd/backend/api";
 import { Switch } from "@hezaerd/ui/components/switch";
 import { Globe02Icon, PieChart01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react";
-import { useMutation, useQuery } from "convex/react";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { useMutation } from "convex/react";
 
 import { Link, createFileRoute, notFound } from "@tanstack/react-router";
 
+import { clientBySlugQuery, waitingOnClientQuery } from "@/lib/convex-queries";
 import { type ClientFeature, toPortalClient } from "@/lib/portal-types";
 
 export const Route = createFileRoute("/op/clients/$clientId/")({
@@ -14,28 +16,12 @@ export const Route = createFileRoute("/op/clients/$clientId/")({
 
 function ClientDeskIndexPage() {
   const { clientId } = Route.useParams();
-  const clientDoc = useQuery(api.clients.getBySlug, { slug: clientId });
-  const waitingOnClient = useQuery(api.invoices.listWaitingOnClient, { slug: clientId });
+  const { data: clientDoc } = useSuspenseQuery(clientBySlugQuery(clientId));
+  const { data: waitingOnClient } = useSuspenseQuery(waitingOnClientQuery(clientId));
   const setFeature = useMutation(api.clients.setFeature);
-
-  if (clientDoc === undefined) {
-    return (
-      <div className="flex min-h-[20vh] items-center justify-center">
-        <p className="text-muted-foreground font-mono text-sm">Chargement…</p>
-      </div>
-    );
-  }
 
   if (clientDoc === null) {
     throw notFound();
-  }
-
-  if (waitingOnClient === undefined) {
-    return (
-      <div className="flex min-h-[20vh] items-center justify-center">
-        <p className="text-muted-foreground font-mono text-sm">Chargement…</p>
-      </div>
-    );
   }
 
   const client = toPortalClient(clientDoc);

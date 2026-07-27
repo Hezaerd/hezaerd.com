@@ -6,12 +6,14 @@
  */
 import { api } from "@hezaerd/backend/api";
 import { useAuth } from "@workos/authkit-tanstack-react-start/client";
-import { useMutation, useQuery } from "convex/react";
+import { useQuery } from "@tanstack/react-query";
+import { useMutation } from "convex/react";
 import { useEffect, useRef, useState } from "react";
 
-const workosConfigured =
-  typeof import.meta.env.VITE_WORKOS_CLIENT_ID === "string" &&
-  import.meta.env.VITE_WORKOS_CLIENT_ID.length > 0;
+import { portalMeQuery } from "@/lib/convex-queries";
+import { workosClientConfigured } from "@/lib/workos-auth";
+
+const workosConfigured = workosClientConfigured;
 
 const convexConfigured =
   typeof import.meta.env.VITE_CONVEX_URL === "string" && import.meta.env.VITE_CONVEX_URL.length > 0;
@@ -182,10 +184,13 @@ export function usePortalSession() {
       });
   }, [workos.user, ensureAccess, accessReady]);
 
-  const me = useQuery(api.users.me, convexConfigured && workos.user && accessReady ? {} : "skip");
+  const { data: me, isPending: mePending } = useQuery({
+    ...portalMeQuery,
+    enabled: convexConfigured && Boolean(workos.user) && accessReady,
+  });
 
   const viewerLoading =
-    Boolean(workos.user) && convexConfigured && (!accessReady || me === undefined);
+    Boolean(workos.user) && convexConfigured && (!accessReady || (mePending && me === undefined));
 
   const role = me?.role ?? null;
   const clientSlug = me?.clientSlug ?? null;
