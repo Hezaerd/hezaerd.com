@@ -20,6 +20,7 @@
 - **Depends on**: none (glossary + ADR-0003 already landed in the working tree / prior docs work; verify they match "Documented product decision" below)
 - **Category**: direction
 - **Planned at**: commit `d1f8048`, 2026-07-25
+- **Partial land (session routing)**: Portal session module + Operator `/w/{slug}` → Desk redirect, WorkspaceSwitcher deleted, Open-workspace CTAs removed. Remaining for this plan: Client Desk chrome (dual queues + Desk sections), Message route/footer cut, honest empty Desk stubs.
 
 ## Why this matters
 

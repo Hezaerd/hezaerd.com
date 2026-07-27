@@ -123,3 +123,7 @@ _Avoid_: Membership table, teammate invites, WorkOS Organization as the Client i
 **Unlinked Client**:
 Signed-in User with `role=client` and no `clientId` yet (email has not matched a Client `contactEmail`). Sees a not-linked screen, not Operator Home and not a guessed Workspace.
 _Avoid_: Falling back to fixture Clients; treating Unlinked as Operator
+
+**Portal session**:
+The signed-in person's Portal identity for this visit: Operator or Client role, optional Client seat/slug, and which home shell they land in (Operator Home, Client Workspace, or Unlinked).
+_Avoid_: Me-as-role; WorkOS session alone; inventing a third role; treating Unlinked as Operator
