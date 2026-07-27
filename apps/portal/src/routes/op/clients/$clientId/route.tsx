@@ -1,10 +1,15 @@
-import { api } from "@hezaerd/backend/api";
-import { useQuery } from "convex/react";
+import { Suspense, useCallback } from "react";
+
+import { type QueryClient } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 
 import { Link, Outlet, createFileRoute, notFound } from "@tanstack/react-router";
 
 import { ClientDeskNav } from "@/components/shell/client-desk-nav";
+import { PageContentSkeleton } from "@/components/shell/page-content-skeleton";
+import { clientBySlugQuery } from "@/lib/convex-queries";
 import { toPortalClient } from "@/lib/portal-types";
+import { usePrefetchWhenAuthenticated } from "@/lib/use-prefetch-when-authenticated";
 
 export const Route = createFileRoute("/op/clients/$clientId")({
   component: ClientDeskLayout,
@@ -21,15 +26,17 @@ function getClientInitials(name: string): string {
 
 function ClientDeskLayout() {
   const { clientId } = Route.useParams();
-  const clientDoc = useQuery(api.clients.getBySlug, { slug: clientId });
 
-  if (clientDoc === undefined) {
-    return (
-      <main className="flex min-h-[40vh] items-center justify-center">
-        <p className="text-muted-foreground font-mono text-sm">Chargement…</p>
-      </main>
-    );
-  }
+  const prefetchDesk = useCallback(
+    (queryClient: QueryClient) => {
+      void queryClient.prefetchQuery(clientBySlugQuery(clientId));
+    },
+    [clientId],
+  );
+
+  usePrefetchWhenAuthenticated(prefetchDesk);
+
+  const { data: clientDoc } = useSuspenseQuery(clientBySlugQuery(clientId));
 
   if (clientDoc === null) {
     throw notFound();
@@ -60,7 +67,9 @@ function ClientDeskLayout() {
         </div>
         <ClientDeskNav clientId={clientId} />
       </div>
-      <Outlet />
+      <Suspense fallback={<PageContentSkeleton />}>
+        <Outlet />
+      </Suspense>
     </div>
   );
 }

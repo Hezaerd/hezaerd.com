@@ -3,23 +3,26 @@ import {
   useAccessToken,
   useAuth,
 } from "@workos/authkit-tanstack-react-start/client";
-import { ConvexQueryCacheProvider } from "convex-helpers/react/cache";
-import { ConvexProviderWithAuth, ConvexReactClient } from "convex/react";
+import { ConvexProviderWithAuth } from "convex/react";
 import { useCallback, useMemo, type ReactNode } from "react";
 
-const convexUrl = import.meta.env.VITE_CONVEX_URL;
+import { convex } from "@/lib/convex-client";
+import type { WorkosInitialAuth } from "@/lib/workos-auth";
 
-const convex = convexUrl ? new ConvexReactClient(convexUrl) : null;
+type PortalConvexProviderProps = {
+  children: ReactNode;
+  initialAuth?: WorkosInitialAuth;
+};
 
-export function PortalConvexProvider({ children }: { children: ReactNode }) {
+export function PortalConvexProvider({ children, initialAuth }: PortalConvexProviderProps) {
   if (!convex) {
-    return <AuthKitProvider>{children}</AuthKitProvider>;
+    return <AuthKitProvider initialAuth={initialAuth}>{children}</AuthKitProvider>;
   }
 
   return (
-    <AuthKitProvider>
+    <AuthKitProvider initialAuth={initialAuth}>
       <ConvexProviderWithAuth client={convex} useAuth={useConvexAuthFromWorkOS}>
-        <ConvexQueryCacheProvider>{children}</ConvexQueryCacheProvider>
+        {children}
       </ConvexProviderWithAuth>
     </AuthKitProvider>
   );

@@ -1,13 +1,12 @@
-import { api } from "@hezaerd/backend/api";
 import { Button } from "@hezaerd/ui/components/button";
 import { ArrowRight01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { useQuery } from "convex-helpers/react/cache";
+import { useSuspenseQuery } from "@tanstack/react-query";
 
 import { Link, createFileRoute } from "@tanstack/react-router";
 
-import { OperatorHomeSkeleton } from "@/components/shell/operator-home-skeleton";
 import { PracticeCockpit } from "@/components/shell/practice-cockpit";
+import { clientsListQuery, clientsStatsQuery } from "@/lib/convex-queries";
 import { toPortalClient } from "@/lib/portal-types";
 
 export const Route = createFileRoute("/op/")({
@@ -24,8 +23,8 @@ function getClientInitials(name: string): string {
 }
 
 function OperatorHomePage() {
-  const clients = useQuery(api.clients.list);
-  const stats = useQuery(api.clients.stats);
+  const { data: clients } = useSuspenseQuery(clientsListQuery);
+  const { data: stats } = useSuspenseQuery(clientsStatsQuery);
 
   const now = new Date();
   const dateStr = now.toLocaleDateString("fr-FR", {
@@ -33,10 +32,6 @@ function OperatorHomePage() {
     month: "long",
     day: "numeric",
   });
-
-  if (clients === undefined || stats === undefined) {
-    return <OperatorHomeSkeleton />;
-  }
 
   return (
     <div className="flex flex-col gap-10">

@@ -3,11 +3,13 @@ import type { Id } from "@hezaerd/backend/dataModel";
 import { Empty, EmptyDescription, EmptyHeader, EmptyTitle } from "@hezaerd/ui/components/empty";
 import { Invoice01Icon, CheckmarkCircle01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { useAction, useQuery } from "convex/react";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { useAction } from "convex/react";
 
 import { createFileRoute } from "@tanstack/react-router";
 
 import { ClientInvoiceCard } from "@/components/invoices/client-invoice-card";
+import { invoicesForWorkspaceQuery } from "@/lib/convex-queries";
 import type { PortalInvoice } from "@/lib/portal-types";
 
 export const Route = createFileRoute("/w/$clientId/invoices")({
@@ -16,16 +18,8 @@ export const Route = createFileRoute("/w/$clientId/invoices")({
 
 function ClientInvoicesPage() {
   const { clientId } = Route.useParams();
-  const invoices = useQuery(api.invoices.listForWorkspace, { slug: clientId });
+  const { data: invoices } = useSuspenseQuery(invoicesForWorkspaceQuery(clientId));
   const startCheckout = useAction(api.invoiceCheckout.startCheckout);
-
-  if (invoices === undefined) {
-    return (
-      <main className="flex min-h-[40vh] items-center justify-center">
-        <p className="text-muted-foreground font-mono text-sm">Chargement…</p>
-      </main>
-    );
-  }
 
   const openInvoices = invoices.filter((invoice) => invoice.status === "open");
   const paidInvoices = invoices.filter((invoice) => invoice.status === "paid");

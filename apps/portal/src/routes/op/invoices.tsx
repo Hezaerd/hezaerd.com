@@ -3,11 +3,13 @@ import type { Id } from "@hezaerd/backend/dataModel";
 import { Empty, EmptyDescription, EmptyHeader, EmptyTitle } from "@hezaerd/ui/components/empty";
 import { Invoice01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { useMutation, useQuery } from "convex/react";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { useMutation } from "convex/react";
 
 import { Link, createFileRoute } from "@tanstack/react-router";
 
 import { OperatorInvoiceRow } from "@/components/invoices/operator-invoice-row";
+import { invoicesAllQuery } from "@/lib/convex-queries";
 import type { PortalInvoice } from "@/lib/portal-types";
 
 export const Route = createFileRoute("/op/invoices")({
@@ -15,18 +17,10 @@ export const Route = createFileRoute("/op/invoices")({
 });
 
 function OperatorInvoicesPage() {
-  const invoices = useQuery(api.invoices.listAll);
+  const { data: invoices } = useSuspenseQuery(invoicesAllQuery);
   const sendInvoice = useMutation(api.invoices.send);
   const cancelInvoice = useMutation(api.invoices.cancel);
   const markPaidBankWire = useMutation(api.invoices.markPaidBankWire);
-
-  if (invoices === undefined) {
-    return (
-      <main className="flex min-h-[40vh] items-center justify-center">
-        <p className="text-muted-foreground font-mono text-sm">Chargement…</p>
-      </main>
-    );
-  }
 
   const openInvoices = invoices.filter((invoice) => invoice.status === "open");
   const otherInvoices = invoices.filter((invoice) => invoice.status !== "open");
