@@ -1,7 +1,14 @@
 import { api } from "@hezaerd/backend/api";
 import { useQuery } from "convex/react";
 
-import { Link, Navigate, Outlet, createFileRoute, notFound } from "@tanstack/react-router";
+import {
+  Link,
+  Navigate,
+  Outlet,
+  createFileRoute,
+  notFound,
+  useRouterState,
+} from "@tanstack/react-router";
 
 import { ClientWorkspaceShell } from "@/components/shell/client-workspace-shell";
 import { usePortalSession } from "@/lib/portal-session";
@@ -11,10 +18,22 @@ export const Route = createFileRoute("/w/$clientId")({
   component: ClientWorkspaceLayout,
 });
 
+const DESK_SEGMENTS = ["invoices", "files", "insights", "website"] as const;
+type DeskSegment = (typeof DESK_SEGMENTS)[number];
+
+function resolveDeskSegment(pathname: string, clientId: string): DeskSegment | null {
+  const prefix = `/w/${clientId}/`;
+  if (!pathname.startsWith(prefix)) return null;
+  const parts = pathname.slice(prefix.length).split("/");
+  const segment = parts[0] ?? "";
+  return (DESK_SEGMENTS as readonly string[]).includes(segment) ? (segment as DeskSegment) : null;
+}
+
 function ClientWorkspaceLayout() {
   const { clientId } = Route.useParams();
   const session = usePortalSession();
   const gate = session.workspaceGateFor(clientId);
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
 
   const shouldLoadClient = gate.kind === "load-client";
   const clientDoc = useQuery(api.clients.getBySlug, shouldLoadClient ? { slug: clientId } : "skip");
@@ -41,6 +60,12 @@ function ClientWorkspaceLayout() {
   }
 
   if (gate.kind === "operator-desk") {
+    const segment = resolveDeskSegment(pathname, gate.slug);
+    if (segment) {
+      return (
+        <Navigate to={`/op/clients/$clientId/${segment}`} params={{ clientId: gate.slug }} replace />
+      );
+    }
     return <Navigate to="/op/clients/$clientId" params={{ clientId: gate.slug }} replace />;
   }
 

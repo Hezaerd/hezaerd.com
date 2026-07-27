@@ -6,7 +6,6 @@ import {
   Globe02Icon,
   Home01Icon,
   Invoice01Icon,
-  MessageIcon,
   PieChart01Icon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react";
@@ -103,20 +102,6 @@ export function ClientWorkspaceShell({ client, email, children }: ClientWorkspac
           </SidebarMenuItem>
         );
       })}
-      footer={
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton
-              render={<Link to="/w/$clientId/message" params={{ clientId: client.id }} />}
-              isActive={pathname.startsWith(`/w/${client.id}/message`)}
-              tooltip="Contacter Hezaerd"
-            >
-              <HugeiconsIcon icon={MessageIcon} size={16} className="shrink-0" />
-              <span>Contacter Hezaerd</span>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      }
     >
       {children}
     </DashboardChrome>
