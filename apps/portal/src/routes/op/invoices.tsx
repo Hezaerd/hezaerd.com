@@ -1,7 +1,5 @@
 import type { Id } from "@hezaerd/backend/dataModel";
-import { Empty, EmptyDescription, EmptyHeader, EmptyTitle } from "@hezaerd/ui/components/empty";
-import { Invoice01Icon } from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react";
+import { Empty, EmptyHeader, EmptyTitle } from "@hezaerd/ui/components/empty";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
 import { Link, createFileRoute } from "@tanstack/react-router";
@@ -24,27 +22,12 @@ function OperatorInvoicesPage() {
 
   return (
     <div className="flex flex-col gap-8">
-      <div className="flex flex-col gap-1">
-        <div className="flex items-center gap-2">
-          <div className="bg-muted flex h-8 w-8 items-center justify-center rounded-lg">
-            <HugeiconsIcon icon={Invoice01Icon} size={16} className="text-muted-foreground" />
-          </div>
-          <h1 className="font-display text-2xl font-semibold tracking-tight">Factures</h1>
-        </div>
-        <p className="text-muted-foreground mt-1 text-sm leading-relaxed">
-          Registre global des factures de la pratique.
-        </p>
-      </div>
-
       {invoices.length === 0 ? (
         <Empty className="border-border bg-muted/20 rounded-xl border py-12">
           <EmptyHeader>
             <EmptyTitle className="font-display text-base font-semibold tracking-tight">
               Aucune facture
             </EmptyTitle>
-            <EmptyDescription className="text-muted-foreground max-w-xs text-sm leading-relaxed">
-              Créez une facture depuis le bureau d&apos;un client pour commencer.
-            </EmptyDescription>
           </EmptyHeader>
         </Empty>
       ) : (
@@ -97,7 +80,7 @@ function OperatorInvoicesPage() {
                         params={{ clientId: invoice.clientSlug }}
                         className="text-muted-foreground hover:text-foreground pl-14 text-xs font-medium"
                       >
-                        Voir le bureau client
+                        Voir son bureau
                       </Link>
                     ) : null}
                   </div>

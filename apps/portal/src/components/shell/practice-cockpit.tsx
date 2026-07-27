@@ -64,7 +64,7 @@ const tiles: TileConfig[] = [
   },
   {
     key: "clientsWaiting",
-    label: "En attente de vous",
+    label: "A besoin de toi",
     icon: Target01Icon,
     iconBg: "bg-muted",
     iconColor: "text-muted-foreground",
@@ -93,13 +93,7 @@ export function PracticeCockpit({ stats }: PracticeCockpitProps) {
 
   return (
     <section className="flex flex-col gap-4">
-      <div className="flex items-start justify-between">
-        <div>
-          <h2 className="font-display text-xl font-semibold tracking-tight">Tableau de bord</h2>
-          <p className="text-muted-foreground mt-1 text-sm leading-relaxed">
-            Un aperçu en direct de votre activité freelance.
-          </p>
-        </div>
+      <div className="flex justify-end">
         <div className="bg-muted/30 text-muted-foreground flex items-center gap-1.5 rounded-lg px-3 py-1.5">
           <HugeiconsIcon icon={AnalyticsUpIcon} size={13} />
           <span className="font-mono text-[10px] font-medium tracking-wide uppercase">En direct</span>

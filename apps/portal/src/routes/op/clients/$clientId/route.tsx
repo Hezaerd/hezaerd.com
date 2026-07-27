@@ -6,7 +6,6 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { Link, Outlet, createFileRoute, notFound } from "@tanstack/react-router";
 
 import { ClientDeskNav } from "@/components/shell/client-desk-nav";
-import { ClientAccessPanel } from "@/components/client-access-panel";
 import { PageContentSkeleton } from "@/components/shell/page-content-skeleton";
 import { clientBySlugQuery } from "@/lib/convex-queries";
 import { toPortalClient } from "@/lib/portal-types";
@@ -68,7 +67,6 @@ function ClientDeskLayout() {
         </div>
         <ClientDeskNav clientId={clientId} />
       </div>
-      <ClientAccessPanel clientSlug={clientId} clientName={client.name} />
       <Suspense fallback={<PageContentSkeleton />}>
         <Outlet />
       </Suspense>

@@ -40,21 +40,13 @@ function OperatorHomePage() {
           {dateStr}
         </p>
         <h1 className="font-display text-2xl font-semibold tracking-tight">Bon retour.</h1>
-        <p className="text-muted-foreground mt-1 text-sm leading-relaxed">
-          Voici un aperçu de votre activité et des bureaux clients.
-        </p>
       </div>
 
       <PracticeCockpit stats={stats} />
 
       <section className="flex flex-col gap-4">
         <div className="flex items-center justify-between">
-          <div>
-            <h2 className="font-display text-xl font-semibold tracking-tight">Clients</h2>
-            <p className="text-muted-foreground mt-0.5 text-sm">
-              Ouvrez le bureau de chaque client.
-            </p>
-          </div>
+          <h2 className="font-display text-xl font-semibold tracking-tight">Clients</h2>
           <Button variant="outline" size="sm" render={<Link to="/op/clients" />}>
             Tous les clients
             <HugeiconsIcon icon={ArrowRight01Icon} size={14} />

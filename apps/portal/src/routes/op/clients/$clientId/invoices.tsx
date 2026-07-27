@@ -1,6 +1,5 @@
 import type { Id } from "@hezaerd/backend/dataModel";
-import { Invoice01Icon } from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react";
+import { Empty, EmptyHeader, EmptyTitle } from "@hezaerd/ui/components/empty";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
 import { createFileRoute } from "@tanstack/react-router";
@@ -22,16 +21,6 @@ function ClientDeskInvoicesPage() {
 
   return (
     <div className="flex max-w-3xl flex-col gap-6">
-      <div className="flex items-center gap-2">
-        <div className="bg-muted flex h-8 w-8 items-center justify-center rounded-lg">
-          <HugeiconsIcon icon={Invoice01Icon} size={16} className="text-muted-foreground" />
-        </div>
-        <div>
-          <h2 className="font-display text-lg font-semibold tracking-tight">Factures</h2>
-          <p className="text-muted-foreground text-xs">Côté cabinet — factures pour ce client</p>
-        </div>
-      </div>
-
       <InvoiceCreateForm
         onCreate={async (input) => {
           await createInvoice({
@@ -46,9 +35,13 @@ function ClientDeskInvoicesPage() {
 
       <div className="flex flex-col gap-3">
         {invoices.length === 0 ? (
-          <div className="border-border bg-muted/20 flex min-h-[8rem] items-center justify-center rounded-xl border">
-            <p className="text-muted-foreground text-sm">Aucune facture pour ce client.</p>
-          </div>
+          <Empty className="border-border bg-muted/20 rounded-xl border py-12">
+            <EmptyHeader>
+              <EmptyTitle className="font-display text-base font-semibold tracking-tight">
+                Aucune facture
+              </EmptyTitle>
+            </EmptyHeader>
+          </Empty>
         ) : (
           invoices.map((invoice) => (
             <OperatorInvoiceRow

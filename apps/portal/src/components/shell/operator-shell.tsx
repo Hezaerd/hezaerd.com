@@ -10,6 +10,7 @@ import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react";
 import { Link, useRouterState } from "@tanstack/react-router";
 
 import { DashboardChrome } from "@/components/shell/dashboard-chrome";
+import { getOperatorHeaderTitle } from "@/lib/operator-header-title";
 
 type OperatorShellProps = {
   email: string;
@@ -34,6 +35,8 @@ export function OperatorShell({ email, children }: OperatorShellProps) {
     select: (state) => state.location.pathname,
   });
 
+  const headerTitle = getOperatorHeaderTitle(pathname);
+
   return (
     <DashboardChrome
       brand={{
@@ -41,6 +44,7 @@ export function OperatorShell({ email, children }: OperatorShellProps) {
         title: "Hezaerd",
         subtitle: "Opérateur",
       }}
+      headerTitle={headerTitle}
       email={email}
       nav={navItems.map((item) => (
         <SidebarMenuItem key={item.to}>

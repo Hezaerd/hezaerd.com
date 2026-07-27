@@ -46,13 +46,13 @@ function formatAccessStatus(status: ClientAccessStatus): {
     case "accepted":
       return {
         label: "Invitation acceptée",
-        detail: "Compte créé — liaison du siège en cours ou en attente de connexion.",
+        detail: "Compte créé — en attente de connexion.",
         variant: "secondary",
       };
     case "expired":
       return {
         label: "Invitation expirée",
-        detail: "Renvoyez une invitation depuis la création client ou le tableau de bord WorkOS.",
+        detail: "Renvoie une invitation depuis la création client.",
         variant: "outline",
       };
     case "revoked":
@@ -64,7 +64,7 @@ function formatAccessStatus(status: ClientAccessStatus): {
     case "none":
       return {
         label: "Aucune invitation",
-        detail: "Aucune invitation WorkOS trouvée pour cet e-mail.",
+        detail: "Aucune invitation trouvée pour cet e-mail.",
         variant: "outline",
       };
   }
@@ -99,7 +99,7 @@ export function ClientAccessPanel({
       const nextStatus = await revokeInvite({ slug: clientSlug });
       queryClient.setQueryData(clientAccessQueryKey(clientSlug), nextStatus);
     } catch (revokeError) {
-      setError(revokeError instanceof Error ? revokeError.message : "Révocation impossible");
+      setError(revokeError instanceof Error ? revokeError.message : "Impossible de révoquer.");
     } finally {
       setRevoking(false);
     }
@@ -114,7 +114,7 @@ export function ClientAccessPanel({
       setDeleteDialogOpen(false);
       await navigate({ to: "/op/clients" });
     } catch (deleteError) {
-      setError(deleteError instanceof Error ? deleteError.message : "Suppression impossible");
+      setError(deleteError instanceof Error ? deleteError.message : "Impossible de supprimer.");
     } finally {
       setDeleting(false);
     }
@@ -123,7 +123,7 @@ export function ClientAccessPanel({
   if (isLoading || !status) {
     return (
       <section className="border-border bg-muted/20 rounded-xl border px-5 py-4">
-        <p className="text-muted-foreground text-sm">Chargement de l&apos;accès client…</p>
+        <p className="text-muted-foreground text-sm">Chargement…</p>
       </section>
     );
   }
@@ -133,12 +133,7 @@ export function ClientAccessPanel({
   return (
     <section className="border-border bg-muted/20 flex flex-col gap-4 rounded-xl border px-5 py-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <p className="text-sm font-semibold">Accès client</p>
-          <p className="text-muted-foreground mt-0.5 text-xs leading-relaxed">
-            Statut WorkOS et siège Portal pour ce dossier.
-          </p>
-        </div>
+        <p className="text-sm font-semibold">Accès Portal</p>
         <Badge variant={access.variant}>{access.label}</Badge>
       </div>
       <p className="text-muted-foreground text-sm leading-relaxed">{access.detail}</p>
@@ -157,12 +152,7 @@ export function ClientAccessPanel({
       ) : null}
 
       <div className="border-border flex flex-col gap-3 border-t pt-4">
-        <div>
-          <p className="text-sm font-semibold">Supprimer le client</p>
-          <p className="text-muted-foreground mt-0.5 text-xs leading-relaxed">
-            Supprime le dossier, les factures et le compte WorkOS associé.
-          </p>
-        </div>
+        <p className="text-sm font-semibold">Supprimer le client</p>
         <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
           <DialogTrigger
             render={
@@ -175,8 +165,7 @@ export function ClientAccessPanel({
             <DialogHeader>
               <DialogTitle>Supprimer {clientName} ?</DialogTitle>
               <DialogDescription>
-                Cette action supprime le client, toutes ses factures et révoque ou supprime
-                l&apos;accès WorkOS. Elle est irréversible.
+                Tu perds le dossier, les factures et l&apos;accès Portal. Irréversible.
               </DialogDescription>
             </DialogHeader>
             <DialogFooter>

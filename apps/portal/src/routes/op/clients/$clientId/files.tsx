@@ -1,5 +1,4 @@
-import { File01Icon } from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react";
+import { Empty, EmptyHeader, EmptyTitle } from "@hezaerd/ui/components/empty";
 
 import { createFileRoute } from "@tanstack/react-router";
 
@@ -9,19 +8,12 @@ export const Route = createFileRoute("/op/clients/$clientId/files")({
 
 function ClientDeskFilesPage() {
   return (
-    <div className="flex max-w-3xl flex-col gap-6">
-      <div className="flex items-center gap-2">
-        <div className="bg-muted flex h-8 w-8 items-center justify-center rounded-lg">
-          <HugeiconsIcon icon={File01Icon} size={16} className="text-muted-foreground" />
-        </div>
-        <div>
-          <h2 className="font-display text-lg font-semibold tracking-tight">Fichiers</h2>
-          <p className="text-muted-foreground text-xs">Côté cabinet — fichiers et demandes</p>
-        </div>
-      </div>
-      <div className="border-border bg-muted/20 flex min-h-[12rem] items-center justify-center rounded-xl border">
-        <p className="text-muted-foreground text-sm">À venir.</p>
-      </div>
-    </div>
+    <Empty className="border-border bg-muted/20 rounded-xl border py-16">
+      <EmptyHeader>
+        <EmptyTitle className="font-display text-base font-semibold tracking-tight">
+          À venir.
+        </EmptyTitle>
+      </EmptyHeader>
+    </Empty>
   );
 }

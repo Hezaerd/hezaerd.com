@@ -1,7 +1,7 @@
 import { api } from "@hezaerd/backend/api";
 import { Button } from "@hezaerd/ui/components/button";
 import { Input } from "@hezaerd/ui/components/input";
-import { ArrowRight01Icon, UserGroupIcon } from "@hugeicons/core-free-icons";
+import { ArrowRight01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useAction } from "convex/react";
@@ -49,7 +49,7 @@ function ClientDirectoryPage() {
         params: { clientId: created.slug },
       });
     } catch (createError) {
-      setError(createError instanceof Error ? createError.message : "Création impossible");
+      setError(createError instanceof Error ? createError.message : "Impossible de créer.");
     } finally {
       setSubmitting(false);
     }
@@ -57,19 +57,6 @@ function ClientDirectoryPage() {
 
   return (
     <div className="flex flex-col gap-8">
-      <div className="flex flex-col gap-1">
-        <div className="flex items-center gap-2">
-          <div className="bg-muted flex h-8 w-8 items-center justify-center rounded-lg">
-            <HugeiconsIcon icon={UserGroupIcon} size={16} className="text-muted-foreground" />
-          </div>
-          <h1 className="font-display text-2xl font-semibold tracking-tight">Clients</h1>
-        </div>
-        <p className="text-muted-foreground mt-1 text-sm leading-relaxed">
-          Ouvrez le bureau de chaque client pour gérer son dossier, ses fonctionnalités et son
-          activité. La création envoie une invitation WorkOS à l&apos;e-mail de contact.
-        </p>
-      </div>
-
       <section className="border-border bg-muted/20 flex flex-col gap-4 rounded-xl border p-5">
         <h2 className="font-display text-base font-semibold tracking-tight">Nouveau client</h2>
         <form className="grid gap-4 sm:grid-cols-3" onSubmit={handleCreate}>
@@ -158,7 +145,7 @@ function ClientDirectoryPage() {
                   size="sm"
                   render={<Link to="/op/clients/$clientId" params={{ clientId: client.id }} />}
                 >
-                  Ouvrir le bureau
+                  Ouvrir
                   <HugeiconsIcon icon={ArrowRight01Icon} size={13} />
                 </Button>
               </div>

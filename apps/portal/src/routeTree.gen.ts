@@ -30,6 +30,7 @@ import { Route as OpClientsClientIdIndexRouteImport } from './routes/op/clients/
 import { Route as OpClientsClientIdFilesRouteImport } from './routes/op/clients/$clientId/files'
 import { Route as OpClientsClientIdInsightsRouteImport } from './routes/op/clients/$clientId/insights'
 import { Route as OpClientsClientIdInvoicesRouteImport } from './routes/op/clients/$clientId/invoices'
+import { Route as OpClientsClientIdSettingsRouteImport } from './routes/op/clients/$clientId/settings'
 import { Route as OpClientsClientIdWebsiteRouteImport } from './routes/op/clients/$clientId/website'
 
 const IndexRoute = IndexRouteImport.update({
@@ -139,6 +140,12 @@ const OpClientsClientIdInvoicesRoute =
     path: '/invoices',
     getParentRoute: () => OpClientsClientIdRouteRoute,
   } as any)
+const OpClientsClientIdSettingsRoute =
+  OpClientsClientIdSettingsRouteImport.update({
+    id: '/settings',
+    path: '/settings',
+    getParentRoute: () => OpClientsClientIdRouteRoute,
+  } as any)
 const OpClientsClientIdWebsiteRoute =
   OpClientsClientIdWebsiteRouteImport.update({
     id: '/website',
@@ -167,6 +174,7 @@ export interface FileRoutesByFullPath {
   '/op/clients/$clientId/files': typeof OpClientsClientIdFilesRoute
   '/op/clients/$clientId/insights': typeof OpClientsClientIdInsightsRoute
   '/op/clients/$clientId/invoices': typeof OpClientsClientIdInvoicesRoute
+  '/op/clients/$clientId/settings': typeof OpClientsClientIdSettingsRoute
   '/op/clients/$clientId/website': typeof OpClientsClientIdWebsiteRoute
   '/op/clients/$clientId/': typeof OpClientsClientIdIndexRoute
 }
@@ -188,6 +196,7 @@ export interface FileRoutesByTo {
   '/op/clients/$clientId/files': typeof OpClientsClientIdFilesRoute
   '/op/clients/$clientId/insights': typeof OpClientsClientIdInsightsRoute
   '/op/clients/$clientId/invoices': typeof OpClientsClientIdInvoicesRoute
+  '/op/clients/$clientId/settings': typeof OpClientsClientIdSettingsRoute
   '/op/clients/$clientId/website': typeof OpClientsClientIdWebsiteRoute
   '/op/clients/$clientId': typeof OpClientsClientIdIndexRoute
 }
@@ -213,6 +222,7 @@ export interface FileRoutesById {
   '/op/clients/$clientId/files': typeof OpClientsClientIdFilesRoute
   '/op/clients/$clientId/insights': typeof OpClientsClientIdInsightsRoute
   '/op/clients/$clientId/invoices': typeof OpClientsClientIdInvoicesRoute
+  '/op/clients/$clientId/settings': typeof OpClientsClientIdSettingsRoute
   '/op/clients/$clientId/website': typeof OpClientsClientIdWebsiteRoute
   '/op/clients/$clientId/': typeof OpClientsClientIdIndexRoute
 }
@@ -239,6 +249,7 @@ export interface FileRouteTypes {
     | '/op/clients/$clientId/files'
     | '/op/clients/$clientId/insights'
     | '/op/clients/$clientId/invoices'
+    | '/op/clients/$clientId/settings'
     | '/op/clients/$clientId/website'
     | '/op/clients/$clientId/'
   fileRoutesByTo: FileRoutesByTo
@@ -260,6 +271,7 @@ export interface FileRouteTypes {
     | '/op/clients/$clientId/files'
     | '/op/clients/$clientId/insights'
     | '/op/clients/$clientId/invoices'
+    | '/op/clients/$clientId/settings'
     | '/op/clients/$clientId/website'
     | '/op/clients/$clientId'
   id:
@@ -284,6 +296,7 @@ export interface FileRouteTypes {
     | '/op/clients/$clientId/files'
     | '/op/clients/$clientId/insights'
     | '/op/clients/$clientId/invoices'
+    | '/op/clients/$clientId/settings'
     | '/op/clients/$clientId/website'
     | '/op/clients/$clientId/'
   fileRoutesById: FileRoutesById
@@ -447,6 +460,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OpClientsClientIdInvoicesRouteImport
       parentRoute: typeof OpClientsClientIdRouteRoute
     }
+    '/op/clients/$clientId/settings': {
+      id: '/op/clients/$clientId/settings'
+      path: '/settings'
+      fullPath: '/op/clients/$clientId/settings'
+      preLoaderRoute: typeof OpClientsClientIdSettingsRouteImport
+      parentRoute: typeof OpClientsClientIdRouteRoute
+    }
     '/op/clients/$clientId/website': {
       id: '/op/clients/$clientId/website'
       path: '/website'
@@ -461,6 +481,7 @@ interface OpClientsClientIdRouteRouteChildren {
   OpClientsClientIdFilesRoute: typeof OpClientsClientIdFilesRoute
   OpClientsClientIdInsightsRoute: typeof OpClientsClientIdInsightsRoute
   OpClientsClientIdInvoicesRoute: typeof OpClientsClientIdInvoicesRoute
+  OpClientsClientIdSettingsRoute: typeof OpClientsClientIdSettingsRoute
   OpClientsClientIdWebsiteRoute: typeof OpClientsClientIdWebsiteRoute
   OpClientsClientIdIndexRoute: typeof OpClientsClientIdIndexRoute
 }
@@ -470,6 +491,7 @@ const OpClientsClientIdRouteRouteChildren: OpClientsClientIdRouteRouteChildren =
     OpClientsClientIdFilesRoute: OpClientsClientIdFilesRoute,
     OpClientsClientIdInsightsRoute: OpClientsClientIdInsightsRoute,
     OpClientsClientIdInvoicesRoute: OpClientsClientIdInvoicesRoute,
+    OpClientsClientIdSettingsRoute: OpClientsClientIdSettingsRoute,
     OpClientsClientIdWebsiteRoute: OpClientsClientIdWebsiteRoute,
     OpClientsClientIdIndexRoute: OpClientsClientIdIndexRoute,
   }

@@ -25,11 +25,11 @@ export function InvoiceCreateForm({ onCreate }: InvoiceCreateFormProps) {
     setError(null);
     const amountCents = parseEuroInputToCents(amount);
     if (!label.trim()) {
-      setError("Libellé requis");
+      setError("Ajoute un libellé.");
       return;
     }
     if (amountCents === null) {
-      setError("Montant invalide");
+      setError("Montant invalide.");
       return;
     }
 
@@ -45,7 +45,7 @@ export function InvoiceCreateForm({ onCreate }: InvoiceCreateFormProps) {
       setAmount("");
       setDueDate(undefined);
     } catch (createError) {
-      setError(createError instanceof Error ? createError.message : "Création impossible");
+      setError(createError instanceof Error ? createError.message : "Impossible de créer.");
     } finally {
       setSubmitting(null);
     }
@@ -53,12 +53,7 @@ export function InvoiceCreateForm({ onCreate }: InvoiceCreateFormProps) {
 
   return (
     <section className="border-border bg-muted/20 flex flex-col gap-4 rounded-xl border p-5">
-      <div>
-        <h3 className="font-display text-base font-semibold tracking-tight">Nouvelle facture</h3>
-        <p className="text-muted-foreground mt-1 text-sm">
-          Créez et envoyez, ou enregistrez un brouillon à finaliser plus tard.
-        </p>
-      </div>
+      <h3 className="font-display text-base font-semibold tracking-tight">Nouvelle facture</h3>
 
       <div className="grid gap-4 sm:grid-cols-3">
         <div className="flex flex-col gap-2 sm:col-span-2">
