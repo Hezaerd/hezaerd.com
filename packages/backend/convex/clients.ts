@@ -1,15 +1,18 @@
 import { v } from "convex/values";
 
-import { authedMutation, authedQuery, operatorMutation, operatorQuery } from "./lib/functions";
+import { internal } from "./_generated/api";
+import type { Doc } from "./_generated/dataModel";
+import { action, internalMutation, internalQuery } from "./_generated/server";
+import { authedQuery, operatorMutation, operatorQuery } from "./lib/functions";
+import { cascadeDeleteClient } from "./lib/clientCascade";
 import {
   assertUniqueContactEmail,
   assertUniqueSlug,
   getClientBySlug,
   normalizeEmail,
   normalizeSlug,
-  tryBindSeatByEmail,
 } from "./lib/clients";
-import { assertClientAccess } from "./lib/users";
+import { assertClientAccess, isOperatorEmail } from "./lib/users";
 
 const featuresValidator = v.object({
   insights: v.boolean(),
@@ -95,8 +98,8 @@ export const getBySlug = authedQuery({
   },
 });
 
-/** Create a Client (Operator). Features default off; seat binds on matching login email. */
-export const create = operatorMutation({
+/** Insert a Client record (internal). Features default off. */
+export const insert = internalMutation({
   args: {
     name: v.string(),
     slug: v.string(),
@@ -131,6 +134,188 @@ export const create = operatorMutation({
     const client = await ctx.db.get("clients", clientId);
     if (!client) {
       throw new Error("Client not found");
+    }
+
+    return client;
+  },
+});
+
+/** Roll back a Client insert when the WorkOS invite fails. */
+export const remove = internalMutation({
+  args: { clientId: v.id("clients") },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    await ctx.db.delete(args.clientId);
+    return null;
+  },
+});
+
+/** Persist the WorkOS invitation id after a successful send. */
+export const setWorkosInvitationId = internalMutation({
+  args: {
+    clientId: v.id("clients"),
+    workosInvitationId: v.string(),
+  },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    await ctx.db.patch(args.clientId, {
+      workosInvitationId: args.workosInvitationId,
+    });
+    return null;
+  },
+});
+
+/** Client + invite metadata for WorkOS actions. */
+export const getForInviteInternal = internalQuery({
+  args: { slug: v.string() },
+  returns: v.union(
+    v.object({
+      _id: v.id("clients"),
+      slug: v.string(),
+      contactEmail: v.string(),
+      workosInvitationId: v.optional(v.string()),
+    }),
+    v.null(),
+  ),
+  handler: async (ctx, args) => {
+    const client = await getClientBySlug(ctx, args.slug);
+    if (!client) {
+      return null;
+    }
+
+    return {
+      _id: client._id,
+      slug: client.slug,
+      contactEmail: client.contactEmail,
+      workosInvitationId: client.workosInvitationId,
+    };
+  },
+});
+
+/** Bound Client seat, if any. */
+export const getSeatUser = internalQuery({
+  args: { clientId: v.id("clients") },
+  returns: v.union(
+    v.object({
+      authId: v.string(),
+      name: v.string(),
+      email: v.string(),
+    }),
+    v.null(),
+  ),
+  handler: async (ctx, args) => {
+    const seat = await ctx.db
+      .query("users")
+      .withIndex("by_clientId", (q) => q.eq("clientId", args.clientId))
+      .unique();
+    if (!seat) {
+      return null;
+    }
+
+    return {
+      authId: seat.authId,
+      name: seat.name,
+      email: seat.email,
+    };
+  },
+});
+
+/** Remove a Client and all dependent Portal rows (invoices, bound user). */
+export const cascadeDelete = internalMutation({
+  args: { clientId: v.id("clients") },
+  returns: v.object({ deletedAuthId: v.optional(v.string()) }),
+  handler: async (ctx, args) => {
+    return await cascadeDeleteClient(ctx, args.clientId);
+  },
+});
+
+/**
+ * Delete a Client (Operator): revoke pending invite, cascade Portal data,
+ * then delete the WorkOS user so AuthKit webhooks stay in sync.
+ */
+export const deleteClient = action({
+  args: { slug: v.string() },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Not authenticated");
+    }
+
+    const operator = await ctx.runQuery(internal.users.getByAuthId, {
+      authId: identity.subject,
+    });
+    if (!operator || operator.role !== "operator") {
+      throw new Error("Unauthorized: Operator access required");
+    }
+
+    const client = await ctx.runQuery(internal.clients.getForInviteInternal, {
+      slug: args.slug,
+    });
+    if (!client) {
+      throw new Error("Client not found");
+    }
+
+    await ctx.runAction(internal.clientInvites.revokePendingIfNeeded, {
+      email: client.contactEmail,
+      workosInvitationId: client.workosInvitationId,
+    });
+
+    const { deletedAuthId } = await ctx.runMutation(internal.clients.cascadeDelete, {
+      clientId: client._id,
+    });
+
+    if (deletedAuthId) {
+      await ctx.runAction(internal.clientInvites.deleteWorkosUser, {
+        authId: deletedAuthId,
+      });
+    }
+
+    return null;
+  },
+});
+
+/**
+ * Create a Client (Operator) and send a WorkOS invitation to `contactEmail`
+ * so they can register while signup is disabled.
+ */
+export const create = action({
+  args: {
+    name: v.string(),
+    slug: v.string(),
+    contactEmail: v.string(),
+  },
+  returns: clientValidator,
+  handler: async (ctx, args): Promise<Doc<"clients">> => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Not authenticated");
+    }
+
+    const user = await ctx.runQuery(internal.users.getByAuthId, {
+      authId: identity.subject,
+    });
+    if (!user || user.role !== "operator") {
+      throw new Error("Unauthorized: Operator access required");
+    }
+
+    const client = await ctx.runMutation(internal.clients.insert, args);
+
+    if (!isOperatorEmail(client.contactEmail)) {
+      try {
+        const invitationId = await ctx.runAction(internal.clientInvites.send, {
+          email: client.contactEmail,
+          inviterUserId: user.authId,
+        });
+        await ctx.runMutation(internal.clients.setWorkosInvitationId, {
+          clientId: client._id,
+          workosInvitationId: invitationId,
+        });
+      } catch (error) {
+        await ctx.runMutation(internal.clients.remove, { clientId: client._id });
+        const detail = error instanceof Error ? error.message : "Erreur WorkOS";
+        throw new Error(`Impossible d'envoyer l'invitation : ${detail}`);
+      }
     }
 
     return client;

@@ -59,7 +59,6 @@
         "@tanstack/react-start": "latest",
         "@workos/authkit-tanstack-react-start": "^0.11.0",
         "convex": "^1.31.6",
-        "convex-helpers": "^0.1.120",
         "nitro": "3.0.260610-beta",
         "react": "catalog:",
         "react-dom": "catalog:",
@@ -111,6 +110,7 @@
       "dependencies": {
         "@convex-dev/stripe": "^0.1.6",
         "@convex-dev/workos-authkit": "^0.2.7",
+        "@workos-inc/node": "^10.8.0",
         "convex": "^1.31.6",
         "convex-helpers": "^0.1.120",
         "stripe": "^22.3.2",

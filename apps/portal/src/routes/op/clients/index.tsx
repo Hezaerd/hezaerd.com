@@ -4,7 +4,7 @@ import { Input } from "@hezaerd/ui/components/input";
 import { ArrowRight01Icon, UserGroupIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { useMutation } from "convex/react";
+import { useAction } from "convex/react";
 import { useState } from "react";
 
 import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
@@ -27,7 +27,7 @@ function getClientInitials(name: string): string {
 
 function ClientDirectoryPage() {
   const { data: clients } = useSuspenseQuery(clientsListQuery);
-  const createClient = useMutation(api.clients.create);
+  const createClient = useAction(api.clients.create);
   const navigate = useNavigate();
   const [name, setName] = useState("");
   const [slug, setSlug] = useState("");
@@ -66,7 +66,7 @@ function ClientDirectoryPage() {
         </div>
         <p className="text-muted-foreground mt-1 text-sm leading-relaxed">
           Ouvrez le bureau de chaque client pour gérer son dossier, ses fonctionnalités et son
-          activité.
+          activité. La création envoie une invitation WorkOS à l&apos;e-mail de contact.
         </p>
       </div>
 

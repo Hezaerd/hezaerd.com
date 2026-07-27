@@ -7,6 +7,7 @@ export default defineSchema({
     slug: v.string(),
     contactEmail: v.string(),
     stripeCustomerId: v.optional(v.string()),
+    workosInvitationId: v.optional(v.string()),
     features: v.object({
       insights: v.boolean(),
       website: v.boolean(),
