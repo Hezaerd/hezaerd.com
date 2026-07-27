@@ -1,4 +1,4 @@
-import { createFileRoute, Link, Navigate } from "@tanstack/react-router";
+import { createFileRoute, Navigate } from "@tanstack/react-router";
 
 import { PortalSpinner } from "@/components/shell/portal-spinner";
 import { usePortalSession } from "@/lib/portal-session";
@@ -45,9 +45,9 @@ function UnlinkedPage() {
           </a>
         </p>
         <p className="text-muted-foreground mt-8 text-xs">
-          <Link to="/signout" className="hover:text-foreground underline-offset-4 hover:underline">
+          <a href="/api/auth/sign-out" className="hover:text-foreground underline-offset-4 hover:underline">
             Se déconnecter
-          </Link>
+          </a>
         </p>
       </div>
     </main>

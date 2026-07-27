@@ -19,6 +19,7 @@ import { Route as OpSettingsRouteImport } from './routes/op/settings'
 import { Route as WClientIdRouteRouteImport } from './routes/w/$clientId/route'
 import { Route as ApiAuthCallbackRouteImport } from './routes/api.auth.callback'
 import { Route as ApiAuthSignInRouteImport } from './routes/api.auth.sign-in'
+import { Route as ApiAuthSignOutRouteImport } from './routes/api.auth.sign-out'
 import { Route as OpClientsIndexRouteImport } from './routes/op/clients/index'
 import { Route as OpClientsClientIdRouteRouteImport } from './routes/op/clients/$clientId/route'
 import { Route as WClientIdIndexRouteImport } from './routes/w/$clientId/index'
@@ -83,6 +84,11 @@ const ApiAuthCallbackRoute = ApiAuthCallbackRouteImport.update({
 const ApiAuthSignInRoute = ApiAuthSignInRouteImport.update({
   id: '/api/auth/sign-in',
   path: '/api/auth/sign-in',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAuthSignOutRoute = ApiAuthSignOutRouteImport.update({
+  id: '/api/auth/sign-out',
+  path: '/api/auth/sign-out',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OpClientsIndexRoute = OpClientsIndexRouteImport.update({
@@ -178,6 +184,7 @@ export interface FileRoutesByFullPath {
   '/op/clients/$clientId': typeof OpClientsClientIdRouteRouteWithChildren
   '/api/auth/callback': typeof ApiAuthCallbackRoute
   '/api/auth/sign-in': typeof ApiAuthSignInRoute
+  '/api/auth/sign-out': typeof ApiAuthSignOutRoute
   '/w/$clientId/files': typeof WClientIdFilesRouteWithChildren
   '/w/$clientId/insights': typeof WClientIdInsightsRoute
   '/w/$clientId/invoices': typeof WClientIdInvoicesRoute
@@ -202,6 +209,7 @@ export interface FileRoutesByTo {
   '/op': typeof OpIndexRoute
   '/api/auth/callback': typeof ApiAuthCallbackRoute
   '/api/auth/sign-in': typeof ApiAuthSignInRoute
+  '/api/auth/sign-out': typeof ApiAuthSignOutRoute
   '/w/$clientId/files': typeof WClientIdFilesRouteWithChildren
   '/w/$clientId/insights': typeof WClientIdInsightsRoute
   '/w/$clientId/invoices': typeof WClientIdInvoicesRoute
@@ -230,6 +238,7 @@ export interface FileRoutesById {
   '/op/clients/$clientId': typeof OpClientsClientIdRouteRouteWithChildren
   '/api/auth/callback': typeof ApiAuthCallbackRoute
   '/api/auth/sign-in': typeof ApiAuthSignInRoute
+  '/api/auth/sign-out': typeof ApiAuthSignOutRoute
   '/w/$clientId/files': typeof WClientIdFilesRouteWithChildren
   '/w/$clientId/insights': typeof WClientIdInsightsRoute
   '/w/$clientId/invoices': typeof WClientIdInvoicesRoute
@@ -259,6 +268,7 @@ export interface FileRouteTypes {
     | '/op/clients/$clientId'
     | '/api/auth/callback'
     | '/api/auth/sign-in'
+    | '/api/auth/sign-out'
     | '/w/$clientId/files'
     | '/w/$clientId/insights'
     | '/w/$clientId/invoices'
@@ -283,6 +293,7 @@ export interface FileRouteTypes {
     | '/op'
     | '/api/auth/callback'
     | '/api/auth/sign-in'
+    | '/api/auth/sign-out'
     | '/w/$clientId/files'
     | '/w/$clientId/insights'
     | '/w/$clientId/invoices'
@@ -310,6 +321,7 @@ export interface FileRouteTypes {
     | '/op/clients/$clientId'
     | '/api/auth/callback'
     | '/api/auth/sign-in'
+    | '/api/auth/sign-out'
     | '/w/$clientId/files'
     | '/w/$clientId/insights'
     | '/w/$clientId/invoices'
@@ -334,6 +346,7 @@ export interface RootRouteChildren {
   WClientIdRouteRoute: typeof WClientIdRouteRouteWithChildren
   ApiAuthCallbackRoute: typeof ApiAuthCallbackRoute
   ApiAuthSignInRoute: typeof ApiAuthSignInRoute
+  ApiAuthSignOutRoute: typeof ApiAuthSignOutRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -406,6 +419,13 @@ declare module '@tanstack/react-router' {
       path: '/api/auth/sign-in'
       fullPath: '/api/auth/sign-in'
       preLoaderRoute: typeof ApiAuthSignInRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/auth/sign-out': {
+      id: '/api/auth/sign-out'
+      path: '/api/auth/sign-out'
+      fullPath: '/api/auth/sign-out'
+      preLoaderRoute: typeof ApiAuthSignOutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/op/clients/': {
@@ -613,6 +633,7 @@ const rootRouteChildren: RootRouteChildren = {
   WClientIdRouteRoute: WClientIdRouteRouteWithChildren,
   ApiAuthCallbackRoute: ApiAuthCallbackRoute,
   ApiAuthSignInRoute: ApiAuthSignInRoute,
+  ApiAuthSignOutRoute: ApiAuthSignOutRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

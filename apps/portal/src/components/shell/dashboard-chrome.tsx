@@ -12,8 +12,6 @@ import {
   SidebarTrigger,
 } from "@hezaerd/ui/components/sidebar";
 
-import { Link } from "@tanstack/react-router";
-
 type DashboardChromeBrand = {
   initials: string;
   title: string;
@@ -90,12 +88,12 @@ export function DashboardChrome({
           )}
           <div className="flex items-center justify-end gap-3">
             <p className="text-muted-foreground hidden text-sm sm:block">{email}</p>
-            <Link
-              to="/signout"
+            <a
+              href="/api/auth/sign-out"
               className="border-border text-muted-foreground hover:text-foreground hover:bg-accent rounded-md border px-3 py-1.5 text-xs font-medium transition-colors"
             >
               Déconnexion
-            </Link>
+            </a>
           </div>
         </header>
         <main className="flex flex-1 flex-col gap-6 p-4 md:p-6">{children}</main>
