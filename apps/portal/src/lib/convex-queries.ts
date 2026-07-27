@@ -2,6 +2,10 @@ import { api } from "@hezaerd/backend/api";
 import { convexQuery } from "@convex-dev/react-query";
 import { queryOptions } from "@tanstack/react-query";
 
+import type { Id } from "@hezaerd/backend/dataModel";
+
+import type { NeedsAttentionItem } from "@/lib/portal-types";
+
 export const portalMeQuery = queryOptions({
   ...convexQuery(api.users.me, {}),
 });
@@ -30,15 +34,74 @@ export function invoicesByClientQuery(slug: string) {
   });
 }
 
-export function waitingOnClientQuery(slug: string) {
+export function fileRequestsDeskQuery(slug: string) {
   return queryOptions({
-    ...convexQuery(api.invoices.listWaitingOnClient, { slug }),
+    ...convexQuery(api.files.listForDesk, { slug }),
+  });
+}
+
+export function fileRequestsWorkspaceQuery(slug: string) {
+  return queryOptions({
+    ...convexQuery(api.files.listForWorkspace, { slug }),
+  });
+}
+
+export function fileRequestQuery(slug: string, requestId: string) {
+  return queryOptions({
+    ...convexQuery(api.files.getRequest, {
+      slug,
+      requestId: requestId as Id<"fileRequests">,
+    }),
+  });
+}
+
+function invoiceNeedsAttentionQuery(slug: string) {
+  return queryOptions({
+    ...convexQuery(api.invoices.listNeedsAttention, { slug }),
+  });
+}
+
+function fileNeedsAttentionQuery(slug: string) {
+  return queryOptions({
+    ...convexQuery(api.files.listNeedsAttention, { slug }),
   });
 }
 
 export function needsAttentionQuery(slug: string) {
   return queryOptions({
-    ...convexQuery(api.invoices.listNeedsAttention, { slug }),
+    queryKey: ["needsAttention", slug],
+    queryFn: async ({ client }) => {
+      const [invoiceItems, fileItems] = await Promise.all([
+        client.fetchQuery(invoiceNeedsAttentionQuery(slug)),
+        client.fetchQuery(fileNeedsAttentionQuery(slug)),
+      ]);
+      return [...invoiceItems, ...fileItems] as NeedsAttentionItem[];
+    },
+  });
+}
+
+function invoiceWaitingOnClientQuery(slug: string) {
+  return queryOptions({
+    ...convexQuery(api.invoices.listWaitingOnClient, { slug }),
+  });
+}
+
+function fileWaitingOnClientQuery(slug: string) {
+  return queryOptions({
+    ...convexQuery(api.files.listWaitingOnClient, { slug }),
+  });
+}
+
+export function waitingOnClientQuery(slug: string) {
+  return queryOptions({
+    queryKey: ["waitingOnClient", slug],
+    queryFn: async ({ client }) => {
+      const [invoiceItems, fileItems] = await Promise.all([
+        client.fetchQuery(invoiceWaitingOnClientQuery(slug)),
+        client.fetchQuery(fileWaitingOnClientQuery(slug)),
+      ]);
+      return [...invoiceItems, ...fileItems];
+    },
   });
 }
 

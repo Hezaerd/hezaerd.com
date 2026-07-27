@@ -15,6 +15,31 @@ export async function cascadeDeleteClient(
     await ctx.db.delete(invoice._id);
   }
 
+  const fileRequests = await ctx.db
+    .query("fileRequests")
+    .withIndex("by_clientId", (q) => q.eq("clientId", clientId))
+    .collect();
+
+  for (const request of fileRequests) {
+    const slots = await ctx.db
+      .query("fileRequestSlots")
+      .withIndex("by_requestId", (q) => q.eq("requestId", request._id))
+      .collect();
+    for (const slot of slots) {
+      await ctx.db.delete(slot._id);
+    }
+    await ctx.db.delete(request._id);
+  }
+
+  const notifications = await ctx.db
+    .query("clientNotifications")
+    .withIndex("by_clientId", (q) => q.eq("clientId", clientId))
+    .collect();
+
+  for (const notification of notifications) {
+    await ctx.db.delete(notification._id);
+  }
+
   const seat = await ctx.db
     .query("users")
     .withIndex("by_clientId", (q) => q.eq("clientId", clientId))

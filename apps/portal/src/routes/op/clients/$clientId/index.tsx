@@ -75,8 +75,7 @@ function QueuePanel({
           {items.map((item) => (
             <Link
               key={item.id}
-              to="/op/clients/$clientId/invoices"
-              params={{ clientId: clientId ?? "" }}
+              to={item.href}
               className="border-border bg-background/60 hover:bg-background rounded-lg border px-3 py-2 transition-colors"
             >
               <p className="text-sm font-medium">{item.title}</p>

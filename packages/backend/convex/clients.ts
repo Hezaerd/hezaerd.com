@@ -12,6 +12,7 @@ import {
   normalizeEmail,
   normalizeSlug,
 } from "./lib/clients";
+import { validateClientFileSettings } from "./lib/fileSettings";
 import { assertClientAccess, isOperatorEmail } from "./lib/users";
 
 const featuresValidator = v.object({
@@ -26,6 +27,13 @@ export const clientValidator = v.object({
   slug: v.string(),
   contactEmail: v.string(),
   features: featuresValidator,
+  fileSettings: v.optional(
+    v.object({
+      defaultMaxFileSizeMb: v.number(),
+      uploadPresignTtlHours: v.number(),
+      downloadPresignTtlMinutes: v.number(),
+    }),
+  ),
 });
 
 const cockpitStatsValidator = v.object({
@@ -62,7 +70,24 @@ export const stats = operatorQuery({
       .reduce((sum, invoice) => sum + invoice.amountCents, 0);
 
     const openInvoiceTotal = openInvoices.reduce((sum, invoice) => sum + invoice.amountCents, 0);
-    const clientsWaiting = new Set(openInvoices.map((invoice) => invoice.clientId)).size;
+
+    const activeFileRequests = (await ctx.db.query("fileRequests").collect()).filter(
+      (request) => request.status === "active",
+    );
+
+    const clientsWaitingSet = new Set(openInvoices.map((invoice) => invoice.clientId));
+
+    for (const request of activeFileRequests) {
+      const slots = await ctx.db
+        .query("fileRequestSlots")
+        .withIndex("by_requestId", (q) => q.eq("requestId", request._id))
+        .collect();
+      if (slots.some((slot) => !slot.file)) {
+        clientsWaitingSet.add(request.clientId);
+      }
+    }
+
+    const clientsWaiting = clientsWaitingSet.size;
 
     return {
       openInvoiceTotal: openInvoiceTotal / 100,
@@ -345,6 +370,33 @@ export const setFeature = operatorMutation({
       throw new Error("Client not found");
     }
 
+    return updated;
+  },
+});
+
+/** Update Client file defaults (Operator). */
+export const updateFileSettings = operatorMutation({
+  args: {
+    slug: v.string(),
+    defaultMaxFileSizeMb: v.number(),
+    uploadPresignTtlHours: v.number(),
+    downloadPresignTtlMinutes: v.number(),
+  },
+  returns: clientValidator,
+  handler: async (ctx, args) => {
+    const client = await assertClientAccess(ctx, ctx.user, args.slug);
+    const fileSettings = validateClientFileSettings({
+      defaultMaxFileSizeMb: args.defaultMaxFileSizeMb,
+      uploadPresignTtlHours: args.uploadPresignTtlHours,
+      downloadPresignTtlMinutes: args.downloadPresignTtlMinutes,
+    });
+
+    await ctx.db.patch(client._id, { fileSettings });
+
+    const updated = await ctx.db.get("clients", client._id);
+    if (!updated) {
+      throw new Error("Client not found");
+    }
     return updated;
   },
 });

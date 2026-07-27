@@ -38,7 +38,9 @@ function ClientHomePage() {
           Bon retour, {client.name.split(" ")[0]}.
         </h1>
         <p className="text-muted-foreground mt-1 text-sm leading-relaxed">
-          Tout est à jour. Votre projet avance bien.
+          {needsAttention.length === 0
+            ? "Tout est à jour. Votre projet avance bien."
+            : "Voici ce qui demande votre attention."}
         </p>
       </div>
 
