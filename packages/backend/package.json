@@ -14,9 +14,11 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@convex-dev/stripe": "^0.1.6",
     "@convex-dev/workos-authkit": "^0.2.7",
     "convex": "^1.31.6",
-    "convex-helpers": "^0.1.120"
+    "convex-helpers": "^0.1.120",
+    "stripe": "^22.3.2"
   },
   "devDependencies": {
     "@hezaerd/config": "workspace:*",

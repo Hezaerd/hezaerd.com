@@ -13,6 +13,7 @@ export const Route = createFileRoute("/w/$clientId/")({
 function ClientHomePage() {
   const { clientId } = Route.useParams();
   const clientDoc = useQuery(api.clients.getBySlug, { slug: clientId });
+  const needsAttention = useQuery(api.invoices.listNeedsAttention, { slug: clientId });
 
   if (clientDoc === undefined) {
     return (
@@ -24,6 +25,14 @@ function ClientHomePage() {
 
   if (clientDoc === null) {
     return null;
+  }
+
+  if (needsAttention === undefined) {
+    return (
+      <main className="flex min-h-[40vh] items-center justify-center">
+        <p className="text-muted-foreground font-mono text-sm">Chargement…</p>
+      </main>
+    );
   }
 
   const client = toPortalClient(clientDoc);
@@ -51,7 +60,7 @@ function ClientHomePage() {
 
       <div className="flex flex-col gap-3">
         <h2 className="font-display text-base font-semibold tracking-tight">À traiter</h2>
-        <NeedsAttentionList items={[]} />
+        <NeedsAttentionList items={needsAttention} />
       </div>
     </div>
   );

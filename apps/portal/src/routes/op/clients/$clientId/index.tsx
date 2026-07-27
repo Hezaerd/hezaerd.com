@@ -4,7 +4,7 @@ import { Globe02Icon, PieChart01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react";
 import { useMutation, useQuery } from "convex/react";
 
-import { createFileRoute, notFound } from "@tanstack/react-router";
+import { Link, createFileRoute, notFound } from "@tanstack/react-router";
 
 import { type ClientFeature, toPortalClient } from "@/lib/portal-types";
 
@@ -15,6 +15,7 @@ export const Route = createFileRoute("/op/clients/$clientId/")({
 function ClientDeskIndexPage() {
   const { clientId } = Route.useParams();
   const clientDoc = useQuery(api.clients.getBySlug, { slug: clientId });
+  const waitingOnClient = useQuery(api.invoices.listWaitingOnClient, { slug: clientId });
   const setFeature = useMutation(api.clients.setFeature);
 
   if (clientDoc === undefined) {
@@ -27,6 +28,14 @@ function ClientDeskIndexPage() {
 
   if (clientDoc === null) {
     throw notFound();
+  }
+
+  if (waitingOnClient === undefined) {
+    return (
+      <div className="flex min-h-[20vh] items-center justify-center">
+        <p className="text-muted-foreground font-mono text-sm">Chargement…</p>
+      </div>
+    );
   }
 
   const client = toPortalClient(clientDoc);
@@ -42,6 +51,8 @@ function ClientDeskIndexPage() {
           title="En attente du client"
           description="Actions qui nécessitent une réponse du client."
           emptyMessage="Rien en attente."
+          clientId={clientId}
+          items={waitingOnClient}
         />
         <QueuePanel
           title="En attente de l'opérateur"
@@ -87,10 +98,14 @@ function QueuePanel({
   title,
   description,
   emptyMessage,
+  clientId,
+  items = [],
 }: {
   title: string;
   description: string;
   emptyMessage: string;
+  clientId?: string;
+  items?: Array<{ id: string; title: string; description: string; href: string }>;
 }) {
   return (
     <div className="border-border bg-muted/20 flex flex-col gap-3 rounded-xl border px-5 py-4">
@@ -98,7 +113,23 @@ function QueuePanel({
         <p className="text-sm font-semibold">{title}</p>
         <p className="text-muted-foreground mt-0.5 text-xs leading-relaxed">{description}</p>
       </div>
-      <p className="text-muted-foreground text-sm">{emptyMessage}</p>
+      {items.length === 0 ? (
+        <p className="text-muted-foreground text-sm">{emptyMessage}</p>
+      ) : (
+        <div className="flex flex-col gap-2">
+          {items.map((item) => (
+            <Link
+              key={item.id}
+              to="/op/clients/$clientId/invoices"
+              params={{ clientId: clientId ?? "" }}
+              className="border-border bg-background/60 hover:bg-background rounded-lg border px-3 py-2 transition-colors"
+            >
+              <p className="text-sm font-medium">{item.title}</p>
+              <p className="text-muted-foreground text-xs">{item.description}</p>
+            </Link>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
