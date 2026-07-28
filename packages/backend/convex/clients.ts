@@ -25,6 +25,8 @@ export const clientValidator = v.object({
   name: v.string(),
   slug: v.string(),
   contactEmail: v.string(),
+  stripeCustomerId: v.optional(v.string()),
+  workosInvitationId: v.optional(v.string()),
   features: featuresValidator,
   fileSettings: v.optional(
     v.object({
