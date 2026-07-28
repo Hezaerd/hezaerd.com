@@ -8,7 +8,11 @@ import {
   DialogTitle,
 } from "@hezaerd/ui/components/dialog";
 import { Textarea } from "@hezaerd/ui/components/textarea";
-import { useState } from "react";
+import { useForm } from "@tanstack/react-form";
+import { useEffect } from "react";
+
+import { FieldError } from "@/components/forms/field-error";
+import { setFormSubmitError, submitErrorMessage } from "@/lib/tanstack-form";
 
 type ReasonDialogProps = {
   open: boolean;
@@ -27,28 +31,29 @@ export function ReasonDialog({
   confirmLabel = "Confirmer",
   onConfirm,
 }: ReasonDialogProps) {
-  const [reason, setReason] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [submitting, setSubmitting] = useState(false);
+  const form = useForm({
+    defaultValues: {
+      reason: "",
+    },
+    onSubmit: async ({ value, formApi }) => {
+      try {
+        await onConfirm(value.reason.trim());
+        formApi.reset();
+        onOpenChange(false);
+      } catch (confirmError) {
+        setFormSubmitError(
+          formApi,
+          submitErrorMessage(confirmError, "Impossible de continuer."),
+        );
+      }
+    },
+  });
 
-  async function handleConfirm() {
-    setError(null);
-    if (!reason.trim()) {
-      setError("Explique la raison au client.");
-      return;
+  useEffect(() => {
+    if (!open) {
+      form.reset();
     }
-
-    setSubmitting(true);
-    try {
-      await onConfirm(reason.trim());
-      setReason("");
-      onOpenChange(false);
-    } catch (confirmError) {
-      setError(confirmError instanceof Error ? confirmError.message : "Impossible de continuer.");
-    } finally {
-      setSubmitting(false);
-    }
-  }
+  }, [open, form]);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -57,21 +62,54 @@ export function ReasonDialog({
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
-        <Textarea
-          value={reason}
-          onChange={(event) => setReason(event.target.value)}
-          placeholder="Finalement je peux me débrouiller avec uniquement ce fichier."
-          rows={4}
-        />
-        {error ? <p className="text-destructive text-sm">{error}</p> : null}
-        <DialogFooter>
-          <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-            Annuler
-          </Button>
-          <Button type="button" disabled={submitting} onClick={() => void handleConfirm()}>
-            {submitting ? "Envoi…" : confirmLabel}
-          </Button>
-        </DialogFooter>
+        <form
+          className="flex flex-col gap-3"
+          onSubmit={(event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            void form.handleSubmit();
+          }}
+        >
+          <form.Field
+            name="reason"
+            validators={{
+              onSubmit: ({ value }) =>
+                value.trim() ? undefined : "Explique la raison au client.",
+            }}
+          >
+            {(field) => (
+              <div className="flex flex-col gap-2">
+                <Textarea
+                  id={field.name}
+                  name={field.name}
+                  value={field.state.value}
+                  onBlur={field.handleBlur}
+                  onChange={(event) => field.handleChange(event.target.value)}
+                  placeholder="Finalement je peux me débrouiller avec uniquement ce fichier."
+                  rows={4}
+                />
+                <FieldError errors={field.state.meta.errors} />
+              </div>
+            )}
+          </form.Field>
+          <form.Subscribe selector={(state) => state.errorMap.onSubmit}>
+            {(submitError) =>
+              submitError ? <p className="text-destructive text-sm">{String(submitError)}</p> : null
+            }
+          </form.Subscribe>
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+              Annuler
+            </Button>
+            <form.Subscribe selector={(state) => state.isSubmitting}>
+              {(isSubmitting) => (
+                <Button type="submit" disabled={isSubmitting}>
+                  {isSubmitting ? "Envoi…" : confirmLabel}
+                </Button>
+              )}
+            </form.Subscribe>
+          </DialogFooter>
+        </form>
       </DialogContent>
     </Dialog>
   );

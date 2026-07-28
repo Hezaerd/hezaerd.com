@@ -1,14 +1,13 @@
 import { api } from "@hezaerd/backend/api";
 import { Button } from "@hezaerd/ui/components/button";
-import { Input } from "@hezaerd/ui/components/input";
 import { ArrowRight01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useAction } from "convex/react";
-import { useState } from "react";
 
 import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 
+import { ClientCreateForm } from "@/components/clients/client-create-form";
 import { clientsListQuery } from "@/lib/convex-queries";
 import { toPortalClient } from "@/lib/portal-types";
 
@@ -29,80 +28,18 @@ function ClientDirectoryPage() {
   const { data: clients } = useSuspenseQuery(clientsListQuery);
   const createClient = useAction(api.clients.create);
   const navigate = useNavigate();
-  const [name, setName] = useState("");
-  const [slug, setSlug] = useState("");
-  const [contactEmail, setContactEmail] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [submitting, setSubmitting] = useState(false);
-
-  async function handleCreate(event: React.FormEvent) {
-    event.preventDefault();
-    setError(null);
-    setSubmitting(true);
-    try {
-      const created = await createClient({ name, slug, contactEmail });
-      setName("");
-      setSlug("");
-      setContactEmail("");
-      await navigate({
-        to: "/op/clients/$clientId",
-        params: { clientId: created.slug },
-      });
-    } catch (createError) {
-      setError(createError instanceof Error ? createError.message : "Impossible de créer.");
-    } finally {
-      setSubmitting(false);
-    }
-  }
 
   return (
     <div className="flex flex-col gap-8">
-      <section className="border-border bg-muted/20 flex flex-col gap-4 rounded-xl border p-5">
-        <h2 className="font-display text-base font-semibold tracking-tight">Nouveau client</h2>
-        <form className="grid gap-4 sm:grid-cols-3" onSubmit={handleCreate}>
-          <div className="flex flex-col gap-2">
-            <label htmlFor="client-name" className="text-sm font-medium">
-              Nom
-            </label>
-            <Input
-              id="client-name"
-              value={name}
-              onChange={(event) => setName(event.target.value)}
-              required
-            />
-          </div>
-          <div className="flex flex-col gap-2">
-            <label htmlFor="client-slug" className="text-sm font-medium">
-              Slug
-            </label>
-            <Input
-              id="client-slug"
-              value={slug}
-              onChange={(event) => setSlug(event.target.value)}
-              placeholder="river-cafe"
-              required
-            />
-          </div>
-          <div className="flex flex-col gap-2">
-            <label htmlFor="client-email" className="text-sm font-medium">
-              E-mail de contact
-            </label>
-            <Input
-              id="client-email"
-              type="email"
-              value={contactEmail}
-              onChange={(event) => setContactEmail(event.target.value)}
-              required
-            />
-          </div>
-          <div className="flex items-center gap-3 sm:col-span-3">
-            <Button type="submit" disabled={submitting}>
-              Créer le client
-            </Button>
-            {error ? <p className="text-destructive text-sm">{error}</p> : null}
-          </div>
-        </form>
-      </section>
+      <ClientCreateForm
+        onCreate={async (input) => {
+          const created = await createClient(input);
+          await navigate({
+            to: "/op/clients/$clientId",
+            params: { clientId: created.slug },
+          });
+        }}
+      />
 
       <div className="flex flex-col gap-3">
         {clients.map((clientDoc) => {

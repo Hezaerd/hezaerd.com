@@ -3,18 +3,24 @@ import { Input } from "@hezaerd/ui/components/input";
 import { Textarea } from "@hezaerd/ui/components/textarea";
 import { Add01Icon, Delete02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
+import { useForm } from "@tanstack/react-form";
 import { useState } from "react";
 
-import {
-  ExtensionTagsInput,
-  formatExtensionsLabel,
-} from "@/components/files/extension-tags-input";
+import { ExtensionTagsInput } from "@/components/files/extension-tags-input";
+import { FieldError } from "@/components/forms/field-error";
 import { resolvePortalFileSettings, type PortalClient } from "@/lib/portal-types";
+import { setFormSubmitError, submitErrorMessage } from "@/lib/tanstack-form";
 
 type SlotDraft = {
-  key: string;
   label: string;
   allowedExtensions: string[];
+};
+
+type FileRequestFormValues = {
+  title: string;
+  instructions: string;
+  maxFileSizeMb: string;
+  slots: SlotDraft[];
 };
 
 type FileRequestCreateFormProps = {
@@ -27,163 +33,230 @@ type FileRequestCreateFormProps = {
   }) => Promise<void>;
 };
 
-function newSlot(): SlotDraft {
+function createDefaultSlot(): SlotDraft {
   return {
-    key: crypto.randomUUID(),
     label: "",
     allowedExtensions: ["svg", "ai", "eps"],
   };
 }
 
+function createDefaultValues(defaultMaxFileSizeMb: number): FileRequestFormValues {
+  return {
+    title: "",
+    instructions: "",
+    maxFileSizeMb: String(defaultMaxFileSizeMb),
+    slots: [createDefaultSlot()],
+  };
+}
+
 export function FileRequestCreateForm({ client, onCreate }: FileRequestCreateFormProps) {
   const defaults = resolvePortalFileSettings(client);
-  const [title, setTitle] = useState("");
-  const [instructions, setInstructions] = useState("");
-  const [maxFileSizeMb, setMaxFileSizeMb] = useState(String(defaults.defaultMaxFileSizeMb));
-  const [slots, setSlots] = useState<SlotDraft[]>([newSlot()]);
-  const [error, setError] = useState<string | null>(null);
-  const [submitting, setSubmitting] = useState(false);
+  const defaultValues = createDefaultValues(defaults.defaultMaxFileSizeMb);
+  const [showAdvanced, setShowAdvanced] = useState(false);
 
-  async function handleSubmit() {
-    setError(null);
-    const parsedMax = Number(maxFileSizeMb);
-    if (!title.trim()) {
-      setError("Ajoute un titre.");
-      return;
-    }
-    if (!Number.isFinite(parsedMax) || parsedMax <= 0) {
-      setError("Taille max invalide.");
-      return;
-    }
-    if (slots.some((slot) => !slot.label.trim())) {
-      setError("Chaque slot doit avoir un label.");
-      return;
-    }
-
-    setSubmitting(true);
-    try {
-      await onCreate({
-        title: title.trim(),
-        instructions: instructions.trim() || undefined,
-        maxFileSizeMb: parsedMax,
-        slots: slots.map((slot) => ({
-          label: slot.label.trim(),
-          allowedExtensions: slot.allowedExtensions,
-        })),
-      });
-      setTitle("");
-      setInstructions("");
-      setMaxFileSizeMb(String(defaults.defaultMaxFileSizeMb));
-      setSlots([newSlot()]);
-    } catch (createError) {
-      setError(createError instanceof Error ? createError.message : "Impossible de créer.");
-    } finally {
-      setSubmitting(false);
-    }
-  }
+  const form = useForm({
+    defaultValues,
+    onSubmit: async ({ value, formApi }) => {
+      try {
+        const parsedMax = Number(value.maxFileSizeMb);
+        await onCreate({
+          title: value.title.trim(),
+          instructions: value.instructions.trim() || undefined,
+          maxFileSizeMb: parsedMax,
+          slots: value.slots.map((slot) => ({
+            label: slot.label.trim(),
+            allowedExtensions: slot.allowedExtensions,
+          })),
+        });
+        formApi.reset();
+        setShowAdvanced(false);
+      } catch (createError) {
+        setFormSubmitError(
+          formApi,
+          submitErrorMessage(createError, "Impossible de créer."),
+        );
+      }
+    },
+  });
 
   return (
-    <section className="border-border bg-muted/20 flex flex-col gap-4 rounded-xl border p-5">
-      <h3 className="font-display text-base font-semibold tracking-tight">Nouvelle demande</h3>
+    <form
+      className="flex flex-col gap-6"
+      onSubmit={(event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        void form.handleSubmit();
+      }}
+    >
+      <div className="flex flex-col gap-4">
+        <form.Field
+          name="title"
+          validators={{
+            onSubmit: ({ value }) => (value.trim() ? undefined : "Ajoute un titre."),
+          }}
+        >
+          {(field) => (
+            <div className="flex flex-col gap-2">
+              <label htmlFor={field.name} className="text-sm font-medium">
+                Titre
+              </label>
+              <Input
+                id={field.name}
+                name={field.name}
+                value={field.state.value}
+                onBlur={field.handleBlur}
+                onChange={(event) => field.handleChange(event.target.value)}
+                placeholder="Kit brand"
+              />
+              <FieldError errors={field.state.meta.errors} />
+            </div>
+          )}
+        </form.Field>
 
-      <div className="grid gap-4 sm:grid-cols-2">
-        <div className="flex flex-col gap-2 sm:col-span-2">
-          <label htmlFor="file-request-title" className="text-sm font-medium">
-            Titre
-          </label>
-          <Input
-            id="file-request-title"
-            value={title}
-            onChange={(event) => setTitle(event.target.value)}
-            placeholder="Kit brand"
-          />
-        </div>
-        <div className="flex flex-col gap-2 sm:col-span-2">
-          <label htmlFor="file-request-instructions" className="text-sm font-medium">
-            Consignes (optionnel)
-          </label>
-          <Textarea
-            id="file-request-instructions"
-            value={instructions}
-            onChange={(event) => setInstructions(event.target.value)}
-            placeholder="Si tu n'as pas le vectoriel, une photo nette du logo imprimé suffit."
-            rows={3}
-          />
-        </div>
-        <div className="flex flex-col gap-2">
-          <label htmlFor="file-request-max-size" className="text-sm font-medium">
-            Taille max par fichier (Mo)
-          </label>
-          <Input
-            id="file-request-max-size"
-            inputMode="numeric"
-            value={maxFileSizeMb}
-            onChange={(event) => setMaxFileSizeMb(event.target.value)}
-          />
-        </div>
+        <form.Field name="instructions">
+          {(field) => (
+            <div className="flex flex-col gap-2">
+              <label htmlFor={field.name} className="text-sm font-medium">
+                Consignes <span className="text-muted-foreground font-normal">(optionnel)</span>
+              </label>
+              <Textarea
+                id={field.name}
+                name={field.name}
+                value={field.state.value}
+                onBlur={field.handleBlur}
+                onChange={(event) => field.handleChange(event.target.value)}
+                placeholder="Si tu n'as pas le vectoriel, une photo nette du logo imprimé suffit."
+                rows={3}
+              />
+            </div>
+          )}
+        </form.Field>
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <p className="text-sm font-medium">Fichiers attendus</p>
+        <form.Field name="slots" mode="array">
+          {(slotsField) => (
+            <>
+              <div className="border-border divide-border divide-y rounded-lg border">
+                {slotsField.state.value.map((_, index) => (
+                  <div key={index} className="flex flex-col gap-3 p-3">
+                    <div className="flex items-center gap-2">
+                      <form.Field
+                        name={`slots[${index}].label`}
+                        validators={{
+                          onSubmit: ({ value }) =>
+                            value.trim() ? undefined : "Chaque fichier attendu doit avoir un nom.",
+                        }}
+                      >
+                        {(field) => (
+                          <div className="min-w-0 flex-1">
+                            <Input
+                              id={field.name}
+                              name={field.name}
+                              value={field.state.value}
+                              onBlur={field.handleBlur}
+                              onChange={(event) => field.handleChange(event.target.value)}
+                              placeholder="Logo SVG"
+                            />
+                            <FieldError errors={field.state.meta.errors} />
+                          </div>
+                        )}
+                      </form.Field>
+                      {slotsField.state.value.length > 1 ? (
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon-sm"
+                          aria-label="Retirer ce fichier"
+                          onClick={() => slotsField.removeValue(index)}
+                        >
+                          <HugeiconsIcon icon={Delete02Icon} size={14} />
+                        </Button>
+                      ) : null}
+                    </div>
+                    <form.Field name={`slots[${index}].allowedExtensions`}>
+                      {(field) => (
+                        <ExtensionTagsInput
+                          value={field.state.value}
+                          onChange={field.handleChange}
+                        />
+                      )}
+                    </form.Field>
+                  </div>
+                ))}
+              </div>
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="self-start"
+                onClick={() => slotsField.pushValue(createDefaultSlot())}
+              >
+                <HugeiconsIcon icon={Add01Icon} size={14} />
+                Ajouter un fichier
+              </Button>
+            </>
+          )}
+        </form.Field>
       </div>
 
       <div className="flex flex-col gap-3">
-        <p className="text-sm font-medium">Fichiers attendus</p>
-        {slots.map((slot, index) => (
-          <div key={slot.key} className="border-border bg-background/60 flex flex-col gap-3 rounded-lg border p-4">
-            <div className="flex items-center justify-between gap-3">
-              <p className="text-sm font-medium">Slot {index + 1}</p>
-              {slots.length > 1 ? (
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setSlots((current) => current.filter((item) => item.key !== slot.key))}
-                >
-                  <HugeiconsIcon icon={Delete02Icon} size={14} />
-                </Button>
-              ) : null}
-            </div>
-            <Input
-              value={slot.label}
-              onChange={(event) =>
-                setSlots((current) =>
-                  current.map((item) =>
-                    item.key === slot.key ? { ...item, label: event.target.value } : item,
-                  ),
-                )
-              }
-              placeholder="Logo SVG"
-            />
-            <ExtensionTagsInput
-              value={slot.allowedExtensions}
-              onChange={(allowedExtensions) =>
-                setSlots((current) =>
-                  current.map((item) =>
-                    item.key === slot.key ? { ...item, allowedExtensions } : item,
-                  ),
-                )
-              }
-            />
-            <p className="text-muted-foreground text-xs">
-              Accepté : {formatExtensionsLabel(slot.allowedExtensions)}
-            </p>
-          </div>
-        ))}
-        <Button
+        <button
           type="button"
-          variant="outline"
-          size="sm"
-          className="self-start"
-          onClick={() => setSlots((current) => [...current, newSlot()])}
+          className="text-muted-foreground hover:text-foreground self-start text-sm transition-colors"
+          onClick={() => setShowAdvanced((current) => !current)}
         >
-          <HugeiconsIcon icon={Add01Icon} size={14} />
-          Ajouter un fichier
-        </Button>
+          {showAdvanced ? "Masquer les options" : "Options avancées"}
+        </button>
+        {showAdvanced ? (
+          <form.Field
+            name="maxFileSizeMb"
+            validators={{
+              onSubmit: ({ value }) => {
+                const parsedMax = Number(value);
+                if (!Number.isFinite(parsedMax) || parsedMax <= 0) {
+                  return "Taille max invalide.";
+                }
+                return undefined;
+              },
+            }}
+          >
+            {(field) => (
+              <div className="flex flex-col gap-2">
+                <label htmlFor={field.name} className="text-sm font-medium">
+                  Taille max par fichier (Mo)
+                </label>
+                <Input
+                  id={field.name}
+                  name={field.name}
+                  inputMode="numeric"
+                  value={field.state.value}
+                  onBlur={field.handleBlur}
+                  onChange={(event) => field.handleChange(event.target.value)}
+                  className="max-w-[8rem]"
+                />
+                <FieldError errors={field.state.meta.errors} />
+              </div>
+            )}
+          </form.Field>
+        ) : null}
       </div>
 
-      <div className="flex flex-wrap items-center gap-3">
-        <Button type="button" disabled={submitting} onClick={() => void handleSubmit()}>
-          {submitting ? "Envoi…" : "Envoyer la demande"}
-        </Button>
-        {error ? <p className="text-destructive text-sm">{error}</p> : null}
+      <div className="flex flex-col gap-2">
+        <form.Subscribe selector={(state) => state.isSubmitting}>
+          {(isSubmitting) => (
+            <Button type="submit" disabled={isSubmitting}>
+              {isSubmitting ? "Envoi…" : "Envoyer la demande"}
+            </Button>
+          )}
+        </form.Subscribe>
+        <form.Subscribe selector={(state) => state.errorMap.onSubmit}>
+          {(submitError) =>
+            submitError ? <p className="text-destructive text-sm">{String(submitError)}</p> : null
+          }
+        </form.Subscribe>
       </div>
-    </section>
+    </form>
   );
 }
