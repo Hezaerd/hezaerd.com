@@ -3,7 +3,7 @@ import { Suspense, useCallback, useLayoutEffect, useMemo } from "react";
 import { type QueryClient } from "@tanstack/react-query";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
-import { Outlet, createFileRoute, notFound } from "@tanstack/react-router";
+import { Outlet, createFileRoute, notFound, useRouterState } from "@tanstack/react-router";
 
 import { ClientDeskBackLink } from "@/components/shell/client-desk-back-link";
 import { ClientDeskIdentity, getClientInitials } from "@/components/shell/client-desk-header";
@@ -11,6 +11,7 @@ import { ClientDeskNav } from "@/components/shell/client-desk-nav";
 import { PageContentSkeleton } from "@/components/shell/page-content-skeleton";
 import type { OperatorChromeOverrides } from "@/components/shell/operator-chrome-context";
 import { useSetOperatorChromeOverrides } from "@/components/shell/operator-chrome-context";
+import { ClientSitePreview } from "@/components/site/client-site-preview";
 import { clientBySlugQuery } from "@/lib/convex-queries";
 import { toPortalClient } from "@/lib/portal-types";
 import { usePrefetchWhenAuthenticated } from "@/lib/use-prefetch-when-authenticated";
@@ -19,9 +20,16 @@ export const Route = createFileRoute("/op/clients/$clientId")({
   component: ClientDeskLayout,
 });
 
+function isClientDeskBureau(pathname: string, clientId: string): boolean {
+  const base = `/op/clients/${clientId}`;
+  return pathname === base || pathname === `${base}/`;
+}
+
 function ClientDeskLayout() {
   const { clientId } = Route.useParams();
+  const pathname = useRouterState({ select: (state) => state.location.pathname });
   const setChromeOverrides = useSetOperatorChromeOverrides();
+  const isBureau = isClientDeskBureau(pathname, clientId);
 
   const prefetchDesk = useCallback(
     (queryClient: QueryClient) => {
@@ -60,6 +68,16 @@ function ClientDeskLayout() {
         <ClientDeskIdentity client={client} initials={initials} className="self-end xl:order-2" />
         <ClientDeskNav clientId={clientId} className="xl:order-1 xl:min-w-0 xl:flex-1" />
       </div>
+      {client.linkedSite ? (
+        <div className={isBureau ? "max-w-5xl" : "hidden"} aria-hidden={!isBureau}>
+          <ClientSitePreview
+            key={client.linkedSite.productionUrl}
+            clientSlug={clientId}
+            clientName={client.name}
+            linkedSite={client.linkedSite}
+          />
+        </div>
+      ) : null}
       <Suspense fallback={<PageContentSkeleton />}>
         <Outlet />
       </Suspense>

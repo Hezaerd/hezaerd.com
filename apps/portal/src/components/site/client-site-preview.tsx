@@ -37,7 +37,7 @@ export function ClientSitePreview({ clientSlug, clientName, linkedSite }: Client
             src={linkedSite.productionUrl}
             title={`Aperçu du site de ${clientName}`}
             className="pointer-events-none absolute top-0 left-0 h-[720px] w-[1280px] origin-top-left [transform:scale(calc(100cqw/1280px))]"
-            loading="lazy"
+            loading="eager"
             tabIndex={-1}
             scrolling="no"
             sandbox="allow-scripts allow-same-origin"
