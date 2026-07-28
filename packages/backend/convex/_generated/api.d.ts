@@ -11,7 +11,6 @@
 import type * as auth from "../auth.js";
 import type * as clientInvites from "../clientInvites.js";
 import type * as clients from "../clients.js";
-import type * as crons from "../crons.js";
 import type * as fileStorage from "../fileStorage.js";
 import type * as files from "../files.js";
 import type * as filesInternal from "../filesInternal.js";
@@ -22,17 +21,12 @@ import type * as invoiceInternal from "../invoiceInternal.js";
 import type * as invoices from "../invoices.js";
 import type * as lib_clientCascade from "../lib/clientCascade.js";
 import type * as lib_clients from "../lib/clients.js";
-import type * as lib_deployToken from "../lib/deployToken.js";
 import type * as lib_fileSettings from "../lib/fileSettings.js";
 import type * as lib_files from "../lib/files.js";
 import type * as lib_functions from "../lib/functions.js";
-import type * as lib_githubApp from "../lib/githubApp.js";
 import type * as lib_invoices from "../lib/invoices.js";
 import type * as lib_r2 from "../lib/r2.js";
-import type * as lib_sites from "../lib/sites.js";
 import type * as lib_users from "../lib/users.js";
-import type * as sites from "../sites.js";
-import type * as sitesInternal from "../sitesInternal.js";
 import type * as users from "../users.js";
 
 import type {
@@ -45,7 +39,6 @@ declare const fullApi: ApiFromModules<{
   auth: typeof auth;
   clientInvites: typeof clientInvites;
   clients: typeof clients;
-  crons: typeof crons;
   fileStorage: typeof fileStorage;
   files: typeof files;
   filesInternal: typeof filesInternal;
@@ -56,17 +49,12 @@ declare const fullApi: ApiFromModules<{
   invoices: typeof invoices;
   "lib/clientCascade": typeof lib_clientCascade;
   "lib/clients": typeof lib_clients;
-  "lib/deployToken": typeof lib_deployToken;
   "lib/fileSettings": typeof lib_fileSettings;
   "lib/files": typeof lib_files;
   "lib/functions": typeof lib_functions;
-  "lib/githubApp": typeof lib_githubApp;
   "lib/invoices": typeof lib_invoices;
   "lib/r2": typeof lib_r2;
-  "lib/sites": typeof lib_sites;
   "lib/users": typeof lib_users;
-  sites: typeof sites;
-  sitesInternal: typeof sitesInternal;
   users: typeof users;
 }>;
 

@@ -24,12 +24,6 @@ export function clientBySlugQuery(slug: string) {
   });
 }
 
-export function siteSnapshotQuery(slug: string) {
-  return queryOptions({
-    ...convexQuery(api.sites.getSnapshot, { slug }),
-  });
-}
-
 export const invoicesAllQuery = queryOptions({
   ...convexQuery(api.invoices.listAll, {}),
 });

@@ -40,22 +40,6 @@ export async function cascadeDeleteClient(
     await ctx.db.delete(notification._id);
   }
 
-  const snapshot = await ctx.db
-    .query("siteSnapshots")
-    .withIndex("by_clientId", (q) => q.eq("clientId", clientId))
-    .unique();
-  if (snapshot) {
-    await ctx.db.delete(snapshot._id);
-  }
-
-  const deployTokens = await ctx.db
-    .query("siteDeployTokens")
-    .withIndex("by_clientId", (q) => q.eq("clientId", clientId))
-    .collect();
-  for (const token of deployTokens) {
-    await ctx.db.delete(token._id);
-  }
-
   const seat = await ctx.db
     .query("users")
     .withIndex("by_clientId", (q) => q.eq("clientId", clientId))

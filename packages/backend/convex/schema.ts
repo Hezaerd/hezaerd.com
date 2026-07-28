@@ -11,13 +11,6 @@ export default defineSchema({
     features: v.object({
       insights: v.boolean(),
     }),
-    linkedSite: v.optional(
-      v.object({
-        githubRepo: v.string(),
-        defaultBranch: v.string(),
-        productionUrl: v.string(),
-      }),
-    ),
     fileSettings: v.optional(
       v.object({
         defaultMaxFileSizeMb: v.number(),
@@ -27,58 +20,7 @@ export default defineSchema({
     ),
   })
     .index("by_slug", ["slug"])
-    .index("by_contactEmail", ["contactEmail"])
-    .index("by_linkedSite_githubRepo", ["linkedSite.githubRepo"]),
-
-  siteDeployTokens: defineTable({
-    clientId: v.id("clients"),
-    tokenHash: v.string(),
-    createdAt: v.number(),
-    revokedAt: v.optional(v.number()),
-  })
-    .index("by_clientId", ["clientId"])
-    .index("by_tokenHash", ["tokenHash"]),
-
-  siteSnapshots: defineTable({
-    clientId: v.id("clients"),
-    health: v.object({
-      status: v.union(
-        v.literal("up"),
-        v.literal("degraded"),
-        v.literal("down"),
-        v.literal("unknown"),
-      ),
-      latencyMs: v.optional(v.number()),
-      httpStatus: v.optional(v.number()),
-      checkedAt: v.number(),
-      consecutiveFailures: v.number(),
-    }),
-    git: v.optional(
-      v.object({
-        branch: v.string(),
-        commits: v.array(
-          v.object({
-            sha: v.string(),
-            shortSha: v.string(),
-            message: v.string(),
-            author: v.string(),
-            committedAt: v.number(),
-            url: v.string(),
-          }),
-        ),
-        syncedAt: v.number(),
-      }),
-    ),
-    deploy: v.optional(
-      v.object({
-        status: v.union(v.literal("success"), v.literal("failure"), v.literal("in_progress")),
-        commitSha: v.optional(v.string()),
-        previewUrl: v.optional(v.string()),
-        finishedAt: v.number(),
-        reportedAt: v.number(),
-      }),
-    ),
-  }).index("by_clientId", ["clientId"]),
+    .index("by_contactEmail", ["contactEmail"]),
 
   invoiceCounters: defineTable({
     key: v.literal("global"),

@@ -80,10 +80,6 @@ _Avoid_: Global Operator nav for Insights/Files/Site; duplicating Client Workspa
 Operator-only Client Desk section for piloting a Client's hosted public site: uptime (HTTP health), recent git activity, and latest Cloudflare Pages deploy status. Shown in Client Desk nav only when that Client has a linked site (GitHub repo + production URL configured). Never shown in Client Workspace.
 _Avoid_: Monitoring (as UI label); Mon site (reserved for parked client CMS Area); Project (ambiguous with repo/product work)
 
-**Site health**:
-Operator-visible uptime state for a linked site: up, degraded, or down. Based on periodic HTTP checks; down requires consecutive failures before surfacing.
-_Avoid_: Monitoring (as UI label); SLA; alerting (v1 — display only on Site section)
-
 **Linked site**:
 A Client's hosted public site registered in Portal for Operator piloting. Configured in Client Desk Settings (GitHub repo, branch, production URL); unlocks the read-only Site Desk section for uptime, git activity, and deploy status.
 _Avoid_: Project (as UI label); Website (generic); treating every Client as having a linked site by default; configuring linked-site fields on the Site section itself
