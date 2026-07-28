@@ -47,6 +47,25 @@ export async function assertUniqueContactEmail(ctx: DbCtx, contactEmail: string)
   }
 }
 
+/** Strip internal DB fields before returning a Client to Portal clients/queries. */
+export function toClientResponse(client: Doc<"clients">) {
+  return {
+    _id: client._id,
+    _creationTime: client._creationTime,
+    name: client.name,
+    slug: client.slug,
+    contactEmail: client.contactEmail,
+    features: client.features,
+    fileSettings: client.fileSettings,
+    linkedSite: client.linkedSite
+      ? {
+          productionUrl: client.linkedSite.productionUrl,
+          githubRepo: client.linkedSite.githubRepo,
+        }
+      : undefined,
+  };
+}
+
 export async function tryBindSeatByEmail(
   ctx: MutationCtx,
   userId: Id<"users">,

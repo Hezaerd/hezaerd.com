@@ -1,7 +1,6 @@
-import { v } from "convex/values";
+import { v, type Infer } from "convex/values";
 
 import { internal } from "./_generated/api";
-import type { Doc } from "./_generated/dataModel";
 import { action, internalMutation, internalQuery } from "./_generated/server";
 import { authedQuery, operatorMutation, operatorQuery } from "./lib/functions";
 import { cascadeDeleteClient } from "./lib/clientCascade";
@@ -11,6 +10,7 @@ import {
   getClientBySlug,
   normalizeEmail,
   normalizeSlug,
+  toClientResponse,
 } from "./lib/clients";
 import { validateClientFileSettings } from "./lib/fileSettings";
 import { linkedSiteValidator, validateLinkedSiteInput } from "./lib/linkedSite";
@@ -37,6 +37,8 @@ export const clientValidator = v.object({
   linkedSite: v.optional(linkedSiteValidator),
 });
 
+type ClientResponse = Infer<typeof clientValidator>;
+
 const cockpitStatsValidator = v.object({
   openInvoiceTotal: v.number(),
   paidThisMonth: v.number(),
@@ -50,7 +52,7 @@ export const list = operatorQuery({
   returns: v.array(clientValidator),
   handler: async (ctx) => {
     const clients = await ctx.db.query("clients").collect();
-    return [...clients].sort((a, b) => a.name.localeCompare(b.name, "fr"));
+    return [...clients].sort((a, b) => a.name.localeCompare(b.name, "fr")).map(toClientResponse);
   },
 });
 
@@ -110,14 +112,14 @@ export const getBySlug = authedQuery({
     }
 
     if (ctx.user.role === "operator") {
-      return client;
+      return toClientResponse(client);
     }
 
     if (ctx.user.role === "client") {
       if (ctx.user.clientId !== client._id) {
         throw new Error("Unauthorized: You don't have access to this Client");
       }
-      return client;
+      return toClientResponse(client);
     }
 
     return null;
@@ -161,7 +163,7 @@ export const insert = internalMutation({
       throw new Error("Client not found");
     }
 
-    return client;
+    return toClientResponse(client);
   },
 });
 
@@ -311,7 +313,7 @@ export const create = action({
     contactEmail: v.string(),
   },
   returns: clientValidator,
-  handler: async (ctx, args): Promise<Doc<"clients">> => {
+  handler: async (ctx, args): Promise<ClientResponse> => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) {
       throw new Error("Not authenticated");
@@ -324,7 +326,7 @@ export const create = action({
       throw new Error("Unauthorized: Operator access required");
     }
 
-    const client = await ctx.runMutation(internal.clients.insert, args);
+    const client: ClientResponse = await ctx.runMutation(internal.clients.insert, args);
 
     if (!isOperatorEmail(client.contactEmail)) {
       try {
@@ -343,7 +345,7 @@ export const create = action({
       }
     }
 
-    return client;
+    return toClientResponse(client);
   },
 });
 
@@ -370,7 +372,7 @@ export const setFeature = operatorMutation({
       throw new Error("Client not found");
     }
 
-    return updated;
+    return toClientResponse(updated);
   },
 });
 
@@ -395,7 +397,7 @@ export const updateLinkedSite = operatorMutation({
     if (!updated) {
       throw new Error("Client not found");
     }
-    return updated;
+    return toClientResponse(updated);
   },
 });
 
@@ -422,6 +424,6 @@ export const updateFileSettings = operatorMutation({
     if (!updated) {
       throw new Error("Client not found");
     }
-    return updated;
+    return toClientResponse(updated);
   },
 });
