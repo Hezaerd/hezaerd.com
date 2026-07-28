@@ -11,6 +11,7 @@ dist-ssr
 .output
 .vinxi
 .turbo
+.astro
 __unconfig*
 todos.json
 apps/portfolio/scripts/og-fonts/

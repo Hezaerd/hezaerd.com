@@ -1,0 +1,25 @@
+{
+  "name": "@hezaerd/client-site-template",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "typecheck": "tsc --noEmit",
+    "register-schema": "bun scripts/register-schema.ts"
+  },
+  "dependencies": {
+    "@astrojs/react": "^4.4.2",
+    "@hezaerd/cms": "workspace:*",
+    "astro": "^5.16.4",
+    "react": "catalog:",
+    "react-dom": "catalog:"
+  },
+  "devDependencies": {
+    "@hezaerd/config": "workspace:*",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "typescript": "catalog:"
+  }
+}

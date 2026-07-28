@@ -1,0 +1,53 @@
+---
+import { EditableImage, EditableText } from "@hezaerd/cms/react";
+import { emptyPublishedSnapshot, fetchPublishedSnapshot } from "@hezaerd/cms";
+
+const snapshotUrl = process.env.CMS_SNAPSHOT_URL?.trim();
+let snapshot = emptyPublishedSnapshot();
+
+if (snapshotUrl) {
+  try {
+    snapshot = await fetchPublishedSnapshot(snapshotUrl);
+  } catch {
+    snapshot = emptyPublishedSnapshot();
+  }
+}
+---
+
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{snapshot.fields["hero.title"] || "Client site template"}</title>
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        margin: 0;
+        padding: 2rem;
+        max-width: 48rem;
+      }
+      .hero {
+        display: grid;
+        gap: 1rem;
+      }
+      .hero img {
+        width: 100%;
+        height: auto;
+        border-radius: 0.5rem;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="hero">
+      <EditableText fieldKey="hero.title" snapshot={snapshot} as="h1" />
+      <EditableImage
+        fieldKey="hero.photo"
+        snapshot={snapshot}
+        alt="Hero"
+        width={1920}
+        height={1080}
+        priority
+      />
+    </main>
+  </body>
+</html>

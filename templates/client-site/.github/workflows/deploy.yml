@@ -1,0 +1,24 @@
+name: Deploy client site
+on:
+  push:
+    branches: [main]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - run: bun install
+      - name: Register CMS schema
+        env:
+          CONVEX_SITE_URL: ${{ secrets.CONVEX_SITE_URL }}
+          CMS_DEPLOY_TOKEN: ${{ secrets.CMS_DEPLOY_TOKEN }}
+          CMS_SLUG: ${{ vars.CMS_SLUG }}
+        run: bun run register-schema
+      - name: Build
+        env:
+          CMS_SNAPSHOT_URL: ${{ vars.CMS_SNAPSHOT_URL }}
+        run: bun run build
+      # TODO(plan-005): Cloudflare Pages deploy
+      # - name: Deploy to Cloudflare Pages
+      #   run: bunx wrangler pages deploy dist ...

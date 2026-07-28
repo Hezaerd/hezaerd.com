@@ -113,4 +113,53 @@ export default defineSchema({
     .index("by_authId", ["authId"])
     .index("by_email", ["email"])
     .index("by_clientId", ["clientId"]),
+
+  cmsFieldSchemas: defineTable({
+    clientId: v.id("clients"),
+    fieldKey: v.string(),
+    type: v.union(v.literal("text"), v.literal("image")),
+    constraints: v.union(
+      v.object({
+        maxLength: v.number(),
+        multiline: v.optional(v.boolean()),
+      }),
+      v.object({
+        aspect: v.string(),
+        maxWidth: v.number(),
+        priority: v.optional(v.boolean()),
+      }),
+    ),
+    label: v.optional(v.string()),
+    defaultValue: v.optional(v.string()),
+    deprecated: v.optional(v.boolean()),
+  })
+    .index("by_clientId", ["clientId"])
+    .index("by_clientId_and_fieldKey", ["clientId", "fieldKey"]),
+
+  cmsFieldValues: defineTable({
+    clientId: v.id("clients"),
+    fieldKey: v.string(),
+    draftValue: v.string(),
+    updatedAt: v.number(),
+  })
+    .index("by_clientId", ["clientId"])
+    .index("by_clientId_and_fieldKey", ["clientId", "fieldKey"]),
+
+  cmsDeployTokens: defineTable({
+    clientId: v.id("clients"),
+    tokenHash: v.string(),
+    label: v.optional(v.string()),
+    createdAt: v.number(),
+    revokedAt: v.optional(v.number()),
+  })
+    .index("by_clientId", ["clientId"])
+    .index("by_tokenHash", ["tokenHash"]),
+
+  cmsPublishState: defineTable({
+    clientId: v.id("clients"),
+    version: v.number(),
+    publishedAt: v.optional(v.number()),
+    r2Key: v.optional(v.string()),
+    publishedFields: v.optional(v.record(v.string(), v.string())),
+  }).index("by_clientId", ["clientId"]),
 });

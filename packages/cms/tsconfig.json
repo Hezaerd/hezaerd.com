@@ -1,0 +1,9 @@
+{
+  "extends": "@hezaerd/config/tsconfig.base.json",
+  "compilerOptions": {
+    "paths": {
+      "@hezaerd/cms/*": ["./src/*"]
+    }
+  },
+  "include": ["src"]
+}

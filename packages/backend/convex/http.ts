@@ -3,6 +3,7 @@ import { registerRoutes } from "@convex-dev/stripe";
 import type Stripe from "stripe";
 
 import { authKit } from "./auth";
+import { registerCmsRoutes } from "./cmsHttp";
 import { components, internal } from "./_generated/api";
 import type { Id } from "./_generated/dataModel";
 
@@ -26,5 +27,7 @@ registerRoutes(http, components.stripe, {
     },
   },
 });
+
+registerCmsRoutes(http);
 
 export default http;

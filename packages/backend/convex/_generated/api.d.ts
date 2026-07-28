@@ -11,6 +11,10 @@
 import type * as auth from "../auth.js";
 import type * as clientInvites from "../clientInvites.js";
 import type * as clients from "../clients.js";
+import type * as cms from "../cms.js";
+import type * as cmsHttp from "../cmsHttp.js";
+import type * as cmsInternal from "../cmsInternal.js";
+import type * as cmsPublish from "../cmsPublish.js";
 import type * as fileStorage from "../fileStorage.js";
 import type * as files from "../files.js";
 import type * as filesInternal from "../filesInternal.js";
@@ -21,6 +25,7 @@ import type * as invoiceInternal from "../invoiceInternal.js";
 import type * as invoices from "../invoices.js";
 import type * as lib_clientCascade from "../lib/clientCascade.js";
 import type * as lib_clients from "../lib/clients.js";
+import type * as lib_cms from "../lib/cms.js";
 import type * as lib_fileSettings from "../lib/fileSettings.js";
 import type * as lib_files from "../lib/files.js";
 import type * as lib_functions from "../lib/functions.js";
@@ -39,6 +44,10 @@ declare const fullApi: ApiFromModules<{
   auth: typeof auth;
   clientInvites: typeof clientInvites;
   clients: typeof clients;
+  cms: typeof cms;
+  cmsHttp: typeof cmsHttp;
+  cmsInternal: typeof cmsInternal;
+  cmsPublish: typeof cmsPublish;
   fileStorage: typeof fileStorage;
   files: typeof files;
   filesInternal: typeof filesInternal;
@@ -49,6 +58,7 @@ declare const fullApi: ApiFromModules<{
   invoices: typeof invoices;
   "lib/clientCascade": typeof lib_clientCascade;
   "lib/clients": typeof lib_clients;
+  "lib/cms": typeof lib_cms;
   "lib/fileSettings": typeof lib_fileSettings;
   "lib/files": typeof lib_files;
   "lib/functions": typeof lib_functions;

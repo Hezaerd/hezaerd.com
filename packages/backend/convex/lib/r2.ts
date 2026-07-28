@@ -101,3 +101,35 @@ export async function headR2Object(key: string): Promise<{
     contentType: response.ContentType,
   };
 }
+
+export async function putR2Object(input: {
+  key: string;
+  body: string | Uint8Array;
+  contentType: string;
+  cacheControl?: string;
+}): Promise<void> {
+  const client = createR2Client();
+  await client.send(
+    new PutObjectCommand({
+      Bucket: getR2BucketName(),
+      Key: input.key,
+      Body: input.body,
+      ContentType: input.contentType,
+      CacheControl: input.cacheControl,
+    }),
+  );
+}
+
+export async function getR2ObjectText(key: string): Promise<string> {
+  const client = createR2Client();
+  const response = await client.send(
+    new GetObjectCommand({
+      Bucket: getR2BucketName(),
+      Key: key,
+    }),
+  );
+  if (!response.Body) {
+    throw new Error("Objet R2 introuvable");
+  }
+  return await response.Body.transformToString();
+}
