@@ -1,4 +1,9 @@
+import { useEffect } from "react";
+
 import { useSuspenseQuery } from "@tanstack/react-query";
+
+import { api } from "@hezaerd/backend/api";
+import { useMutation } from "convex/react";
 
 import { createFileRoute, redirect } from "@tanstack/react-router";
 
@@ -12,6 +17,11 @@ export const Route = createFileRoute("/w/$clientId/cms")({
 function ClientCmsPage() {
   const { clientId } = Route.useParams();
   const { data: clientDoc } = useSuspenseQuery(clientBySlugQuery(clientId));
+  const acknowledgeFeatureUnlock = useMutation(api.cms.acknowledgeFeatureUnlock);
+
+  useEffect(() => {
+    void acknowledgeFeatureUnlock({ slug: clientId });
+  }, [acknowledgeFeatureUnlock, clientId]);
 
   if (clientDoc === null || !clientDoc.features.cms) {
     throw redirect({

@@ -1,8 +1,10 @@
 import { v } from "convex/values";
 
-import type { Doc } from "./_generated/dataModel";
+import type { Doc, Id } from "./_generated/dataModel";
+import type { QueryCtx } from "./_generated/server";
 import { loadDeskFieldRows, loadWorkspaceFields } from "./cmsInternal";
 import { authedMutation, authedQuery, operatorMutation, operatorQuery } from "./lib/functions";
+import { CMS_UNPUBLISHED_COPY } from "./lib/clientNotifications";
 import {
   cmsFieldSchemaValidator,
   cmsImageConstraintsValidator,
@@ -40,6 +42,34 @@ const deployTokenRowValidator = v.object({
   createdAt: v.number(),
   revokedAt: v.optional(v.number()),
 });
+
+const cmsNeedsAttentionItemValidator = v.object({
+  id: v.string(),
+  title: v.string(),
+  description: v.string(),
+  clientId: v.string(),
+  area: v.literal("cms"),
+  kind: v.union(v.literal("cms"), v.literal("feature")),
+});
+
+const cmsWaitingItemValidator = v.object({
+  id: v.string(),
+  title: v.string(),
+  description: v.string(),
+  href: v.string(),
+});
+
+async function loadUndismissedCmsFeatureUnlocks(ctx: QueryCtx, clientId: Id<"clients">) {
+  const notifications = await ctx.db
+    .query("clientNotifications")
+    .withIndex("by_clientId", (q) => q.eq("clientId", clientId))
+    .collect();
+
+  return notifications.filter(
+    (notification) =>
+      notification.kind === "cms_feature_unlock" && notification.dismissedAt === undefined,
+  );
+}
 
 function assertCmsFeature(client: Doc<"clients">): void {
   if (!client.features.cms) {
@@ -312,5 +342,125 @@ export const createPreviewLink = authedMutation({
     const previewUrl = new URL("/preview", siteBaseUrl);
     previewUrl.searchParams.set("token", token);
     return { url: previewUrl.toString() };
+  },
+});
+
+/** Needs Attention rows for CMS feature unlock and publish-ready drafts. */
+export const listNeedsAttention = authedQuery({
+  args: { slug: v.string() },
+  returns: v.array(cmsNeedsAttentionItemValidator),
+  handler: async (ctx, args) => {
+    if (ctx.user.role !== "client") {
+      return [];
+    }
+
+    const client = await assertClientAccess(ctx, ctx.user, args.slug);
+    if (!client.features.cms) {
+      return [];
+    }
+
+    const items: Array<{
+      id: string;
+      title: string;
+      description: string;
+      clientId: string;
+      area: "cms";
+      kind: "cms" | "feature";
+    }> = [];
+
+    const unlockNotifications = await loadUndismissedCmsFeatureUnlocks(ctx, client._id);
+    for (const notification of unlockNotifications) {
+      items.push({
+        id: notification._id,
+        title: notification.title,
+        description: notification.description,
+        clientId: client.slug,
+        area: "cms",
+        kind: "feature",
+      });
+    }
+
+    const { hasUnpublishedChanges } = await loadWorkspaceFields(ctx, client._id);
+    if (hasUnpublishedChanges) {
+      items.push({
+        id: `cms-unpublished-${client._id}`,
+        title: CMS_UNPUBLISHED_COPY.title,
+        description: CMS_UNPUBLISHED_COPY.description,
+        clientId: client.slug,
+        area: "cms",
+        kind: "cms",
+      });
+    }
+
+    return items;
+  },
+});
+
+/** Waiting on Client rows for CMS feature unlock and publish-ready drafts. */
+export const listWaitingOnClient = operatorQuery({
+  args: { slug: v.string() },
+  returns: v.array(cmsWaitingItemValidator),
+  handler: async (ctx, args) => {
+    const client = await assertClientAccess(ctx, ctx.user, args.slug);
+    if (!client.features.cms) {
+      return [];
+    }
+
+    const href = `/op/clients/${client.slug}/cms`;
+    const items: Array<{
+      id: string;
+      title: string;
+      description: string;
+      href: string;
+    }> = [];
+
+    const unlockNotifications = await loadUndismissedCmsFeatureUnlocks(ctx, client._id);
+    for (const notification of unlockNotifications) {
+      items.push({
+        id: notification._id,
+        title: notification.title,
+        description: notification.description,
+        href,
+      });
+    }
+
+    const { hasUnpublishedChanges } = await loadWorkspaceFields(ctx, client._id);
+    if (hasUnpublishedChanges) {
+      items.push({
+        id: `cms-unpublished-${client._id}`,
+        title: CMS_UNPUBLISHED_COPY.title,
+        description: CMS_UNPUBLISHED_COPY.description,
+        href,
+      });
+    }
+
+    return items;
+  },
+});
+
+/** Dismiss undismissed CMS feature-unlock notifications after Mon site visit. */
+export const acknowledgeFeatureUnlock = authedMutation({
+  args: { slug: v.string() },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    const client = await assertClientAccess(ctx, ctx.user, args.slug);
+    if (ctx.user.role !== "client") {
+      return null;
+    }
+    if (!client.features.cms) {
+      return null;
+    }
+
+    const unlockNotifications = await loadUndismissedCmsFeatureUnlocks(ctx, client._id);
+    if (unlockNotifications.length === 0) {
+      return null;
+    }
+
+    const dismissedAt = Date.now();
+    for (const notification of unlockNotifications) {
+      await ctx.db.patch(notification._id, { dismissedAt });
+    }
+
+    return null;
   },
 });

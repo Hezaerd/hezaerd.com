@@ -493,7 +493,12 @@ export const listNeedsAttention = authedQuery({
       .collect();
 
     const notificationItems = notifications
-      .filter((notification) => !notification.dismissedAt)
+      .filter(
+        (notification) =>
+          !notification.dismissedAt &&
+          (notification.kind === "file_request_cancelled" ||
+            notification.kind === "file_slot_removed"),
+      )
       .map((notification) => ({
         id: notification._id,
         title: notification.title,

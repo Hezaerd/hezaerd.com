@@ -12,6 +12,7 @@ import {
   normalizeEmail,
   normalizeSlug,
 } from "./lib/clients";
+import { CMS_FEATURE_UNLOCK_COPY } from "./lib/clientNotifications";
 import { validateClientFileSettings } from "./lib/fileSettings";
 import { assertClientAccess, isOperatorEmail } from "./lib/users";
 
@@ -348,7 +349,7 @@ export const create = action({
   },
 });
 
-/** Toggle a Client Feature (Operator). Does not create Needs Attention rows. */
+/** Toggle a Client Feature (Operator). Creates a CMS feature-unlock notification on enable. */
 export const setFeature = operatorMutation({
   args: {
     slug: v.string(),
@@ -358,6 +359,7 @@ export const setFeature = operatorMutation({
   returns: clientValidator,
   handler: async (ctx, args) => {
     const client = await assertClientAccess(ctx, ctx.user, args.slug);
+    const wasEnabled = client.features[args.feature];
 
     await ctx.db.patch(client._id, {
       features: {
@@ -365,6 +367,25 @@ export const setFeature = operatorMutation({
         [args.feature]: args.enabled,
       },
     });
+
+    if (args.feature === "cms" && args.enabled && !wasEnabled) {
+      const notifications = await ctx.db
+        .query("clientNotifications")
+        .withIndex("by_clientId", (q) => q.eq("clientId", client._id))
+        .collect();
+      const hasUndismissedUnlock = notifications.some(
+        (notification) =>
+          notification.kind === "cms_feature_unlock" && notification.dismissedAt === undefined,
+      );
+      if (!hasUndismissedUnlock) {
+        await ctx.db.insert("clientNotifications", {
+          clientId: client._id,
+          kind: "cms_feature_unlock",
+          title: CMS_FEATURE_UNLOCK_COPY.title,
+          description: CMS_FEATURE_UNLOCK_COPY.description,
+        });
+      }
+    }
 
     const updated = await ctx.db.get("clients", client._id);
     if (!updated) {

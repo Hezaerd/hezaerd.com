@@ -97,7 +97,11 @@ export default defineSchema({
 
   clientNotifications: defineTable({
     clientId: v.id("clients"),
-    kind: v.union(v.literal("file_request_cancelled"), v.literal("file_slot_removed")),
+    kind: v.union(
+      v.literal("file_request_cancelled"),
+      v.literal("file_slot_removed"),
+      v.literal("cms_feature_unlock"),
+    ),
     title: v.string(),
     description: v.string(),
     dismissedAt: v.optional(v.number()),
