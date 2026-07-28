@@ -10,7 +10,7 @@ export default defineSchema({
     workosInvitationId: v.optional(v.string()),
     features: v.object({
       insights: v.boolean(),
-      website: v.boolean(),
+      cms: v.boolean(),
     }),
     fileSettings: v.optional(
       v.object({

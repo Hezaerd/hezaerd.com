@@ -22,7 +22,7 @@ export const Route = createFileRoute("/w/$clientId")({
   component: ClientWorkspaceLayout,
 });
 
-const DESK_SEGMENTS = ["invoices", "files", "insights", "website"] as const;
+const DESK_SEGMENTS = ["invoices", "files", "insights", "cms"] as const;
 type DeskSegment = (typeof DESK_SEGMENTS)[number];
 
 function resolveDeskSegment(pathname: string, clientId: string): DeskSegment | null {

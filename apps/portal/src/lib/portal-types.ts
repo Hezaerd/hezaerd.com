@@ -1,8 +1,8 @@
-export type ClientFeature = "insights" | "website";
+export type ClientFeature = "insights" | "cms";
 
-export type NeedsAttentionKind = "invoice" | "file" | "notification" | "website" | "feature";
+export type NeedsAttentionKind = "invoice" | "file" | "notification" | "cms" | "feature";
 
-export type NeedsAttentionArea = "invoices" | "files" | "website" | "insights";
+export type NeedsAttentionArea = "invoices" | "files" | "cms" | "insights";
 
 export type NeedsAttentionItem = {
   id: string;

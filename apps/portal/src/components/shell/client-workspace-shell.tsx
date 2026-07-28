@@ -22,7 +22,7 @@ type ClientWorkspaceShellProps = {
 
 type WorkspaceArea = {
   label: string;
-  segment: "" | "invoices" | "files" | "insights" | "website";
+  segment: "" | "invoices" | "files" | "insights" | "cms";
   feature?: keyof PortalClient["features"];
   icon: IconSvgElement;
 };
@@ -41,9 +41,9 @@ const featureAreas: WorkspaceArea[] = [
     icon: PieChart01Icon,
   },
   {
-    label: "Site web",
-    segment: "website",
-    feature: "website",
+    label: "Mon site",
+    segment: "cms",
+    feature: "cms",
     icon: Globe02Icon,
   },
 ];

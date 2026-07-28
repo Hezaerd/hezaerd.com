@@ -17,7 +17,7 @@ import { assertClientAccess, isOperatorEmail } from "./lib/users";
 
 const featuresValidator = v.object({
   insights: v.boolean(),
-  website: v.boolean(),
+  cms: v.boolean(),
 });
 
 export const clientValidator = v.object({
@@ -152,7 +152,7 @@ export const insert = internalMutation({
       contactEmail,
       features: {
         insights: false,
-        website: false,
+        cms: false,
       },
     });
 
@@ -351,7 +351,7 @@ export const create = action({
 export const setFeature = operatorMutation({
   args: {
     slug: v.string(),
-    feature: v.union(v.literal("insights"), v.literal("website")),
+    feature: v.union(v.literal("insights"), v.literal("cms")),
     enabled: v.boolean(),
   },
   returns: clientValidator,
@@ -398,5 +398,35 @@ export const updateFileSettings = operatorMutation({
       throw new Error("Client not found");
     }
     return updated;
+  },
+});
+
+/** One-time: rename `features.website` → `features.cms` on existing Client rows. */
+export const migrateWebsiteFeatureToCms = internalMutation({
+  args: {},
+  returns: v.number(),
+  handler: async (ctx) => {
+    const clients = await ctx.db.query("clients").collect();
+    let migrated = 0;
+
+    for (const client of clients) {
+      const features = client.features as {
+        insights: boolean;
+        cms?: boolean;
+        website?: boolean;
+      };
+
+      if ("website" in features && features.cms === undefined) {
+        await ctx.db.patch(client._id, {
+          features: {
+            insights: features.insights,
+            cms: features.website ?? false,
+          },
+        });
+        migrated += 1;
+      }
+    }
+
+    return migrated;
   },
 });

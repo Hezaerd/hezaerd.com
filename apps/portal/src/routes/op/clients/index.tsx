@@ -48,7 +48,7 @@ function ClientDirectoryPage() {
           const featureList = [
             "Essentiel",
             client.features.insights ? "Statistiques" : null,
-            client.features.website ? "Site web" : null,
+            client.features.cms ? "CMS" : null,
           ].filter(Boolean);
 
           return (

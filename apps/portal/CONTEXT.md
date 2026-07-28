@@ -25,15 +25,15 @@ The Client-only collaboration shell bound to one Client. Holds that Client’s w
 _Avoid_: Operator-in-workspace; Workspace Switcher; Open workspace; overlay mode; one shell per engagement/project; portal-within-portal; shared Area chrome for Operators
 
 **Client Desk**:
-The Operator pilot hub for one Client (`/op/clients/{slug}` and its Desk sections). Dual queues on the landing, plus practice-side Invoices, Files, Website, Insights, and Features. Replaces the old thin Client record.
+The Operator pilot hub for one Client (`/op/clients/{slug}` and its Desk sections). Dual queues on the landing, plus practice-side Invoices, Files, CMS, Insights, and Features. Replaces the old thin Client record.
 _Avoid_: Client record; Open workspace; cloning Client Home; acting as the Client (Pay, Publish, fulfill File requests)
 
 **Desk section**:
-An Operator-only sub-route under Client Desk for practice-side work on that Client (e.g. Invoices, Files, Website, Insights, Features).
+An Operator-only sub-route under Client Desk for practice-side work on that Client (e.g. Invoices, Files, CMS, Insights, Features).
 _Avoid_: Calling Desk sections Areas; packing Client-calm density into Desk sections
 
 **Waiting on Client**:
-Open work on Client Desk that needs a Client response (unpaid Invoice, outstanding File request, publish-ready Website draft, Feature unlock pending Client view, and similar).
+Open work on Client Desk that needs a Client response (unpaid Invoice, outstanding File request, publish-ready CMS draft, Feature unlock pending Client view, and similar).
 _Avoid_: Needs Attention (Client-only term); mixing into a single unlabeled queue
 
 **Waiting on Operator**:
@@ -45,15 +45,15 @@ Always-on Client Workspace nav: Home, Invoices, Files. Not toggled per Client.
 _Avoid_: Optional modules, add-ons (for these three)
 
 **Feature**:
-An Operator-toggled Client Workspace Area beyond Core. Client-facing labels: Insights (analytics), Website (CMS). Enabled/disabled per Client from Client Desk to match what that Client bought. On enable: one dismissible Needs Attention for the Client (“Website is ready…”), then silent.
-_Avoid_: Showing disabled Features in Client nav; hard-coding every Client to the full set; exposing “CMS” / “Analytics” as Client nav labels; persistent unlock banners
+An Operator-toggled Client Workspace Area beyond Core. Client-facing labels: Insights (analytics), Mon site (CMS). Enabled/disabled per Client from Client Desk to match what that Client bought. On enable: one dismissible Needs Attention for the Client (« Mon site est prêt… »), then silent.
+_Avoid_: Showing disabled Features in Client nav; hard-coding every Client to the full set; exposing « CMS » / « Analytics » as Client nav labels; persistent unlock banners
 
 **Feature unlock**:
 The one-time Needs Attention created when an Operator enables a Feature for a Client. Dismissed after view/dismiss; does not recur. Also appears as Waiting on Client on Client Desk until the Client has seen it.
 _Avoid_: Permanent badge on the nav item; email-only notification as the sole cue
 
 **Area**:
-A top-level Client Workspace nav destination. Labels: Home, Invoices, Files, Insights, Website. Client-only vocabulary — not used for Operator Desk sections.
+A top-level Client Workspace nav destination. Labels: Home, Invoices, Files, Insights, Mon site. Client-only vocabulary — not used for Operator Desk sections.
 _Avoid_: Modules, tabs-as-product-name, dashboard widgets-as-nav; calling Desk sections Areas
 
 **Client Home**:
@@ -61,7 +61,7 @@ The Client Workspace landing Area. Surfaces only Needs Attention items (unpaid i
 _Avoid_: Snapshot metric cards as the default Home; decorative dashboards; forcing a click through Home to reach work; Operator using Client Home as their cockpit
 
 **Needs Attention**:
-An actionable item on Client Home that expects a Client response. Tapping it goes straight to the relevant Area/detail. Includes unpaid Invoices, File requests, publish-ready Website drafts, Feature unlocks, and similar.
+An actionable item on Client Home that expects a Client response. Tapping it goes straight to the relevant Area/detail. Includes unpaid Invoices, File requests, publish-ready CMS drafts, Feature unlocks, and similar.
 _Avoid_: FYI-only widgets, vanity metrics, news feeds; Insights metrics as Needs Attention by default; Operator-in-workspace as an actor; using this term on Client Desk (use Waiting on Client / Waiting on Operator)
 
 **Practice Cockpit**:
@@ -73,8 +73,8 @@ Operator shell and Client Workspace each use a left sidebar for primary nav and 
 _Avoid_: Top-only nav; Workspace Switcher; Operator chrome inside Client Workspace; packing Client Areas like a SaaS admin console
 
 **Operator nav**:
-Operator sidebar: Home · Clients · Invoices · Settings. Per-Client Files, Insights, Website, and Feature toggles live on Client Desk — not as global Operator Areas and not inside Client Workspace.
-_Avoid_: Global Operator nav for Insights/Website/Files; duplicating Client Workspace Areas in Operator chrome; Open workspace into Client shell
+Operator sidebar: Home · Clients · Invoices · Settings. Per-Client Files, Insights, CMS, and Feature toggles live on Client Desk — not as global Operator Areas and not inside Client Workspace.
+_Avoid_: Global Operator nav for Insights/CMS/Files; duplicating Client Workspace Areas in Operator chrome; Open workspace into Client shell
 
 **Files**:
 Shared folder (open upload + list) plus Operator-created File requests. Clients use the Files Area; Operators manage the practice side from the Client Desk Files section.
@@ -88,17 +88,19 @@ _Avoid_: Vague “please upload stuff”; using chat/email as the system of reco
 A payment request to a Client. Operators create and manage from Client Desk (and the global Operator Invoices ledger). In the Client Workspace Invoices Area, unpaid ones lead (Pay CTA); paid history is secondary. Open Invoices appear as Needs Attention on Client Home and Waiting on Client on Client Desk. Only the Client Pays.
 _Avoid_: Bill, payment request (as UI label); ledger-first Client UI; statement-only path to Pay; Operator Paying as the Client
 
-**Website**:
-Client Workspace Feature Area for updating the Client’s site without Operator intervention. Guided fields only (not a page builder): Operator-defined Editable fields on Client Desk, with Preview and Publish for the Client.
-_Avoid_: CMS as Client label; visual/click-the-page editor as default; free-form page list that can break layout; Operator Publishing as the Client
+**CMS**:
+Optional Feature: guided content editing for the Client’s public site (custom repo + `@hezaerd/cms`). Client Workspace Area label: **Mon site**. Operator Desk section label: **CMS**. Code flag: `features.cms`. Guided fields only (not a page builder): field keys declared in the client site code, registered at deploy; Operator configures labels/constraints on Client Desk; Client edits values with Preview and Publish in Portal.
+_Avoid_: « CMS » as Client nav label; « Website » as feature name; visual/click-the-page editor; free-form page list; Operator Publishing as the Client
 
 **Editable field**:
-A single Operator-defined spot on the Client’s site the Client may change in Website (e.g. hours, hero blurb, menu PDF).
+A code-declared spot on the Client’s site the Client may change in Mon site (e.g. hours, hero blurb, hero photo).
 _Avoid_: Block, section, widget (unless those become real model terms later)
 
 **Publish**:
-Client action in Website that makes draft Editable field changes live on their site. Preview comes before Publish.
+Client action in Mon site that copies draft Editable field values to the published R2 snapshot served on the live site. Preview comes before Publish.
 _Avoid_: Deploy, ship, push (as Client-facing labels); Operator Publishing from Client Desk
+
+Architecture & grilling decisions: [docs/cms-architecture.md](./docs/cms-architecture.md).
 
 **Insights**:
 Client Workspace Feature Area: three plain truths (visitors for the period, top pages/actions, one takeaway). Not a mini analytics suite. Does not create Needs Attention by default. Operators can review the same truths from the Client Desk Insights section.

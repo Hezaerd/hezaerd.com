@@ -23,16 +23,16 @@ import { Route as ApiAuthSignOutRouteImport } from './routes/api.auth.sign-out'
 import { Route as OpClientsIndexRouteImport } from './routes/op/clients/index'
 import { Route as OpClientsClientIdRouteRouteImport } from './routes/op/clients/$clientId/route'
 import { Route as WClientIdIndexRouteImport } from './routes/w/$clientId/index'
+import { Route as WClientIdCmsRouteImport } from './routes/w/$clientId/cms'
 import { Route as WClientIdFilesRouteImport } from './routes/w/$clientId/files'
 import { Route as WClientIdInsightsRouteImport } from './routes/w/$clientId/insights'
 import { Route as WClientIdInvoicesRouteImport } from './routes/w/$clientId/invoices'
-import { Route as WClientIdWebsiteRouteImport } from './routes/w/$clientId/website'
 import { Route as OpClientsClientIdIndexRouteImport } from './routes/op/clients/$clientId/index'
+import { Route as OpClientsClientIdCmsRouteImport } from './routes/op/clients/$clientId/cms'
 import { Route as OpClientsClientIdFilesRouteImport } from './routes/op/clients/$clientId/files'
 import { Route as OpClientsClientIdInsightsRouteImport } from './routes/op/clients/$clientId/insights'
 import { Route as OpClientsClientIdInvoicesRouteImport } from './routes/op/clients/$clientId/invoices'
 import { Route as OpClientsClientIdSettingsRouteImport } from './routes/op/clients/$clientId/settings'
-import { Route as OpClientsClientIdWebsiteRouteImport } from './routes/op/clients/$clientId/website'
 import { Route as WClientIdFilesIndexRouteImport } from './routes/w/$clientId/files/index'
 import { Route as WClientIdFilesRequestIdRouteImport } from './routes/w/$clientId/files/$requestId'
 import { Route as OpClientsClientIdFilesIndexRouteImport } from './routes/op/clients/$clientId/files/index'
@@ -108,6 +108,11 @@ const WClientIdIndexRoute = WClientIdIndexRouteImport.update({
   path: '/',
   getParentRoute: () => WClientIdRouteRoute,
 } as any)
+const WClientIdCmsRoute = WClientIdCmsRouteImport.update({
+  id: '/cms',
+  path: '/cms',
+  getParentRoute: () => WClientIdRouteRoute,
+} as any)
 const WClientIdFilesRoute = WClientIdFilesRouteImport.update({
   id: '/files',
   path: '/files',
@@ -123,14 +128,14 @@ const WClientIdInvoicesRoute = WClientIdInvoicesRouteImport.update({
   path: '/invoices',
   getParentRoute: () => WClientIdRouteRoute,
 } as any)
-const WClientIdWebsiteRoute = WClientIdWebsiteRouteImport.update({
-  id: '/website',
-  path: '/website',
-  getParentRoute: () => WClientIdRouteRoute,
-} as any)
 const OpClientsClientIdIndexRoute = OpClientsClientIdIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => OpClientsClientIdRouteRoute,
+} as any)
+const OpClientsClientIdCmsRoute = OpClientsClientIdCmsRouteImport.update({
+  id: '/cms',
+  path: '/cms',
   getParentRoute: () => OpClientsClientIdRouteRoute,
 } as any)
 const OpClientsClientIdFilesRoute = OpClientsClientIdFilesRouteImport.update({
@@ -154,12 +159,6 @@ const OpClientsClientIdSettingsRoute =
   OpClientsClientIdSettingsRouteImport.update({
     id: '/settings',
     path: '/settings',
-    getParentRoute: () => OpClientsClientIdRouteRoute,
-  } as any)
-const OpClientsClientIdWebsiteRoute =
-  OpClientsClientIdWebsiteRouteImport.update({
-    id: '/website',
-    path: '/website',
     getParentRoute: () => OpClientsClientIdRouteRoute,
   } as any)
 const WClientIdFilesIndexRoute = WClientIdFilesIndexRouteImport.update({
@@ -198,17 +197,17 @@ export interface FileRoutesByFullPath {
   '/api/auth/callback': typeof ApiAuthCallbackRoute
   '/api/auth/sign-in': typeof ApiAuthSignInRoute
   '/api/auth/sign-out': typeof ApiAuthSignOutRoute
+  '/w/$clientId/cms': typeof WClientIdCmsRoute
   '/w/$clientId/files': typeof WClientIdFilesRouteWithChildren
   '/w/$clientId/insights': typeof WClientIdInsightsRoute
   '/w/$clientId/invoices': typeof WClientIdInvoicesRoute
-  '/w/$clientId/website': typeof WClientIdWebsiteRoute
   '/op/clients/': typeof OpClientsIndexRoute
   '/w/$clientId/': typeof WClientIdIndexRoute
+  '/op/clients/$clientId/cms': typeof OpClientsClientIdCmsRoute
   '/op/clients/$clientId/files': typeof OpClientsClientIdFilesRouteWithChildren
   '/op/clients/$clientId/insights': typeof OpClientsClientIdInsightsRoute
   '/op/clients/$clientId/invoices': typeof OpClientsClientIdInvoicesRoute
   '/op/clients/$clientId/settings': typeof OpClientsClientIdSettingsRoute
-  '/op/clients/$clientId/website': typeof OpClientsClientIdWebsiteRoute
   '/w/$clientId/files/$requestId': typeof WClientIdFilesRequestIdRoute
   '/op/clients/$clientId/': typeof OpClientsClientIdIndexRoute
   '/w/$clientId/files/': typeof WClientIdFilesIndexRoute
@@ -225,15 +224,15 @@ export interface FileRoutesByTo {
   '/api/auth/callback': typeof ApiAuthCallbackRoute
   '/api/auth/sign-in': typeof ApiAuthSignInRoute
   '/api/auth/sign-out': typeof ApiAuthSignOutRoute
+  '/w/$clientId/cms': typeof WClientIdCmsRoute
   '/w/$clientId/insights': typeof WClientIdInsightsRoute
   '/w/$clientId/invoices': typeof WClientIdInvoicesRoute
-  '/w/$clientId/website': typeof WClientIdWebsiteRoute
   '/op/clients': typeof OpClientsIndexRoute
   '/w/$clientId': typeof WClientIdIndexRoute
+  '/op/clients/$clientId/cms': typeof OpClientsClientIdCmsRoute
   '/op/clients/$clientId/insights': typeof OpClientsClientIdInsightsRoute
   '/op/clients/$clientId/invoices': typeof OpClientsClientIdInvoicesRoute
   '/op/clients/$clientId/settings': typeof OpClientsClientIdSettingsRoute
-  '/op/clients/$clientId/website': typeof OpClientsClientIdWebsiteRoute
   '/w/$clientId/files/$requestId': typeof WClientIdFilesRequestIdRoute
   '/op/clients/$clientId': typeof OpClientsClientIdIndexRoute
   '/w/$clientId/files': typeof WClientIdFilesIndexRoute
@@ -254,17 +253,17 @@ export interface FileRoutesById {
   '/api/auth/callback': typeof ApiAuthCallbackRoute
   '/api/auth/sign-in': typeof ApiAuthSignInRoute
   '/api/auth/sign-out': typeof ApiAuthSignOutRoute
+  '/w/$clientId/cms': typeof WClientIdCmsRoute
   '/w/$clientId/files': typeof WClientIdFilesRouteWithChildren
   '/w/$clientId/insights': typeof WClientIdInsightsRoute
   '/w/$clientId/invoices': typeof WClientIdInvoicesRoute
-  '/w/$clientId/website': typeof WClientIdWebsiteRoute
   '/op/clients/': typeof OpClientsIndexRoute
   '/w/$clientId/': typeof WClientIdIndexRoute
+  '/op/clients/$clientId/cms': typeof OpClientsClientIdCmsRoute
   '/op/clients/$clientId/files': typeof OpClientsClientIdFilesRouteWithChildren
   '/op/clients/$clientId/insights': typeof OpClientsClientIdInsightsRoute
   '/op/clients/$clientId/invoices': typeof OpClientsClientIdInvoicesRoute
   '/op/clients/$clientId/settings': typeof OpClientsClientIdSettingsRoute
-  '/op/clients/$clientId/website': typeof OpClientsClientIdWebsiteRoute
   '/w/$clientId/files/$requestId': typeof WClientIdFilesRequestIdRoute
   '/op/clients/$clientId/': typeof OpClientsClientIdIndexRoute
   '/w/$clientId/files/': typeof WClientIdFilesIndexRoute
@@ -286,17 +285,17 @@ export interface FileRouteTypes {
     | '/api/auth/callback'
     | '/api/auth/sign-in'
     | '/api/auth/sign-out'
+    | '/w/$clientId/cms'
     | '/w/$clientId/files'
     | '/w/$clientId/insights'
     | '/w/$clientId/invoices'
-    | '/w/$clientId/website'
     | '/op/clients/'
     | '/w/$clientId/'
+    | '/op/clients/$clientId/cms'
     | '/op/clients/$clientId/files'
     | '/op/clients/$clientId/insights'
     | '/op/clients/$clientId/invoices'
     | '/op/clients/$clientId/settings'
-    | '/op/clients/$clientId/website'
     | '/w/$clientId/files/$requestId'
     | '/op/clients/$clientId/'
     | '/w/$clientId/files/'
@@ -313,15 +312,15 @@ export interface FileRouteTypes {
     | '/api/auth/callback'
     | '/api/auth/sign-in'
     | '/api/auth/sign-out'
+    | '/w/$clientId/cms'
     | '/w/$clientId/insights'
     | '/w/$clientId/invoices'
-    | '/w/$clientId/website'
     | '/op/clients'
     | '/w/$clientId'
+    | '/op/clients/$clientId/cms'
     | '/op/clients/$clientId/insights'
     | '/op/clients/$clientId/invoices'
     | '/op/clients/$clientId/settings'
-    | '/op/clients/$clientId/website'
     | '/w/$clientId/files/$requestId'
     | '/op/clients/$clientId'
     | '/w/$clientId/files'
@@ -341,17 +340,17 @@ export interface FileRouteTypes {
     | '/api/auth/callback'
     | '/api/auth/sign-in'
     | '/api/auth/sign-out'
+    | '/w/$clientId/cms'
     | '/w/$clientId/files'
     | '/w/$clientId/insights'
     | '/w/$clientId/invoices'
-    | '/w/$clientId/website'
     | '/op/clients/'
     | '/w/$clientId/'
+    | '/op/clients/$clientId/cms'
     | '/op/clients/$clientId/files'
     | '/op/clients/$clientId/insights'
     | '/op/clients/$clientId/invoices'
     | '/op/clients/$clientId/settings'
-    | '/op/clients/$clientId/website'
     | '/w/$clientId/files/$requestId'
     | '/op/clients/$clientId/'
     | '/w/$clientId/files/'
@@ -470,6 +469,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WClientIdIndexRouteImport
       parentRoute: typeof WClientIdRouteRoute
     }
+    '/w/$clientId/cms': {
+      id: '/w/$clientId/cms'
+      path: '/cms'
+      fullPath: '/w/$clientId/cms'
+      preLoaderRoute: typeof WClientIdCmsRouteImport
+      parentRoute: typeof WClientIdRouteRoute
+    }
     '/w/$clientId/files': {
       id: '/w/$clientId/files'
       path: '/files'
@@ -491,18 +497,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WClientIdInvoicesRouteImport
       parentRoute: typeof WClientIdRouteRoute
     }
-    '/w/$clientId/website': {
-      id: '/w/$clientId/website'
-      path: '/website'
-      fullPath: '/w/$clientId/website'
-      preLoaderRoute: typeof WClientIdWebsiteRouteImport
-      parentRoute: typeof WClientIdRouteRoute
-    }
     '/op/clients/$clientId/': {
       id: '/op/clients/$clientId/'
       path: '/'
       fullPath: '/op/clients/$clientId/'
       preLoaderRoute: typeof OpClientsClientIdIndexRouteImport
+      parentRoute: typeof OpClientsClientIdRouteRoute
+    }
+    '/op/clients/$clientId/cms': {
+      id: '/op/clients/$clientId/cms'
+      path: '/cms'
+      fullPath: '/op/clients/$clientId/cms'
+      preLoaderRoute: typeof OpClientsClientIdCmsRouteImport
       parentRoute: typeof OpClientsClientIdRouteRoute
     }
     '/op/clients/$clientId/files': {
@@ -531,13 +537,6 @@ declare module '@tanstack/react-router' {
       path: '/settings'
       fullPath: '/op/clients/$clientId/settings'
       preLoaderRoute: typeof OpClientsClientIdSettingsRouteImport
-      parentRoute: typeof OpClientsClientIdRouteRoute
-    }
-    '/op/clients/$clientId/website': {
-      id: '/op/clients/$clientId/website'
-      path: '/website'
-      fullPath: '/op/clients/$clientId/website'
-      preLoaderRoute: typeof OpClientsClientIdWebsiteRouteImport
       parentRoute: typeof OpClientsClientIdRouteRoute
     }
     '/w/$clientId/files/': {
@@ -588,21 +587,21 @@ const OpClientsClientIdFilesRouteWithChildren =
   )
 
 interface OpClientsClientIdRouteRouteChildren {
+  OpClientsClientIdCmsRoute: typeof OpClientsClientIdCmsRoute
   OpClientsClientIdFilesRoute: typeof OpClientsClientIdFilesRouteWithChildren
   OpClientsClientIdInsightsRoute: typeof OpClientsClientIdInsightsRoute
   OpClientsClientIdInvoicesRoute: typeof OpClientsClientIdInvoicesRoute
   OpClientsClientIdSettingsRoute: typeof OpClientsClientIdSettingsRoute
-  OpClientsClientIdWebsiteRoute: typeof OpClientsClientIdWebsiteRoute
   OpClientsClientIdIndexRoute: typeof OpClientsClientIdIndexRoute
 }
 
 const OpClientsClientIdRouteRouteChildren: OpClientsClientIdRouteRouteChildren =
   {
+    OpClientsClientIdCmsRoute: OpClientsClientIdCmsRoute,
     OpClientsClientIdFilesRoute: OpClientsClientIdFilesRouteWithChildren,
     OpClientsClientIdInsightsRoute: OpClientsClientIdInsightsRoute,
     OpClientsClientIdInvoicesRoute: OpClientsClientIdInvoicesRoute,
     OpClientsClientIdSettingsRoute: OpClientsClientIdSettingsRoute,
-    OpClientsClientIdWebsiteRoute: OpClientsClientIdWebsiteRoute,
     OpClientsClientIdIndexRoute: OpClientsClientIdIndexRoute,
   }
 
@@ -645,18 +644,18 @@ const WClientIdFilesRouteWithChildren = WClientIdFilesRoute._addFileChildren(
 )
 
 interface WClientIdRouteRouteChildren {
+  WClientIdCmsRoute: typeof WClientIdCmsRoute
   WClientIdFilesRoute: typeof WClientIdFilesRouteWithChildren
   WClientIdInsightsRoute: typeof WClientIdInsightsRoute
   WClientIdInvoicesRoute: typeof WClientIdInvoicesRoute
-  WClientIdWebsiteRoute: typeof WClientIdWebsiteRoute
   WClientIdIndexRoute: typeof WClientIdIndexRoute
 }
 
 const WClientIdRouteRouteChildren: WClientIdRouteRouteChildren = {
+  WClientIdCmsRoute: WClientIdCmsRoute,
   WClientIdFilesRoute: WClientIdFilesRouteWithChildren,
   WClientIdInsightsRoute: WClientIdInsightsRoute,
   WClientIdInvoicesRoute: WClientIdInvoicesRoute,
-  WClientIdWebsiteRoute: WClientIdWebsiteRoute,
   WClientIdIndexRoute: WClientIdIndexRoute,
 }
 

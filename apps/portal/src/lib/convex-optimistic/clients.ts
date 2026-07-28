@@ -3,7 +3,7 @@ import type { OptimisticLocalStore } from "convex/browser";
 
 type SetFeatureArgs = {
   slug: string;
-  feature: "insights" | "website";
+  feature: "insights" | "cms";
   enabled: boolean;
 };
 

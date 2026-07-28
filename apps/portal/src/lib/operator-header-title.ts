@@ -1,7 +1,7 @@
 const deskSectionTitles: Record<string, string> = {
   invoices: "Factures",
   files: "Fichiers",
-  website: "Site web",
+  cms: "CMS",
   insights: "Statistiques",
   settings: "Paramètres",
 };

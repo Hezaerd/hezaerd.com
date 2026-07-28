@@ -2,11 +2,11 @@ import { Empty, EmptyHeader, EmptyTitle } from "@hezaerd/ui/components/empty";
 
 import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/op/clients/$clientId/website")({
-  component: ClientDeskWebsitePage,
+export const Route = createFileRoute("/op/clients/$clientId/cms")({
+  component: ClientDeskCmsPage,
 });
 
-function ClientDeskWebsitePage() {
+function ClientDeskCmsPage() {
   return (
     <Empty className="border-border bg-muted/20 rounded-xl border py-16">
       <EmptyHeader>

@@ -47,9 +47,9 @@ function ClientDeskIndexPage() {
             />
             <FeatureToggleRow
               icon={Globe02Icon}
-              label="Site web"
-              checked={client.features.website}
-              onCheckedChange={(checked) => toggleFeature("website", checked)}
+              label="CMS"
+              checked={client.features.cms}
+              onCheckedChange={(checked) => toggleFeature("cms", checked)}
             />
           </div>
         </section>

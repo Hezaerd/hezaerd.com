@@ -45,9 +45,9 @@ const kindConfig: Record<NeedsAttentionKind, KindConfig> = {
     iconBgClass: "bg-muted",
     iconColorClass: "text-muted-foreground",
   },
-  website: {
+  cms: {
     icon: Globe02Icon,
-    label: "Site web",
+    label: "Mon site",
     ctaLabel: "Relire les changements",
     accentClass: "border-l-border",
     iconBgClass: "bg-muted",
