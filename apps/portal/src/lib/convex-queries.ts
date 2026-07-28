@@ -67,22 +67,15 @@ function fileNeedsAttentionQuery(slug: string) {
   });
 }
 
-function cmsNeedsAttentionQuery(slug: string) {
-  return queryOptions({
-    ...convexQuery(api.cms.listNeedsAttention, { slug }),
-  });
-}
-
 export function needsAttentionQuery(slug: string) {
   return queryOptions({
     queryKey: ["needsAttention", slug],
     queryFn: async ({ client }) => {
-      const [invoiceItems, fileItems, cmsItems] = await Promise.all([
+      const [invoiceItems, fileItems] = await Promise.all([
         client.fetchQuery(invoiceNeedsAttentionQuery(slug)),
         client.fetchQuery(fileNeedsAttentionQuery(slug)),
-        client.fetchQuery(cmsNeedsAttentionQuery(slug)),
       ]);
-      return [...invoiceItems, ...fileItems, ...cmsItems] as NeedsAttentionItem[];
+      return [...invoiceItems, ...fileItems] as NeedsAttentionItem[];
     },
   });
 }
@@ -99,22 +92,15 @@ function fileWaitingOnClientQuery(slug: string) {
   });
 }
 
-function cmsWaitingOnClientQuery(slug: string) {
-  return queryOptions({
-    ...convexQuery(api.cms.listWaitingOnClient, { slug }),
-  });
-}
-
 export function waitingOnClientQuery(slug: string) {
   return queryOptions({
     queryKey: ["waitingOnClient", slug],
     queryFn: async ({ client }) => {
-      const [invoiceItems, fileItems, cmsItems] = await Promise.all([
+      const [invoiceItems, fileItems] = await Promise.all([
         client.fetchQuery(invoiceWaitingOnClientQuery(slug)),
         client.fetchQuery(fileWaitingOnClientQuery(slug)),
-        client.fetchQuery(cmsWaitingOnClientQuery(slug)),
       ]);
-      return [...invoiceItems, ...fileItems, ...cmsItems];
+      return [...invoiceItems, ...fileItems];
     },
   });
 }
@@ -122,29 +108,5 @@ export function waitingOnClientQuery(slug: string) {
 export function invoicesForWorkspaceQuery(slug: string) {
   return queryOptions({
     ...convexQuery(api.invoices.listForWorkspace, { slug }),
-  });
-}
-
-export function cmsDeskQuery(slug: string) {
-  return queryOptions({
-    ...convexQuery(api.cms.listSchemaForDesk, { slug }),
-  });
-}
-
-export function cmsDeskOverviewQuery(slug: string) {
-  return queryOptions({
-    ...convexQuery(api.cms.getDeskOverview, { slug }),
-  });
-}
-
-export function cmsDeployTokensQuery(slug: string) {
-  return queryOptions({
-    ...convexQuery(api.cms.getDeployTokens, { slug }),
-  });
-}
-
-export function cmsWorkspaceQuery(slug: string) {
-  return queryOptions({
-    ...convexQuery(api.cms.listFieldsForWorkspace, { slug }),
   });
 }

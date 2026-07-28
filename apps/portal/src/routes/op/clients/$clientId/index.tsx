@@ -1,5 +1,5 @@
 import { Switch } from "@hezaerd/ui/components/switch";
-import { Globe02Icon, PieChart01Icon } from "@hugeicons/core-free-icons";
+import { PieChart01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
@@ -44,12 +44,6 @@ function ClientDeskIndexPage() {
               label="Statistiques"
               checked={client.features.insights}
               onCheckedChange={(checked) => toggleFeature("insights", checked)}
-            />
-            <FeatureToggleRow
-              icon={Globe02Icon}
-              label="CMS"
-              checked={client.features.cms}
-              onCheckedChange={(checked) => toggleFeature("cms", checked)}
             />
           </div>
         </section>

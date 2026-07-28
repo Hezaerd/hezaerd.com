@@ -7,7 +7,6 @@ import {
   ArrowRight01Icon,
   DollarCircleIcon,
   File01Icon,
-  Globe02Icon,
   SparklesIcon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react";
@@ -41,14 +40,6 @@ const kindConfig: Record<NeedsAttentionKind, KindConfig> = {
     icon: File01Icon,
     label: "Fichier demandé",
     ctaLabel: "Envoyer le fichier",
-    accentClass: "border-l-border",
-    iconBgClass: "bg-muted",
-    iconColorClass: "text-muted-foreground",
-  },
-  cms: {
-    icon: Globe02Icon,
-    label: "Mon site",
-    ctaLabel: "Relire les changements",
     accentClass: "border-l-border",
     iconBgClass: "bg-muted",
     iconColorClass: "text-muted-foreground",

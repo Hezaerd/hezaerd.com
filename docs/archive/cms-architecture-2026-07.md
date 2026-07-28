@@ -1,8 +1,10 @@
 # CMS — architecture & decisions
 
+> **Archivé (2026-07-28)** — Feature CMS retirée du produit actif. Conservé pour une éventuelle reprise client par client. L'implémentation reste accessible via l'historique git.
+
 Contexte figé lors d'une session grilling (2026-07-28). Ce document n'est **pas** un plan d'exécution — c'est la source de vérité pour reprendre la feature dans une autre session.
 
-Voir aussi : [Portal CONTEXT.md](../CONTEXT.md) (vocabulaire domaine), [ADR 0003](./adr/0003-operator-desk-client-only-workspace.md).
+Voir aussi : [Portal CONTEXT.md](../../apps/portal/CONTEXT.md) (vocabulaire domaine), [ADR 0003](../../apps/portal/docs/adr/0003-operator-desk-client-only-workspace.md).
 
 ---
 
@@ -130,9 +132,9 @@ Prod = perf d'un site statique. Le CMS n'existe qu'au moment publish + preview.
 
 ---
 
-## Modèle de données (à implémenter)
+## Modèle de données (implémenté puis retiré 2026-07-28)
 
-Non implémenté au moment de ce doc. Shape cible :
+Shape cible (git history pour l'implé) :
 
 **Convex**
 
@@ -161,23 +163,6 @@ Non implémenté au moment de ce doc. Shape cible :
 
 ---
 
-## Portal — état au rename (2026-07-28)
-
-- Flag `features.cms`, routes `/cms`, labels OP « CMS » / client « Mon site ».
-- Stubs UI desk + workspace — **pas encore de backend CMS**.
-
----
-
-## Prochaines briques (ordre suggéré, pas un plan)
-
-1. Schema Convex + deploy tokens + registerSchema
-2. Package `@hezaerd/cms` + template repo client
-3. Portal : édition draft, preview JWT, publish → R2
-4. Feature unlock (`features.cms` → Needs Attention)
-5. Premier site pilote sur CF Pages
-
----
-
 ## Analytics (insights)
 
 Feature parallèle, non couverte ici. Même philosophie : outil custom activable par l'OP, label client « Statistiques », pas « Analytics ». Grilling séparé quand on attaque la pipeline de données.
@@ -186,4 +171,4 @@ Feature parallèle, non couverte ici. Même philosophie : outil custom activable
 
 ## Références session
 
-Décisions prises une par une ; ne pas implémenter tant que ce doc n'est pas relu en début de session suivante.
+Décisions prises une par une ; ne pas réimplémenter tant que ce doc n'est pas relu en début de session suivante.

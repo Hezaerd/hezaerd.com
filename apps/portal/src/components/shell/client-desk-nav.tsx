@@ -1,6 +1,5 @@
 import {
   File01Icon,
-  Globe02Icon,
   Home01Icon,
   Invoice01Icon,
   PieChart01Icon,
@@ -16,7 +15,7 @@ type ClientDeskNavProps = {
 
 type DeskSection = {
   label: string;
-  segment: "" | "invoices" | "files" | "cms" | "insights" | "settings";
+  segment: "" | "invoices" | "files" | "insights" | "settings";
   icon: IconSvgElement;
 };
 
@@ -24,7 +23,6 @@ const deskSections: DeskSection[] = [
   { label: "Bureau", segment: "", icon: Home01Icon },
   { label: "Factures", segment: "invoices", icon: Invoice01Icon },
   { label: "Fichiers", segment: "files", icon: File01Icon },
-  { label: "CMS", segment: "cms", icon: Globe02Icon },
   { label: "Statistiques", segment: "insights", icon: PieChart01Icon },
   { label: "Paramètres", segment: "settings", icon: Setting07Icon },
 ];

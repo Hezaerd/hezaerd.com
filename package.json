@@ -4,8 +4,7 @@
   "workspaces": {
     "packages": [
       "apps/*",
-      "packages/*",
-      "templates/*"
+      "packages/*"
     ],
     "catalog": {
       "typescript": "^7.0.2",

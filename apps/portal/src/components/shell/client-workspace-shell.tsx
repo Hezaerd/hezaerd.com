@@ -3,7 +3,6 @@ import type { PortalClient } from "@/lib/portal-types";
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@hezaerd/ui/components/sidebar";
 import {
   File01Icon,
-  Globe02Icon,
   Home01Icon,
   Invoice01Icon,
   PieChart01Icon,
@@ -22,7 +21,7 @@ type ClientWorkspaceShellProps = {
 
 type WorkspaceArea = {
   label: string;
-  segment: "" | "invoices" | "files" | "insights" | "cms";
+  segment: "" | "invoices" | "files" | "insights";
   feature?: keyof PortalClient["features"];
   icon: IconSvgElement;
 };
@@ -39,12 +38,6 @@ const featureAreas: WorkspaceArea[] = [
     segment: "insights",
     feature: "insights",
     icon: PieChart01Icon,
-  },
-  {
-    label: "Mon site",
-    segment: "cms",
-    feature: "cms",
-    icon: Globe02Icon,
   },
 ];
 
