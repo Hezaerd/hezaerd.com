@@ -5,9 +5,13 @@ import type { MutationCtx, QueryCtx } from "./_generated/server";
 import { internalMutation, internalQuery } from "./_generated/server";
 import {
   buildSnapshotFields,
+  buildCmsAssetKey,
+  buildCmsAssetPublicUrl,
   cmsFieldInputValidator,
+  getCmsImageMaxBytes,
   hashDeployToken,
   validateFieldInput,
+  validateFieldKey,
 } from "./lib/cms";
 import { getClientBySlug } from "./lib/clients";
 
@@ -353,3 +357,167 @@ function snapshotsEqualRecords(
   }
   return true;
 }
+
+export const validateImageUploadIntent = internalQuery({
+  args: {
+    authId: v.string(),
+    slug: v.string(),
+    fieldKey: v.string(),
+    contentType: v.string(),
+    sizeBytes: v.number(),
+    assetId: v.string(),
+  },
+  returns: v.union(
+    v.object({
+      ok: v.literal(true),
+      access: v.object({
+        r2Key: v.string(),
+        publicUrl: v.string(),
+        maxSizeBytes: v.number(),
+        uploadPresignTtlHours: v.number(),
+      }),
+    }),
+    v.object({
+      ok: v.literal(false),
+      error: v.string(),
+    }),
+  ),
+  handler: async (ctx, args) => {
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_authId", (q) => q.eq("authId", args.authId))
+      .unique();
+    if (!user) {
+      return { ok: false as const, error: "Utilisateur introuvable" };
+    }
+
+    const client = await getClientBySlug(ctx, args.slug);
+    if (!client) {
+      return { ok: false as const, error: "Client introuvable" };
+    }
+
+    if (user.role !== "client" || user.clientId !== client._id) {
+      return { ok: false as const, error: "Accès refusé" };
+    }
+
+    if (!client.features.cms) {
+      return { ok: false as const, error: "CMS non activé" };
+    }
+
+    let fieldKey: string;
+    try {
+      fieldKey = validateFieldKey(args.fieldKey);
+    } catch {
+      return { ok: false as const, error: "Clé de champ invalide" };
+    }
+
+    const schema = await ctx.db
+      .query("cmsFieldSchemas")
+      .withIndex("by_clientId_and_fieldKey", (q) =>
+        q.eq("clientId", client._id).eq("fieldKey", fieldKey),
+      )
+      .unique();
+    if (!schema || schema.deprecated || schema.type !== "image") {
+      return { ok: false as const, error: "Champ image introuvable" };
+    }
+
+    const contentType = args.contentType.trim().toLowerCase();
+    if (!contentType.startsWith("image/")) {
+      return { ok: false as const, error: "Type de fichier invalide" };
+    }
+
+    const maxSizeBytes = getCmsImageMaxBytes();
+    if (!Number.isFinite(args.sizeBytes) || args.sizeBytes <= 0) {
+      return { ok: false as const, error: "Taille de fichier invalide" };
+    }
+    if (args.sizeBytes > maxSizeBytes) {
+      return { ok: false as const, error: "Image trop lourde" };
+    }
+
+    const assetId = args.assetId.trim();
+    if (!assetId) {
+      return { ok: false as const, error: "Identifiant asset invalide" };
+    }
+
+    const uploadPresignTtlHours = client.fileSettings?.uploadPresignTtlHours ?? 24;
+
+    return {
+      ok: true as const,
+      access: {
+        r2Key: buildCmsAssetKey(client.slug, fieldKey, assetId),
+        publicUrl: buildCmsAssetPublicUrl(client.slug, fieldKey, assetId),
+        maxSizeBytes,
+        uploadPresignTtlHours,
+      },
+    };
+  },
+});
+
+export const applyImageUpload = internalMutation({
+  args: {
+    authId: v.string(),
+    slug: v.string(),
+    fieldKey: v.string(),
+    publicUrl: v.string(),
+  },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_authId", (q) => q.eq("authId", args.authId))
+      .unique();
+    if (!user) {
+      throw new Error("Utilisateur introuvable");
+    }
+
+    const client = await getClientBySlug(ctx, args.slug);
+    if (!client) {
+      throw new Error("Client introuvable");
+    }
+
+    if (user.role !== "client" || user.clientId !== client._id) {
+      throw new Error("Accès refusé");
+    }
+
+    if (!client.features.cms) {
+      throw new Error("CMS non activé");
+    }
+
+    const fieldKey = validateFieldKey(args.fieldKey);
+    const schema = await ctx.db
+      .query("cmsFieldSchemas")
+      .withIndex("by_clientId_and_fieldKey", (q) =>
+        q.eq("clientId", client._id).eq("fieldKey", fieldKey),
+      )
+      .unique();
+    if (!schema || schema.deprecated || schema.type !== "image") {
+      throw new Error("Champ image introuvable");
+    }
+
+    const draftValue = args.publicUrl.trim();
+    if (!draftValue) {
+      throw new Error("URL asset invalide");
+    }
+
+    const existing = await ctx.db
+      .query("cmsFieldValues")
+      .withIndex("by_clientId_and_fieldKey", (q) =>
+        q.eq("clientId", client._id).eq("fieldKey", fieldKey),
+      )
+      .unique();
+
+    const updatedAt = Date.now();
+    if (existing) {
+      await ctx.db.patch(existing._id, { draftValue, updatedAt });
+    } else {
+      await ctx.db.insert("cmsFieldValues", {
+        clientId: client._id,
+        fieldKey,
+        draftValue,
+        updatedAt,
+      });
+    }
+
+    return null;
+  },
+});

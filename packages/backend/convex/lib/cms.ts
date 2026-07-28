@@ -217,3 +217,83 @@ export function generateDeployTokenPlaintext(): string {
     .map((byte) => byte.toString(16).padStart(2, "0"))
     .join("");
 }
+
+const PREVIEW_JWT_TTL_SECONDS = 15 * 60;
+const CMS_IMAGE_MAX_BYTES = 10 * 1024 * 1024;
+
+function getCmsPreviewJwtSecret(): string {
+  const secret = process.env.CMS_PREVIEW_JWT_SECRET;
+  if (!secret || secret.trim().length === 0) {
+    throw new Error("Variable Convex manquante : CMS_PREVIEW_JWT_SECRET");
+  }
+  return secret.trim();
+}
+
+function getCmsAssetsPublicBaseUrl(): string {
+  const baseUrl = process.env.CMS_ASSETS_PUBLIC_BASE_URL;
+  if (!baseUrl || baseUrl.trim().length === 0) {
+    throw new Error("Variable Convex manquante : CMS_ASSETS_PUBLIC_BASE_URL");
+  }
+  return baseUrl.trim().replace(/\/+$/, "");
+}
+
+function base64UrlEncode(input: string | Uint8Array): string {
+  const bytes =
+    typeof input === "string" ? new TextEncoder().encode(input) : input;
+  let binary = "";
+  for (const byte of bytes) {
+    binary += String.fromCharCode(byte);
+  }
+  return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+}
+
+export function validateHttpsSiteUrl(url: string): string {
+  let parsed: URL;
+  try {
+    parsed = new URL(url.trim());
+  } catch {
+    throw new Error("URL invalide");
+  }
+  if (parsed.protocol !== "https:") {
+    throw new Error("L'URL du site doit être en HTTPS");
+  }
+  return parsed.origin;
+}
+
+export function buildCmsAssetKey(slug: string, fieldKey: string, assetId: string): string {
+  return `cms/${slug}/assets/${fieldKey}/${assetId}.webp`;
+}
+
+export function buildCmsAssetPublicUrl(slug: string, fieldKey: string, assetId: string): string {
+  const baseUrl = getCmsAssetsPublicBaseUrl();
+  return `${baseUrl}/${buildCmsAssetKey(slug, fieldKey, assetId)}`;
+}
+
+export function getCmsImageMaxBytes(): number {
+  return CMS_IMAGE_MAX_BYTES;
+}
+
+export async function signPreviewJwt(input: { slug: string }): Promise<string> {
+  const secret = getCmsPreviewJwtSecret();
+  const iat = Math.floor(Date.now() / 1000);
+  const exp = iat + PREVIEW_JWT_TTL_SECONDS;
+  const encodedHeader = base64UrlEncode(JSON.stringify({ alg: "HS256", typ: "JWT" }));
+  const encodedPayload = base64UrlEncode(
+    JSON.stringify({ sub: input.slug, aud: "cms-preview", iat, exp }),
+  );
+  const signingInput = `${encodedHeader}.${encodedPayload}`;
+
+  const key = await crypto.subtle.importKey(
+    "raw",
+    new TextEncoder().encode(secret),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"],
+  );
+  const signature = await crypto.subtle.sign(
+    "HMAC",
+    key,
+    new TextEncoder().encode(signingInput),
+  );
+  return `${signingInput}.${base64UrlEncode(new Uint8Array(signature))}`;
+}

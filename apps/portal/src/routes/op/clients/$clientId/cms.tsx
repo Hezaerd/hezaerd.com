@@ -1,19 +1,21 @@
-import { Empty, EmptyHeader, EmptyTitle } from "@hezaerd/ui/components/empty";
+import { useSuspenseQuery } from "@tanstack/react-query";
 
 import { createFileRoute } from "@tanstack/react-router";
+
+import { CmsDeskContent } from "@/components/cms/cms-desk-content";
+import { clientBySlugQuery } from "@/lib/convex-queries";
 
 export const Route = createFileRoute("/op/clients/$clientId/cms")({
   component: ClientDeskCmsPage,
 });
 
 function ClientDeskCmsPage() {
-  return (
-    <Empty className="border-border bg-muted/20 rounded-xl border py-16">
-      <EmptyHeader>
-        <EmptyTitle className="font-display text-base font-semibold tracking-tight">
-          À venir.
-        </EmptyTitle>
-      </EmptyHeader>
-    </Empty>
-  );
+  const { clientId } = Route.useParams();
+  const { data: clientDoc } = useSuspenseQuery(clientBySlugQuery(clientId));
+
+  if (clientDoc === null) {
+    return null;
+  }
+
+  return <CmsDeskContent clientId={clientId} />;
 }

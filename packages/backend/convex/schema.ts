@@ -19,6 +19,7 @@ export default defineSchema({
         downloadPresignTtlMinutes: v.number(),
       }),
     ),
+    cmsSiteUrl: v.optional(v.string()),
   })
     .index("by_slug", ["slug"])
     .index("by_contactEmail", ["contactEmail"]),

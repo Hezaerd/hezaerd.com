@@ -34,6 +34,7 @@ export const clientValidator = v.object({
       downloadPresignTtlMinutes: v.number(),
     }),
   ),
+  cmsSiteUrl: v.optional(v.string()),
 });
 
 const cockpitStatsValidator = v.object({

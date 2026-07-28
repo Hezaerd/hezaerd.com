@@ -2,6 +2,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 
 import { createFileRoute, redirect } from "@tanstack/react-router";
 
+import { CmsWorkspaceContent } from "@/components/cms/cms-workspace-content";
 import { clientBySlugQuery } from "@/lib/convex-queries";
 
 export const Route = createFileRoute("/w/$clientId/cms")({
@@ -19,18 +20,5 @@ function ClientCmsPage() {
     });
   }
 
-  return <CmsContent />;
-}
-
-function CmsContent() {
-  return (
-    <div className="flex max-w-2xl flex-col gap-8">
-      <div className="flex flex-col gap-1">
-        <h1 className="font-display text-2xl font-semibold tracking-tight">Mon site</h1>
-        <p className="text-muted-foreground mt-1 text-sm leading-relaxed">
-          Champs guidés — prévisualisez vos changements avant de publier.
-        </p>
-      </div>
-    </div>
-  );
+  return <CmsWorkspaceContent clientId={clientId} />;
 }

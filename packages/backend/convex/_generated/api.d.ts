@@ -15,6 +15,7 @@ import type * as cms from "../cms.js";
 import type * as cmsHttp from "../cmsHttp.js";
 import type * as cmsInternal from "../cmsInternal.js";
 import type * as cmsPublish from "../cmsPublish.js";
+import type * as cmsStorage from "../cmsStorage.js";
 import type * as fileStorage from "../fileStorage.js";
 import type * as files from "../files.js";
 import type * as filesInternal from "../filesInternal.js";
@@ -48,6 +49,7 @@ declare const fullApi: ApiFromModules<{
   cmsHttp: typeof cmsHttp;
   cmsInternal: typeof cmsInternal;
   cmsPublish: typeof cmsPublish;
+  cmsStorage: typeof cmsStorage;
   fileStorage: typeof fileStorage;
   files: typeof files;
   filesInternal: typeof filesInternal;

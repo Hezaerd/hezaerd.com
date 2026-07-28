@@ -110,3 +110,27 @@ export function invoicesForWorkspaceQuery(slug: string) {
     ...convexQuery(api.invoices.listForWorkspace, { slug }),
   });
 }
+
+export function cmsDeskQuery(slug: string) {
+  return queryOptions({
+    ...convexQuery(api.cms.listSchemaForDesk, { slug }),
+  });
+}
+
+export function cmsDeskOverviewQuery(slug: string) {
+  return queryOptions({
+    ...convexQuery(api.cms.getDeskOverview, { slug }),
+  });
+}
+
+export function cmsDeployTokensQuery(slug: string) {
+  return queryOptions({
+    ...convexQuery(api.cms.getDeployTokens, { slug }),
+  });
+}
+
+export function cmsWorkspaceQuery(slug: string) {
+  return queryOptions({
+    ...convexQuery(api.cms.listFieldsForWorkspace, { slug }),
+  });
+}

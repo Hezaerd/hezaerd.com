@@ -9,8 +9,10 @@ import {
   cmsTextConstraintsValidator,
   generateDeployTokenPlaintext,
   hashDeployToken,
+  signPreviewJwt,
   validateDraftTextValue,
   validateFieldKey,
+  validateHttpsSiteUrl,
 } from "./lib/cms";
 import { assertClientAccess } from "./lib/users";
 
@@ -247,5 +249,68 @@ export const upsertDraftText = authedMutation({
     }
 
     return null;
+  },
+});
+
+const deskOverviewValidator = v.object({
+  cmsSiteUrl: v.union(v.string(), v.null()),
+  publishVersion: v.union(v.number(), v.null()),
+  publishedAt: v.union(v.number(), v.null()),
+});
+
+/** Operator Desk — site URL and publish metadata. */
+export const getDeskOverview = operatorQuery({
+  args: { slug: v.string() },
+  returns: deskOverviewValidator,
+  handler: async (ctx, args) => {
+    const client = await assertClientAccess(ctx, ctx.user, args.slug);
+    const publishState = await ctx.db
+      .query("cmsPublishState")
+      .withIndex("by_clientId", (q) => q.eq("clientId", client._id))
+      .unique();
+
+    return {
+      cmsSiteUrl: client.cmsSiteUrl ?? null,
+      publishVersion: publishState?.version ?? null,
+      publishedAt: publishState?.publishedAt ?? null,
+    };
+  },
+});
+
+/** Operator Desk — preview base URL for client site. */
+export const updateSiteUrl = operatorMutation({
+  args: {
+    slug: v.string(),
+    siteUrl: v.string(),
+  },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    const client = await assertClientAccess(ctx, ctx.user, args.slug);
+    const cmsSiteUrl = validateHttpsSiteUrl(args.siteUrl);
+    await ctx.db.patch(client._id, { cmsSiteUrl });
+    return null;
+  },
+});
+
+/** Client Workspace — preview link with short-lived JWT. */
+export const createPreviewLink = authedMutation({
+  args: { slug: v.string() },
+  returns: v.object({ url: v.string() }),
+  handler: async (ctx, args) => {
+    const client = await assertClientAccess(ctx, ctx.user, args.slug);
+    if (ctx.user.role !== "client") {
+      throw new Error("Accès refusé");
+    }
+    assertCmsFeature(client);
+
+    const siteBaseUrl = client.cmsSiteUrl?.trim();
+    if (!siteBaseUrl) {
+      throw new Error("URL du site non configurée — contacte ton opérateur");
+    }
+
+    const token = await signPreviewJwt({ slug: client.slug });
+    const previewUrl = new URL("/preview", siteBaseUrl);
+    previewUrl.searchParams.set("token", token);
+    return { url: previewUrl.toString() };
   },
 });
