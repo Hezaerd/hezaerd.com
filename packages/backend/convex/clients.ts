@@ -380,7 +380,6 @@ export const updateLinkedSite = operatorMutation({
     slug: v.string(),
     productionUrl: v.string(),
     githubRepo: v.optional(v.string()),
-    cfPagesProjectName: v.optional(v.string()),
   },
   returns: clientValidator,
   handler: async (ctx, args) => {
@@ -388,7 +387,6 @@ export const updateLinkedSite = operatorMutation({
     const linkedSite = validateLinkedSiteInput({
       productionUrl: args.productionUrl,
       githubRepo: args.githubRepo,
-      cfPagesProjectName: args.cfPagesProjectName,
     });
 
     await ctx.db.patch(client._id, { linkedSite });

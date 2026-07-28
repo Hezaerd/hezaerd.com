@@ -27,7 +27,6 @@ export type PortalClient = {
   linkedSite?: {
     productionUrl: string;
     githubRepo?: string;
-    cfPagesProjectName?: string;
   };
 };
 
@@ -77,7 +76,6 @@ export function toPortalClient(client: {
   linkedSite?: {
     productionUrl: string;
     githubRepo?: string;
-    cfPagesProjectName?: string;
   };
 }): PortalClient {
   return {

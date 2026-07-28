@@ -89,14 +89,6 @@ export function ClientSitePreview({ clientSlug, clientName, linkedSite }: Client
                 GitHub
               </Button>
             ) : null}
-            {links.cloudflareUrl ? (
-              <Button
-                variant="outline"
-                render={<a href={links.cloudflareUrl} target="_blank" rel="noreferrer" />}
-              >
-                Cloudflare Pages
-              </Button>
-            ) : null}
           </div>
 
           <p className="text-muted-foreground text-xs leading-relaxed">

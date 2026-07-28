@@ -15,14 +15,12 @@ type ClientLinkedSiteFormProps = {
 type LinkedSiteFormValues = {
   productionUrl: string;
   githubRepo: string;
-  cfPagesProjectName: string;
 };
 
 function createDefaultValues(client: PortalClient): LinkedSiteFormValues {
   return {
     productionUrl: client.linkedSite?.productionUrl ?? "",
     githubRepo: client.linkedSite?.githubRepo ?? "",
-    cfPagesProjectName: client.linkedSite?.cfPagesProjectName ?? "",
   };
 }
 
@@ -38,7 +36,6 @@ export function ClientLinkedSiteForm({ client }: ClientLinkedSiteFormProps) {
           slug: client.id,
           productionUrl: value.productionUrl,
           githubRepo: value.githubRepo.trim() || undefined,
-          cfPagesProjectName: value.cfPagesProjectName.trim() || undefined,
         });
         formApi.reset(value);
       } catch (submitError) {
@@ -103,46 +100,24 @@ export function ClientLinkedSiteForm({ client }: ClientLinkedSiteFormProps) {
           )}
         </form.Field>
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          <form.Field name="githubRepo">
-            {(field) => (
-              <div className="flex flex-col gap-2">
-                <label htmlFor={field.name} className="text-sm font-medium">
-                  Repo GitHub <span className="text-muted-foreground font-normal">(optionnel)</span>
-                </label>
-                <Input
-                  id={field.name}
-                  name={field.name}
-                  value={field.state.value}
-                  onBlur={field.handleBlur}
-                  onChange={(event) => field.handleChange(event.target.value)}
-                  placeholder="org/repo"
-                />
-                <FieldError errors={field.state.meta.errors} />
-              </div>
-            )}
-          </form.Field>
-
-          <form.Field name="cfPagesProjectName">
-            {(field) => (
-              <div className="flex flex-col gap-2">
-                <label htmlFor={field.name} className="text-sm font-medium">
-                  Projet Cloudflare Pages{" "}
-                  <span className="text-muted-foreground font-normal">(optionnel)</span>
-                </label>
-                <Input
-                  id={field.name}
-                  name={field.name}
-                  value={field.state.value}
-                  onBlur={field.handleBlur}
-                  onChange={(event) => field.handleChange(event.target.value)}
-                  placeholder="mon-site-client"
-                />
-                <FieldError errors={field.state.meta.errors} />
-              </div>
-            )}
-          </form.Field>
-        </div>
+        <form.Field name="githubRepo">
+          {(field) => (
+            <div className="flex flex-col gap-2">
+              <label htmlFor={field.name} className="text-sm font-medium">
+                Repo GitHub <span className="text-muted-foreground font-normal">(optionnel)</span>
+              </label>
+              <Input
+                id={field.name}
+                name={field.name}
+                value={field.state.value}
+                onBlur={field.handleBlur}
+                onChange={(event) => field.handleChange(event.target.value)}
+                placeholder="org/repo"
+              />
+              <FieldError errors={field.state.meta.errors} />
+            </div>
+          )}
+        </form.Field>
 
         <div className="flex flex-col gap-2">
           <form.Subscribe

@@ -3,13 +3,11 @@ import { v } from "convex/values";
 export const linkedSiteValidator = v.object({
   productionUrl: v.string(),
   githubRepo: v.optional(v.string()),
-  cfPagesProjectName: v.optional(v.string()),
 });
 
 export type LinkedSite = {
   productionUrl: string;
   githubRepo?: string;
-  cfPagesProjectName?: string;
 };
 
 export function normalizeProductionUrl(raw: string): string {
@@ -47,15 +45,9 @@ function normalizeGithubRepo(raw: string | undefined): string | undefined {
   return repo;
 }
 
-function normalizeCfPagesProjectName(raw: string | undefined): string | undefined {
-  const trimmed = raw?.trim();
-  return trimmed ? trimmed : undefined;
-}
-
 export function validateLinkedSiteInput(input: {
   productionUrl: string;
   githubRepo?: string;
-  cfPagesProjectName?: string;
 }): LinkedSite | undefined {
   const productionUrl = normalizeProductionUrl(input.productionUrl);
   if (!productionUrl) {
@@ -65,6 +57,5 @@ export function validateLinkedSiteInput(input: {
   return {
     productionUrl,
     githubRepo: normalizeGithubRepo(input.githubRepo),
-    cfPagesProjectName: normalizeCfPagesProjectName(input.cfPagesProjectName),
   };
 }

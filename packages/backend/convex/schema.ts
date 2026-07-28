@@ -22,7 +22,6 @@ export default defineSchema({
       v.object({
         productionUrl: v.string(),
         githubRepo: v.optional(v.string()),
-        cfPagesProjectName: v.optional(v.string()),
       }),
     ),
   })
