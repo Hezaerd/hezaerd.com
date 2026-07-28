@@ -5,6 +5,7 @@ import { useForm } from "@tanstack/react-form";
 import { useMutation } from "convex/react";
 
 import { FieldError } from "@/components/forms/field-error";
+import { DeskCard, DeskCardHeader } from "@/components/shell/client-desk-layout";
 import type { PortalClient } from "@/lib/portal-types";
 import { setFormSubmitError, submitErrorMessage } from "@/lib/tanstack-form";
 
@@ -45,13 +46,11 @@ export function ClientLinkedSiteForm({ client }: ClientLinkedSiteFormProps) {
   });
 
   return (
-    <section className="border-border bg-muted/20 flex flex-col gap-4 rounded-xl border p-5">
-      <div>
-        <h3 className="font-display text-base font-semibold tracking-tight">Site public</h3>
-        <p className="text-muted-foreground mt-1 text-sm">
-          URL de la landing client. Active l&apos;aperçu live sur le Bureau.
-        </p>
-      </div>
+    <DeskCard>
+      <DeskCardHeader
+        title="Site public"
+        description="URL de la landing client. Active l'aperçu live sur le Bureau."
+      />
 
       <form
         className="flex flex-col gap-4"
@@ -146,6 +145,6 @@ export function ClientLinkedSiteForm({ client }: ClientLinkedSiteFormProps) {
           </form.Subscribe>
         </div>
       </form>
-    </section>
+    </DeskCard>
   );
 }

@@ -7,6 +7,7 @@ import { useAction } from "convex/react";
 
 import { resolveLinkedSiteLinks } from "@/lib/linked-site-links";
 import type { PortalClient } from "@/lib/portal-types";
+import { DeskCard } from "@/components/shell/client-desk-layout";
 
 type ClientSitePreviewProps = {
   clientSlug: string;
@@ -29,7 +30,7 @@ export function ClientSitePreview({ clientSlug, clientName, linkedSite }: Client
   });
 
   return (
-    <section className="border-border bg-muted/20 overflow-hidden rounded-xl border">
+    <DeskCard className="gap-0 overflow-hidden p-0">
       <div className="grid lg:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)]">
         <div className="border-border @container relative aspect-video overflow-hidden border-b lg:border-r lg:border-b-0">
           <iframe
@@ -92,6 +93,6 @@ export function ClientSitePreview({ clientSlug, clientName, linkedSite }: Client
           </div>
         </div>
       </div>
-    </section>
+    </DeskCard>
   );
 }

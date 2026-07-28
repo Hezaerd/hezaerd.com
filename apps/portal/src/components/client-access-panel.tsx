@@ -16,6 +16,7 @@ import { useAction } from "convex/react";
 import { useState } from "react";
 
 import { clientsListQuery } from "@/lib/convex-queries";
+import { DeskCard, DeskCardHeader } from "@/components/shell/client-desk-layout";
 
 type ClientAccessStatus = typeof api.clientInvites.getAccessStatus._returnType;
 
@@ -122,20 +123,20 @@ export function ClientAccessPanel({
 
   if (isLoading || !status) {
     return (
-      <section className="border-border bg-muted/20 rounded-xl border px-5 py-4">
+      <DeskCard>
         <p className="text-muted-foreground text-sm">Chargement…</p>
-      </section>
+      </DeskCard>
     );
   }
 
   const access = formatAccessStatus(status);
 
   return (
-    <section className="border-border bg-muted/20 flex flex-col gap-4 rounded-xl border px-5 py-4">
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <p className="text-sm font-semibold">Accès Portal</p>
-        <Badge variant={access.variant}>{access.label}</Badge>
-      </div>
+    <DeskCard>
+      <DeskCardHeader
+        title="Accès Portal"
+        action={<Badge variant={access.variant}>{access.label}</Badge>}
+      />
       <p className="text-muted-foreground text-sm leading-relaxed">{access.detail}</p>
       {status.kind === "pending" ? (
         <div className="flex items-center gap-3">
@@ -191,6 +192,6 @@ export function ClientAccessPanel({
       </div>
 
       {error ? <p className="text-destructive text-sm">{error}</p> : null}
-    </section>
+    </DeskCard>
   );
 }

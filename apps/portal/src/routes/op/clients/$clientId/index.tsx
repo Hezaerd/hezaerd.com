@@ -5,10 +5,15 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 
 import { Link, createFileRoute, notFound } from "@tanstack/react-router";
 
+import {
+  ClientDeskPage,
+  DeskCard,
+  DeskCardHeader,
+} from "@/components/shell/client-desk-layout";
+import { ClientSitePreview } from "@/components/site/client-site-preview";
 import { clientBySlugQuery, waitingOnClientQuery } from "@/lib/convex-queries";
 import { useSetFeatureMutation } from "@/lib/convex-optimistic";
 import { type ClientFeature, toPortalClient } from "@/lib/portal-types";
-import { ClientSitePreview } from "@/components/site/client-site-preview";
 
 export const Route = createFileRoute("/op/clients/$clientId/")({
   component: ClientDeskIndexPage,
@@ -31,7 +36,7 @@ function ClientDeskIndexPage() {
   }
 
   return (
-    <div className="flex max-w-5xl flex-col gap-6">
+    <ClientDeskPage wide>
       {client.linkedSite ? (
         <ClientSitePreview
           clientSlug={clientId}
@@ -47,17 +52,17 @@ function ClientDeskIndexPage() {
         </aside>
 
         <section className="min-w-0">
-          <div className="border-border bg-muted/20 divide-border flex flex-col divide-y overflow-hidden rounded-xl border">
+          <DeskCard className="divide-border divide-y gap-0 p-0">
             <FeatureToggleRow
               icon={PieChart01Icon}
               label="Statistiques"
               checked={client.features.insights}
               onCheckedChange={(checked) => toggleFeature("insights", checked)}
             />
-          </div>
+          </DeskCard>
         </section>
       </div>
-    </div>
+    </ClientDeskPage>
   );
 }
 
@@ -71,8 +76,8 @@ function QueuePanel({
   items?: Array<{ id: string; title: string; description: string; href: string }>;
 }) {
   return (
-    <div className="border-border bg-muted/20 flex flex-col gap-3 rounded-xl border px-5 py-4">
-      <p className="text-sm font-semibold">{title}</p>
+    <DeskCard className="gap-3">
+      <DeskCardHeader title={title} />
       {items.length > 0 ? (
         <div className="flex flex-col gap-2">
           {items.map((item) => (
@@ -87,7 +92,7 @@ function QueuePanel({
           ))}
         </div>
       ) : null}
-    </div>
+    </DeskCard>
   );
 }
 

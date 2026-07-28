@@ -1,6 +1,10 @@
-import { Empty, EmptyHeader, EmptyTitle } from "@hezaerd/ui/components/empty";
-
 import { createFileRoute } from "@tanstack/react-router";
+
+import {
+  ClientDeskPage,
+  ClientDeskPageHeader,
+  DeskEmptyState,
+} from "@/components/shell/client-desk-layout";
 
 export const Route = createFileRoute("/op/clients/$clientId/insights")({
   component: ClientDeskInsightsPage,
@@ -8,12 +12,9 @@ export const Route = createFileRoute("/op/clients/$clientId/insights")({
 
 function ClientDeskInsightsPage() {
   return (
-    <Empty className="border-border bg-muted/20 rounded-xl border py-16">
-      <EmptyHeader>
-        <EmptyTitle className="font-display text-base font-semibold tracking-tight">
-          À venir.
-        </EmptyTitle>
-      </EmptyHeader>
-    </Empty>
+    <ClientDeskPage>
+      <ClientDeskPageHeader title="Statistiques" />
+      <DeskEmptyState title="À venir." />
+    </ClientDeskPage>
   );
 }

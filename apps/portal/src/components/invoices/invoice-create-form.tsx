@@ -3,6 +3,7 @@ import { DatePicker } from "@hezaerd/ui/components/date-picker";
 import { Input } from "@hezaerd/ui/components/input";
 import { useForm } from "@tanstack/react-form";
 
+import { DeskCard, DeskCardHeader } from "@/components/shell/client-desk-layout";
 import { FieldError } from "@/components/forms/field-error";
 import { parseDateInputValue, parseEuroInputToCents, toDateInputValue } from "@/lib/invoice-format";
 import { setFormSubmitError, submitErrorMessage } from "@/lib/tanstack-form";
@@ -61,8 +62,8 @@ export function InvoiceCreateForm({ onCreate }: InvoiceCreateFormProps) {
   });
 
   return (
-    <section className="border-border bg-muted/20 flex flex-col gap-4 rounded-xl border p-5">
-      <h3 className="font-display text-base font-semibold tracking-tight">Nouvelle facture</h3>
+    <DeskCard>
+      <DeskCardHeader title="Nouvelle facture" />
 
       <form
         className="flex flex-col gap-4"
@@ -170,6 +171,6 @@ export function InvoiceCreateForm({ onCreate }: InvoiceCreateFormProps) {
           </form.Subscribe>
         </div>
       </form>
-    </section>
+    </DeskCard>
   );
 }

@@ -5,6 +5,7 @@ import { useForm } from "@tanstack/react-form";
 import { useMutation } from "convex/react";
 
 import { FieldError } from "@/components/forms/field-error";
+import { DeskCard, DeskCardHeader } from "@/components/shell/client-desk-layout";
 import {
   DEFAULT_DOWNLOAD_PRESIGN_TTL_MINUTES,
   DEFAULT_MAX_FILE_SIZE_MB,
@@ -105,13 +106,11 @@ export function ClientFileSettingsForm({ client }: ClientFileSettingsFormProps) 
   });
 
   return (
-    <section className="border-border bg-muted/20 flex flex-col gap-4 rounded-xl border p-5">
-      <div>
-        <h3 className="font-display text-base font-semibold tracking-tight">Fichiers</h3>
-        <p className="text-muted-foreground mt-1 text-sm">
-          Défauts pour les nouvelles demandes et durées des liens signés.
-        </p>
-      </div>
+    <DeskCard>
+      <DeskCardHeader
+        title="Fichiers"
+        description="Défauts pour les nouvelles demandes et durées des liens signés."
+      />
 
       <form
         className="flex flex-col gap-4"
@@ -244,6 +243,6 @@ export function ClientFileSettingsForm({ client }: ClientFileSettingsFormProps) 
           </form.Subscribe>
         </div>
       </form>
-    </section>
+    </DeskCard>
   );
 }
