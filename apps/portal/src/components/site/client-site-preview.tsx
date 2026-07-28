@@ -49,10 +49,10 @@ export function ClientSitePreview({ clientSlug, clientName, linkedSite }: Client
             <p className="text-muted-foreground text-xs font-medium tracking-[0.16em] uppercase">
               Site public
             </p>
-            <div className="mt-3 flex items-start gap-2">
+            <div className="mt-3 flex items-center gap-2">
               <span
                 className={[
-                  "mt-1.5 size-2 shrink-0 rounded-full",
+                  "size-2 shrink-0 rounded-full",
                   healthLoading
                     ? "bg-muted-foreground/40 animate-pulse"
                     : health?.ok
@@ -62,10 +62,12 @@ export function ClientSitePreview({ clientSlug, clientName, linkedSite }: Client
                 aria-hidden="true"
               />
               <div className="min-w-0">
-                <p className="text-sm font-semibold">
-                  {healthLoading ? "Vérification…" : health?.ok ? "En ligne" : "Injoignable"}
+                <p className="flex min-w-0 items-baseline gap-2">
+                  <span className="shrink-0 text-sm font-semibold">
+                    {healthLoading ? "Vérification…" : health?.ok ? "En ligne" : "Injoignable"}
+                  </span>
+                  <span className="text-muted-foreground truncate text-xs">{links.productionUrl}</span>
                 </p>
-                <p className="text-muted-foreground mt-1 truncate text-xs">{links.productionUrl}</p>
                 {!healthLoading && health ? (
                   <p className="text-muted-foreground mt-1 text-xs">
                     {health.statusCode ? `HTTP ${health.statusCode}` : "Pas de réponse"}
