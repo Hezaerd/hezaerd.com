@@ -10,6 +10,10 @@ import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react";
 import { Link, useRouterState } from "@tanstack/react-router";
 
 import { DashboardChrome } from "@/components/shell/dashboard-chrome";
+import {
+  OperatorChromeProvider,
+  useOperatorChromeOverrides,
+} from "@/components/shell/operator-chrome-context";
 import { getOperatorHeaderTitle } from "@/lib/operator-header-title";
 
 type OperatorShellProps = {
@@ -35,7 +39,30 @@ export function OperatorShell({ email, children }: OperatorShellProps) {
     select: (state) => state.location.pathname,
   });
 
-  const headerTitle = getOperatorHeaderTitle(pathname);
+  const defaultHeaderTitle = getOperatorHeaderTitle(pathname);
+
+  return (
+    <OperatorChromeProvider>
+      <OperatorShellChrome email={email} defaultHeaderTitle={defaultHeaderTitle}>
+        {children}
+      </OperatorShellChrome>
+    </OperatorChromeProvider>
+  );
+}
+
+function OperatorShellChrome({
+  email,
+  defaultHeaderTitle,
+  children,
+}: {
+  email: string;
+  defaultHeaderTitle: string;
+  children: React.ReactNode;
+}) {
+  const chrome = useOperatorChromeOverrides();
+
+  const headerTitle =
+    chrome.headerTitle === null ? undefined : (chrome.headerTitle ?? defaultHeaderTitle);
 
   return (
     <DashboardChrome
@@ -45,25 +72,38 @@ export function OperatorShell({ email, children }: OperatorShellProps) {
         subtitle: "Opérateur",
       }}
       headerTitle={headerTitle}
+      headerStart={chrome.headerStart}
+      headerEnd={chrome.headerEnd}
+      subHeader={chrome.subHeader}
       email={email}
       nav={navItems.map((item) => (
-        <SidebarMenuItem key={item.to}>
-          <SidebarMenuButton
-            render={<Link to={item.to} />}
-            isActive={
-              item.to === "/op"
-                ? pathname === "/op" || pathname === "/op/"
-                : pathname.startsWith(item.to as string)
-            }
-            tooltip={item.label}
-          >
-            <HugeiconsIcon icon={item.icon} size={16} className="shrink-0" />
-            <span>{item.label}</span>
-          </SidebarMenuButton>
-        </SidebarMenuItem>
+        <NavItemLink key={item.to} item={item} />
       ))}
     >
       {children}
     </DashboardChrome>
+  );
+}
+
+function NavItemLink({ item }: { item: NavItem }) {
+  const pathname = useRouterState({
+    select: (state) => state.location.pathname,
+  });
+
+  return (
+    <SidebarMenuItem>
+      <SidebarMenuButton
+        render={<Link to={item.to} />}
+        isActive={
+          item.to === "/op"
+            ? pathname === "/op" || pathname === "/op/"
+            : pathname.startsWith(item.to as string)
+        }
+        tooltip={item.label}
+      >
+        <HugeiconsIcon icon={item.icon} size={16} className="shrink-0" />
+        <span>{item.label}</span>
+      </SidebarMenuButton>
+    </SidebarMenuItem>
   );
 }

@@ -8,6 +8,7 @@ import { Link, createFileRoute, notFound } from "@tanstack/react-router";
 import { clientBySlugQuery, waitingOnClientQuery } from "@/lib/convex-queries";
 import { useSetFeatureMutation } from "@/lib/convex-optimistic";
 import { type ClientFeature, toPortalClient } from "@/lib/portal-types";
+import { ClientSitePreview } from "@/components/site/client-site-preview";
 
 export const Route = createFileRoute("/op/clients/$clientId/")({
   component: ClientDeskIndexPage,
@@ -31,6 +32,14 @@ function ClientDeskIndexPage() {
 
   return (
     <div className="flex max-w-5xl flex-col gap-6">
+      {client.linkedSite ? (
+        <ClientSitePreview
+          clientSlug={clientId}
+          clientName={client.name}
+          linkedSite={client.linkedSite}
+        />
+      ) : null}
+
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_min(18rem,100%)]">
         <aside className="flex flex-col gap-4">
           <QueuePanel title="En attente du client" clientId={clientId} items={waitingOnClient} />

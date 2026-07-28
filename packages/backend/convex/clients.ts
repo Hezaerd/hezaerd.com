@@ -13,6 +13,7 @@ import {
   normalizeSlug,
 } from "./lib/clients";
 import { validateClientFileSettings } from "./lib/fileSettings";
+import { linkedSiteValidator, validateLinkedSiteInput } from "./lib/linkedSite";
 import { assertClientAccess, isOperatorEmail } from "./lib/users";
 
 const featuresValidator = v.object({
@@ -33,6 +34,7 @@ export const clientValidator = v.object({
       downloadPresignTtlMinutes: v.number(),
     }),
   ),
+  linkedSite: v.optional(linkedSiteValidator),
 });
 
 const cockpitStatsValidator = v.object({
@@ -368,6 +370,33 @@ export const setFeature = operatorMutation({
       throw new Error("Client not found");
     }
 
+    return updated;
+  },
+});
+
+/** Update linked public site (Operator). Empty URL clears the link. */
+export const updateLinkedSite = operatorMutation({
+  args: {
+    slug: v.string(),
+    productionUrl: v.string(),
+    githubRepo: v.optional(v.string()),
+    cfPagesProjectName: v.optional(v.string()),
+  },
+  returns: clientValidator,
+  handler: async (ctx, args) => {
+    const client = await assertClientAccess(ctx, ctx.user, args.slug);
+    const linkedSite = validateLinkedSiteInput({
+      productionUrl: args.productionUrl,
+      githubRepo: args.githubRepo,
+      cfPagesProjectName: args.cfPagesProjectName,
+    });
+
+    await ctx.db.patch(client._id, { linkedSite });
+
+    const updated = await ctx.db.get("clients", client._id);
+    if (!updated) {
+      throw new Error("Client not found");
+    }
     return updated;
   },
 });

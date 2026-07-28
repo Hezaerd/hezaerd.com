@@ -18,6 +18,13 @@ export default defineSchema({
         downloadPresignTtlMinutes: v.number(),
       }),
     ),
+    linkedSite: v.optional(
+      v.object({
+        productionUrl: v.string(),
+        githubRepo: v.optional(v.string()),
+        cfPagesProjectName: v.optional(v.string()),
+      }),
+    ),
   })
     .index("by_slug", ["slug"])
     .index("by_contactEmail", ["contactEmail"]),

@@ -11,6 +11,7 @@ import { Link, useRouterState } from "@tanstack/react-router";
 
 type ClientDeskNavProps = {
   clientId: string;
+  className?: string;
 };
 
 type DeskSection = {
@@ -27,7 +28,7 @@ const deskSections: DeskSection[] = [
   { label: "Paramètres", segment: "settings", icon: Setting07Icon },
 ];
 
-export function ClientDeskNav({ clientId }: ClientDeskNavProps) {
+export function ClientDeskNav({ clientId, className }: ClientDeskNavProps) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
   function isSectionActive(segment: DeskSection["segment"]) {
@@ -39,7 +40,14 @@ export function ClientDeskNav({ clientId }: ClientDeskNavProps) {
   }
 
   return (
-    <nav className="border-border -mx-4 flex items-center gap-1 border-b px-4 pb-0 md:-mx-6 md:px-6">
+    <nav
+      className={[
+        "border-border -mx-1 flex w-full items-center gap-0.5 overflow-x-auto border-b px-1 pb-px [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
+        className,
+      ]
+        .filter(Boolean)
+        .join(" ")}
+    >
       {deskSections.map((section) => {
         const active = isSectionActive(section.segment);
         return (
@@ -52,7 +60,7 @@ export function ClientDeskNav({ clientId }: ClientDeskNavProps) {
             }
             params={{ clientId }}
             className={[
-              "inline-flex items-center gap-1.5 border-b-2 px-3 py-2.5 text-sm font-medium transition-colors",
+              "inline-flex shrink-0 items-center gap-1.5 border-b-2 px-2.5 py-2.5 text-sm font-medium whitespace-nowrap transition-colors sm:px-3",
               active
                 ? "border-foreground text-foreground"
                 : "border-transparent text-muted-foreground hover:text-foreground",

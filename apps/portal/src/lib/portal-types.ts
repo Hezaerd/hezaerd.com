@@ -24,6 +24,11 @@ export type PortalClient = {
     uploadPresignTtlHours: number;
     downloadPresignTtlMinutes: number;
   };
+  linkedSite?: {
+    productionUrl: string;
+    githubRepo?: string;
+    cfPagesProjectName?: string;
+  };
 };
 
 export type PracticeCockpitStats = {
@@ -69,6 +74,11 @@ export function toPortalClient(client: {
     uploadPresignTtlHours: number;
     downloadPresignTtlMinutes: number;
   };
+  linkedSite?: {
+    productionUrl: string;
+    githubRepo?: string;
+    cfPagesProjectName?: string;
+  };
 }): PortalClient {
   return {
     id: client.slug,
@@ -76,6 +86,7 @@ export function toPortalClient(client: {
     contactEmail: client.contactEmail,
     features: client.features,
     fileSettings: client.fileSettings,
+    linkedSite: client.linkedSite,
   };
 }
 

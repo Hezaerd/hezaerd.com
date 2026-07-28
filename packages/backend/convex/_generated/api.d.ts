@@ -25,8 +25,10 @@ import type * as lib_fileSettings from "../lib/fileSettings.js";
 import type * as lib_files from "../lib/files.js";
 import type * as lib_functions from "../lib/functions.js";
 import type * as lib_invoices from "../lib/invoices.js";
+import type * as lib_linkedSite from "../lib/linkedSite.js";
 import type * as lib_r2 from "../lib/r2.js";
 import type * as lib_users from "../lib/users.js";
+import type * as linkedSite from "../linkedSite.js";
 import type * as users from "../users.js";
 
 import type {
@@ -53,8 +55,10 @@ declare const fullApi: ApiFromModules<{
   "lib/files": typeof lib_files;
   "lib/functions": typeof lib_functions;
   "lib/invoices": typeof lib_invoices;
+  "lib/linkedSite": typeof lib_linkedSite;
   "lib/r2": typeof lib_r2;
   "lib/users": typeof lib_users;
+  linkedSite: typeof linkedSite;
   users: typeof users;
 }>;
 
