@@ -1,9 +1,9 @@
-import { api } from "@hezaerd/backend/api";
-import { useQuery } from "convex/react";
+import { useSuspenseQuery } from "@tanstack/react-query";
 
 import { createFileRoute } from "@tanstack/react-router";
 
 import { NeedsAttentionList } from "@/components/shell/needs-attention-list";
+import { clientBySlugQuery, needsAttentionQuery } from "@/lib/convex-queries";
 import { toPortalClient } from "@/lib/portal-types";
 
 export const Route = createFileRoute("/w/$clientId/")({
@@ -12,15 +12,8 @@ export const Route = createFileRoute("/w/$clientId/")({
 
 function ClientHomePage() {
   const { clientId } = Route.useParams();
-  const clientDoc = useQuery(api.clients.getBySlug, { slug: clientId });
-
-  if (clientDoc === undefined) {
-    return (
-      <main className="flex min-h-[40vh] items-center justify-center">
-        <p className="text-muted-foreground font-mono text-sm">Chargement…</p>
-      </main>
-    );
-  }
+  const { data: clientDoc } = useSuspenseQuery(clientBySlugQuery(clientId));
+  const { data: needsAttention } = useSuspenseQuery(needsAttentionQuery(clientId));
 
   if (clientDoc === null) {
     return null;
@@ -45,13 +38,15 @@ function ClientHomePage() {
           Bon retour, {client.name.split(" ")[0]}.
         </h1>
         <p className="text-muted-foreground mt-1 text-sm leading-relaxed">
-          Tout est à jour. Votre projet avance bien.
+          {needsAttention.length === 0
+            ? "Tout est à jour. Votre projet avance bien."
+            : "Voici ce qui demande votre attention."}
         </p>
       </div>
 
       <div className="flex flex-col gap-3">
         <h2 className="font-display text-base font-semibold tracking-tight">À traiter</h2>
-        <NeedsAttentionList items={[]} />
+        <NeedsAttentionList items={needsAttention} />
       </div>
     </div>
   );

@@ -32,6 +32,18 @@ const emptyStats: PracticeCockpitStats = {
   activeClients: 0,
 };
 
+function statsEqual(a: PracticeCockpitStats, b: PracticeCockpitStats): boolean {
+  return (
+    a.openInvoiceTotal === b.openInvoiceTotal &&
+    a.paidThisMonth === b.paidThisMonth &&
+    a.clientsWaiting === b.clientsWaiting &&
+    a.activeClients === b.activeClients
+  );
+}
+
+/** UI-only: intro count-up runs once per session; stats come from React Query. */
+let hasIntroAnimated = false;
+
 const tiles: TileConfig[] = [
   {
     key: "openInvoiceTotal",
@@ -52,7 +64,7 @@ const tiles: TileConfig[] = [
   },
   {
     key: "clientsWaiting",
-    label: "En attente de vous",
+    label: "A besoin de toi",
     icon: Target01Icon,
     iconBg: "bg-muted",
     iconColor: "text-muted-foreground",
@@ -67,21 +79,21 @@ const tiles: TileConfig[] = [
 ];
 
 export function PracticeCockpit({ stats }: PracticeCockpitProps) {
-  const [live, setLive] = useState(emptyStats);
+  const [live, setLive] = useState(() => (hasIntroAnimated ? stats : emptyStats));
 
   useEffect(() => {
-    setLive(stats);
+    if (!hasIntroAnimated) {
+      hasIntroAnimated = true;
+      setLive(stats);
+      return;
+    }
+
+    setLive((prev) => (statsEqual(prev, stats) ? prev : stats));
   }, [stats]);
 
   return (
     <section className="flex flex-col gap-4">
-      <div className="flex items-start justify-between">
-        <div>
-          <h2 className="font-display text-xl font-semibold tracking-tight">Tableau de bord</h2>
-          <p className="text-muted-foreground mt-1 text-sm leading-relaxed">
-            Un aperçu en direct de votre activité freelance.
-          </p>
-        </div>
+      <div className="flex justify-end">
         <div className="bg-muted/30 text-muted-foreground flex items-center gap-1.5 rounded-lg px-3 py-1.5">
           <HugeiconsIcon icon={AnalyticsUpIcon} size={13} />
           <span className="font-mono text-[10px] font-medium tracking-wide uppercase">En direct</span>

@@ -1,5 +1,6 @@
 import { createFileRoute, Navigate } from "@tanstack/react-router";
 
+import { PortalSpinner } from "@/components/shell/portal-spinner";
 import { usePortalSession } from "@/lib/portal-session";
 
 export const Route = createFileRoute("/")({ component: PortalHome });
@@ -8,11 +9,7 @@ function PortalHome() {
   const { home } = usePortalSession();
 
   if (home.kind === "loading") {
-    return (
-      <main className="flex min-h-svh items-center justify-center px-6">
-        <p className="text-muted-foreground font-mono text-sm">Chargement…</p>
-      </main>
-    );
+    return <PortalSpinner />;
   }
 
   if (home.kind === "login") {

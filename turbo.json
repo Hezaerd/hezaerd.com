@@ -1,5 +1,6 @@
 {
   "$schema": "https://turbo.build/schema.json",
+  "noUpdateNotifier": true,
   "tasks": {
     "dev": {
       "cache": false,

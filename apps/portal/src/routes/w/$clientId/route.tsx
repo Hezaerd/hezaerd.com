@@ -1,5 +1,6 @@
-import { api } from "@hezaerd/backend/api";
-import { useQuery } from "convex/react";
+import { Suspense } from "react";
+
+import { useSuspenseQuery } from "@tanstack/react-query";
 
 import {
   Link,
@@ -11,6 +12,9 @@ import {
 } from "@tanstack/react-router";
 
 import { ClientWorkspaceShell } from "@/components/shell/client-workspace-shell";
+import { PageContentSkeleton } from "@/components/shell/page-content-skeleton";
+import { PortalSpinner } from "@/components/shell/portal-spinner";
+import { clientBySlugQuery } from "@/lib/convex-queries";
 import { usePortalSession } from "@/lib/portal-session";
 import { toPortalClient } from "@/lib/portal-types";
 
@@ -18,7 +22,7 @@ export const Route = createFileRoute("/w/$clientId")({
   component: ClientWorkspaceLayout,
 });
 
-const DESK_SEGMENTS = ["invoices", "files", "insights", "website"] as const;
+const DESK_SEGMENTS = ["invoices", "files", "insights"] as const;
 type DeskSegment = (typeof DESK_SEGMENTS)[number];
 
 function resolveDeskSegment(pathname: string, clientId: string): DeskSegment | null {
@@ -35,15 +39,8 @@ function ClientWorkspaceLayout() {
   const gate = session.workspaceGateFor(clientId);
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
-  const shouldLoadClient = gate.kind === "load-client";
-  const clientDoc = useQuery(api.clients.getBySlug, shouldLoadClient ? { slug: clientId } : "skip");
-
   if (gate.kind === "loading") {
-    return (
-      <main className="flex min-h-svh items-center justify-center px-6">
-        <p className="text-muted-foreground font-mono text-sm">Chargement…</p>
-      </main>
-    );
+    return <PortalSpinner />;
   }
 
   if (gate.kind === "login") {
@@ -69,24 +66,27 @@ function ClientWorkspaceLayout() {
     return <Navigate to="/op/clients/$clientId" params={{ clientId: gate.slug }} replace />;
   }
 
-  if (clientDoc === undefined) {
-    return (
-      <main className="flex min-h-svh items-center justify-center px-6">
-        <p className="text-muted-foreground font-mono text-sm">Chargement…</p>
-      </main>
-    );
-  }
+  return (
+    <Suspense fallback={<PortalSpinner />}>
+      <ClientWorkspaceLoaded clientId={clientId} email={session.authUser?.email ?? ""} />
+    </Suspense>
+  );
+}
+
+function ClientWorkspaceLoaded({ clientId, email }: { clientId: string; email: string }) {
+  const { data: clientDoc } = useSuspenseQuery(clientBySlugQuery(clientId));
 
   if (clientDoc === null) {
     throw notFound();
   }
 
   const client = toPortalClient(clientDoc);
-  const email = session.authUser?.email ?? "";
 
   return (
     <ClientWorkspaceShell client={client} email={email}>
-      <Outlet />
+      <Suspense fallback={<PageContentSkeleton />}>
+        <Outlet />
+      </Suspense>
     </ClientWorkspaceShell>
   );
 }

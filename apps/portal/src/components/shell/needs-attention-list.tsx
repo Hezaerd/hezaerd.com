@@ -1,14 +1,16 @@
 import type { NeedsAttentionItem, NeedsAttentionKind } from "@/lib/portal-types";
 
+import { api } from "@hezaerd/backend/api";
+import type { Id } from "@hezaerd/backend/dataModel";
 import { Empty, EmptyDescription, EmptyHeader, EmptyTitle } from "@hezaerd/ui/components/empty";
 import {
   ArrowRight01Icon,
   DollarCircleIcon,
   File01Icon,
-  Globe02Icon,
   SparklesIcon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react";
+import { useMutation } from "convex/react";
 
 import { Link } from "@tanstack/react-router";
 
@@ -42,14 +44,6 @@ const kindConfig: Record<NeedsAttentionKind, KindConfig> = {
     iconBgClass: "bg-muted",
     iconColorClass: "text-muted-foreground",
   },
-  website: {
-    icon: Globe02Icon,
-    label: "Site web",
-    ctaLabel: "Relire les changements",
-    accentClass: "border-l-border",
-    iconBgClass: "bg-muted",
-    iconColorClass: "text-muted-foreground",
-  },
   feature: {
     icon: SparklesIcon,
     label: "Nouvelle fonctionnalité",
@@ -58,9 +52,19 @@ const kindConfig: Record<NeedsAttentionKind, KindConfig> = {
     iconBgClass: "bg-primary/10",
     iconColorClass: "text-primary",
   },
+  notification: {
+    icon: File01Icon,
+    label: "Message",
+    ctaLabel: "OK",
+    accentClass: "border-l-border",
+    iconBgClass: "bg-muted",
+    iconColorClass: "text-muted-foreground",
+  },
 };
 
 export function NeedsAttentionList({ items }: NeedsAttentionListProps) {
+  const dismissNotification = useMutation(api.files.dismissNotification);
+
   if (items.length === 0) {
     return (
       <Empty className="border-border bg-muted/20 rounded-xl border py-12">
@@ -109,18 +113,50 @@ export function NeedsAttentionList({ items }: NeedsAttentionListProps) {
                 </span>
               </div>
 
-              <Link
-                to={`/w/$clientId/${item.area}`}
-                params={{ clientId: item.clientId }}
-                className="text-primary mt-3 inline-flex items-center gap-1.5 text-xs font-medium transition-opacity hover:opacity-70"
-              >
-                {config.ctaLabel}
-                <HugeiconsIcon
-                  icon={ArrowRight01Icon}
-                  size={13}
-                  className="transition-transform group-hover:translate-x-0.5"
-                />
-              </Link>
+              {item.kind === "notification" ? (
+                <button
+                  type="button"
+                  onClick={() =>
+                    void dismissNotification({
+                      notificationId: item.id as Id<"clientNotifications">,
+                    })
+                  }
+                  className="text-primary mt-3 inline-flex items-center gap-1.5 text-xs font-medium transition-opacity hover:opacity-70"
+                >
+                  {config.ctaLabel}
+                  <HugeiconsIcon
+                    icon={ArrowRight01Icon}
+                    size={13}
+                    className="transition-transform group-hover:translate-x-0.5"
+                  />
+                </button>
+              ) : item.kind === "file" ? (
+                <Link
+                  to="/w/$clientId/files/$requestId"
+                  params={{ clientId: item.clientId, requestId: item.id }}
+                  className="text-primary mt-3 inline-flex items-center gap-1.5 text-xs font-medium transition-opacity hover:opacity-70"
+                >
+                  {config.ctaLabel}
+                  <HugeiconsIcon
+                    icon={ArrowRight01Icon}
+                    size={13}
+                    className="transition-transform group-hover:translate-x-0.5"
+                  />
+                </Link>
+              ) : (
+                <Link
+                  to={`/w/$clientId/${item.area}`}
+                  params={{ clientId: item.clientId }}
+                  className="text-primary mt-3 inline-flex items-center gap-1.5 text-xs font-medium transition-opacity hover:opacity-70"
+                >
+                  {config.ctaLabel}
+                  <HugeiconsIcon
+                    icon={ArrowRight01Icon}
+                    size={13}
+                    className="transition-transform group-hover:translate-x-0.5"
+                  />
+                </Link>
+              )}
             </div>
           </div>
         );

@@ -1,9 +1,9 @@
 import {
   File01Icon,
-  Globe02Icon,
   Home01Icon,
   Invoice01Icon,
   PieChart01Icon,
+  Setting07Icon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react";
 
@@ -15,7 +15,7 @@ type ClientDeskNavProps = {
 
 type DeskSection = {
   label: string;
-  segment: "" | "invoices" | "files" | "website" | "insights";
+  segment: "" | "invoices" | "files" | "insights" | "settings";
   icon: IconSvgElement;
 };
 
@@ -23,8 +23,8 @@ const deskSections: DeskSection[] = [
   { label: "Bureau", segment: "", icon: Home01Icon },
   { label: "Factures", segment: "invoices", icon: Invoice01Icon },
   { label: "Fichiers", segment: "files", icon: File01Icon },
-  { label: "Site web", segment: "website", icon: Globe02Icon },
   { label: "Statistiques", segment: "insights", icon: PieChart01Icon },
+  { label: "Paramètres", segment: "settings", icon: Setting07Icon },
 ];
 
 export function ClientDeskNav({ clientId }: ClientDeskNavProps) {
