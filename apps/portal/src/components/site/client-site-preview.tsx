@@ -3,7 +3,6 @@ import { Button } from "@hezaerd/ui/components/button";
 import { Link01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useQuery } from "@tanstack/react-query";
-import { Link } from "@tanstack/react-router";
 import { useAction } from "convex/react";
 
 import { resolveLinkedSiteLinks } from "@/lib/linked-site-links";
@@ -32,13 +31,14 @@ export function ClientSitePreview({ clientSlug, clientName, linkedSite }: Client
   return (
     <section className="border-border bg-muted/20 overflow-hidden rounded-xl border">
       <div className="grid lg:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)]">
-        <div className="border-border relative min-h-52 overflow-hidden border-b lg:min-h-72 lg:border-r lg:border-b-0">
+        <div className="border-border @container relative aspect-video overflow-hidden border-b lg:border-r lg:border-b-0">
           <iframe
             src={linkedSite.productionUrl}
             title={`Aperçu du site de ${clientName}`}
-            className="pointer-events-none absolute top-0 left-0 h-[720px] w-[1280px] origin-top-left scale-[0.28] sm:scale-[0.32] lg:scale-[0.36]"
+            className="pointer-events-none absolute top-0 left-0 h-[720px] w-[1280px] origin-top-left [transform:scale(calc(100cqw/1280px))]"
             loading="lazy"
             tabIndex={-1}
+            scrolling="no"
             sandbox="allow-scripts allow-same-origin"
           />
         </div>
@@ -90,17 +90,6 @@ export function ClientSitePreview({ clientSlug, clientName, linkedSite }: Client
               </Button>
             ) : null}
           </div>
-
-          <p className="text-muted-foreground text-xs leading-relaxed">
-            Aperçu live du site.{" "}
-            <Link
-              to="/op/clients/$clientId/settings"
-              params={{ clientId: clientSlug }}
-              className="text-foreground hover:underline"
-            >
-              Modifier l&apos;URL
-            </Link>
-          </p>
         </div>
       </div>
     </section>
