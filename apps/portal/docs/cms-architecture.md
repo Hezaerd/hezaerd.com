@@ -165,12 +165,6 @@ Non implémenté au moment de ce doc. Shape cible :
 
 - Flag `features.cms`, routes `/cms`, labels OP « CMS » / client « Mon site ».
 - Stubs UI desk + workspace — **pas encore de backend CMS**.
-- Migration données : `clients/migrateWebsiteFeatureToCms` (internal) si des rows ont encore `features.website`.
-
-```bash
-# Après deploy Convex, si needed :
-bunx convex run clients:migrateWebsiteFeatureToCms --internal
-```
 
 ---
 

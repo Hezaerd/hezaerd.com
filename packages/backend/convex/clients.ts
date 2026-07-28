@@ -400,33 +400,3 @@ export const updateFileSettings = operatorMutation({
     return updated;
   },
 });
-
-/** One-time: rename `features.website` → `features.cms` on existing Client rows. */
-export const migrateWebsiteFeatureToCms = internalMutation({
-  args: {},
-  returns: v.number(),
-  handler: async (ctx) => {
-    const clients = await ctx.db.query("clients").collect();
-    let migrated = 0;
-
-    for (const client of clients) {
-      const features = client.features as {
-        insights: boolean;
-        cms?: boolean;
-        website?: boolean;
-      };
-
-      if ("website" in features && features.cms === undefined) {
-        await ctx.db.patch(client._id, {
-          features: {
-            insights: features.insights,
-            cms: features.website ?? false,
-          },
-        });
-        migrated += 1;
-      }
-    }
-
-    return migrated;
-  },
-});
