@@ -1,5 +1,46 @@
 export type ClientFeature = "insights";
 
+export type SiteHealthStatus = "up" | "degraded" | "down" | "unknown";
+
+export type LinkedSite = {
+  githubRepo: string;
+  defaultBranch: string;
+  productionUrl: string;
+};
+
+export type SiteGitCommit = {
+  sha: string;
+  shortSha: string;
+  message: string;
+  author: string;
+  committedAt: number;
+  url: string;
+};
+
+export type SiteSnapshot = {
+  linkedSite: LinkedSite;
+  health: {
+    status: SiteHealthStatus;
+    latencyMs?: number;
+    httpStatus?: number;
+    checkedAt: number;
+    consecutiveFailures: number;
+  };
+  git?: {
+    branch: string;
+    commits: SiteGitCommit[];
+    syncedAt: number;
+  };
+  deploy?: {
+    status: "success" | "failure" | "in_progress";
+    commitSha?: string;
+    previewUrl?: string;
+    finishedAt: number;
+    reportedAt: number;
+  };
+  hasActiveDeployToken: boolean;
+};
+
 export type NeedsAttentionKind = "invoice" | "file" | "notification" | "feature";
 
 export type NeedsAttentionArea = "invoices" | "files" | "insights";
@@ -19,12 +60,21 @@ export type PortalClient = {
   name: string;
   contactEmail: string;
   features: Record<ClientFeature, boolean>;
+  linkedSite?: LinkedSite;
   fileSettings?: {
     defaultMaxFileSizeMb: number;
     uploadPresignTtlHours: number;
     downloadPresignTtlMinutes: number;
   };
 };
+
+export function hasLinkedSite(client: Pick<PortalClient, "linkedSite">): boolean {
+  return Boolean(
+    client.linkedSite?.githubRepo &&
+      client.linkedSite.defaultBranch &&
+      client.linkedSite.productionUrl,
+  );
+}
 
 export type PracticeCockpitStats = {
   openInvoiceTotal: number;
@@ -64,6 +114,7 @@ export function toPortalClient(client: {
   name: string;
   contactEmail: string;
   features: Record<ClientFeature, boolean>;
+  linkedSite?: LinkedSite;
   fileSettings?: {
     defaultMaxFileSizeMb: number;
     uploadPresignTtlHours: number;
@@ -75,6 +126,7 @@ export function toPortalClient(client: {
     name: client.name,
     contactEmail: client.contactEmail,
     features: client.features,
+    linkedSite: client.linkedSite,
     fileSettings: client.fileSettings,
   };
 }

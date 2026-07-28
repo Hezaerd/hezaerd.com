@@ -8,7 +8,7 @@ import { Link, Outlet, createFileRoute, notFound } from "@tanstack/react-router"
 import { ClientDeskNav } from "@/components/shell/client-desk-nav";
 import { PageContentSkeleton } from "@/components/shell/page-content-skeleton";
 import { clientBySlugQuery } from "@/lib/convex-queries";
-import { toPortalClient } from "@/lib/portal-types";
+import { hasLinkedSite, toPortalClient } from "@/lib/portal-types";
 import { usePrefetchWhenAuthenticated } from "@/lib/use-prefetch-when-authenticated";
 
 export const Route = createFileRoute("/op/clients/$clientId")({
@@ -65,7 +65,7 @@ function ClientDeskLayout() {
             ← Clients
           </Link>
         </div>
-        <ClientDeskNav clientId={clientId} />
+        <ClientDeskNav clientId={clientId} showSite={hasLinkedSite(client)} />
       </div>
       <Suspense fallback={<PageContentSkeleton />}>
         <Outlet />

@@ -26,6 +26,13 @@ export const clientValidator = v.object({
   slug: v.string(),
   contactEmail: v.string(),
   features: featuresValidator,
+  linkedSite: v.optional(
+    v.object({
+      githubRepo: v.string(),
+      defaultBranch: v.string(),
+      productionUrl: v.string(),
+    }),
+  ),
   fileSettings: v.optional(
     v.object({
       defaultMaxFileSizeMb: v.number(),

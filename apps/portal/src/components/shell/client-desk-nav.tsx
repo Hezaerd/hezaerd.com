@@ -1,5 +1,6 @@
 import {
   File01Icon,
+  Globe02Icon,
   Home01Icon,
   Invoice01Icon,
   PieChart01Icon,
@@ -11,24 +12,32 @@ import { Link, useRouterState } from "@tanstack/react-router";
 
 type ClientDeskNavProps = {
   clientId: string;
+  showSite?: boolean;
 };
 
 type DeskSection = {
   label: string;
-  segment: "" | "invoices" | "files" | "insights" | "settings";
+  segment: "" | "invoices" | "files" | "insights" | "site" | "settings";
   icon: IconSvgElement;
 };
 
-const deskSections: DeskSection[] = [
+const deskSectionsBase: DeskSection[] = [
   { label: "Bureau", segment: "", icon: Home01Icon },
   { label: "Factures", segment: "invoices", icon: Invoice01Icon },
   { label: "Fichiers", segment: "files", icon: File01Icon },
   { label: "Statistiques", segment: "insights", icon: PieChart01Icon },
-  { label: "Paramètres", segment: "settings", icon: Setting07Icon },
 ];
 
-export function ClientDeskNav({ clientId }: ClientDeskNavProps) {
+const siteSection: DeskSection = { label: "Site", segment: "site", icon: Globe02Icon };
+const settingsSection: DeskSection = { label: "Paramètres", segment: "settings", icon: Setting07Icon };
+
+export function ClientDeskNav({ clientId, showSite = false }: ClientDeskNavProps) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const deskSections = [
+    ...deskSectionsBase,
+    ...(showSite ? [siteSection] : []),
+    settingsSection,
+  ];
 
   function isSectionActive(segment: DeskSection["segment"]) {
     const base = `/op/clients/${clientId}`;
