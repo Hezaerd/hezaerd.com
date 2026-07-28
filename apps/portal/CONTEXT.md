@@ -73,8 +73,16 @@ Operator shell and Client Workspace each use a left sidebar for primary nav and 
 _Avoid_: Top-only nav; Workspace Switcher; Operator chrome inside Client Workspace; packing Client Areas like a SaaS admin console
 
 **Operator nav**:
-Operator sidebar: Home · Clients · Invoices · Settings. Per-Client Files, Insights, and Feature toggles live on Client Desk — not as global Operator Areas and not inside Client Workspace.
-_Avoid_: Global Operator nav for Insights/Files; duplicating Client Workspace Areas in Operator chrome; Open workspace into Client shell
+Operator sidebar: Home · Clients · Invoices · Settings. Per-Client Files, Insights, Site, and Feature toggles live on Client Desk — not as global Operator Areas and not inside Client Workspace.
+_Avoid_: Global Operator nav for Insights/Files/Site; duplicating Client Workspace Areas in Operator chrome; Open workspace into Client shell
+
+**Site**:
+Operator-only Client Desk section for piloting a Client's hosted public site: uptime (HTTP health), recent git activity, and latest Cloudflare Pages deploy status. Shown in Client Desk nav only when that Client has a linked site (GitHub repo + production URL configured). Never shown in Client Workspace.
+_Avoid_: Monitoring (as UI label); Mon site (reserved for parked client CMS Area); Project (ambiguous with repo/product work)
+
+**Linked site**:
+A Client's hosted public site registered in Portal for Operator piloting. Configured in Client Desk Settings (GitHub repo, branch, production URL); unlocks the read-only Site Desk section for uptime, git activity, and deploy status.
+_Avoid_: Project (as UI label); Website (generic); treating every Client as having a linked site by default; configuring linked-site fields on the Site section itself
 
 **Files**:
 Shared folder (open upload + list) plus Operator-created File requests. Clients use the Files Area; Operators manage the practice side from the Client Desk Files section.
@@ -118,4 +126,4 @@ _Avoid_: Me-as-role; WorkOS session alone; inventing a third role; treating Unli
 
 ## Parked features
 
-**CMS / Mon site** (retiré 2026-07-28): guided content editing for client public sites. Not in product scope until validated 1-1 with a Client. Architecture archived at [docs/archive/cms-architecture-2026-07.md](../../docs/archive/cms-architecture-2026-07.md).
+**CMS / Mon site** (retiré 2026-07-28): guided content editing for client public sites. Not in product scope until validated 1-1 with a Client.
