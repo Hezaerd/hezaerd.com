@@ -3,6 +3,11 @@ import { Input } from "@hezaerd/ui/components/input";
 import { useForm } from "@tanstack/react-form";
 
 import { FieldError } from "@/components/forms/field-error";
+import {
+  existingContactEmailSet,
+  isValidClientEmail,
+  normalizeClientEmail,
+} from "@/lib/client-email";
 import { setFormSubmitError, submitErrorMessage } from "@/lib/tanstack-form";
 
 type ClientCreateFormValues = {
@@ -13,18 +18,20 @@ type ClientCreateFormValues = {
 
 type ClientCreateFormProps = {
   onCreate: (input: ClientCreateFormValues) => Promise<void>;
+  initialContactEmail?: string;
+  existingContactEmails?: ReadonlySet<string>;
 };
 
-function isValidEmail(value: string): boolean {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
-}
-
-export function ClientCreateForm({ onCreate }: ClientCreateFormProps) {
+export function ClientCreateForm({
+  onCreate,
+  initialContactEmail,
+  existingContactEmails,
+}: ClientCreateFormProps) {
   const form = useForm({
     defaultValues: {
       name: "",
       slug: "",
-      contactEmail: "",
+      contactEmail: initialContactEmail ?? "",
     } satisfies ClientCreateFormValues,
     onSubmit: async ({ value, formApi }) => {
       try {
@@ -63,6 +70,7 @@ export function ClientCreateForm({ onCreate }: ClientCreateFormProps) {
                 Nom
               </label>
               <Input
+                autoFocus={Boolean(initialContactEmail)}
                 id={field.name}
                 name={field.name}
                 value={field.state.value}
@@ -105,8 +113,11 @@ export function ClientCreateForm({ onCreate }: ClientCreateFormProps) {
               if (!value.trim()) {
                 return "Ajoute un e-mail.";
               }
-              if (!isValidEmail(value)) {
+              if (!isValidClientEmail(value)) {
                 return "E-mail invalide.";
+              }
+              if (existingContactEmails?.has(normalizeClientEmail(value))) {
+                return "Cet e-mail de contact est déjà utilisé.";
               }
               return undefined;
             },

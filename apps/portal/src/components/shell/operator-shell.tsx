@@ -9,6 +9,7 @@ import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react";
 
 import { Link, useRouterState } from "@tanstack/react-router";
 
+import { OperatorCommandPalette } from "@/components/command-palette/operator-command-palette";
 import { DashboardChrome } from "@/components/shell/dashboard-chrome";
 import {
   OperatorChromeProvider,
@@ -80,6 +81,7 @@ function OperatorShellChrome({
         <NavItemLink key={item.to} item={item} />
       ))}
     >
+      <OperatorCommandPalette />
       {children}
     </DashboardChrome>
   );

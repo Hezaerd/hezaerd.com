@@ -5,10 +5,14 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useAction } from "convex/react";
 
-import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
+import { Link, createFileRoute, useNavigate, useRouterState } from "@tanstack/react-router";
+
+import { useLayoutEffect, useMemo, useState } from "react";
 
 import { ClientCreateForm } from "@/components/clients/client-create-form";
+import { existingContactEmailSet } from "@/lib/client-email";
 import { clientsListQuery } from "@/lib/convex-queries";
+import { consumePaletteHandoff } from "@/lib/palette-handoff";
 import { toPortalClient } from "@/lib/portal-types";
 
 export const Route = createFileRoute("/op/clients/")({
@@ -28,10 +32,31 @@ function ClientDirectoryPage() {
   const { data: clients } = useSuspenseQuery(clientsListQuery);
   const createClient = useAction(api.clients.create);
   const navigate = useNavigate();
+  const locationKey = useRouterState({
+    select: (state) => state.location.state.key ?? state.location.href,
+  });
+  const [initialContactEmail, setInitialContactEmail] = useState<string | undefined>();
+  const existingContactEmails = useMemo(
+    () => existingContactEmailSet(clients.map(toPortalClient)),
+    [clients],
+  );
+
+  useLayoutEffect(() => {
+    const handoff = consumePaletteHandoff();
+    if (handoff?.type === "new-client") {
+      setInitialContactEmail(handoff.contactEmail);
+      return;
+    }
+
+    setInitialContactEmail(undefined);
+  }, [locationKey]);
 
   return (
     <div className="flex flex-col gap-8">
       <ClientCreateForm
+        key={initialContactEmail ?? "empty"}
+        initialContactEmail={initialContactEmail}
+        existingContactEmails={existingContactEmails}
         onCreate={async (input) => {
           const created = await createClient(input);
           await navigate({
