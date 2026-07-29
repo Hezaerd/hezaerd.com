@@ -371,11 +371,11 @@ function OperatorCommandPaletteInner() {
         <Command
           key={page}
           shouldFilter={page === "root" || page.startsWith("pick-client")}
-          value={search}
-          onValueChange={setSearch}
         >
           <CommandInput
             placeholder={getInputPlaceholder(page)}
+            value={search}
+            onValueChange={setSearch}
             onKeyDown={handlePaletteEscape}
           />
           <CommandList>
