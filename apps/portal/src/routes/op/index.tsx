@@ -47,7 +47,7 @@ function OperatorHomePage() {
       <section className="flex flex-col gap-4">
         <div className="flex items-center justify-between">
           <h2 className="font-display text-xl font-semibold tracking-tight">Clients</h2>
-          <Button variant="outline" size="sm" render={<Link to="/op/clients" />}>
+          <Button variant="outline" size="sm" nativeButton={false} render={<Link to="/op/clients" />}>
             Tous les clients
             <HugeiconsIcon icon={ArrowRight01Icon} size={14} />
           </Button>
@@ -91,6 +91,7 @@ function OperatorHomePage() {
                 <div className="flex shrink-0 flex-wrap gap-2">
                   <Button
                     size="sm"
+                    nativeButton={false}
                     render={<Link to="/op/clients/$clientId" params={{ clientId: client.id }} />}
                   >
                     Ouvrir

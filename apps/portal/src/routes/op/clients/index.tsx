@@ -7,12 +7,16 @@ import { useAction } from "convex/react";
 
 import { Link, createFileRoute, useNavigate, useRouterState } from "@tanstack/react-router";
 
-import { useLayoutEffect, useMemo, useState } from "react";
+import { useLayoutEffect, useMemo, useState, useSyncExternalStore } from "react";
 
 import { ClientCreateForm } from "@/components/clients/client-create-form";
 import { existingContactEmailSet } from "@/lib/client-email";
 import { clientsListQuery } from "@/lib/convex-queries";
-import { consumePaletteHandoff } from "@/lib/palette-handoff";
+import {
+  consumePaletteHandoff,
+  getPaletteHandoffVersion,
+  subscribePaletteHandoff,
+} from "@/lib/palette-handoff";
 import { toPortalClient } from "@/lib/portal-types";
 
 export const Route = createFileRoute("/op/clients/")({
@@ -35,6 +39,11 @@ function ClientDirectoryPage() {
   const locationKey = useRouterState({
     select: (state) => state.location.state.key ?? state.location.href,
   });
+  const handoffVersion = useSyncExternalStore(
+    subscribePaletteHandoff,
+    getPaletteHandoffVersion,
+    getPaletteHandoffVersion,
+  );
   const [initialContactEmail, setInitialContactEmail] = useState<string | undefined>();
   const existingContactEmails = useMemo(
     () => existingContactEmailSet(clients.map(toPortalClient)),
@@ -45,11 +54,8 @@ function ClientDirectoryPage() {
     const handoff = consumePaletteHandoff();
     if (handoff?.type === "new-client") {
       setInitialContactEmail(handoff.contactEmail);
-      return;
     }
-
-    setInitialContactEmail(undefined);
-  }, [locationKey]);
+  }, [handoffVersion, locationKey]);
 
   return (
     <div className="flex flex-col gap-8">
@@ -104,6 +110,7 @@ function ClientDirectoryPage() {
               <div className="flex shrink-0 flex-wrap gap-2">
                 <Button
                   size="sm"
+                  nativeButton={false}
                   render={<Link to="/op/clients/$clientId" params={{ clientId: client.id }} />}
                 >
                   Ouvrir

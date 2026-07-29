@@ -334,9 +334,11 @@ function OperatorCommandPaletteInner() {
 
     runCommand(() => {
       setPaletteHandoff({ type: "new-client", contactEmail: email });
-      void navigate({ to: "/op/clients" });
+      if (pathname !== "/op/clients" && pathname !== "/op/clients/") {
+        void navigate({ to: "/op/clients" });
+      }
     });
-  }, [clients, emailDraft, navigate, runCommand]);
+  }, [clients, emailDraft, navigate, pathname, runCommand]);
 
   const goToClientDesk = useCallback(
     (slug: string, section: DeskSection) => {

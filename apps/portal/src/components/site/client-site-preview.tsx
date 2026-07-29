@@ -80,13 +80,17 @@ export function ClientSitePreview({ clientSlug, clientName, linkedSite }: Client
           </div>
 
           <div className="flex flex-col gap-2">
-            <Button render={<a href={links.productionUrl} target="_blank" rel="noreferrer" />}>
+            <Button
+              nativeButton={false}
+              render={<a href={links.productionUrl} target="_blank" rel="noreferrer" />}
+            >
               Visiter
               <HugeiconsIcon icon={Link01Icon} size={14} className="ml-1.5" />
             </Button>
             {links.githubUrl ? (
               <Button
                 variant="outline"
+                nativeButton={false}
                 render={<a href={links.githubUrl} target="_blank" rel="noreferrer" />}
               >
                 GitHub
