@@ -1,4 +1,14 @@
-import { Suspense, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import {
+  createContext,
+  Suspense,
+  useCallback,
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
 import {
   Command,
@@ -11,10 +21,19 @@ import {
   CommandSeparator,
 } from "@hezaerd/ui/components/command";
 import {
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+} from "@hezaerd/ui/components/sidebar";
+import { cn } from "@hezaerd/ui/lib/utils";
+import {
   Add01Icon,
   File01Icon,
   Home01Icon,
   Invoice01Icon,
+  SearchIcon,
   Setting07Icon,
   UserGroupIcon,
 } from "@hugeicons/core-free-icons";
@@ -186,6 +205,74 @@ function NewClientEmailStep({
   );
 }
 
+type OperatorCommandPaletteContextValue = {
+  open: boolean;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+const OperatorCommandPaletteContext = createContext<OperatorCommandPaletteContextValue | null>(
+  null,
+);
+
+function useOperatorCommandPalette() {
+  const context = useContext(OperatorCommandPaletteContext);
+  if (!context) {
+    throw new Error("useOperatorCommandPalette must be used within OperatorCommandPaletteProvider");
+  }
+
+  return context;
+}
+
+function getModKeyLabel() {
+  if (typeof navigator === "undefined") {
+    return "⌘";
+  }
+
+  return /Mac|iPhone|iPod|iPad/i.test(navigator.userAgent) ? "⌘" : "Ctrl+";
+}
+
+export function OperatorCommandPaletteProvider({ children }: { children: React.ReactNode }) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <OperatorCommandPaletteContext.Provider value={{ open, setOpen }}>
+      {children}
+    </OperatorCommandPaletteContext.Provider>
+  );
+}
+
+export function OperatorCommandPaletteTrigger() {
+  const { setOpen } = useOperatorCommandPalette();
+  const modKey = getModKeyLabel();
+
+  return (
+    <SidebarGroup className="py-0">
+      <SidebarGroupContent>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              variant="outline"
+              tooltip={`Rechercher (${modKey}K)`}
+              onClick={() => setOpen(true)}
+            >
+              <HugeiconsIcon icon={SearchIcon} strokeWidth={2} className="shrink-0" />
+              <span className="flex-1 truncate text-left">Rechercher…</span>
+              <kbd
+                className={cn(
+                  "border-border bg-muted text-muted-foreground pointer-events-none hidden h-5 shrink-0 items-center rounded border px-1.5 font-mono text-[10px] font-medium select-none",
+                  "group-data-[collapsible=icon]:hidden sm:inline-flex",
+                )}
+              >
+                {modKey}K
+              </kbd>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarGroupContent>
+    </SidebarGroup>
+  );
+}
+
 export function OperatorCommandPalette() {
   return (
     <Suspense fallback={null}>
@@ -200,7 +287,7 @@ function OperatorCommandPaletteInner() {
   const { data: clientDocs } = useSuspenseQuery(clientsListQuery);
   const clients = useMemo(() => clientDocs.map(toPortalClient), [clientDocs]);
 
-  const [open, setOpen] = useState(false);
+  const { open, setOpen } = useOperatorCommandPalette();
   const [page, setPage] = useState<PalettePage>("root");
   const [search, setSearch] = useState("");
   const [emailDraft, setEmailDraft] = useState("");

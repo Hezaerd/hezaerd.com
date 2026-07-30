@@ -9,7 +9,11 @@ import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react";
 
 import { Link, useRouterState } from "@tanstack/react-router";
 
-import { OperatorCommandPalette } from "@/components/command-palette/operator-command-palette";
+import {
+  OperatorCommandPalette,
+  OperatorCommandPaletteProvider,
+  OperatorCommandPaletteTrigger,
+} from "@/components/command-palette/operator-command-palette";
 import { DashboardChrome } from "@/components/shell/dashboard-chrome";
 import {
   OperatorChromeProvider,
@@ -66,24 +70,27 @@ function OperatorShellChrome({
     chrome.headerTitle === null ? undefined : (chrome.headerTitle ?? defaultHeaderTitle);
 
   return (
-    <DashboardChrome
-      brand={{
-        initials: "HZ",
-        title: "Hezaerd",
-        subtitle: "Opérateur",
-      }}
-      headerTitle={headerTitle}
-      headerStart={chrome.headerStart}
-      headerEnd={chrome.headerEnd}
-      subHeader={chrome.subHeader}
-      email={email}
-      nav={navItems.map((item) => (
-        <NavItemLink key={item.to} item={item} />
-      ))}
-    >
-      <OperatorCommandPalette />
-      {children}
-    </DashboardChrome>
+    <OperatorCommandPaletteProvider>
+      <DashboardChrome
+        brand={{
+          initials: "HZ",
+          title: "Hezaerd",
+          subtitle: "Opérateur",
+        }}
+        headerTitle={headerTitle}
+        headerStart={chrome.headerStart}
+        headerEnd={chrome.headerEnd}
+        subHeader={chrome.subHeader}
+        email={email}
+        sidebarTop={<OperatorCommandPaletteTrigger />}
+        nav={navItems.map((item) => (
+          <NavItemLink key={item.to} item={item} />
+        ))}
+      >
+        <OperatorCommandPalette />
+        {children}
+      </DashboardChrome>
+    </OperatorCommandPaletteProvider>
   );
 }
 

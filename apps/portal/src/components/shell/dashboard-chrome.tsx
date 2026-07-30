@@ -21,6 +21,7 @@ type DashboardChromeBrand = {
 type DashboardChromeProps = {
   brand: DashboardChromeBrand;
   nav: React.ReactNode;
+  sidebarTop?: React.ReactNode;
   footer?: React.ReactNode;
   headerStart?: React.ReactNode;
   headerEnd?: React.ReactNode;
@@ -33,6 +34,7 @@ type DashboardChromeProps = {
 export function DashboardChrome({
   brand,
   nav,
+  sidebarTop,
   footer,
   headerStart,
   headerEnd,
@@ -66,6 +68,7 @@ export function DashboardChrome({
         </SidebarHeader>
 
         <SidebarContent>
+          {sidebarTop}
           <SidebarGroup>
             <SidebarGroupContent>
               <SidebarMenu>{nav}</SidebarMenu>
