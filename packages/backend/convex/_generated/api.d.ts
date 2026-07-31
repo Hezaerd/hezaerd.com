@@ -8,6 +8,9 @@
  * @module
  */
 
+import type * as analyticsCollect from "../analyticsCollect.js";
+import type * as analyticsHttp from "../analyticsHttp.js";
+import type * as analyticsSites from "../analyticsSites.js";
 import type * as auth from "../auth.js";
 import type * as clientInvites from "../clientInvites.js";
 import type * as clients from "../clients.js";
@@ -19,6 +22,14 @@ import type * as http from "../http.js";
 import type * as invoiceCheckout from "../invoiceCheckout.js";
 import type * as invoiceInternal from "../invoiceInternal.js";
 import type * as invoices from "../invoices.js";
+import type * as lib_analytics_constants from "../lib/analytics/constants.js";
+import type * as lib_analytics_dayKey from "../lib/analytics/dayKey.js";
+import type * as lib_analytics_origin from "../lib/analytics/origin.js";
+import type * as lib_analytics_paths from "../lib/analytics/paths.js";
+import type * as lib_analytics_rollups from "../lib/analytics/rollups.js";
+import type * as lib_analytics_siteKey from "../lib/analytics/siteKey.js";
+import type * as lib_analytics_sourceKind from "../lib/analytics/sourceKind.js";
+import type * as lib_analytics_visitor from "../lib/analytics/visitor.js";
 import type * as lib_clientCascade from "../lib/clientCascade.js";
 import type * as lib_clients from "../lib/clients.js";
 import type * as lib_fileSettings from "../lib/fileSettings.js";
@@ -38,6 +49,9 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  analyticsCollect: typeof analyticsCollect;
+  analyticsHttp: typeof analyticsHttp;
+  analyticsSites: typeof analyticsSites;
   auth: typeof auth;
   clientInvites: typeof clientInvites;
   clients: typeof clients;
@@ -49,6 +63,14 @@ declare const fullApi: ApiFromModules<{
   invoiceCheckout: typeof invoiceCheckout;
   invoiceInternal: typeof invoiceInternal;
   invoices: typeof invoices;
+  "lib/analytics/constants": typeof lib_analytics_constants;
+  "lib/analytics/dayKey": typeof lib_analytics_dayKey;
+  "lib/analytics/origin": typeof lib_analytics_origin;
+  "lib/analytics/paths": typeof lib_analytics_paths;
+  "lib/analytics/rollups": typeof lib_analytics_rollups;
+  "lib/analytics/siteKey": typeof lib_analytics_siteKey;
+  "lib/analytics/sourceKind": typeof lib_analytics_sourceKind;
+  "lib/analytics/visitor": typeof lib_analytics_visitor;
   "lib/clientCascade": typeof lib_clientCascade;
   "lib/clients": typeof lib_clients;
   "lib/fileSettings": typeof lib_fileSettings;

@@ -392,6 +392,10 @@ export const updateLinkedSite = operatorMutation({
     });
 
     await ctx.db.patch(client._id, { linkedSite });
+    await ctx.runMutation(internal.analyticsSites.syncForClient, {
+      clientId: client._id,
+      linkedSite,
+    });
 
     const updated = await ctx.db.get("clients", client._id);
     if (!updated) {

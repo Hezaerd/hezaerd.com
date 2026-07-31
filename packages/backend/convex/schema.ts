@@ -11,6 +11,7 @@ export default defineSchema({
     features: v.object({
       insights: v.boolean(),
     }),
+    insightsEventLabels: v.optional(v.record(v.string(), v.string())),
     fileSettings: v.optional(
       v.object({
         defaultMaxFileSizeMb: v.number(),
@@ -118,5 +119,87 @@ export default defineSchema({
     .index("by_authId", ["authId"])
     .index("by_email", ["email"])
     .index("by_clientId", ["clientId"]),
+
+  analyticsSites: defineTable({
+    clientId: v.id("clients"),
+    siteKey: v.string(),
+    productionUrl: v.string(),
+  })
+    .index("by_siteKey", ["siteKey"])
+    .index("by_clientId", ["clientId"]),
+
+  analyticsDailyTotals: defineTable({
+    clientId: v.id("clients"),
+    dayKey: v.string(),
+    pageviews: v.number(),
+    visitors: v.number(),
+  }).index("by_clientId_and_dayKey", ["clientId", "dayKey"]),
+
+  analyticsDailyPages: defineTable({
+    clientId: v.id("clients"),
+    dayKey: v.string(),
+    path: v.string(),
+    views: v.number(),
+    entries: v.number(),
+    exits: v.number(),
+  })
+    .index("by_clientId_and_dayKey", ["clientId", "dayKey"])
+    .index("by_clientId_dayKey_path", ["clientId", "dayKey", "path"]),
+
+  analyticsDailySources: defineTable({
+    clientId: v.id("clients"),
+    dayKey: v.string(),
+    sourceKind: v.union(
+      v.literal("google"),
+      v.literal("direct"),
+      v.literal("social"),
+      v.literal("referral"),
+      v.literal("email"),
+      v.literal("other"),
+    ),
+    views: v.number(),
+  })
+    .index("by_clientId_and_dayKey", ["clientId", "dayKey"])
+    .index("by_clientId_dayKey_sourceKind", ["clientId", "dayKey", "sourceKind"]),
+
+  analyticsDailyRoutes: defineTable({
+    clientId: v.id("clients"),
+    dayKey: v.string(),
+    routeKey: v.string(),
+    views: v.number(),
+  })
+    .index("by_clientId_and_dayKey", ["clientId", "dayKey"])
+    .index("by_clientId_dayKey_routeKey", ["clientId", "dayKey", "routeKey"]),
+
+  analyticsDailyEvents: defineTable({
+    clientId: v.id("clients"),
+    dayKey: v.string(),
+    eventName: v.string(),
+    count: v.number(),
+  })
+    .index("by_clientId_and_dayKey", ["clientId", "dayKey"])
+    .index("by_clientId_dayKey_eventName", ["clientId", "dayKey", "eventName"]),
+
+  analyticsVisitorDays: defineTable({
+    clientId: v.id("clients"),
+    dayKey: v.string(),
+    visitorHash: v.string(),
+  })
+    .index("by_clientId_and_dayKey", ["clientId", "dayKey"])
+    .index("by_clientId_dayKey_visitorHash", ["clientId", "dayKey", "visitorHash"])
+    .index("by_dayKey", ["dayKey"]),
+
+  analyticsSessions: defineTable({
+    clientId: v.id("clients"),
+    dayKey: v.string(),
+    visitorHash: v.string(),
+    paths: v.array(v.string()),
+    firstPath: v.string(),
+    lastPath: v.string(),
+    lastSeenAt: v.number(),
+  })
+    .index("by_clientId_and_dayKey", ["clientId", "dayKey"])
+    .index("by_clientId_dayKey_visitorHash", ["clientId", "dayKey", "visitorHash"])
+    .index("by_lastSeenAt", ["lastSeenAt"]),
 
 });

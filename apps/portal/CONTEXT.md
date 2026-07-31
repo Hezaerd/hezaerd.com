@@ -45,8 +45,8 @@ Always-on Client Workspace nav: Home, Invoices, Files. Not toggled per Client.
 _Avoid_: Optional modules, add-ons (for these three)
 
 **Feature**:
-An Operator-toggled Client Workspace Area beyond Core. Client-facing label: Insights (analytics). Enabled/disabled per Client from Client Desk to match what that Client bought.
-_Avoid_: Showing disabled Features in Client nav; hard-coding every Client to the full set; exposing « Analytics » as Client nav label; persistent unlock banners
+An Operator-toggled gate for Client access to a Workspace Area beyond Core — not a switch for whether baseline site analytics run. Client-facing label: Insights (Statistiques). Enabled/disabled per Client from Client Desk to match what that Client bought (future: subscription).
+_Avoid_: Treating the toggle as “start/stop tracking”; showing disabled Features in Client nav; hard-coding every Client to the full set; exposing « Analytics » as Client nav label; persistent unlock banners
 
 **Feature unlock**:
 The one-time Needs Attention created when an Operator enables a Feature for a Client. Dismissed after view/dismiss; does not recur. Also appears as Waiting on Client on Client Desk until the Client has seen it.
@@ -81,7 +81,7 @@ Operator-only Client Desk section for piloting a Client's hosted public site: up
 _Avoid_: Monitoring (as UI label); Mon site (reserved for parked client CMS Area); Project (ambiguous with repo/product work)
 
 **Linked site**:
-A Client's hosted public site registered in Portal for Operator piloting. Configured in Client Desk Settings (GitHub repo, branch, production URL); unlocks the read-only Site Desk section for uptime, git activity, and deploy status.
+A Client's hosted public site registered in Portal for Operator piloting. Configured in Client Desk Settings (GitHub repo, branch, production URL); unlocks the read-only Site Desk section for uptime, git activity, and deploy status; baseline first-party analytics collection starts here regardless of whether the Client has Insights access.
 _Avoid_: Project (as UI label); Website (generic); treating every Client as having a linked site by default; configuring linked-site fields on the Site section itself
 
 **Files**:
@@ -97,11 +97,11 @@ A payment request to a Client. Operators create and manage from Client Desk (and
 _Avoid_: Bill, payment request (as UI label); ledger-first Client UI; statement-only path to Pay; Operator Paying as the Client
 
 **Insights**:
-Client Workspace Feature Area: three plain truths (visitors for the period, top pages/actions, one takeaway). Not a mini analytics suite. Does not create Needs Attention by default. Operators can review the same truths from the Client Desk Insights section.
-_Avoid_: GA-style chart walls; single opaque health score as the only view; Analytics as Client nav label
+Client Workspace Feature Area (gated by the Insights Feature): traffic over time (today plus 7/30/90 days), traffic sources, page navigation signals (landings, top pages, short paths, exits), and custom actions when enabled. Enough charts to help a local business read SEO and site performance — not a Google Analytics replacement. Does not create Needs Attention by default. Operators always review the same views from Client Desk Statistiques when the Client has a linked site; Client access is optional and toggled separately.
+_Avoid_: GA-style chart walls; real-time streams; funnels and attribution; single opaque health score as the only view; Analytics as Client nav label
 
 **Takeaway**:
-The single plain-language sentence on Insights explaining what the numbers suggest the Client might do or notice.
+(Parked beyond Insights v1.) The single plain-language sentence on Insights explaining what the numbers suggest the Client might do or notice.
 _Avoid_: Insight (ambiguous with the Area name); recommendation engine; AI summary as a required label
 
 **Brand** / **Portfolio**:
