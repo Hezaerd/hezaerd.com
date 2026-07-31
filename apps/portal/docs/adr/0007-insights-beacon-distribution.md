@@ -1,63 +1,99 @@
-# Insights — beacon distribution & install
+# Insights — SDK distribution & install
 
-How the tracking snippet reaches client sites and talks to Convex.
+How client sites send analytics to Portal via `@hezaerd/analytics` on npm.
 
-**Status:** accepted
+**Status:** accepted (revised — npm SDK primary)
 
-## Artifact
+## Product surface
 
-Monorepo package `packages/analytics` (`@hezaerd/analytics`) — TypeScript → esbuild **IIFE** (~2 KB gzip target). Product-facing name remains **Insights** in Portal; this package is the site-side collector only.
+Published npm package `@hezaerd/analytics` (public). Product name in Portal remains **Insights**.
 
-Served at:
+| Export | Role |
+|--------|------|
+| `@hezaerd/analytics` | Core — `init`, `track` |
+| `@hezaerd/analytics/react` | `<HezaerdAnalytics />`, `useTrack()` |
+| `@hezaerd/analytics/server` | `track()` for Node / server actions |
+
+Monorepo source: `packages/analytics`. Built with **tsdown** (ESM + CJS + `.d.ts`).
+
+## Ingestion URL
+
+Target (stable SDK default):
 
 ```
-GET https://{CONVEX_SITE_URL}/analytics/a.js
+https://analytics.hezaerd.com/collect          ← browser (pageviews + client events)
+https://analytics.hezaerd.com/collect/server   ← server events
 ```
 
-Same deployment as `POST /analytics/collect`. `CONVEX_SITE_URL` is already env-configured per environment (dev/prod).
+Until custom domain is live (Convex free tier or Worker proxy), apps override via env:
 
-## Snippet (copy from Client Desk)
-
-```html
-<script
-  defer
-  src="https://{CONVEX_SITE_URL}/analytics/a.js"
-  data-site-key="{siteKey}"
-></script>
+```env
+NEXT_PUBLIC_HEZAERD_ANALYTICS_URL=https://{CONVEX_SITE_URL}/analytics/collect
+HEZAERD_ANALYTICS_URL=https://{CONVEX_SITE_URL}/analytics/collect/server
 ```
 
-Desk Statistiques shows the filled snippet + copy button when `linkedSite` exists.
+Same Convex deployment as Portal backend. Worker CNAME on `analytics.hezaerd.com` → Convex is the v1 infra path without Convex paid custom domains.
 
-## siteKey lifecycle
+## Install (primary)
 
-1. Operator saves `linkedSite` on a client → generate `siteKey` (crypto random, URL-safe).
-2. Upsert `analyticsSites` row `{ clientId, siteKey, productionUrl }`.
-3. Rotating key: Operator action « Regénérer la clé » invalidates old key (rare; re-copy snippet).
+```tsx
+// app/layout.tsx
+import { HezaerdAnalytics } from "@hezaerd/analytics/react";
+
+export default function RootLayout({ children }) {
+  return (
+    <html>
+      <body>
+        {children}
+        <HezaerdAnalytics
+          siteKey={process.env.NEXT_PUBLIC_HEZAERD_SITE_KEY!}
+          endpoint={process.env.NEXT_PUBLIC_HEZAERD_ANALYTICS_URL}
+        />
+      </body>
+    </html>
+  );
+}
+```
+
+Desk Statistiques shows: `siteKey`, `ingestSecret` (server only, copy once), env template, and npm install line when `linkedSite` exists.
+
+## Credentials lifecycle
+
+1. Operator saves `linkedSite` → generate `siteKey` (public) + `ingestSecret` (private).
+2. Upsert `analyticsSites` row `{ clientId, siteKey, ingestSecret, productionUrl }`.
+3. **Regénérer les clés** (Operator): rotates both `siteKey` and `ingestSecret`; client updates env + redeploy.
+
+| Credential | Exposure | Auth |
+|------------|----------|------|
+| `siteKey` | Public — bundle / `NEXT_PUBLIC_*` | Browser ingest + Origin check |
+| `ingestSecret` | Server only — `HEZAERD_INGEST_SECRET` | Bearer token on `/collect/server` |
 
 ## Install channels
 
 | Channel | When |
 |---------|------|
-| **Desk copy-paste** | Default — Operator pastes into client site `<head>` or layout |
-| **Managed repo** | When `linkedSite.githubRepo` is set and you maintain the repo — add snippet in root layout via PR as part of site setup checklist (Portal shows diff hint, no auto-PR v1) |
+| **npm + env** | Default — managed React/Next/TanStack/Astro repos |
+| **Managed repo PR** | `linkedSite.githubRepo` set — add dep + layout in setup PR |
 
-No npm package for clients v1 — unnecessary surface for SMB sites.
+## Client behaviour (SDK)
 
-## Beacon behaviour (v1)
+- `<HezaerdAnalytics />` → `init({ siteKey, endpoint })` on mount (client-only).
+- Pageview on init: `{ siteKey, path, referrer }`.
+- **SPA**: patch `history.pushState` / `replaceState` + `popstate`.
+- `useTrack()` / `track()` → custom events (ADR-0006).
+- `sendBeacon` + `fetch` fallback; no cookies, no localStorage.
 
-- On load: send pageview `{ siteKey, path, referrer: document.referrer }`.
-- **SPA**: patch `history.pushState` / `replaceState` + `popstate` → pageview on path change (same payload).
-- **Events**: `hezaerd.track(name)` + delegated `click` on `[data-hezaerd-event]` (ADR-0006).
-- `sendBeacon` with `fetch` fallback; always async, non-blocking.
-- No cookies, no localStorage.
+## Validation (browser)
 
-## Validation
+`POST /analytics/collect` — `Origin` / `Referer` host must match `analyticsSites.productionUrl`. Wrong origin → `204` (no leak). Dynamic CORS `Access-Control-Allow-Origin` when allowed.
 
-- Collect endpoint validates `Origin` / `Referer` host against `analyticsSites.productionUrl`.
-- Wrong origin → 204 (no leak).
+## Validation (server)
+
+`POST /analytics/collect/server` — `Authorization: Bearer {ingestSecret}` must match the row for `siteKey`. No Origin check. Events only.
 
 ## Non-goals v1
 
-- First-party CNAME (`analytics.client.com`)
-- Auto-inject via Cloudflare Zaraz / GTM template
+- Per-client CNAME (`analytics.client.com`)
+- GTM / Zaraz template
 - WordPress plugin
+- Legacy `<script src="…/a.js">` (removed — npm only)

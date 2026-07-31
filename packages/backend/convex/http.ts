@@ -3,7 +3,7 @@ import { registerRoutes } from "@convex-dev/stripe";
 import type Stripe from "stripe";
 
 import { authKit } from "./auth";
-import { collectOptions, collectPost } from "./analyticsHttp";
+import { collectOptions, collectPost, collectServerPost } from "./analyticsHttp";
 import { components, internal } from "./_generated/api";
 import type { Id } from "./_generated/dataModel";
 
@@ -38,6 +38,12 @@ http.route({
   path: "/analytics/collect",
   method: "OPTIONS",
   handler: collectOptions,
+});
+
+http.route({
+  path: "/analytics/collect/server",
+  method: "POST",
+  handler: collectServerPost,
 });
 
 export default http;

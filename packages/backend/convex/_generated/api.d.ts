@@ -27,6 +27,7 @@ import type * as lib_analytics_dayKey from "../lib/analytics/dayKey.js";
 import type * as lib_analytics_origin from "../lib/analytics/origin.js";
 import type * as lib_analytics_paths from "../lib/analytics/paths.js";
 import type * as lib_analytics_rollups from "../lib/analytics/rollups.js";
+import type * as lib_analytics_secrets from "../lib/analytics/secrets.js";
 import type * as lib_analytics_siteKey from "../lib/analytics/siteKey.js";
 import type * as lib_analytics_sourceKind from "../lib/analytics/sourceKind.js";
 import type * as lib_analytics_visitor from "../lib/analytics/visitor.js";
@@ -68,6 +69,7 @@ declare const fullApi: ApiFromModules<{
   "lib/analytics/origin": typeof lib_analytics_origin;
   "lib/analytics/paths": typeof lib_analytics_paths;
   "lib/analytics/rollups": typeof lib_analytics_rollups;
+  "lib/analytics/secrets": typeof lib_analytics_secrets;
   "lib/analytics/siteKey": typeof lib_analytics_siteKey;
   "lib/analytics/sourceKind": typeof lib_analytics_sourceKind;
   "lib/analytics/visitor": typeof lib_analytics_visitor;

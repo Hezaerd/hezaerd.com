@@ -1,0 +1,8 @@
+{
+  "extends": "@hezaerd/config/tsconfig.base.json",
+  "compilerOptions": {
+    "types": ["node"],
+    "jsx": "react-jsx"
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx", "tsdown.config.ts"]
+}

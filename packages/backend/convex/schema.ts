@@ -123,6 +123,7 @@ export default defineSchema({
   analyticsSites: defineTable({
     clientId: v.id("clients"),
     siteKey: v.string(),
+    ingestSecret: v.optional(v.string()),
     productionUrl: v.string(),
   })
     .index("by_siteKey", ["siteKey"])

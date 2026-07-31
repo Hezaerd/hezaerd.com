@@ -2,30 +2,58 @@
 
 Custom events are **generic and name-free**: any valid event name works per client, with optional Operator labels for the Insights UI. Events are **ingested only when `features.insights` is true** for that client; baseline pageview collection is unchanged.
 
-**Status:** accepted
+**Status:** accepted (revised — SDK surface)
 
-## Snippet surface
+## SDK surface
 
-Global on the client site after the beacon loads:
+### Client (browser)
 
-```js
-hezaerd.track("phone_click");
+```tsx
+import { useTrack } from "@hezaerd/analytics/react";
+
+function QuoteForm() {
+  const track = useTrack();
+  return <button onClick={() => track("quote_submit")}>Envoyer</button>;
+}
 ```
 
-Declarative clicks (delegated listener on `document`):
+```tsx
+import { track } from "@hezaerd/analytics";
+
+track("phone_click");
+```
+
+Declarative (delegated listener installed by `init` / `<HezaerdAnalytics />`):
 
 ```html
 <a href="tel:+15145551234" data-hezaerd-event="phone_click">Appeler</a>
-<button type="submit" data-hezaerd-event="quote_submit">Envoyer</button>
 ```
 
-Both paths send the same payload shape to `POST /analytics/collect`:
+### Server (Node, server actions, route handlers)
+
+```ts
+import { track } from "@hezaerd/analytics/server";
+
+await track("contact_submit", { path: "/api/contact" });
+```
+
+Requires env: `HEZAERD_SITE_KEY`, `HEZAERD_INGEST_SECRET`, optional `HEZAERD_ANALYTICS_URL`.
+
+## Payload shapes
+
+**Browser** → `POST /analytics/collect`:
 
 ```json
 { "siteKey": "…", "path": "/contact", "event": "phone_click" }
 ```
 
-Pageviews omit `event`. Custom events omit navigation side-effects beyond the current `path` for context.
+**Server** → `POST /analytics/collect/server` + `Authorization: Bearer {ingestSecret}`:
+
+```json
+{ "siteKey": "…", "path": "/api/contact", "event": "contact_submit" }
+```
+
+Pageviews are browser-only (omit `event`). Server ingest is **events only** — no pageviews, sessions, or visitor hash.
 
 ## Event name rules
 
@@ -33,8 +61,8 @@ Pageviews omit `event`. Custom events omit navigation side-effects beyond the cu
 |------|--------|
 | Pattern | `^[a-z][a-z0-9_]{2,63}$` |
 | Reserved | `pageview`, names prefixed `_` |
-| Invalid names | Dropped silently (still `204`) — no beacon errors in prod |
-| Props | **None in v1** — no second argument to `track()` |
+| Invalid names | Dropped silently (still `204`) — no SDK throw in prod |
+| Props | **None in v1** — no second argument beyond optional server `path` |
 
 Names are **not whitelisted**. Operators may pre-label names before first fire.
 
@@ -71,4 +99,4 @@ Not enforced by Portal — copy into per-client repo README / handoff:
 
 - Event properties / dimensions
 - Operator-defined required catalogue before tracking works
-- Client-side event preview or debug mode in production snippet
+- Client-side debug mode in production builds

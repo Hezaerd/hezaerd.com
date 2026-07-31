@@ -13,6 +13,7 @@ import {
   recordUniqueVisitor,
 } from "./lib/analytics/rollups";
 import { classifySourceKind } from "./lib/analytics/sourceKind";
+import { secretsEqual } from "./lib/analytics/secrets";
 import { computeVisitorHash, isBotUserAgent, truncateIp } from "./lib/analytics/visitor";
 
 const collectArgs = {
@@ -115,6 +116,42 @@ export const ingest = internalMutation({
     await incrementDailyPageViews(ctx, site.clientId, dayKey, path);
     await incrementDailySource(ctx, site.clientId, dayKey, sourceKind);
 
+    return null;
+  },
+});
+
+const serverCollectArgs = {
+  siteKey: v.string(),
+  ingestSecret: v.string(),
+  event: v.string(),
+  path: v.optional(v.string()),
+};
+
+/** Ingest one server-side custom event. Invalid or rejected hits are no-ops. */
+export const ingestServer = internalMutation({
+  args: serverCollectArgs,
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    const site = await ctx.db
+      .query("analyticsSites")
+      .withIndex("by_siteKey", (q) => q.eq("siteKey", args.siteKey))
+      .unique();
+
+    if (!site?.ingestSecret || !secretsEqual(site.ingestSecret, args.ingestSecret)) {
+      return null;
+    }
+
+    if (!isValidEventName(args.event)) {
+      return null;
+    }
+
+    const client = await ctx.db.get("clients", site.clientId);
+    if (!client?.features.insights) {
+      return null;
+    }
+
+    const dayKey = getDayKey();
+    await incrementDailyEvent(ctx, site.clientId, dayKey, args.event);
     return null;
   },
 });

@@ -1,0 +1,45 @@
+{
+  "name": "@hezaerd/analytics",
+  "version": "0.1.0",
+  "description": "First-party analytics SDK for Hezaerd Portal Insights",
+  "license": "MIT",
+  "type": "module",
+  "files": ["dist"],
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "types": "./dist/index.d.ts"
+    },
+    "./react": {
+      "import": "./dist/react/index.js",
+      "require": "./dist/react/index.cjs",
+      "types": "./dist/react/index.d.ts"
+    },
+    "./server": {
+      "import": "./dist/server/index.mjs",
+      "require": "./dist/server/index.cjs",
+      "types": "./dist/server/index.d.mts"
+    }
+  },
+  "scripts": {
+    "build": "tsdown",
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "react": ">=18.0.0"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@hezaerd/config": "workspace:*",
+    "@types/node": "^26.1.1",
+    "@types/react": "catalog:",
+    "react": "catalog:",
+    "tsdown": "^0.22.14",
+    "typescript": "catalog:"
+  }
+}

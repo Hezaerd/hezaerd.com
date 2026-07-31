@@ -13,7 +13,8 @@ Portal Insights v1 ingests pageviews and (when client access is on) custom event
 | Field | Role |
 |-------|------|
 | `clientId` | Owner |
-| `siteKey` | Public beacon key (lookup index) |
+| `siteKey` | Public key — browser SDK (`NEXT_PUBLIC_HEZAERD_SITE_KEY`) |
+| `ingestSecret` | Private key — server SDK (`HEZAERD_INGEST_SECRET`) |
 | `productionUrl` | Denormalized for Origin validation |
 
 Index: `by_siteKey`, `by_clientId`.
@@ -49,7 +50,9 @@ Session rules: same `visitorHash` + gap ≤ 30 min → append path (dedupe conse
 
 **Visitor hash:** `HMAC-SHA256(serverSecret, siteKey + dayKey + truncatedIp + userAgent)` — truncated IP (/24 IPv4, /48 IPv6), never stored.
 
-## Ingest (`POST /analytics/collect`)
+## Ingest
+
+### Browser (`POST /analytics/collect`)
 
 Payload: `{ siteKey, path, referrer?, event? }`.
 
@@ -58,6 +61,15 @@ Payload: `{ siteKey, path, referrer?, event? }`.
 3. If `event` present: require `clients.features.insights === true`; increment `analyticsDailyEvents` only.
 4. Else pageview: compute hash → upsert visitor day (new → `visitors++`) → update session → increment totals, pages, sources, routes as above.
 5. Return `204` immediately.
+
+### Server (`POST /analytics/collect/server`)
+
+Payload: `{ siteKey, path?, event }`. Header: `Authorization: Bearer {ingestSecret}`.
+
+1. Resolve `analyticsSites` by `siteKey`; constant-time compare `ingestSecret`.
+2. Require valid `event` name and `clients.features.insights === true`.
+3. Increment `analyticsDailyEvents` only (`path` defaults to `/server` for UI context).
+4. Return `204`. No visitor hash, sessions, or pageview rollups.
 
 ## Read paths (Portal queries)
 

@@ -1,7 +1,18 @@
 import { v } from "convex/values";
 
-import { internalMutation } from "./_generated/server";
-import { generateSiteKey } from "./lib/analytics/siteKey";
+import { internalMutation, internalQuery } from "./_generated/server";
+import { isAllowedRequestOrigin } from "./lib/analytics/origin";
+import {
+  generateAnalyticsCredential,
+  generateSiteKey,
+} from "./lib/analytics/siteKey";
+
+function createAnalyticsCredentials() {
+  return {
+    siteKey: generateSiteKey(),
+    ingestSecret: generateAnalyticsCredential(),
+  };
+}
 
 /** Create, update, or remove analyticsSites when linkedSite changes. */
 export const syncForClient = internalMutation({
@@ -29,27 +40,72 @@ export const syncForClient = internalMutation({
     }
 
     if (existing) {
-      await ctx.db.patch(existing._id, {
+      const patch: { productionUrl: string; ingestSecret?: string } = {
         productionUrl: args.linkedSite.productionUrl,
-      });
+      };
+      if (!existing.ingestSecret) {
+        patch.ingestSecret = generateAnalyticsCredential();
+      }
+      await ctx.db.patch(existing._id, patch);
       return null;
     }
 
+    const credentials = createAnalyticsCredentials();
     await ctx.db.insert("analyticsSites", {
       clientId: args.clientId,
-      siteKey: generateSiteKey(),
+      siteKey: credentials.siteKey,
+      ingestSecret: credentials.ingestSecret,
       productionUrl: args.linkedSite.productionUrl,
     });
     return null;
   },
 });
 
-/** Operator-only: invalidate current siteKey and issue a new one. */
+/** True when Origin matches any registered analytics site production URL. */
+export const isKnownOrigin = internalQuery({
+  args: { origin: v.string() },
+  returns: v.boolean(),
+  handler: async (ctx, args) => {
+    const sites = await ctx.db.query("analyticsSites").collect();
+    for (const site of sites) {
+      if (isAllowedRequestOrigin(site.productionUrl, args.origin, null)) {
+        return true;
+      }
+    }
+    return false;
+  },
+});
+
+/** True when Origin matches the siteKey's linked production URL. */
+export const isOriginAllowedForSiteKey = internalQuery({
+  args: {
+    siteKey: v.string(),
+    origin: v.string(),
+  },
+  returns: v.boolean(),
+  handler: async (ctx, args) => {
+    const site = await ctx.db
+      .query("analyticsSites")
+      .withIndex("by_siteKey", (q) => q.eq("siteKey", args.siteKey))
+      .unique();
+
+    if (!site) {
+      return false;
+    }
+
+    return isAllowedRequestOrigin(site.productionUrl, args.origin, null);
+  },
+});
+
+/** Operator-only: rotate public siteKey and private ingestSecret. */
 export const rotateSiteKey = internalMutation({
   args: {
     clientId: v.id("clients"),
   },
-  returns: v.string(),
+  returns: v.object({
+    siteKey: v.string(),
+    ingestSecret: v.string(),
+  }),
   handler: async (ctx, args) => {
     const existing = await ctx.db
       .query("analyticsSites")
@@ -60,8 +116,8 @@ export const rotateSiteKey = internalMutation({
       throw new Error("No analytics site for client");
     }
 
-    const siteKey = generateSiteKey();
-    await ctx.db.patch(existing._id, { siteKey });
-    return siteKey;
+    const credentials = createAnalyticsCredentials();
+    await ctx.db.patch(existing._id, credentials);
+    return credentials;
   },
 });
