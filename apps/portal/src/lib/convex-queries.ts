@@ -114,3 +114,22 @@ export function invoicesForWorkspaceQuery(slug: string) {
 export function analyticsSiteForDeskQueryKey(slug: string) {
   return ["analyticsSiteForDesk", slug] as const;
 }
+
+export const insightsPeriods = ["today", "7d", "30d", "90d"] as const;
+export type InsightsPeriod = (typeof insightsPeriods)[number];
+
+export function insightsOverviewQueryKey(slug: string, period: InsightsPeriod) {
+  return ["insightsOverview", slug, period] as const;
+}
+
+export function insightsOverviewForDeskQuery(slug: string, period: InsightsPeriod) {
+  return queryOptions({
+    ...convexQuery(api.analytics.getInsightsOverviewForDesk, { slug, period }),
+  });
+}
+
+export function insightsOverviewForWorkspaceQuery(slug: string, period: InsightsPeriod) {
+  return queryOptions({
+    ...convexQuery(api.analytics.getInsightsOverviewForWorkspace, { slug, period }),
+  });
+}

@@ -3,7 +3,12 @@ import { v } from "convex/values";
 import type { Id } from "./_generated/dataModel";
 import type { MutationCtx, QueryCtx } from "./_generated/server";
 import { internal } from "./_generated/api";
-import { operatorMutation, operatorQuery } from "./lib/functions";
+import { authedQuery, operatorMutation, operatorQuery } from "./lib/functions";
+import {
+  insightsOverviewValidator,
+  loadInsightsOverview,
+} from "./lib/analytics/insightsOverview";
+import { insightsPeriodValidator } from "./lib/analytics/period";
 import { assertClientAccess } from "./lib/users";
 
 const analyticsSiteForDeskValidator = v.object({
@@ -102,5 +107,43 @@ export const rotateSiteKeys = operatorMutation({
       ingestSecret: credentials.ingestSecret,
       productionUrl: site.productionUrl,
     };
+  },
+});
+
+const insightsOverviewArgs = {
+  slug: v.string(),
+  period: insightsPeriodValidator,
+};
+
+/** Operator Desk — rollup overview for Statistiques (always includes events). */
+export const getInsightsOverviewForDesk = operatorQuery({
+  args: insightsOverviewArgs,
+  returns: v.union(v.null(), insightsOverviewValidator),
+  handler: async (ctx, args) => {
+    const client = await assertClientAccess(ctx, ctx.user, args.slug);
+    if (!client.linkedSite) {
+      return null;
+    }
+
+    return loadInsightsOverview(ctx, client._id, args.period, { includeEvents: true });
+  },
+});
+
+/** Client Workspace — rollup overview (requires Insights feature; events when feature on). */
+export const getInsightsOverviewForWorkspace = authedQuery({
+  args: insightsOverviewArgs,
+  returns: v.union(v.null(), insightsOverviewValidator),
+  handler: async (ctx, args) => {
+    const client = await assertClientAccess(ctx, ctx.user, args.slug);
+    if (!client.features.insights) {
+      throw new Error("Insights access required");
+    }
+    if (!client.linkedSite) {
+      return null;
+    }
+
+    return loadInsightsOverview(ctx, client._id, args.period, {
+      includeEvents: client.features.insights,
+    });
   },
 });
