@@ -110,3 +110,7 @@ export function invoicesForWorkspaceQuery(slug: string) {
     ...convexQuery(api.invoices.listForWorkspace, { slug }),
   });
 }
+
+export function analyticsSiteForDeskQueryKey(slug: string) {
+  return ["analyticsSiteForDesk", slug] as const;
+}

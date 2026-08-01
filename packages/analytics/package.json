@@ -5,6 +5,15 @@
   "license": "MIT",
   "type": "module",
   "files": ["dist"],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Hezaerd/hezaerd.com.git",
+    "directory": "packages/analytics"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": ["analytics", "hezaerd", "insights", "privacy", "first-party"],
   "exports": {
     ".": {
       "import": "./dist/index.js",
@@ -24,6 +33,7 @@
   },
   "scripts": {
     "build": "tsdown",
+    "prepublishOnly": "tsdown",
     "typecheck": "tsc --noEmit"
   },
   "peerDependencies": {
@@ -35,11 +45,10 @@
     }
   },
   "devDependencies": {
-    "@hezaerd/config": "workspace:*",
     "@types/node": "^26.1.1",
-    "@types/react": "catalog:",
-    "react": "catalog:",
+    "@types/react": "^19.2.0",
+    "react": "^19.2.0",
     "tsdown": "^0.22.14",
-    "typescript": "catalog:"
+    "typescript": "^5.9.3"
   }
 }

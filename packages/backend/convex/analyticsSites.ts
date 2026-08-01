@@ -97,7 +97,7 @@ export const isOriginAllowedForSiteKey = internalQuery({
   },
 });
 
-/** Operator-only: rotate public siteKey and private ingestSecret. */
+/** Rotate public siteKey and private ingestSecret (internal — use analytics.rotateSiteKeys). */
 export const rotateSiteKey = internalMutation({
   args: {
     clientId: v.id("clients"),

@@ -8,6 +8,7 @@
  * @module
  */
 
+import type * as analytics from "../analytics.js";
 import type * as analyticsCollect from "../analyticsCollect.js";
 import type * as analyticsHttp from "../analyticsHttp.js";
 import type * as analyticsSites from "../analyticsSites.js";
@@ -50,6 +51,7 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  analytics: typeof analytics;
   analyticsCollect: typeof analyticsCollect;
   analyticsHttp: typeof analyticsHttp;
   analyticsSites: typeof analyticsSites;
