@@ -36,13 +36,15 @@ function SectionBlock({
   title,
   children,
   className,
+  stretch,
 }: {
   title: string;
   children: React.ReactNode;
   className?: string;
+  stretch?: boolean;
 }) {
   return (
-    <section className={cn("flex flex-col gap-3", className)}>
+    <section className={cn("flex flex-col gap-3", stretch && "h-full", className)}>
       <h2 className="text-muted-foreground text-xs font-medium tracking-[0.14em] uppercase">
         {title}
       </h2>
@@ -51,11 +53,12 @@ function SectionBlock({
   );
 }
 
-function Panel({ children, className }: { children: React.ReactNode; className?: string }) {
+function Panel({ children, className, fill }: { children: React.ReactNode; className?: string; fill?: boolean }) {
   return (
     <div
       className={cn(
         "border-border bg-muted/20 flex flex-col gap-4 rounded-xl border p-4",
+        fill && "min-h-0 flex-1",
         className,
       )}
     >
@@ -122,18 +125,19 @@ export function InsightsOverviewPanels({
       <div
         className={cn(
           "grid gap-6",
-          variant === "desk" ? "lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]" : "gap-8",
+          variant === "desk" && "lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:items-stretch",
+          variant === "workspace" && "gap-8",
         )}
       >
-        <SectionBlock title="Sources">
-          <Panel>
+        <SectionBlock title="Sources" stretch={variant === "desk"}>
+          <Panel fill={variant === "desk"}>
             <InsightsSourceBars rows={sourceRows} animateBars={isRefreshing} />
             <InsightsSourceDetails rows={data.sourceDetails} totalViews={sourceTotal} />
           </Panel>
         </SectionBlock>
 
-        <SectionBlock title="Pages">
-          <Panel>
+        <SectionBlock title="Pages" stretch={variant === "desk"}>
+          <Panel fill={variant === "desk"}>
             <InsightsPagesPanel data={data} variant={variant} siteHost={siteHost} />
           </Panel>
         </SectionBlock>
