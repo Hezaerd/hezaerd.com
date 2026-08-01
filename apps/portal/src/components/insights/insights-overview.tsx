@@ -1,10 +1,10 @@
 import { Separator } from "@hezaerd/ui/components/separator";
-import { InsightsLineChart } from "@hezaerd/ui/components/chart/presets/line-chart";
 import { cn } from "@hezaerd/ui/lib/utils";
 
 import type { InsightsPeriod } from "@/lib/convex-queries";
 
 import { InsightsDataTable } from "./insights-data-table";
+import { InsightsLineChart } from "./insights-line-chart";
 import { formatCount, formatShare, sourceKindLabels } from "./insights-labels";
 import { InsightsPeriodPicker } from "./insights-period-picker";
 import { InsightsSourceBars } from "./insights-source-bars";
