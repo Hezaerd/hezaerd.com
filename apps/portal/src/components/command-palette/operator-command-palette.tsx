@@ -20,6 +20,7 @@ import {
   CommandList,
   CommandSeparator,
 } from "@hezaerd/ui/components/command";
+import { Button } from "@hezaerd/ui/components/button";
 import {
   SidebarGroup,
   SidebarGroupContent,
@@ -238,6 +239,24 @@ export function OperatorCommandPaletteProvider({ children }: { children: React.R
     <OperatorCommandPaletteContext.Provider value={{ open, setOpen }}>
       {children}
     </OperatorCommandPaletteContext.Provider>
+  );
+}
+
+export function OperatorCommandPaletteHeaderTrigger({ className }: { className?: string }) {
+  const { setOpen } = useOperatorCommandPalette();
+  const modKey = getModKeyLabel();
+
+  return (
+    <Button
+      type="button"
+      variant="ghost"
+      size="icon-sm"
+      className={cn("shrink-0", className)}
+      aria-label={`Rechercher (${modKey}K)`}
+      onClick={() => setOpen(true)}
+    >
+      <HugeiconsIcon icon={SearchIcon} strokeWidth={2} />
+    </Button>
   );
 }
 

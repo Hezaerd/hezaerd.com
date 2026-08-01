@@ -69,8 +69,8 @@ The top of Operator Home. Four tiles: open invoice total, paid this month, Clien
 _Avoid_: Recreating Client Home here; unbounded widget grids; sales-pipeline tiles until Portal owns sales; hard-switch into Client Workspace
 
 **Shell chrome**:
-Operator shell and Client Workspace each use a left sidebar for primary nav and a top bar for context/account. Mobile: collapsible sidebar. Density: Client Workspace stays calm/sparse; Operator shell (including Client Desk) may use denser tables and controls (same tokens, different information density).
-_Avoid_: Top-only nav; Workspace Switcher; Operator chrome inside Client Workspace; packing Client Areas like a SaaS admin console
+Operator shell and Client Workspace each use a left sidebar for primary nav and a top bar for context/account. Mobile: fixed bottom bar for primary nav (contextual on Client Desk); command palette via header on Operator shell. Density: Client Workspace stays calm/sparse; Operator shell (including Client Desk) may use denser tables and controls (same tokens, different information density).
+_Avoid_: Top-only nav; Workspace Switcher; Operator chrome inside Client Workspace; packing Client Areas like a SaaS admin console; collapsible sidebar as the mobile primary nav
 
 **Operator nav**:
 Operator sidebar: Home · Clients · Invoices · Settings. Per-Client Files, Insights, Site, and Feature toggles live on Client Desk — not as global Operator Areas and not inside Client Workspace.

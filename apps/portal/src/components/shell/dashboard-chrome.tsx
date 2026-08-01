@@ -1,3 +1,4 @@
+import { BOTTOM_NAV_HEIGHT } from "@hezaerd/ui/components/bottom-nav";
 import {
   Sidebar,
   SidebarContent,
@@ -11,6 +12,8 @@ import {
   SidebarRail,
   SidebarTrigger,
 } from "@hezaerd/ui/components/sidebar";
+import { useIsMobile } from "@hezaerd/ui/hooks/use-mobile";
+import { cn } from "@hezaerd/ui/lib/utils";
 
 type DashboardChromeBrand = {
   initials: string;
@@ -21,6 +24,7 @@ type DashboardChromeBrand = {
 type DashboardChromeProps = {
   brand: DashboardChromeBrand;
   nav: React.ReactNode;
+  mobileBottomNav?: React.ReactNode;
   sidebarTop?: React.ReactNode;
   footer?: React.ReactNode;
   headerStart?: React.ReactNode;
@@ -34,6 +38,7 @@ type DashboardChromeProps = {
 export function DashboardChrome({
   brand,
   nav,
+  mobileBottomNav,
   sidebarTop,
   footer,
   headerStart,
@@ -43,6 +48,44 @@ export function DashboardChrome({
   email,
   children,
 }: DashboardChromeProps) {
+  const isMobile = useIsMobile();
+
+  const header = (
+    <DashboardHeader
+      headerStart={headerStart}
+      headerEnd={headerEnd}
+      headerTitle={headerTitle}
+      email={email}
+      showSidebarTrigger={!isMobile}
+    />
+  );
+
+  const main = (
+    <main
+      className={cn(
+        "flex flex-1 flex-col gap-6 p-4 md:p-6",
+        isMobile &&
+          mobileBottomNav &&
+          `pb-[calc(${BOTTOM_NAV_HEIGHT}+env(safe-area-inset-bottom))]`,
+      )}
+    >
+      {children}
+    </main>
+  );
+
+  if (isMobile) {
+    return (
+      <div className="flex min-h-svh flex-col">
+        <div className="border-border shrink-0 border-b">
+          {header}
+          {subHeader ? <div className="px-4">{subHeader}</div> : null}
+        </div>
+        {main}
+        {mobileBottomNav}
+      </div>
+    );
+  }
+
   return (
     <SidebarProvider>
       <Sidebar variant="inset" collapsible="icon">
@@ -63,7 +106,7 @@ export function DashboardChrome({
                 </p>
               </div>
             </div>
-            <SidebarTrigger className="hidden size-8 shrink-0 md:flex" />
+            <SidebarTrigger className="size-8 shrink-0" />
           </div>
         </SidebarHeader>
 
@@ -82,36 +125,54 @@ export function DashboardChrome({
 
       <SidebarInset>
         <div className="border-border shrink-0 border-b">
-          <header className="grid h-14 grid-cols-[1fr_auto_1fr] items-center gap-3 px-4 md:px-6">
-            <div className="flex min-w-0 items-center gap-3">
-              <SidebarTrigger className="shrink-0 md:hidden" />
-              {headerStart}
-            </div>
-            {headerTitle ? (
-              <p className="font-display truncate text-sm font-semibold tracking-tight">
-                {headerTitle}
-              </p>
-            ) : (
-              <span aria-hidden="true" />
-            )}
-            <div className="flex items-center justify-end gap-3">
-              {headerEnd ?? (
-                <>
-                  <p className="text-muted-foreground hidden text-sm sm:block">{email}</p>
-                  <a
-                    href="/api/auth/sign-out"
-                    className="border-border text-muted-foreground hover:text-foreground hover:bg-accent rounded-md border px-3 py-1.5 text-xs font-medium transition-colors"
-                  >
-                    Déconnexion
-                  </a>
-                </>
-              )}
-            </div>
-          </header>
+          {header}
           {subHeader ? <div className="px-4 md:px-6">{subHeader}</div> : null}
         </div>
-        <main className="flex flex-1 flex-col gap-6 p-4 md:p-6">{children}</main>
+        {main}
       </SidebarInset>
     </SidebarProvider>
+  );
+}
+
+type DashboardHeaderProps = {
+  headerStart?: React.ReactNode;
+  headerEnd?: React.ReactNode;
+  headerTitle?: string | null;
+  email: string;
+  showSidebarTrigger: boolean;
+};
+
+function DashboardHeader({
+  headerStart,
+  headerEnd,
+  headerTitle,
+  email,
+  showSidebarTrigger,
+}: DashboardHeaderProps) {
+  return (
+    <header className="grid h-14 grid-cols-[1fr_auto_1fr] items-center gap-3 px-4 md:px-6">
+      <div className="flex min-w-0 items-center gap-3">
+        {showSidebarTrigger ? <SidebarTrigger className="shrink-0" /> : null}
+        {headerStart}
+      </div>
+      {headerTitle ? (
+        <p className="font-display truncate text-sm font-semibold tracking-tight">{headerTitle}</p>
+      ) : (
+        <span aria-hidden="true" />
+      )}
+      <div className="flex items-center justify-end gap-2">
+        {headerEnd ?? (
+          <>
+            <p className="text-muted-foreground hidden text-sm sm:block">{email}</p>
+            <a
+              href="/api/auth/sign-out"
+              className="border-border text-muted-foreground hover:text-foreground hover:bg-accent rounded-md border px-3 py-1.5 text-xs font-medium transition-colors"
+            >
+              Déconnexion
+            </a>
+          </>
+        )}
+      </div>
+    </header>
   );
 }

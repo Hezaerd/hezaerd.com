@@ -11,6 +11,7 @@ export type OperatorChromeOverrides = {
   headerStart?: ReactNode;
   headerEnd?: ReactNode;
   subHeader?: ReactNode;
+  mobileBottomNav?: ReactNode;
   /** `null` hides the centered title; omit to keep the route default. */
   headerTitle?: string | null;
 };
@@ -59,7 +60,14 @@ export function OperatorChrome(overrides: OperatorChromeOverrides) {
   useLayoutEffect(() => {
     setOverrides(overrides);
     return () => setOverrides({});
-  }, [overrides.headerStart, overrides.headerEnd, overrides.subHeader, overrides.headerTitle, setOverrides]);
+  }, [
+    overrides.headerStart,
+    overrides.headerEnd,
+    overrides.subHeader,
+    overrides.headerTitle,
+    overrides.mobileBottomNav,
+    setOverrides,
+  ]);
 
   return null;
 }

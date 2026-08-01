@@ -1,4 +1,5 @@
 import { SidebarMenuButton, SidebarMenuItem } from "@hezaerd/ui/components/sidebar";
+import { BottomNav, BottomNavItem } from "@hezaerd/ui/components/bottom-nav";
 import {
   Home01Icon,
   Invoice01Icon,
@@ -11,6 +12,7 @@ import { Link, useRouterState } from "@tanstack/react-router";
 
 import {
   OperatorCommandPalette,
+  OperatorCommandPaletteHeaderTrigger,
   OperatorCommandPaletteProvider,
   OperatorCommandPaletteTrigger,
 } from "@/components/command-palette/operator-command-palette";
@@ -28,15 +30,16 @@ type OperatorShellProps = {
 
 type NavItem = {
   label: string;
+  mobileLabel: string;
   to: "/op" | "/op/clients" | "/op/invoices" | "/op/settings";
   icon: IconSvgElement;
 };
 
 const navItems: NavItem[] = [
-  { label: "Accueil", to: "/op", icon: Home01Icon },
-  { label: "Clients", to: "/op/clients", icon: UserGroupIcon },
-  { label: "Factures", to: "/op/invoices", icon: Invoice01Icon },
-  { label: "Paramètres", to: "/op/settings", icon: Setting07Icon },
+  { label: "Accueil", mobileLabel: "Accueil", to: "/op", icon: Home01Icon },
+  { label: "Clients", mobileLabel: "Clients", to: "/op/clients", icon: UserGroupIcon },
+  { label: "Factures", mobileLabel: "Factures", to: "/op/invoices", icon: Invoice01Icon },
+  { label: "Paramètres", mobileLabel: "Réglages", to: "/op/settings", icon: Setting07Icon },
 ];
 
 export function OperatorShell({ email, children }: OperatorShellProps) {
@@ -69,6 +72,20 @@ function OperatorShellChrome({
   const headerTitle =
     chrome.headerTitle === null ? undefined : (chrome.headerTitle ?? defaultHeaderTitle);
 
+  const headerEnd =
+    chrome.headerEnd ?? (
+      <>
+        <OperatorCommandPaletteHeaderTrigger className="md:hidden" />
+        <p className="text-muted-foreground hidden text-sm sm:block">{email}</p>
+        <a
+          href="/api/auth/sign-out"
+          className="border-border text-muted-foreground hover:text-foreground hover:bg-accent rounded-md border px-3 py-1.5 text-xs font-medium transition-colors"
+        >
+          Déconnexion
+        </a>
+      </>
+    );
+
   return (
     <OperatorCommandPaletteProvider>
       <DashboardChrome
@@ -79,10 +96,11 @@ function OperatorShellChrome({
         }}
         headerTitle={headerTitle}
         headerStart={chrome.headerStart}
-        headerEnd={chrome.headerEnd}
+        headerEnd={headerEnd}
         subHeader={chrome.subHeader}
         email={email}
         sidebarTop={<OperatorCommandPaletteTrigger />}
+        mobileBottomNav={chrome.mobileBottomNav ?? <OperatorMobileBottomNav />}
         nav={navItems.map((item) => (
           <NavItemLink key={item.to} item={item} />
         ))}
@@ -91,6 +109,30 @@ function OperatorShellChrome({
         {children}
       </DashboardChrome>
     </OperatorCommandPaletteProvider>
+  );
+}
+
+function OperatorMobileBottomNav() {
+  const pathname = useRouterState({
+    select: (state) => state.location.pathname,
+  });
+
+  return (
+    <BottomNav>
+      {navItems.map((item) => (
+        <BottomNavItem
+          key={item.to}
+          render={<Link to={item.to} />}
+          isActive={
+            item.to === "/op"
+              ? pathname === "/op" || pathname === "/op/"
+              : pathname.startsWith(item.to as string)
+          }
+          icon={<HugeiconsIcon icon={item.icon} size={20} className="shrink-0" />}
+          label={item.mobileLabel}
+        />
+      ))}
+    </BottomNav>
   );
 }
 

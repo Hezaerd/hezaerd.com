@@ -7,7 +7,7 @@ import { Outlet, createFileRoute, notFound, useRouterState } from "@tanstack/rea
 
 import { ClientDeskBackLink } from "@/components/shell/client-desk-back-link";
 import { ClientDeskIdentity, getClientInitials } from "@/components/shell/client-desk-header";
-import { ClientDeskNav } from "@/components/shell/client-desk-nav";
+import { ClientDeskMobileBottomNav, ClientDeskNav } from "@/components/shell/client-desk-nav";
 import { PageContentSkeleton } from "@/components/shell/page-content-skeleton";
 import type { OperatorChromeOverrides } from "@/components/shell/operator-chrome-context";
 import { useSetOperatorChromeOverrides } from "@/components/shell/operator-chrome-context";
@@ -53,8 +53,9 @@ function ClientDeskLayout() {
     (): OperatorChromeOverrides => ({
       headerStart: <ClientDeskBackLink />,
       headerTitle: null,
+      mobileBottomNav: <ClientDeskMobileBottomNav clientId={clientId} />,
     }),
-    [],
+    [clientId],
   );
 
   useLayoutEffect(() => {
