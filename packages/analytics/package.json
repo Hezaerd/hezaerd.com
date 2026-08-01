@@ -1,6 +1,6 @@
 {
   "name": "@hezaerd/analytics",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "First-party analytics SDK for Hezaerd Portal Insights",
   "license": "MIT",
   "type": "module",
