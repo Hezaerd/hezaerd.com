@@ -43,12 +43,8 @@ export function InsightsStatHeader({
       </div>
 
       <div className="text-muted-foreground flex flex-wrap items-center gap-x-2 gap-y-1 text-xs leading-relaxed">
-        {period !== "today" ? (
-          <>
-            <span>{formatCount(visitorsToday)} aujourd&apos;hui</span>
-            <span aria-hidden="true">·</span>
-          </>
-        ) : null}
+        <span>{formatCount(visitorsToday)} aujourd&apos;hui</span>
+        <span aria-hidden="true">·</span>
 
         {deltaLabel ? (
           <>

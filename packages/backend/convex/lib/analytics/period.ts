@@ -3,7 +3,6 @@ import { v, type Infer } from "convex/values";
 import { getDayKey } from "./dayKey";
 
 export const insightsPeriodValidator = v.union(
-  v.literal("today"),
   v.literal("7d"),
   v.literal("30d"),
   v.literal("90d"),
@@ -12,7 +11,6 @@ export const insightsPeriodValidator = v.union(
 export type InsightsPeriod = Infer<typeof insightsPeriodValidator>;
 
 const PERIOD_DAY_COUNT: Record<InsightsPeriod, number> = {
-  today: 1,
   "7d": 7,
   "30d": 30,
   "90d": 90,

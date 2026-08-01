@@ -1,14 +1,12 @@
 import type { InsightsPeriod } from "@/lib/convex-queries";
 
 export const periodLabels: Record<InsightsPeriod, string> = {
-  today: "Aujourd'hui",
   "7d": "7j",
   "30d": "30j",
   "90d": "90j",
 };
 
 export const periodStatSuffix: Record<InsightsPeriod, string> = {
-  today: "aujourd'hui",
   "7d": "sur 7 jours",
   "30d": "sur 30 jours",
   "90d": "sur 90 jours",
@@ -24,7 +22,6 @@ export const sourceKindLabels: Record<string, string> = {
 };
 
 export const periodComparisonSuffix: Record<InsightsPeriod, string> = {
-  today: "vs hier",
   "7d": "vs 7j préc.",
   "30d": "vs 30j préc.",
   "90d": "vs 90j préc.",

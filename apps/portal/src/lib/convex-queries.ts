@@ -115,11 +115,10 @@ export function analyticsSiteForDeskQueryKey(slug: string) {
   return ["analyticsSiteForDesk", slug] as const;
 }
 
-export const insightsPeriods = ["today", "7d", "30d", "90d"] as const;
+export const insightsPeriods = ["7d", "30d", "90d"] as const;
 export type InsightsPeriod = (typeof insightsPeriods)[number];
 
 const INSIGHTS_STALE_MS: Record<InsightsPeriod, number> = {
-  today: 15 * 60 * 1000,
   "7d": 60 * 60 * 1000,
   "30d": 60 * 60 * 1000,
   "90d": 60 * 60 * 1000,
