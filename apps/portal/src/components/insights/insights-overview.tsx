@@ -9,6 +9,7 @@ import { InsightsPagesPanel } from "./insights-pages-panel";
 import { InsightsPathLabel, InsightsRouteLabel } from "./insights-path-label";
 import { InsightsPeriodPicker } from "./insights-period-picker";
 import { InsightsSourceBars } from "./insights-source-bars";
+import { InsightsSourceDetails } from "./insights-source-details";
 import { sourceKindBarClass } from "./insights-source-visuals";
 import { InsightsStatHeader } from "./insights-stat-header";
 import type { InsightsOverviewData, InsightsShellVariant } from "./insights-types";
@@ -127,6 +128,7 @@ export function InsightsOverviewPanels({
         <SectionBlock title="Sources">
           <Panel>
             <InsightsSourceBars rows={sourceRows} animateBars={isRefreshing} />
+            <InsightsSourceDetails rows={data.sourceDetails} totalViews={sourceTotal} />
           </Panel>
         </SectionBlock>
 

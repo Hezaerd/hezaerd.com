@@ -8,11 +8,13 @@ import {
   incrementDailyEvent,
   incrementDailyPageViews,
   incrementDailySource,
+  incrementDailySourceDetail,
   incrementDailyTotals,
   processSessionPath,
   recordUniqueVisitor,
 } from "./lib/analytics/rollups";
 import { classifySourceKind } from "./lib/analytics/sourceKind";
+import { resolveSourceDetail } from "./lib/analytics/sourceDetail";
 import { secretsEqual } from "./lib/analytics/secrets";
 import { computeVisitorHash, isBotUserAgent, truncateIp } from "./lib/analytics/visitor";
 
@@ -112,6 +114,12 @@ export const ingest = internalMutation({
       search,
       siteHost,
     });
+    const sourceDetail = resolveSourceDetail({
+      referrer: args.referrer,
+      search,
+      siteHost,
+      sourceKind,
+    });
 
     await incrementDailyTotals(ctx, site.clientId, dayKey, {
       pageviews: 1,
@@ -119,6 +127,15 @@ export const ingest = internalMutation({
     });
     await incrementDailyPageViews(ctx, site.clientId, dayKey, path);
     await incrementDailySource(ctx, site.clientId, dayKey, sourceKind);
+    if (sourceDetail) {
+      await incrementDailySourceDetail(
+        ctx,
+        site.clientId,
+        dayKey,
+        sourceKind,
+        sourceDetail,
+      );
+    }
 
     return null;
   },

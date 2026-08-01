@@ -47,6 +47,13 @@ export const insightsOverviewValidator = v.object({
       views: v.number(),
     }),
   ),
+  sourceDetails: v.array(
+    v.object({
+      sourceKind: sourceKindValidator,
+      sourceDetail: v.string(),
+      views: v.number(),
+    }),
+  ),
   topPages: v.array(
     v.object({
       path: v.string(),
@@ -133,7 +140,8 @@ export async function loadInsightsOverview(
   const queryStartDayKey =
     previousBounds.startDayKey < startDayKey ? previousBounds.startDayKey : startDayKey;
 
-  const [totalsRows, pagesRows, sourcesRows, routesRows, eventsRows] = await Promise.all([
+  const [totalsRows, pagesRows, sourcesRows, sourceDetailRows, routesRows, eventsRows] =
+    await Promise.all([
     ctx.db
       .query("analyticsDailyTotals")
       .withIndex("by_clientId_and_dayKey", (q) => q.eq("clientId", clientId))
@@ -150,6 +158,13 @@ export async function loadInsightsOverview(
       .collect(),
     ctx.db
       .query("analyticsDailySources")
+      .withIndex("by_clientId_and_dayKey", (q) => q.eq("clientId", clientId))
+      .filter((q) =>
+        q.and(q.gte(q.field("dayKey"), startDayKey), q.lte(q.field("dayKey"), endDayKey)),
+      )
+      .collect(),
+    ctx.db
+      .query("analyticsDailySourceDetails")
       .withIndex("by_clientId_and_dayKey", (q) => q.eq("clientId", clientId))
       .filter((q) =>
         q.and(q.gte(q.field("dayKey"), startDayKey), q.lte(q.field("dayKey"), endDayKey)),
@@ -213,6 +228,32 @@ export async function loadInsightsOverview(
     Number.POSITIVE_INFINITY,
   );
 
+  const sourceDetailsMap = new Map<string, { sourceKind: string; sourceDetail: string; views: number }>();
+  for (const row of sourceDetailRows) {
+    const key = `${row.sourceKind}\0${row.sourceDetail}`;
+    const existing = sourceDetailsMap.get(key);
+    if (existing) {
+      existing.views += row.views;
+    } else {
+      sourceDetailsMap.set(key, {
+        sourceKind: row.sourceKind,
+        sourceDetail: row.sourceDetail,
+        views: row.views,
+      });
+    }
+  }
+  const sourceDetails = topBy(
+    [...sourceDetailsMap.values()]
+      .filter((row) => row.views > 0)
+      .map((row) => ({
+        sourceKind: row.sourceKind as Infer<typeof sourceKindValidator>,
+        sourceDetail: row.sourceDetail,
+        views: row.views,
+      })),
+    (row) => row.views,
+    10,
+  );
+
   const pagesMap = new Map<string, { views: number; entries: number; exits: number }>();
   for (const row of pagesRows) {
     const existing = pagesMap.get(row.path) ?? { views: 0, entries: 0, exits: 0 };
@@ -246,6 +287,7 @@ export async function loadInsightsOverview(
       },
     },
     sources,
+    sourceDetails,
     topPages: topBy(
       pageStats.filter(({ views }) => views > 0).map(({ path, views }) => ({ path, views })),
       (row) => row.views,

@@ -7,6 +7,7 @@ async function deleteAnalyticsRowsByClient(
     | "analyticsDailyTotals"
     | "analyticsDailyPages"
     | "analyticsDailySources"
+    | "analyticsDailySourceDetails"
     | "analyticsDailyRoutes"
     | "analyticsDailyEvents"
     | "analyticsVisitorDays"
@@ -73,6 +74,7 @@ export async function cascadeDeleteClient(
   await deleteAnalyticsRowsByClient(ctx, "analyticsDailyTotals", clientId);
   await deleteAnalyticsRowsByClient(ctx, "analyticsDailyPages", clientId);
   await deleteAnalyticsRowsByClient(ctx, "analyticsDailySources", clientId);
+  await deleteAnalyticsRowsByClient(ctx, "analyticsDailySourceDetails", clientId);
   await deleteAnalyticsRowsByClient(ctx, "analyticsDailyRoutes", clientId);
   await deleteAnalyticsRowsByClient(ctx, "analyticsDailyEvents", clientId);
   await deleteAnalyticsRowsByClient(ctx, "analyticsVisitorDays", clientId);

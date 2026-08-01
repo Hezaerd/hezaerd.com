@@ -13,6 +13,7 @@ export type InsightsOverviewData = {
     };
   };
   sources: Array<{ sourceKind: string; views: number }>;
+  sourceDetails: Array<{ sourceKind: string; sourceDetail: string; views: number }>;
   topPages: Array<{ path: string; views: number }>;
   landings: Array<{ path: string; entries: number }>;
   exits: Array<{ path: string; exits: number }>;

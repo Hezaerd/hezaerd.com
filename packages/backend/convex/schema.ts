@@ -163,6 +163,28 @@ export default defineSchema({
     .index("by_clientId_and_dayKey", ["clientId", "dayKey"])
     .index("by_clientId_dayKey_sourceKind", ["clientId", "dayKey", "sourceKind"]),
 
+  analyticsDailySourceDetails: defineTable({
+    clientId: v.id("clients"),
+    dayKey: v.string(),
+    sourceKind: v.union(
+      v.literal("google"),
+      v.literal("direct"),
+      v.literal("social"),
+      v.literal("referral"),
+      v.literal("email"),
+      v.literal("other"),
+    ),
+    sourceDetail: v.string(),
+    views: v.number(),
+  })
+    .index("by_clientId_and_dayKey", ["clientId", "dayKey"])
+    .index("by_clientId_dayKey_sourceKind_sourceDetail", [
+      "clientId",
+      "dayKey",
+      "sourceKind",
+      "sourceDetail",
+    ]),
+
   analyticsDailyRoutes: defineTable({
     clientId: v.id("clients"),
     dayKey: v.string(),

@@ -142,6 +142,38 @@ export async function incrementDailySource(
   });
 }
 
+export async function incrementDailySourceDetail(
+  ctx: MutationCtx,
+  clientId: Id<"clients">,
+  dayKey: string,
+  sourceKind: SourceKind,
+  sourceDetail: string,
+): Promise<void> {
+  const existing = await ctx.db
+    .query("analyticsDailySourceDetails")
+    .withIndex("by_clientId_dayKey_sourceKind_sourceDetail", (q) =>
+      q
+        .eq("clientId", clientId)
+        .eq("dayKey", dayKey)
+        .eq("sourceKind", sourceKind)
+        .eq("sourceDetail", sourceDetail),
+    )
+    .unique();
+
+  if (existing) {
+    await ctx.db.patch(existing._id, { views: existing.views + 1 });
+    return;
+  }
+
+  await ctx.db.insert("analyticsDailySourceDetails", {
+    clientId,
+    dayKey,
+    sourceKind,
+    sourceDetail,
+    views: 1,
+  });
+}
+
 export async function incrementDailyRoute(
   ctx: MutationCtx,
   clientId: Id<"clients">,
