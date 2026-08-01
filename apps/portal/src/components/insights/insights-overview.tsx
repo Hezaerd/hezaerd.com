@@ -12,7 +12,6 @@ import { InsightsSourceBars } from "./insights-source-bars";
 import { InsightsSourceDetails } from "./insights-source-details";
 import { sourceKindBarClass } from "./insights-source-visuals";
 import { InsightsStatHeader } from "./insights-stat-header";
-import { InsightsTakeaway } from "./insights-takeaway";
 import type { InsightsOverviewData, InsightsShellVariant } from "./insights-types";
 
 type InsightsOverviewProps = {
@@ -112,7 +111,6 @@ export function InsightsOverviewPanels({
               <InsightsPeriodPicker value={period} onValueChange={onPeriodChange} />
             ) : null}
           </div>
-          {data.takeaway ? <InsightsTakeaway text={data.takeaway} /> : null}
           <Panel className="overflow-hidden p-2">
             <InsightsLineChart
               data={data.traffic.series.map((point) => ({

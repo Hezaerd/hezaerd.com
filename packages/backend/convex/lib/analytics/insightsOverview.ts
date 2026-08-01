@@ -5,7 +5,6 @@ import type { QueryCtx } from "../../_generated/server";
 import { sourceKindValidator } from "./constants";
 import { extractHostname } from "./origin";
 import { enumerateDayKeys, getPeriodBounds, getPreviousPeriodBounds, insightsPeriodValidator } from "./period";
-import { buildInsightsTakeaway } from "./takeaway";
 import type { InsightsPeriod } from "./period";
 
 const trafficDayPointValidator = v.object({
@@ -80,7 +79,6 @@ export const insightsOverviewValidator = v.object({
     }),
   ),
   events: v.union(v.null(), insightsEventsValidator),
-  takeaway: v.union(v.string(), v.null()),
 });
 
 export type InsightsOverview = Infer<typeof insightsOverviewValidator>;
@@ -296,15 +294,6 @@ export async function loadInsightsOverview(
     5,
   );
 
-  const takeaway = buildInsightsTakeaway({
-    period,
-    totalVisitors: totals.visitors,
-    deltaPercent,
-    sources,
-    landings,
-    topPages,
-  });
-
   return {
     period,
     startDayKey,
@@ -327,6 +316,5 @@ export async function loadInsightsOverview(
     exits,
     routes,
     events: options.includeEvents ? aggregateEvents(eventsRows) : null,
-    takeaway,
   };
 }
