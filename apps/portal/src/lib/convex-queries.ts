@@ -118,6 +118,17 @@ export function analyticsSiteForDeskQueryKey(slug: string) {
 export const insightsPeriods = ["today", "7d", "30d", "90d"] as const;
 export type InsightsPeriod = (typeof insightsPeriods)[number];
 
+const INSIGHTS_STALE_MS: Record<InsightsPeriod, number> = {
+  today: 15 * 60 * 1000,
+  "7d": 60 * 60 * 1000,
+  "30d": 60 * 60 * 1000,
+  "90d": 60 * 60 * 1000,
+};
+
+export function insightsStaleTime(period: InsightsPeriod) {
+  return INSIGHTS_STALE_MS[period];
+}
+
 export function insightsOverviewQueryKey(slug: string, period: InsightsPeriod) {
   return ["insightsOverview", slug, period] as const;
 }
@@ -125,11 +136,13 @@ export function insightsOverviewQueryKey(slug: string, period: InsightsPeriod) {
 export function insightsOverviewForDeskQuery(slug: string, period: InsightsPeriod) {
   return queryOptions({
     ...convexQuery(api.analytics.getInsightsOverviewForDesk, { slug, period }),
+    staleTime: insightsStaleTime(period),
   });
 }
 
 export function insightsOverviewForWorkspaceQuery(slug: string, period: InsightsPeriod) {
   return queryOptions({
     ...convexQuery(api.analytics.getInsightsOverviewForWorkspace, { slug, period }),
+    staleTime: insightsStaleTime(period),
   });
 }

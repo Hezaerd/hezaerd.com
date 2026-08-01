@@ -1,4 +1,3 @@
-import { api } from "@hezaerd/backend/api";
 import {
   Empty,
   EmptyDescription,
@@ -7,15 +6,13 @@ import {
 } from "@hezaerd/ui/components/empty";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Link, createFileRoute, notFound } from "@tanstack/react-router";
-import { useConvex } from "convex/react";
 
-import { DeskInsightsSetupPanel } from "@/components/insights/desk-insights-setup-panel";
+import { DeskInsightsDashboard } from "@/components/insights/desk-insights-dashboard";
 import {
   ClientDeskPage,
   ClientDeskPageHeader,
-  DeskEmptyState,
 } from "@/components/shell/client-desk-layout";
-import { analyticsSiteForDeskQueryKey, clientBySlugQuery } from "@/lib/convex-queries";
+import { clientBySlugQuery } from "@/lib/convex-queries";
 import { toPortalClient } from "@/lib/portal-types";
 
 export const Route = createFileRoute("/op/clients/$clientId/insights")({
@@ -59,30 +56,12 @@ function ClientDeskInsightsPage() {
   }
 
   return (
-    <ClientDeskPage>
+    <ClientDeskPage wide>
       <ClientDeskPageHeader title="Statistiques" />
-      <DeskInsightsSiteContent clientId={clientId} />
+      <DeskInsightsDashboard
+        clientId={clientId}
+        insightsEnabled={client.features.insights}
+      />
     </ClientDeskPage>
   );
-}
-
-function DeskInsightsSiteContent({ clientId }: { clientId: string }) {
-  const convex = useConvex();
-
-  const { data: site } = useSuspenseQuery({
-    queryKey: analyticsSiteForDeskQueryKey(clientId),
-    queryFn: async () => {
-      const existing = await convex.query(api.analytics.getSiteForDesk, { slug: clientId });
-      if (existing) {
-        return existing;
-      }
-      return await convex.mutation(api.analytics.ensureSiteForDesk, { slug: clientId });
-    },
-  });
-
-  if (!site) {
-    return <DeskEmptyState title="Site analytics introuvable." />;
-  }
-
-  return <DeskInsightsSetupPanel clientId={clientId} site={site} />;
 }
