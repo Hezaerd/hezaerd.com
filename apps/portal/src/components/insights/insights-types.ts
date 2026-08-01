@@ -22,6 +22,7 @@ export type InsightsOverviewData = {
     items: Array<{ eventName: string; count: number }>;
     otherCount: number;
   } | null;
+  takeaway: string | null;
 };
 
 export type InsightsShellVariant = "desk" | "workspace";

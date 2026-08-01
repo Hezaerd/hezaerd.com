@@ -255,6 +255,8 @@ export async function recordUniqueVisitor(
 export type SessionPathResult = {
   /** False when the same path is hit again within an active session (refresh). */
   countPageview: boolean;
+  /** True only on a new session — first external source for the visit. */
+  countSource: boolean;
 };
 
 export async function processSessionPath(
@@ -281,7 +283,7 @@ export async function processSessionPath(
     const lastPath = existingSession.paths[existingSession.paths.length - 1];
     if (lastPath === path) {
       await ctx.db.patch(existingSession._id, { lastSeenAt: now });
-      return { countPageview: false };
+      return { countPageview: false, countSource: false };
     }
 
     const newPaths = [...existingSession.paths, path];
@@ -294,7 +296,7 @@ export async function processSessionPath(
     if (newPaths.length === 2 || newPaths.length === 3) {
       await incrementDailyRoute(ctx, clientId, dayKey, newPaths);
     }
-    return { countPageview: true };
+    return { countPageview: true, countSource: false };
   }
 
   if (existingSession) {
@@ -312,5 +314,5 @@ export async function processSessionPath(
     lastSeenAt: now,
   });
   await incrementDailyPageEntries(ctx, clientId, dayKey, path);
-  return { countPageview: true };
+  return { countPageview: true, countSource: true };
 }

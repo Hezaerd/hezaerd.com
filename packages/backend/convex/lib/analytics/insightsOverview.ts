@@ -5,6 +5,7 @@ import type { QueryCtx } from "../../_generated/server";
 import { sourceKindValidator } from "./constants";
 import { extractHostname } from "./origin";
 import { enumerateDayKeys, getPeriodBounds, getPreviousPeriodBounds, insightsPeriodValidator } from "./period";
+import { buildInsightsTakeaway } from "./takeaway";
 import type { InsightsPeriod } from "./period";
 
 const trafficDayPointValidator = v.object({
@@ -79,6 +80,7 @@ export const insightsOverviewValidator = v.object({
     }),
   ),
   events: v.union(v.null(), insightsEventsValidator),
+  takeaway: v.union(v.string(), v.null()),
 });
 
 export type InsightsOverview = Infer<typeof insightsOverviewValidator>;
@@ -271,6 +273,38 @@ export async function loadInsightsOverview(
     routesMap.set(row.routeKey, (routesMap.get(row.routeKey) ?? 0) + row.views);
   }
 
+  const topPages = topBy(
+    pageStats.filter(({ views }) => views > 0).map(({ path, views }) => ({ path, views })),
+    (row) => row.views,
+    5,
+  );
+  const landings = topBy(
+    pageStats.filter(({ entries }) => entries > 0).map(({ path, entries }) => ({ path, entries })),
+    (row) => row.entries,
+    5,
+  );
+  const exits = topBy(
+    pageStats.filter(({ exits }) => exits > 0).map(({ path, exits }) => ({ path, exits })),
+    (row) => row.exits,
+    5,
+  );
+  const routes = topBy(
+    [...routesMap.entries()]
+      .filter(([, views]) => views > 0)
+      .map(([routeKey, views]) => ({ routeKey, views })),
+    (row) => row.views,
+    5,
+  );
+
+  const takeaway = buildInsightsTakeaway({
+    period,
+    totalVisitors: totals.visitors,
+    deltaPercent,
+    sources,
+    landings,
+    topPages,
+  });
+
   return {
     period,
     startDayKey,
@@ -288,28 +322,11 @@ export async function loadInsightsOverview(
     },
     sources,
     sourceDetails,
-    topPages: topBy(
-      pageStats.filter(({ views }) => views > 0).map(({ path, views }) => ({ path, views })),
-      (row) => row.views,
-      5,
-    ),
-    landings: topBy(
-      pageStats.filter(({ entries }) => entries > 0).map(({ path, entries }) => ({ path, entries })),
-      (row) => row.entries,
-      5,
-    ),
-    exits: topBy(
-      pageStats.filter(({ exits }) => exits > 0).map(({ path, exits }) => ({ path, exits })),
-      (row) => row.exits,
-      5,
-    ),
-    routes: topBy(
-      [...routesMap.entries()]
-        .filter(([, views]) => views > 0)
-        .map(([routeKey, views]) => ({ routeKey, views })),
-      (row) => row.views,
-      5,
-    ),
+    topPages,
+    landings,
+    exits,
+    routes,
     events: options.includeEvents ? aggregateEvents(eventsRows) : null,
+    takeaway,
   };
 }

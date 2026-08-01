@@ -3,6 +3,7 @@ import { v } from "convex/values";
 import { internalMutation } from "./_generated/server";
 import { getDayKey } from "./lib/analytics/dayKey";
 import { extractHostname, isAllowedRequestOrigin } from "./lib/analytics/origin";
+import { isPortalReferrer } from "./lib/analytics/portal";
 import { isValidEventName, splitPathAndSearch } from "./lib/analytics/paths";
 import {
   incrementDailyEvent,
@@ -58,6 +59,10 @@ export const ingest = internalMutation({
       return null;
     }
 
+    if (isPortalReferrer(args.referrer)) {
+      return null;
+    }
+
     const hashSecret = getAnalyticsHashSecret();
     if (!hashSecret) {
       console.error("ANALYTICS_HASH_SECRET is not configured");
@@ -96,7 +101,7 @@ export const ingest = internalMutation({
       visitorHash,
     );
 
-    const { countPageview } = await processSessionPath(ctx, {
+    const { countPageview, countSource } = await processSessionPath(ctx, {
       clientId: site.clientId,
       dayKey,
       visitorHash,
@@ -126,15 +131,18 @@ export const ingest = internalMutation({
       visitors: isNewVisitor ? 1 : 0,
     });
     await incrementDailyPageViews(ctx, site.clientId, dayKey, path);
-    await incrementDailySource(ctx, site.clientId, dayKey, sourceKind);
-    if (sourceDetail) {
-      await incrementDailySourceDetail(
-        ctx,
-        site.clientId,
-        dayKey,
-        sourceKind,
-        sourceDetail,
-      );
+
+    if (countSource) {
+      await incrementDailySource(ctx, site.clientId, dayKey, sourceKind);
+      if (sourceDetail) {
+        await incrementDailySourceDetail(
+          ctx,
+          site.clientId,
+          dayKey,
+          sourceKind,
+          sourceDetail,
+        );
+      }
     }
 
     return null;

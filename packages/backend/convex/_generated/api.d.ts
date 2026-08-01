@@ -10,11 +10,13 @@
 
 import type * as analytics from "../analytics.js";
 import type * as analyticsCollect from "../analyticsCollect.js";
+import type * as analyticsCrons from "../analyticsCrons.js";
 import type * as analyticsHttp from "../analyticsHttp.js";
 import type * as analyticsSites from "../analyticsSites.js";
 import type * as auth from "../auth.js";
 import type * as clientInvites from "../clientInvites.js";
 import type * as clients from "../clients.js";
+import type * as crons from "../crons.js";
 import type * as fileStorage from "../fileStorage.js";
 import type * as files from "../files.js";
 import type * as filesInternal from "../filesInternal.js";
@@ -29,10 +31,13 @@ import type * as lib_analytics_insightsOverview from "../lib/analytics/insightsO
 import type * as lib_analytics_origin from "../lib/analytics/origin.js";
 import type * as lib_analytics_paths from "../lib/analytics/paths.js";
 import type * as lib_analytics_period from "../lib/analytics/period.js";
+import type * as lib_analytics_portal from "../lib/analytics/portal.js";
 import type * as lib_analytics_rollups from "../lib/analytics/rollups.js";
 import type * as lib_analytics_secrets from "../lib/analytics/secrets.js";
 import type * as lib_analytics_siteKey from "../lib/analytics/siteKey.js";
+import type * as lib_analytics_sourceDetail from "../lib/analytics/sourceDetail.js";
 import type * as lib_analytics_sourceKind from "../lib/analytics/sourceKind.js";
+import type * as lib_analytics_takeaway from "../lib/analytics/takeaway.js";
 import type * as lib_analytics_visitor from "../lib/analytics/visitor.js";
 import type * as lib_clientCascade from "../lib/clientCascade.js";
 import type * as lib_clients from "../lib/clients.js";
@@ -55,11 +60,13 @@ import type {
 declare const fullApi: ApiFromModules<{
   analytics: typeof analytics;
   analyticsCollect: typeof analyticsCollect;
+  analyticsCrons: typeof analyticsCrons;
   analyticsHttp: typeof analyticsHttp;
   analyticsSites: typeof analyticsSites;
   auth: typeof auth;
   clientInvites: typeof clientInvites;
   clients: typeof clients;
+  crons: typeof crons;
   fileStorage: typeof fileStorage;
   files: typeof files;
   filesInternal: typeof filesInternal;
@@ -74,10 +81,13 @@ declare const fullApi: ApiFromModules<{
   "lib/analytics/origin": typeof lib_analytics_origin;
   "lib/analytics/paths": typeof lib_analytics_paths;
   "lib/analytics/period": typeof lib_analytics_period;
+  "lib/analytics/portal": typeof lib_analytics_portal;
   "lib/analytics/rollups": typeof lib_analytics_rollups;
   "lib/analytics/secrets": typeof lib_analytics_secrets;
   "lib/analytics/siteKey": typeof lib_analytics_siteKey;
+  "lib/analytics/sourceDetail": typeof lib_analytics_sourceDetail;
   "lib/analytics/sourceKind": typeof lib_analytics_sourceKind;
+  "lib/analytics/takeaway": typeof lib_analytics_takeaway;
   "lib/analytics/visitor": typeof lib_analytics_visitor;
   "lib/clientCascade": typeof lib_clientCascade;
   "lib/clients": typeof lib_clients;

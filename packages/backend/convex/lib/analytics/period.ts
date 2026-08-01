@@ -1,6 +1,6 @@
 import { v, type Infer } from "convex/values";
 
-import { getDayKey } from "./dayKey";
+import { getDayKey, addDaysToDayKey } from "./dayKey";
 
 export const insightsPeriodValidator = v.union(
   v.literal("7d"),
@@ -48,16 +48,4 @@ export function enumerateDayKeys(startDayKey: string, endDayKey: string): string
     current = addDaysToDayKey(current, 1);
   }
   return keys;
-}
-
-function addDaysToDayKey(dayKey: string, deltaDays: number): string {
-  const parts = dayKey.split("-").map(Number);
-  const year = parts[0];
-  const month = parts[1];
-  const day = parts[2];
-  if (year === undefined || month === undefined || day === undefined) {
-    throw new Error(`Invalid dayKey: ${dayKey}`);
-  }
-  const utc = new Date(Date.UTC(year, month - 1, day + deltaDays, 12, 0, 0));
-  return getDayKey(utc);
 }
