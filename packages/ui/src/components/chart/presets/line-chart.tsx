@@ -1,11 +1,11 @@
-import { areaY, defineChart, lineY } from "@tanstack/charts";
-import { tooltip } from "@tanstack/charts/tooltip";
-import { Chart } from "@tanstack/react-charts";
-import { scaleLinear, scaleUtc } from "d3-scale";
-import { useMemo } from "react";
-
-import { ChartContainer } from "../chart-container";
-import { getChartColor, type ChartConfig } from "../chart-config";
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+  type ChartConfig,
+} from "@hezaerd/ui/components/chart";
+import { cn } from "@hezaerd/ui/lib/utils";
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
 export type LineChartPoint = {
   dayKey: string;
@@ -15,7 +15,7 @@ export type LineChartPoint = {
 const defaultConfig = {
   visitors: {
     label: "Visiteurs",
-    color: "var(--color-visitors)",
+    color: "var(--chart-1)",
   },
 } satisfies ChartConfig;
 
@@ -27,8 +27,13 @@ type InsightsLineChartProps = {
   ariaLabel?: string;
 };
 
-function parseDayKey(dayKey: string) {
-  return new Date(`${dayKey}T12:00:00`);
+function formatDayKey(dayKey: string) {
+  const date = new Date(`${dayKey}T12:00:00`);
+  return new Intl.DateTimeFormat("fr-CA", { month: "short", day: "numeric" }).format(date);
+}
+
+function formatVisitors(value: number) {
+  return Math.round(value).toLocaleString("fr-CA");
 }
 
 export function InsightsLineChart({
@@ -38,57 +43,56 @@ export function InsightsLineChart({
   height = 240,
   ariaLabel = "Visiteurs par jour",
 }: InsightsLineChartProps) {
-  const accent = getChartColor(config, "visitors", "var(--chart-1)");
-
-  const definition = useMemo(() => {
-    const rows = data.map((point) => ({
-      date: parseDayKey(point.dayKey),
-      visitors: point.visitors,
-    }));
-
-    return defineChart({
-      marks: [
-        areaY(rows, {
-          x: "date",
-          y: "visitors",
-          fill: accent,
-          fillOpacity: 0.16,
-        }),
-        lineY(rows, {
-          x: "date",
-          y: "visitors",
-          stroke: accent,
-          strokeWidth: 2,
-        }),
-      ],
-      x: {
-        scale: scaleUtc,
-        axis: {
-          ticks: {
-            format: (value) =>
-              new Intl.DateTimeFormat("fr-CA", { month: "short", day: "numeric" }).format(
-                value as Date,
-              ),
-          },
-        },
-      },
-      y: {
-        scale: scaleLinear,
-        nice: true,
-        grid: true,
-        axis: {
-          ticks: {
-            format: (value) => Math.round(value as number).toLocaleString("fr-CA"),
-          },
-        },
-      },
-      tooltip,
-    });
-  }, [accent, data]);
+  const chartData = data.map((point) => ({
+    dayKey: point.dayKey,
+    label: formatDayKey(point.dayKey),
+    visitors: point.visitors,
+  }));
 
   return (
-    <ChartContainer config={config} className={className}>
-      <Chart definition={definition} height={height} ariaLabel={ariaLabel} />
+    <ChartContainer
+      config={config}
+      className={cn("aspect-auto w-full", className)}
+      style={{ height }}
+      aria-label={ariaLabel}
+    >
+      <AreaChart
+        accessibilityLayer
+        data={chartData}
+        margin={{ top: 8, right: 8, left: 0, bottom: 0 }}
+      >
+        <CartesianGrid vertical={false} />
+        <XAxis
+          dataKey="label"
+          tickLine={false}
+          axisLine={false}
+          tickMargin={8}
+          minTickGap={24}
+        />
+        <YAxis
+          tickLine={false}
+          axisLine={false}
+          tickMargin={8}
+          width={40}
+          tickFormatter={formatVisitors}
+        />
+        <ChartTooltip
+          content={
+            <ChartTooltipContent
+              labelKey="label"
+              formatter={(value) => formatVisitors(Number(value))}
+            />
+          }
+        />
+        <Area
+          type="monotone"
+          dataKey="visitors"
+          fill="var(--color-visitors)"
+          fillOpacity={0.16}
+          stroke="var(--color-visitors)"
+          strokeWidth={2}
+        />
+      </AreaChart>
     </ChartContainer>
   );
 }
