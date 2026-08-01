@@ -94,13 +94,17 @@ export const ingest = internalMutation({
       visitorHash,
     );
 
-    await processSessionPath(ctx, {
+    const { countPageview } = await processSessionPath(ctx, {
       clientId: site.clientId,
       dayKey,
       visitorHash,
       path,
       now: Date.now(),
     });
+
+    if (!countPageview) {
+      return null;
+    }
 
     const siteHost = extractHostname(site.productionUrl) ?? "";
     const sourceKind = classifySourceKind({

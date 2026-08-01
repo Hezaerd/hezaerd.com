@@ -23,6 +23,13 @@ export const sourceKindLabels: Record<string, string> = {
   other: "Autre",
 };
 
+export const periodComparisonSuffix: Record<InsightsPeriod, string> = {
+  today: "vs hier",
+  "7d": "vs 7j préc.",
+  "30d": "vs 30j préc.",
+  "90d": "vs 90j préc.",
+};
+
 export function formatCount(value: number) {
   return value.toLocaleString("fr-CA");
 }
@@ -33,4 +40,18 @@ export function formatShare(value: number, total: number) {
   }
   const percent = (value / total) * 100;
   return `${percent.toLocaleString("fr-CA", { maximumFractionDigits: 0 })} %`;
+}
+
+export function formatVisitorDelta(deltaPercent: number | null) {
+  if (deltaPercent === null) {
+    return null;
+  }
+
+  const rounded = Math.round(deltaPercent);
+  if (rounded === 0) {
+    return "stable";
+  }
+
+  const sign = rounded > 0 ? "+" : "";
+  return `${sign}${rounded.toLocaleString("fr-CA")} %`;
 }

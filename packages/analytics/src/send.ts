@@ -1,4 +1,5 @@
 import { getActiveConfig } from "./config.js";
+import { isEmbedded } from "./embed.js";
 
 export type CollectPayload = {
   path: string;
@@ -19,6 +20,10 @@ function isCrossOriginEndpoint(endpoint: string): boolean {
 }
 
 export function send(payload: CollectPayload): void {
+  if (isEmbedded()) {
+    return;
+  }
+
   const config = getActiveConfig();
   if (!config) {
     return;

@@ -2,10 +2,15 @@ import type { InsightsPeriod } from "@/lib/convex-queries";
 
 export type InsightsOverviewData = {
   period: InsightsPeriod;
+  siteHost: string;
   traffic: {
     series: Array<{ dayKey: string; pageviews: number; visitors: number }>;
     totals: { pageviews: number; visitors: number };
     visitorsToday: number;
+    comparison: {
+      previousVisitors: number;
+      deltaPercent: number | null;
+    };
   };
   sources: Array<{ sourceKind: string; views: number }>;
   topPages: Array<{ path: string; views: number }>;

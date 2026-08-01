@@ -1,4 +1,3 @@
-import { Separator } from "@hezaerd/ui/components/separator";
 import { cn } from "@hezaerd/ui/lib/utils";
 
 import type { InsightsPeriod } from "@/lib/convex-queries";
@@ -6,8 +5,11 @@ import type { InsightsPeriod } from "@/lib/convex-queries";
 import { InsightsDataTable } from "./insights-data-table";
 import { InsightsLineChart } from "./insights-line-chart";
 import { formatCount, formatShare, sourceKindLabels } from "./insights-labels";
+import { InsightsPagesPanel } from "./insights-pages-panel";
+import { InsightsPathLabel, InsightsRouteLabel } from "./insights-path-label";
 import { InsightsPeriodPicker } from "./insights-period-picker";
 import { InsightsSourceBars } from "./insights-source-bars";
+import { sourceKindBarClass } from "./insights-source-visuals";
 import { InsightsStatHeader } from "./insights-stat-header";
 import type { InsightsOverviewData, InsightsShellVariant } from "./insights-types";
 
@@ -23,6 +25,7 @@ type InsightsOverviewProps = {
 type InsightsOverviewPanelsProps = {
   data: InsightsOverviewData;
   period: InsightsPeriod;
+  onPeriodChange?: (period: InsightsPeriod) => void;
   variant?: InsightsShellVariant;
   showEvents?: boolean;
   isRefreshing?: boolean;
@@ -39,7 +42,9 @@ function SectionBlock({
 }) {
   return (
     <section className={cn("flex flex-col gap-3", className)}>
-      <h2 className="text-muted-foreground text-sm font-medium">{title}</h2>
+      <h2 className="text-muted-foreground text-xs font-medium tracking-[0.14em] uppercase">
+        {title}
+      </h2>
       {children}
     </section>
   );
@@ -61,6 +66,7 @@ function Panel({ children, className }: { children: React.ReactNode; className?:
 export function InsightsOverviewPanels({
   data,
   period,
+  onPeriodChange,
   variant = "desk",
   showEvents = true,
   isRefreshing = false,
@@ -69,36 +75,47 @@ export function InsightsOverviewPanels({
   const sourceRows = data.sources.map((source) => {
     const percent = sourceTotal > 0 ? (source.views / sourceTotal) * 100 : 0;
     return {
+      sourceKind: source.sourceKind,
       label: sourceKindLabels[source.sourceKind] ?? source.sourceKind,
       value: source.views,
       share: formatShare(source.views, sourceTotal),
       percent,
+      barClassName: sourceKindBarClass(source.sourceKind),
     };
   });
 
+  const siteHost = data.siteHost;
+
   return (
-    <div
-      className={cn(
-        "flex flex-col gap-6",
-        variant === "workspace" && "gap-8",
-        "transition-[opacity,filter] duration-200 ease-out motion-reduce:transition-none",
-        isRefreshing && "opacity-80 blur-[1px] motion-reduce:blur-none",
-      )}
-    >
+    <div className={cn("flex flex-col gap-6", variant === "workspace" && "gap-8")}>
       <SectionBlock title="Visiteurs">
-        <InsightsStatHeader
-          period={period}
-          totalVisitors={data.traffic.totals.visitors}
-          visitorsToday={data.traffic.visitorsToday}
-        />
-        <Panel className="overflow-hidden p-2">
-          <InsightsLineChart
-            data={data.traffic.series.map((point) => ({
-              dayKey: point.dayKey,
-              visitors: point.visitors,
-            }))}
-          />
-        </Panel>
+        <div
+          className={cn(
+            "flex flex-col gap-4",
+            "transition-[opacity,filter] duration-200 ease-out motion-reduce:transition-none",
+            isRefreshing && "opacity-80 blur-[1px] motion-reduce:blur-none",
+          )}
+        >
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <InsightsStatHeader
+              period={period}
+              totalVisitors={data.traffic.totals.visitors}
+              visitorsToday={data.traffic.visitorsToday}
+              deltaPercent={data.traffic.comparison.deltaPercent}
+            />
+            {onPeriodChange ? (
+              <InsightsPeriodPicker value={period} onValueChange={onPeriodChange} />
+            ) : null}
+          </div>
+          <Panel className="overflow-hidden p-2">
+            <InsightsLineChart
+              data={data.traffic.series.map((point) => ({
+                dayKey: point.dayKey,
+                visitors: point.visitors,
+              }))}
+            />
+          </Panel>
+        </div>
       </SectionBlock>
 
       <div
@@ -109,68 +126,13 @@ export function InsightsOverviewPanels({
       >
         <SectionBlock title="Sources">
           <Panel>
-            <InsightsSourceBars rows={sourceRows} />
+            <InsightsSourceBars rows={sourceRows} animateBars={isRefreshing} />
           </Panel>
         </SectionBlock>
 
         <SectionBlock title="Pages">
-          <Panel className="gap-0 p-0">
-            <div className="flex flex-col gap-4 p-4">
-              <div className="flex flex-col gap-2">
-                <h3 className="text-sm font-medium">Pages vues</h3>
-                <InsightsDataTable
-                  variant={variant}
-                  rows={data.topPages}
-                  columns={[
-                    { key: "path", header: "Chemin", mono: true },
-                    {
-                      key: "views",
-                      header: "Vues",
-                      align: "right",
-                      format: (row) => formatCount(row.views),
-                    },
-                  ]}
-                />
-              </div>
-
-              <Separator />
-
-              <div className="flex flex-col gap-2">
-                <h3 className="text-sm font-medium">Entrées</h3>
-                <InsightsDataTable
-                  variant={variant}
-                  rows={data.landings}
-                  columns={[
-                    { key: "path", header: "Chemin", mono: true },
-                    {
-                      key: "entries",
-                      header: "Entrées",
-                      align: "right",
-                      format: (row) => formatCount(row.entries),
-                    },
-                  ]}
-                />
-              </div>
-
-              <Separator />
-
-              <div className="flex flex-col gap-2">
-                <h3 className="text-sm font-medium">Sorties</h3>
-                <InsightsDataTable
-                  variant={variant}
-                  rows={data.exits}
-                  columns={[
-                    { key: "path", header: "Chemin", mono: true },
-                    {
-                      key: "exits",
-                      header: "Sorties",
-                      align: "right",
-                      format: (row) => formatCount(row.exits),
-                    },
-                  ]}
-                />
-              </div>
-            </div>
+          <Panel>
+            <InsightsPagesPanel data={data} variant={variant} siteHost={siteHost} />
           </Panel>
         </SectionBlock>
       </div>
@@ -179,9 +141,15 @@ export function InsightsOverviewPanels({
         <Panel>
           <InsightsDataTable
             variant={variant}
+            showRank
             rows={data.routes}
+            rowKey={(row) => row.routeKey}
             columns={[
-              { key: "routeKey", header: "Parcours", mono: true },
+              {
+                key: "routeKey",
+                header: "Parcours",
+                format: (row) => <InsightsRouteLabel routeKey={row.routeKey} siteHost={siteHost} />,
+              },
               {
                 key: "views",
                 header: "Vues",
@@ -208,6 +176,7 @@ export function InsightsOverviewPanels({
                   ? [{ label: "Autres", count: data.events.otherCount }]
                   : []),
               ]}
+              rowKey={(row) => row.label}
               columns={[
                 { key: "label", header: "Action" },
                 {
@@ -236,13 +205,13 @@ export function InsightsOverview({
 }: InsightsOverviewProps) {
   return (
     <div className={cn("flex flex-col gap-6", variant === "workspace" && "gap-8")}>
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <InsightsPeriodPicker value={period} onValueChange={onPeriodChange} />
-        {headerAction}
-      </div>
+      {headerAction ? (
+        <div className="flex justify-end">{headerAction}</div>
+      ) : null}
       <InsightsOverviewPanels
         data={data}
         period={period}
+        onPeriodChange={onPeriodChange}
         variant={variant}
         showEvents={showEvents}
       />

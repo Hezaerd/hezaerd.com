@@ -1,5 +1,6 @@
 import type { HezaerdInitOptions } from "./config.js";
 import { setActiveConfig } from "./config.js";
+import { isEmbedded } from "./embed.js";
 import { trackEvent, trackPageview } from "./track.js";
 
 const INIT_FLAG = "__hezaerd_analytics_init__";
@@ -75,6 +76,10 @@ export function init(options: HezaerdInitOptions): void {
   }
 
   if (!options.siteKey.trim()) {
+    return;
+  }
+
+  if (isEmbedded()) {
     return;
   }
 

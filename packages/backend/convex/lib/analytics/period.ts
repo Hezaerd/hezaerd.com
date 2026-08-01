@@ -29,6 +29,18 @@ export function getPeriodBounds(
   return { startDayKey, endDayKey: todayDayKey, todayDayKey };
 }
 
+/** Bounds for the period immediately before the current one (same length). */
+export function getPreviousPeriodBounds(
+  period: InsightsPeriod,
+  now = new Date(),
+): { startDayKey: string; endDayKey: string } {
+  const { startDayKey } = getPeriodBounds(period, now);
+  const dayCount = PERIOD_DAY_COUNT[period];
+  const endDayKey = addDaysToDayKey(startDayKey, -1);
+  const previousStartDayKey = addDaysToDayKey(endDayKey, -(dayCount - 1));
+  return { startDayKey: previousStartDayKey, endDayKey };
+}
+
 /** Every calendar dayKey from start through end (inclusive), ascending. */
 export function enumerateDayKeys(startDayKey: string, endDayKey: string): string[] {
   const keys: string[] = [];

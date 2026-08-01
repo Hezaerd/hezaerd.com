@@ -220,6 +220,11 @@ export async function recordUniqueVisitor(
   return true;
 }
 
+export type SessionPathResult = {
+  /** False when the same path is hit again within an active session (refresh). */
+  countPageview: boolean;
+};
+
 export async function processSessionPath(
   ctx: MutationCtx,
   input: {
@@ -229,7 +234,7 @@ export async function processSessionPath(
     path: string;
     now: number;
   },
-): Promise<void> {
+): Promise<SessionPathResult> {
   const { clientId, dayKey, visitorHash, path, now } = input;
   const existingSession = await ctx.db
     .query("analyticsSessions")
@@ -244,7 +249,7 @@ export async function processSessionPath(
     const lastPath = existingSession.paths[existingSession.paths.length - 1];
     if (lastPath === path) {
       await ctx.db.patch(existingSession._id, { lastSeenAt: now });
-      return;
+      return { countPageview: false };
     }
 
     const newPaths = [...existingSession.paths, path];
@@ -257,7 +262,7 @@ export async function processSessionPath(
     if (newPaths.length === 2 || newPaths.length === 3) {
       await incrementDailyRoute(ctx, clientId, dayKey, newPaths);
     }
-    return;
+    return { countPageview: true };
   }
 
   if (existingSession) {
@@ -275,4 +280,5 @@ export async function processSessionPath(
     lastSeenAt: now,
   });
   await incrementDailyPageEntries(ctx, clientId, dayKey, path);
+  return { countPageview: true };
 }

@@ -2,7 +2,6 @@ import { useState } from "react";
 
 import { InsightsOverviewPanels } from "@/components/insights/insights-overview";
 import { InsightsOverviewSkeleton } from "@/components/insights/insights-overview-skeleton";
-import { InsightsPeriodPicker } from "@/components/insights/insights-period-picker";
 import {
   useInsightsOverviewQuery,
   usePrefetchInsightsOverview,
@@ -27,9 +26,7 @@ export function WorkspaceInsightsDashboard({ clientId }: WorkspaceInsightsDashbo
   } = useInsightsOverviewQuery(clientId, period, "workspace");
 
   return (
-    <div className="flex flex-col gap-8">
-      <InsightsPeriodPicker value={period} onValueChange={setPeriod} />
-
+    <>
       {isPending && !overview ? (
         <InsightsOverviewSkeleton variant="workspace" />
       ) : !overview ? (
@@ -38,11 +35,12 @@ export function WorkspaceInsightsDashboard({ clientId }: WorkspaceInsightsDashbo
         <InsightsOverviewPanels
           data={overview}
           period={period}
+          onPeriodChange={setPeriod}
           variant="workspace"
           showEvents
           isRefreshing={isFetching && isPlaceholderData}
         />
       )}
-    </div>
+    </>
   );
 }

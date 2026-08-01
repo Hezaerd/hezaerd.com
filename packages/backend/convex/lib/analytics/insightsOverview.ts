@@ -3,7 +3,8 @@ import { v, type Infer } from "convex/values";
 import type { Id } from "../../_generated/dataModel";
 import type { QueryCtx } from "../../_generated/server";
 import { sourceKindValidator } from "./constants";
-import { enumerateDayKeys, getPeriodBounds, insightsPeriodValidator } from "./period";
+import { extractHostname } from "./origin";
+import { enumerateDayKeys, getPeriodBounds, getPreviousPeriodBounds, insightsPeriodValidator } from "./period";
 import type { InsightsPeriod } from "./period";
 
 const trafficDayPointValidator = v.object({
@@ -27,6 +28,7 @@ export const insightsOverviewValidator = v.object({
   startDayKey: v.string(),
   endDayKey: v.string(),
   todayDayKey: v.string(),
+  siteHost: v.string(),
   traffic: v.object({
     series: v.array(trafficDayPointValidator),
     totals: v.object({
@@ -34,6 +36,10 @@ export const insightsOverviewValidator = v.object({
       visitors: v.number(),
     }),
     visitorsToday: v.number(),
+    comparison: v.object({
+      previousVisitors: v.number(),
+      deltaPercent: v.union(v.number(), v.null()),
+    }),
   }),
   sources: v.array(
     v.object({
@@ -91,6 +97,23 @@ function aggregateEvents(
   return { items, otherCount };
 }
 
+function aggregateVisitorsForRange(
+  rows: { dayKey: string; visitors: number }[],
+  startDayKey: string,
+  endDayKey: string,
+): number {
+  return rows
+    .filter((row) => row.dayKey >= startDayKey && row.dayKey <= endDayKey)
+    .reduce((sum, row) => sum + row.visitors, 0);
+}
+
+function computeDeltaPercent(current: number, previous: number): number | null {
+  if (previous <= 0) {
+    return null;
+  }
+  return ((current - previous) / previous) * 100;
+}
+
 export async function loadInsightsOverview(
   ctx: QueryCtx,
   clientId: Id<"clients">,
@@ -98,14 +121,24 @@ export async function loadInsightsOverview(
   options: { includeEvents: boolean },
 ): Promise<InsightsOverview> {
   const { startDayKey, endDayKey, todayDayKey } = getPeriodBounds(period);
+  const previousBounds = getPreviousPeriodBounds(period);
   const dayKeys = enumerateDayKeys(startDayKey, endDayKey);
+
+  const site = await ctx.db
+    .query("analyticsSites")
+    .withIndex("by_clientId", (q) => q.eq("clientId", clientId))
+    .unique();
+  const siteHost = site ? (extractHostname(site.productionUrl) ?? "") : "";
+
+  const queryStartDayKey =
+    previousBounds.startDayKey < startDayKey ? previousBounds.startDayKey : startDayKey;
 
   const [totalsRows, pagesRows, sourcesRows, routesRows, eventsRows] = await Promise.all([
     ctx.db
       .query("analyticsDailyTotals")
       .withIndex("by_clientId_and_dayKey", (q) => q.eq("clientId", clientId))
       .filter((q) =>
-        q.and(q.gte(q.field("dayKey"), startDayKey), q.lte(q.field("dayKey"), endDayKey)),
+        q.and(q.gte(q.field("dayKey"), queryStartDayKey), q.lte(q.field("dayKey"), endDayKey)),
       )
       .collect(),
     ctx.db
@@ -158,6 +191,13 @@ export async function loadInsightsOverview(
     { pageviews: 0, visitors: 0 },
   );
 
+  const previousVisitors = aggregateVisitorsForRange(
+    totalsRows,
+    previousBounds.startDayKey,
+    previousBounds.endDayKey,
+  );
+  const deltaPercent = computeDeltaPercent(totals.visitors, previousVisitors);
+
   const sourcesMap = new Map<string, number>();
   for (const row of sourcesRows) {
     sourcesMap.set(row.sourceKind, (sourcesMap.get(row.sourceKind) ?? 0) + row.views);
@@ -195,10 +235,15 @@ export async function loadInsightsOverview(
     startDayKey,
     endDayKey,
     todayDayKey,
+    siteHost,
     traffic: {
       series,
       totals,
       visitorsToday: totalsByDay.get(todayDayKey)?.visitors ?? 0,
+      comparison: {
+        previousVisitors,
+        deltaPercent,
+      },
     },
     sources,
     topPages: topBy(

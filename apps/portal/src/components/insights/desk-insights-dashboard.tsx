@@ -6,7 +6,6 @@ import { useState } from "react";
 import { InsightsClientAccessBanner } from "@/components/insights/insights-client-access-banner";
 import { InsightsOverviewPanels } from "@/components/insights/insights-overview";
 import { InsightsOverviewSkeleton } from "@/components/insights/insights-overview-skeleton";
-import { InsightsPeriodPicker } from "@/components/insights/insights-period-picker";
 import { DeskInsightsSetupPanel } from "@/components/insights/desk-insights-setup-panel";
 import {
   useInsightsOverviewQuery,
@@ -56,23 +55,20 @@ export function DeskInsightsDashboard({ clientId, insightsEnabled }: DeskInsight
       <InsightsClientAccessBanner insightsEnabled={insightsEnabled} />
       <DeskInsightsSetupPanel clientId={clientId} site={site} />
 
-      <div className="flex flex-col gap-6">
-        <InsightsPeriodPicker value={period} onValueChange={setPeriod} />
-
-        {isPending && !overview ? (
-          <InsightsOverviewSkeleton variant="desk" />
-        ) : !overview ? (
-          <DeskEmptyState title="Statistiques indisponibles." />
-        ) : (
-          <InsightsOverviewPanels
-            data={overview}
-            period={period}
-            variant="desk"
-            showEvents
-            isRefreshing={isFetching && isPlaceholderData}
-          />
-        )}
-      </div>
+      {isPending && !overview ? (
+        <InsightsOverviewSkeleton variant="desk" />
+      ) : !overview ? (
+        <DeskEmptyState title="Statistiques indisponibles." />
+      ) : (
+        <InsightsOverviewPanels
+          data={overview}
+          period={period}
+          onPeriodChange={setPeriod}
+          variant="desk"
+          showEvents
+          isRefreshing={isFetching && isPlaceholderData}
+        />
+      )}
     </div>
   );
 }
