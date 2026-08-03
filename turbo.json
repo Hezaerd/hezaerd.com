@@ -20,7 +20,17 @@
         "WORKOS_API_KEY",
         "WORKOS_COOKIE_PASSWORD",
         "WORKOS_REDIRECT_URI",
-        "CONVEX_DEPLOY_KEY"
+        "CONVEX_DEPLOY_KEY",
+        "CONVEX_URL",
+        "MARION_SERVICE_SECRET",
+        "DISCORD_APPLICATION_ID",
+        "DISCORD_BOT_TOKEN",
+        "DISCORD_PUBLIC_KEY",
+        "DISCORD_OPERATOR_USER_IDS",
+        "MARION_CHAT_MODEL",
+        "MARION_CHAT_MODEL_FALLBACK",
+        "MARION_SUMMARIZE_MODEL",
+        "MARION_EMBEDDING_MODEL"
       ],
       "passThroughEnv": [
         "AI_GATEWAY_API_KEY"

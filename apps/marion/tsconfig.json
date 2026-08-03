@@ -1,0 +1,12 @@
+{
+  "extends": "@hezaerd/config/tsconfig.base.json",
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "types": ["node"],
+    "noEmit": true
+  },
+  "include": ["agent/**/*.ts"],
+  "exclude": ["node_modules"]
+}

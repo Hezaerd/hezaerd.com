@@ -37,7 +37,6 @@ import type * as lib_analytics_secrets from "../lib/analytics/secrets.js";
 import type * as lib_analytics_siteKey from "../lib/analytics/siteKey.js";
 import type * as lib_analytics_sourceDetail from "../lib/analytics/sourceDetail.js";
 import type * as lib_analytics_sourceKind from "../lib/analytics/sourceKind.js";
-import type * as lib_analytics_takeaway from "../lib/analytics/takeaway.js";
 import type * as lib_analytics_visitor from "../lib/analytics/visitor.js";
 import type * as lib_clientCascade from "../lib/clientCascade.js";
 import type * as lib_clients from "../lib/clients.js";
@@ -46,9 +45,15 @@ import type * as lib_files from "../lib/files.js";
 import type * as lib_functions from "../lib/functions.js";
 import type * as lib_invoices from "../lib/invoices.js";
 import type * as lib_linkedSite from "../lib/linkedSite.js";
+import type * as lib_marion_auth from "../lib/marion/auth.js";
+import type * as lib_marion_deskRead from "../lib/marion/deskRead.js";
+import type * as lib_marion_gateway from "../lib/marion/gateway.js";
+import type * as lib_marion_rag from "../lib/marion/rag.js";
 import type * as lib_r2 from "../lib/r2.js";
 import type * as lib_users from "../lib/users.js";
 import type * as linkedSite from "../linkedSite.js";
+import type * as marionMemory from "../marionMemory.js";
+import type * as marionRead from "../marionRead.js";
 import type * as users from "../users.js";
 
 import type {
@@ -87,7 +92,6 @@ declare const fullApi: ApiFromModules<{
   "lib/analytics/siteKey": typeof lib_analytics_siteKey;
   "lib/analytics/sourceDetail": typeof lib_analytics_sourceDetail;
   "lib/analytics/sourceKind": typeof lib_analytics_sourceKind;
-  "lib/analytics/takeaway": typeof lib_analytics_takeaway;
   "lib/analytics/visitor": typeof lib_analytics_visitor;
   "lib/clientCascade": typeof lib_clientCascade;
   "lib/clients": typeof lib_clients;
@@ -96,9 +100,15 @@ declare const fullApi: ApiFromModules<{
   "lib/functions": typeof lib_functions;
   "lib/invoices": typeof lib_invoices;
   "lib/linkedSite": typeof lib_linkedSite;
+  "lib/marion/auth": typeof lib_marion_auth;
+  "lib/marion/deskRead": typeof lib_marion_deskRead;
+  "lib/marion/gateway": typeof lib_marion_gateway;
+  "lib/marion/rag": typeof lib_marion_rag;
   "lib/r2": typeof lib_r2;
   "lib/users": typeof lib_users;
   linkedSite: typeof linkedSite;
+  marionMemory: typeof marionMemory;
+  marionRead: typeof marionRead;
   users: typeof users;
 }>;
 
@@ -131,4 +141,5 @@ export declare const internal: FilterApi<
 export declare const components: {
   workOSAuthKit: import("@convex-dev/workos-authkit/_generated/component.js").ComponentApi<"workOSAuthKit">;
   stripe: import("@convex-dev/stripe/_generated/component.js").ComponentApi<"stripe">;
+  rag: import("@convex-dev/rag/_generated/component.js").ComponentApi<"rag">;
 };

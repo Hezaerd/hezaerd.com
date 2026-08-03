@@ -16,4 +16,10 @@ crons.daily(
   internal.analyticsCrons.purgeOldVisitorDays,
 );
 
+crons.interval(
+  "marion summarize stale threads",
+  { minutes: 15 },
+  internal.marionMemory.summarizeStaleThreads,
+);
+
 export default crons;

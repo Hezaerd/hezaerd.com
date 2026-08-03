@@ -225,4 +225,47 @@ export default defineSchema({
     .index("by_clientId_dayKey_visitorHash", ["clientId", "dayKey", "visitorHash"])
     .index("by_lastSeenAt", ["lastSeenAt"]),
 
+  /** Marion — Discord conversation threads (operator namespace). */
+  colleagueThreads: defineTable({
+    discordUserId: v.string(),
+    eveSessionId: v.optional(v.string()),
+    title: v.optional(v.string()),
+    lastMessageAt: v.number(),
+    summarizedAt: v.optional(v.number()),
+  })
+    .index("by_discordUserId", ["discordUserId"])
+    .index("by_eveSessionId", ["eveSessionId"])
+    .index("by_lastMessageAt", ["lastMessageAt"])
+    .index("by_summarizedAt", ["summarizedAt"]),
+
+  /** Marion — verbatim messages with hybrid search (text + vector). */
+  colleagueMessages: defineTable({
+    threadId: v.id("colleagueThreads"),
+    role: v.union(v.literal("user"), v.literal("assistant"), v.literal("system")),
+    content: v.string(),
+    discordMessageId: v.optional(v.string()),
+    eveSessionId: v.optional(v.string()),
+    embedding: v.optional(v.array(v.float64())),
+  })
+    .index("by_threadId", ["threadId"])
+    .searchIndex("search_content", {
+      searchField: "content",
+      filterFields: ["threadId"],
+    })
+    .vectorIndex("by_embedding", {
+      vectorField: "embedding",
+      dimensions: 1536,
+      filterFields: ["threadId"],
+    }),
+
+  /** Marion — operator channel state (DM target, daily ping budget). */
+  marionOperatorState: defineTable({
+    key: v.literal("operator"),
+    discordUserId: v.optional(v.string()),
+    dmChannelId: v.optional(v.string()),
+    pingsToday: v.number(),
+    pingsDayKey: v.string(),
+    lastDigestAt: v.optional(v.number()),
+  }).index("by_key", ["key"]),
+
 });

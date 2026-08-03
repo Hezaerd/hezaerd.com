@@ -14,11 +14,14 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@ai-sdk/gateway": "^4.0.37",
     "@aws-sdk/client-s3": "^3.1096.0",
     "@aws-sdk/s3-request-presigner": "^3.1096.0",
+    "@convex-dev/rag": "^0.7.5",
     "@convex-dev/stripe": "^0.1.6",
     "@convex-dev/workos-authkit": "^0.2.7",
     "@workos-inc/node": "^10.8.0",
+    "ai": "^7.0.48",
     "convex": "^1.31.6",
     "convex-helpers": "^0.1.120",
     "stripe": "^22.3.2"

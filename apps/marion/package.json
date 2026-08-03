@@ -1,0 +1,35 @@
+{
+  "name": "@hezaerd/marion",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "imports": {
+    "#*": "./agent/*",
+    "#evals/*": "./evals/*"
+  },
+  "scripts": {
+    "build": "eve build",
+    "dev": "eve dev",
+    "start": "eve start",
+    "typecheck": "tsc"
+  },
+  "dependencies": {
+    "@hezaerd/backend": "workspace:*",
+    "@vercel/connect": "0.4.3",
+    "ai": "^7.0.38",
+    "convex": "^1.31.6",
+    "eve": "^0.29.5",
+    "zod": "4.4.3"
+  },
+  "devDependencies": {
+    "@hezaerd/config": "workspace:*",
+    "@types/node": "24.x",
+    "typescript": "catalog:"
+  },
+  "overrides": {
+    "ai": "^7.0.38"
+  },
+  "engines": {
+    "node": "24.x"
+  }
+}
