@@ -55,7 +55,7 @@ export default discordChannel({
     };
   },
   events: {
-    async "message.completed"(eventData, _channel, ctx) {
+    async "message.completed"(eventData, channel, ctx) {
       if (eventData.finishReason === "tool-calls") {
         return;
       }
@@ -75,6 +75,8 @@ export default discordChannel({
         role: "assistant",
         content: eventData.message,
       });
+
+      await channel.discord.post(eventData.message);
     },
   },
 });
