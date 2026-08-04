@@ -7,6 +7,6 @@
     "types": ["node"],
     "noEmit": true
   },
-  "include": ["agent/**/*.ts"],
+  "include": ["agent/**/*.ts", "vercel.ts"],
   "exclude": ["node_modules"]
 }

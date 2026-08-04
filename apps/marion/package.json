@@ -24,6 +24,7 @@
   "devDependencies": {
     "@hezaerd/config": "workspace:*",
     "@types/node": "24.x",
+    "@vercel/config": "^0.5.1",
     "typescript": "catalog:"
   },
   "overrides": {
