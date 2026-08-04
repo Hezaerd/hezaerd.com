@@ -50,5 +50,5 @@ DM bot 1:1 ; seuls les IDs dans `DISCORD_OPERATOR_USER_IDS` passent l'allowlist.
 
 - Read Desk complet (tools → actions `marionRead`)
 - Write RAG + threads only (`marionMemory`)
-- Digest 8h Montreal (cron daily — Hobby Vercel). Proactivité horaire : Pro ou scheduler externe
+- Digest 8h Montreal + proactivité (quiet 8–20h, max 3 pings/j)
 - Pas sandbox, pas Hermes, pas tchat client

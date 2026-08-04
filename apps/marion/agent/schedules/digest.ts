@@ -5,8 +5,8 @@ import { api, marionAction } from "../lib/convex";
 import { isMorningDigestHour, isQuietHours, montrealDayKey } from "../lib/quiet-hours";
 
 export default defineSchedule({
-  /** Daily 13:00 UTC ≈ 8h Montreal (EST). Hobby Vercel rejects sub-daily crons. */
-  cron: "0 13 * * *",
+  /** Hourly tick — digest at 8h Montreal, gated proactive otherwise. */
+  cron: "0 * * * *",
   async run({ receive, waitUntil, appAuth }) {
     if (!isQuietHours()) {
       return;
