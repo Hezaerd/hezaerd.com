@@ -37,6 +37,24 @@
     text-rendering: optimizeLegibility;
   }
 
+  html {
+    scrollbar-width: none;
+  }
+
+  html::-webkit-scrollbar {
+    display: none;
+  }
+
+  html:has([data-flock-track]) {
+    scroll-snap-type: y mandatory;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
   body {
     background: var(--background);
     min-height: 100svh;
