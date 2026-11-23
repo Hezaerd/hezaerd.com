@@ -11,12 +11,12 @@ export const Route = createFileRoute("/")({
   component: Home,
 });
 
-type HomeScene = FlockScene & { id: string; position: string; width: string; content: ReactNode };
+type HomeScene = FlockScene & { id: string; label?: string; position: string; width: string; content: ReactNode };
 
 const sidePosition = "justify-end pb-[clamp(1rem,6svh,3.5rem)] md:justify-center md:pb-0";
 const sideWidth = "w-fit max-w-md md:max-w-[min(28rem,calc(50%_-_1.5rem))]";
 const sectionHeading = "text-[clamp(2.75rem,7vw,5rem)] leading-none font-[640] tracking-[-0.045em] [font-stretch:110%]";
-const scenes = [
+const scenes: [HomeScene, ...HomeScene[]] = [
   {
     id: "hero",
     form: "sheet",
@@ -38,6 +38,7 @@ const scenes = [
   },
   {
     id: "about",
+    label: "About",
     form: globe([12, -72], [14.64, -61.02]),
     centre: { wide: [0.71, 0.48], narrow: [0.5, 0.25] },
     scale: 0.56,
@@ -64,6 +65,7 @@ const scenes = [
   },
   {
     id: "contact",
+    label: "Contact",
     form: glyph("@"),
     centre: { wide: [0.75, 0.47], narrow: [0.5, 0.3] },
     scale: 0.54,
@@ -87,7 +89,7 @@ const scenes = [
       </>
     ),
   },
-] satisfies [HomeScene, ...HomeScene[]];
+];
 
 function Home() {
   const track = useRef<HTMLElement>(null);
@@ -101,6 +103,7 @@ function Home() {
     const trackEl = track.current!;
     const stageEl = stage.current!;
     const blocks = Array.from(stageEl.querySelectorAll<HTMLElement>("[data-flock-scene]"));
+    const links = Array.from(stageEl.querySelectorAll<HTMLAnchorElement>("[data-section-link]"));
     const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
     let progress = 0;
     let raf = 0;
@@ -115,6 +118,8 @@ function Home() {
         block.style.translate = motion.matches ? "" : `0 ${-offset * 32}px`;
         block.style.pointerEvents = opacity > 0 ? "auto" : "none";
       });
+      const active = scenes[Math.round(progress)].id;
+      links.forEach((link) => link.setAttribute("aria-current", String(link.dataset.sectionLink === active)));
     };
     const schedule = () => {
       if (raf) return;
@@ -126,17 +131,34 @@ function Home() {
     window.addEventListener("scroll", schedule, { passive: true, signal });
     window.addEventListener("resize", schedule, { signal });
     motion.addEventListener("change", schedule, { signal });
+    const sceneTop = (index: number) => window.scrollY + trackEl.getBoundingClientRect().top + index * stageEl.clientHeight;
     stageEl.addEventListener(
       "focusin",
       (event) => {
         const block = (event.target as HTMLElement).closest<HTMLElement>("[data-flock-scene]");
         if (!block) return;
-        const index = blocks.indexOf(block);
-        const top = window.scrollY + trackEl.getBoundingClientRect().top + index * stageEl.clientHeight;
-        window.scrollTo({ top, behavior: "instant" });
+        window.scrollTo({ top: sceneTop(blocks.indexOf(block)), behavior: "instant" });
         update();
       },
       { signal },
+    );
+
+    // One wheel gesture moves one scene. A trackpad swipe streams wheel events
+    // through its momentum, so a gesture ends once they go quiet.
+    let target = -1;
+    let quiet = 0;
+    window.addEventListener(
+      "wheel",
+      (event) => {
+        if (event.ctrlKey || Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
+        event.preventDefault();
+        clearTimeout(quiet);
+        quiet = window.setTimeout(() => (target = -1), 180);
+        if (target >= 0) return;
+        target = Math.max(0, Math.min(scenes.length - 1, Math.round(progress) + Math.sign(event.deltaY)));
+        window.scrollTo({ top: sceneTop(target), behavior: motion.matches ? "instant" : "smooth" });
+      },
+      { passive: false, signal },
     );
     update();
 
@@ -166,6 +188,7 @@ function Home() {
       {scenes.map(({ id }, i) => (
         <div
           key={id}
+          id={id}
           aria-hidden="true"
           className="pointer-events-none absolute inset-x-0 h-px snap-start"
           style={{ top: `${i * 100}svh` }}
@@ -177,6 +200,23 @@ function Home() {
           aria-hidden="true"
           className={`absolute inset-0 -z-10 h-full w-full transition-opacity duration-1000 motion-reduce:transition-none ${lit ? "" : "opacity-0"}`}
         />
+        <nav
+          aria-label="Sections"
+          className="absolute inset-x-0 top-0 z-10 mx-auto flex max-w-6xl justify-end gap-6 px-5 py-6 text-sm sm:px-8"
+        >
+          {scenes.map(({ id, label }) =>
+            label ? (
+              <a
+                key={id}
+                href={`#${id}`}
+                data-section-link={id}
+                className="link text-muted aria-[current=true]:text-foreground"
+              >
+                {label}
+              </a>
+            ) : null,
+          )}
+        </nav>
         {scenes.map(({ id, position, width, content }, i) => (
           <div
             key={id}

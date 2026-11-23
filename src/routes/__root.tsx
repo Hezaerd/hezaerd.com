@@ -40,11 +40,11 @@ function Shell({ children }: { children: ReactNode }) {
         >
           Skip to content
         </a>
-        <header className="absolute inset-x-0 top-0 z-40">
+        <header className="pointer-events-none fixed inset-x-0 top-0 z-40">
           <nav className="mx-auto flex max-w-6xl items-center justify-between px-5 py-6 text-sm sm:px-8">
             <a
               href="/"
-              className="font-[620] tracking-[-0.02em] text-foreground [font-stretch:110%]"
+              className="pointer-events-auto font-[620] tracking-[-0.02em] text-foreground [font-stretch:110%]"
               aria-label="Hezaerd, home"
             >
               hezaerd
