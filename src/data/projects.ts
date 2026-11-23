@@ -143,21 +143,22 @@ export const projects: Project[] = [
     slug: "hezaerd-com",
     title: "hezaerd.com",
     summary:
-      "This site, rebuilt from scratch: a prerendered React site with a dithered dusk shader, served by Cloudflare.",
+      "This site, rebuilt from scratch: a prerendered React portfolio with a WebGPU flock, served by Cloudflare.",
     kind: "Website, TypeScript",
+    image: "/images/hezaerd-com.webp",
     about:
-      "The third version of my personal site. The old one was a monorepo with several apps; this one is a single static portfolio. The sky and sea at the top are a WebGL field drawn as an ordered dither, and the same dusk palette colours the footer and every project image.",
+      "The third version of my personal site. The old one was a monorepo with several apps; this one is a single static portfolio. A WebGPU flock moves behind the hero, and the project index pairs each title with original images and video.",
     features: [
       "A React site on TanStack Start, prerendered to static HTML",
-      "A dithered WebGL sky and sea that follows the pointer",
-      "Project images dithered in the browser to one shared palette",
+      "A WebGPU flock simulation in the hero",
+      "A scroll-driven project index with original images and video",
       "Served from Cloudflare",
     ],
     challenges: [
       "Keeping the page pure black and readable with a moving shader behind the text",
       "A finished still frame for reduced motion",
     ],
-    stack: ["TypeScript", "React", "TanStack Start", "Tailwind CSS", "WebGL", "Cloudflare"],
+    stack: ["TypeScript", "React", "TanStack Start", "Tailwind CSS", "WebGPU", "Cloudflare"],
     source: "https://github.com/Hezaerd/hezaerd.com",
     duration: "Ongoing",
     team: "Solo",

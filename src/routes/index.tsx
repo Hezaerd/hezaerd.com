@@ -5,6 +5,7 @@ import { site } from "@/data/site";
 import { mountFlock } from "@/scripts/flock";
 import { About } from "@/sections/about";
 import { Contact } from "@/sections/contact";
+import { Projects } from "@/sections/projects";
 import { Record } from "@/sections/record";
 import { seo } from "@/seo";
 
@@ -53,6 +54,7 @@ function Home() {
     <>
       {hero}
       <About />
+      <Projects />
       <Record />
       <Contact />
     </>
