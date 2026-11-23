@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@source not "../../scripts";
 
 /*
  * Monochrome. The only "colour" on the site is light: white, a few greys,
@@ -22,7 +23,7 @@
 }
 
 @theme {
-  --font-sans: "Mona Sans Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Hezaerd Sans", ui-sans-serif, system-ui, sans-serif;
   --ease-out-soft: cubic-bezier(0.23, 1, 0.32, 1);
 }
 
