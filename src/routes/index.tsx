@@ -40,7 +40,7 @@ const scenes: [HomeScene, ...HomeScene[]] = [
         </h1>
         <p className="mt-6 text-lg text-foreground sm:text-xl">{site.role}</p>
         <p className="mt-3 max-w-md text-base leading-relaxed text-muted italic lg:max-w-none">
-          Jack of all trades, master of none, but oftentimes better than a master of one.
+          {site.tagline}
         </p>
       </>
     ),
@@ -59,7 +59,7 @@ const scenes: [HomeScene, ...HomeScene[]] = [
     content: (
       <>
         <h2 className={sectionHeading}>About</h2>
-        <p className="mt-2 text-base text-foreground sm:text-lg">From Martinique</p>
+        <p className="mt-2 text-base text-foreground sm:text-lg">{site.locationLine}</p>
         <p className="mt-4 text-base leading-snug text-muted sm:text-lg">{site.about}</p>
         <dl className="mt-6 grid grid-cols-[auto_1fr] gap-x-6 gap-y-2 text-sm">
           {site.stack.map(({ label, items }) => (
