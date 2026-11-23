@@ -89,7 +89,9 @@ function projectPoint(point: d.v3f, turn: d.v2f): d.v3f {
 function flockShape(seed: d.v4f, point: d.v3f, kind: number, turn: d.v2f, t: number): d.v3f {
   "use gpu";
   if (kind === 0) return flockSheet(seed.xy, seed.z, t);
-  return projectPoint(point, turn);
+  // Formations keep perspective in where birds sit but not in how big they
+  // draw, so every formation reads at the same fine grain.
+  return d.vec3f(projectPoint(point, turn).xy, 1);
 }
 
 const simulate = tgpu.computeFn({ in: { id: d.builtin.globalInvocationId }, workgroupSize: [64] })(({ id }) => {
