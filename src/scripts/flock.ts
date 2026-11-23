@@ -21,6 +21,8 @@ interface Spin {
   pitch: number;
   yawSpeed: number;
   pitchSpeed: number;
+  /** Yaw and pitch the birds were last carried to. */
+  carried: [number, number];
 }
 
 interface FlockOptions {
@@ -165,6 +167,8 @@ export async function mountFlock(canvas: HTMLCanvasElement, options: FlockOption
     kindB: 0,
     turnA: noTurn,
     turnB: noTurn,
+    carryA: noTurn,
+    carryB: noTurn,
     blend: 0,
   };
   const viewParams = {
@@ -215,11 +219,15 @@ export async function mountFlock(canvas: HTMLCanvasElement, options: FlockOption
 
   let segment = -1;
   const lastScene = scenes.length - 1;
-  const spins = scenes.map<Spin | null>(({ grab }) => (grab ? { yaw: 0, pitch: 0, yawSpeed: 0, pitchSpeed: 0 } : null));
+  const spins = scenes.map<Spin | null>(({ grab }) => (grab ? { yaw: 0, pitch: 0, yawSpeed: 0, pitchSpeed: 0, carried: [0, 0] } : null));
   const sceneTurn = (i: number, time: number): [number, number] => {
     const turn = scenes[i].turn?.(time) ?? noTurn;
     const spin = spins[i];
     return spin ? [turn[0] + spin.yaw, turn[1] + spin.pitch] : turn;
+  };
+  const sceneCarry = (i: number): [number, number] => {
+    const spin = spins[i];
+    return spin ? [spin.yaw - spin.carried[0], spin.pitch - spin.carried[1]] : noTurn;
   };
   const updateScene = (p: number, time: number, wander = 0) => {
     const i = Math.floor(p);
@@ -239,6 +247,8 @@ export async function mountFlock(canvas: HTMLCanvasElement, options: FlockOption
     simParams.blend = blend;
     simParams.turnA = sceneTurn(i, time);
     simParams.turnB = sceneTurn(j, time);
+    simParams.carryA = sceneCarry(i);
+    simParams.carryB = sceneCarry(j);
     simParams.scale = flockScale() * mix(a.scale, b.scale, blend);
 
     const [ax, ay] = placeCentre(a);
@@ -458,6 +468,7 @@ export async function mountFlock(canvas: HTMLCanvasElement, options: FlockOption
 
     // Fly in from off stage, then wander a little around home.
     updateScene(p, simParams.time, 1);
+    for (const spin of spins) if (spin) spin.carried = [spin.yaw, spin.pitch];
     const home = simParams.centre;
     const from = offstage();
     const k = easeOut(alive / ARRIVAL);

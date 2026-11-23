@@ -27,6 +27,9 @@ const Sim = d.struct({
   kindB: d.f32,
   turnA: d.vec2f,
   turnB: d.vec2f,
+  // How far a grabbed formation turned since the last step; birds ride it.
+  carryA: d.vec2f,
+  carryB: d.vec2f,
   blend: d.f32,
 });
 
@@ -97,6 +100,16 @@ function flockShape(seed: d.v4f, point: d.v4f, kind: number, turn: d.v2f, t: num
   return d.vec4f(projectPoint(rotated), 1 - std.smoothstep(0.02, 0.15, rotated.z));
 }
 
+// Where the turn since the last step moved this bird's point on screen, so
+// birds ride a dragged globe instead of chasing it through their springs.
+function flockCarry(point: d.v4f, kind: number, turn: d.v2f, carry: d.v2f): d.v2f {
+  "use gpu";
+  if (kind === 0 || point.w === 1) return d.vec2f(0, 0);
+  const now = projectPoint(rotatePoint(point.xyz, turn));
+  const before = projectPoint(rotatePoint(point.xyz, turn.sub(carry)));
+  return now.xy.sub(before.xy);
+}
+
 const simulate = tgpu.computeFn({ in: { id: d.builtin.globalInvocationId }, workgroupSize: [64] })(({ id }) => {
   "use gpu";
   const params = layout.$.sim;
@@ -146,6 +159,9 @@ const simulate = tgpu.computeFn({ in: { id: d.builtin.globalInvocationId }, work
     vel = vel.mul(cap / speed);
   }
   pos = pos.add(vel.mul(params.dt));
+  const carryA = flockCarry(layout.$.formA[i], params.kindA, params.turnA, params.carryA);
+  const carryB = flockCarry(layout.$.formB[i], params.kindB, params.turnB, params.carryB);
+  pos = pos.add(std.mix(carryA, carryB, params.blend).mul(params.scale));
   layout.$.birds[i] = d.vec4f(pos, vel);
   layout.$.extra[i] = d.vec4f(shape.z, seed.z * 6.2831 + seed.w * 3, shape.w, 0);
 });
