@@ -1,24 +1,20 @@
-// @ts-check
 import { transformWgsl } from "@vgpu/wgsl/loader-vite";
 import typegpu from "unplugin-typegpu/vite";
-import { runnerImport } from "vite";
+import { type Plugin, runnerImport } from "vite";
 
 /**
  * Resolves `import shader from "./shader.ts?wgsl"` at build time: runs the
  * TypeGPU module in Node, takes the WGSL its default export resolved to, and
  * hands it to vgpu's loader. The bundle ships the WGSL, never TypeGPU.
- *
- * @param {{ minify?: boolean }} [options]
- * @returns {import("vite").Plugin}
  */
-export function typegpuWgsl(options = {}) {
+export function typegpuWgsl(options: { minify?: boolean } = {}): Plugin {
   return {
     name: "typegpu-wgsl",
     enforce: "pre",
     async load(id) {
       const [file, query] = id.split("?");
       if (query !== "wgsl") return null;
-      const { module, dependencies } = await runnerImport(file, {
+      const { module, dependencies } = await runnerImport<{ default: string }>(file, {
         configFile: false,
         logLevel: "silent",
         plugins: [typegpu()],

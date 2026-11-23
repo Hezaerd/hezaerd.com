@@ -41,14 +41,7 @@ const vertex = tgpu.vertexFn({
 })(({ vi, ii }) => {
   "use gpu";
   const params = layout.$.view;
-  const corners = [
-    d.vec2f(-1, -1),
-    d.vec2f(1, -1),
-    d.vec2f(-1, 1),
-    d.vec2f(-1, 1),
-    d.vec2f(1, -1),
-    d.vec2f(1, 1),
-  ];
+  const corners = [d.vec2f(-1, -1), d.vec2f(1, -1), d.vec2f(-1, 1), d.vec2f(-1, 1), d.vec2f(1, -1), d.vec2f(1, 1)];
   const corner = corners[vi];
   const bird = layout.$.birds[ii];
   const more = layout.$.extra[ii];

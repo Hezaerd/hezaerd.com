@@ -59,7 +59,9 @@
     background-size: 0% 1px;
     background-position: 0 100%;
     background-repeat: no-repeat;
-    transition: background-size 400ms var(--ease-out-soft), color 200ms;
+    transition:
+      background-size 400ms var(--ease-out-soft),
+      color 200ms;
     padding-bottom: 2px;
   }
   .link:hover,

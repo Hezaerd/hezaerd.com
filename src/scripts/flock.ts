@@ -285,10 +285,7 @@ export async function mountFlock(canvas: HTMLCanvasElement, options: FlockOption
       ];
       const from = offstage();
       const k = easeOut(alive / ARRIVAL);
-      simParams.centre = [
-        from[0] + (home[0] + wander[0] - from[0]) * k,
-        from[1] + (home[1] + wander[1] - from[1]) * k,
-      ];
+      simParams.centre = [from[0] + (home[0] + wander[0] - from[0]) * k, from[1] + (home[1] + wander[1] - from[1]) * k];
       step(f);
       render(f);
     },
