@@ -34,7 +34,7 @@ interface FlockOptions {
   shape?: BirdShape;
   /** Grain cell in CSS pixels. */
   cell?: number;
-  /** Text boxes the flock keeps quiet behind, in scene order. */
+  /** Text boxes the flock keeps quiet behind, in scene order; null lets it fly over the text. */
   clear: readonly (HTMLElement | null)[];
   /** How far the flock leans towards the pointer, in world units. */
   follow?: number;
@@ -188,6 +188,7 @@ export async function mountFlock(canvas: HTMLCanvasElement, options: FlockOption
     res,
     grid,
     clear: [0, 0, 0, 0] as [number, number, number, number],
+    quiet: 0,
     cell: cellPx(),
     gain: look.gain,
     fadeBottom: 0.2,
@@ -204,13 +205,13 @@ export async function mountFlock(canvas: HTMLCanvasElement, options: FlockOption
   });
   const grain = effect(gpu, grainShader, { label: "flock-grain", set: { grain: grainParams, density } });
 
-  const emptyClear: [number, number, number, number] = [0, 0, 0, 0];
-  let clearRects: (typeof emptyClear)[] = [];
+  type Rect = [number, number, number, number];
+  let clearRects: (Rect | null)[] = [];
   const measureClear = () => {
     const c = canvas.getBoundingClientRect();
     if (c.width === 0 || c.height === 0) return;
     clearRects = options.clear.map((el) => {
-      if (!el) return emptyClear;
+      if (!el) return null;
       const r = el.getBoundingClientRect();
       return [
         (r.left - c.left + r.width / 2) / c.width,
@@ -263,13 +264,17 @@ export async function mountFlock(canvas: HTMLCanvasElement, options: FlockOption
       mix(ay, by, blend) + drift * (0.06 * Math.sin(time * 0.17 + 1)),
     ];
 
-    const clearA = clearRects[i] ?? emptyClear;
-    const clearB = clearRects[j] ?? emptyClear;
+    // A scene without a box fades the other scene's box out in place, rather than sliding it away.
+    const clearA = clearRects[i] ?? null;
+    const clearB = clearRects[j] ?? null;
+    const rectA: Rect = clearA ?? clearB ?? [0, 0, 0, 0];
+    const rectB: Rect = clearB ?? rectA;
+    grainParams.quiet = mix(clearA ? 1 : 0, clearB ? 1 : 0, blend);
     grainParams.clear = [
-      mix(clearA[0], clearB[0], blend),
-      mix(clearA[1], clearB[1], blend),
-      mix(clearA[2], clearB[2], blend),
-      mix(clearA[3], clearB[3], blend),
+      mix(rectA[0], rectB[0], blend),
+      mix(rectA[1], rectB[1], blend),
+      mix(rectA[2], rectB[2], blend),
+      mix(rectA[3], rectB[3], blend),
     ];
   };
   const readProgress = () => Math.max(0, Math.min(lastScene, progress()));

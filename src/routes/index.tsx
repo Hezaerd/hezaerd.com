@@ -11,7 +11,15 @@ export const Route = createFileRoute("/")({
   component: Home,
 });
 
-type HomeScene = FlockScene & { id: string; label?: string; position: string; width: string; content: ReactNode };
+type HomeScene = FlockScene & {
+  id: string;
+  label?: string;
+  /** Keeps the flock faint behind this scene's text. */
+  dim?: boolean;
+  position: string;
+  width: string;
+  content: ReactNode;
+};
 
 const sidePosition = "justify-end pb-[clamp(1rem,6svh,3.5rem)] md:justify-center md:pb-0";
 const sideWidth = "w-fit max-w-md md:max-w-[min(28rem,calc(50%_-_1.5rem))]";
@@ -19,6 +27,7 @@ const sectionHeading = "text-[clamp(2.75rem,7vw,5rem)] leading-none font-[640] t
 const scenes: [HomeScene, ...HomeScene[]] = [
   {
     id: "hero",
+    dim: true,
     form: "sheet",
     centre: { wide: [0.68, 0.38], narrow: [0.5, 0.3] },
     scale: 1,
@@ -171,7 +180,7 @@ function Home() {
       shape: "streak",
       cell: 1,
       size: 1.5,
-      clear: blocks.map((block) => block.parentElement),
+      clear: blocks.map((block, i) => (scenes[i].dim ? block.parentElement : null)),
     }).then((ok) => ok && requestAnimationFrame(() => !signal.aborted && setLit(true)));
     return () => {
       abort.abort();

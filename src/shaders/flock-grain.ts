@@ -13,6 +13,8 @@ const Grain = d.struct({
   grid: d.vec2f,
   // Text box to keep quiet: centre and half size, in uv (y down).
   clear: d.vec4f,
+  // How much the text box quiets the flock: 0 not at all, 1 fully.
+  quiet: d.f32,
   // Cell size in device pixels.
   cell: d.f32,
   gain: d.f32,
@@ -30,7 +32,7 @@ function grainClear(uv: d.v2f): number {
   const aspect = params.res.x / params.res.y;
   const edge = std.abs(uv.sub(params.clear.xy)).sub(params.clear.zw).mul(d.vec2f(aspect, 1));
   const dist = std.length(std.max(edge, d.vec2f(0))) + std.min(std.max(edge.x, edge.y), 0);
-  return std.mix(0.08, 1, std.smoothstep(0, 0.1, dist));
+  return std.mix(1, std.mix(0.08, 1, std.smoothstep(0, 0.1, dist)), params.quiet);
 }
 
 const fragment = tgpu.fragmentFn({ in: { frag: d.builtin.position }, out: d.vec4f })(({ frag }) => {
