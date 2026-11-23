@@ -37,10 +37,15 @@ const fragment = tgpu.fragmentFn({ in: { frag: d.builtin.position }, out: d.vec4
   "use gpu";
   const params = layout.$.grain;
   const cellIndex = std.floor(frag.xy.div(params.cell));
-  const uv = cellIndex.add(0.5).mul(params.cell).div(params.res);
   const texel = std.clamp(d.vec2i(cellIndex), d.vec2i(0), d.vec2i(params.grid).sub(1));
   const coverage = std.textureLoad(layout.$.density, texel, 0).x;
+  const emptyCell = coverage <= 0;
+  const black = d.vec4f(0, 0, 0, 1);
+  if (emptyCell) {
+    return black;
+  }
 
+  const uv = cellIndex.add(0.5).mul(params.cell).div(params.res);
   let tone = 1 - std.exp(-coverage * params.gain);
   tone *= grainClear(uv);
   tone *= std.smoothstep(0, params.fadeBottom, 1 - uv.y);

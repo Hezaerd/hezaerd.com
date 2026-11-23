@@ -37,6 +37,7 @@ const ARRIVAL = 3.2;
 
 const reducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const easeOut = (x: number) => 1 - Math.pow(1 - Math.min(Math.max(x, 0), 1), 3);
+const shareClosed = (sharePerSixtieth: number, seconds: number) => 1 - Math.pow(1 - sharePerSixtieth, seconds * 60);
 
 /**
  * Each bird's point on the sheet: spread fairly evenly inside a ragged,
@@ -90,7 +91,7 @@ export async function mountFlock(canvas: HTMLCanvasElement, options: FlockOption
   let grid = gridFor(...res);
   const aspect = () => res[0] / res[1];
 
-  const density = target(gpu, { size: grid, format: "rgba16float", label: "flock-density" });
+  const density = target(gpu, { size: grid, format: "r16float", label: "flock-density" });
   density.clearColor = [0, 0, 0, 0];
 
   const placeCentre = (): [number, number] => {
@@ -259,38 +260,35 @@ export async function mountFlock(canvas: HTMLCanvasElement, options: FlockOption
   const time = clock(gpu);
   let last = time.time;
   let alive = 0;
-  frameLoop(
-    gpu,
-    (f) => {
-      const now = time.time;
-      const delta = Math.min(now - last, 0.1);
-      last = now;
-      if (!visible || document.hidden) return;
-      alive += delta;
-      simParams.time += delta;
-      simParams.dt = Math.min(delta, STEP * 1.5);
-      viewParams.time = simParams.time;
-      simParams.aim[0] += (aim[0] - simParams.aim[0]) * 0.025;
-      simParams.aim[1] += (aim[1] - simParams.aim[1]) * 0.025;
-      // A moving pointer scares the birds; a resting one they get used to.
-      pointerSpeed *= Math.exp(-delta * 2.5);
-      const alarm = pointerHere ? 0.4 + 0.6 * Math.min(1, pointerSpeed / 0.6) : 0;
-      simParams.cursorOn += (alarm - simParams.cursorOn) * 0.12;
+  frameLoop(gpu, (f) => {
+    const now = time.time;
+    const delta = Math.min(now - last, 0.1);
+    last = now;
+    if (!visible || document.hidden) return;
+    alive += delta;
+    simParams.time += delta;
+    simParams.dt = Math.min(delta, STEP * 1.5);
+    viewParams.time = simParams.time;
+    const lean = shareClosed(0.025, delta);
+    simParams.aim[0] += (aim[0] - simParams.aim[0]) * lean;
+    simParams.aim[1] += (aim[1] - simParams.aim[1]) * lean;
+    // A moving pointer scares the birds; a resting one they get used to.
+    pointerSpeed *= Math.exp(-delta * 2.5);
+    const alarm = pointerHere ? 0.4 + 0.6 * Math.min(1, pointerSpeed / 0.6) : 0;
+    simParams.cursorOn += (alarm - simParams.cursorOn) * shareClosed(0.12, delta);
 
-      // Fly in from off stage, then wander a little around home.
-      const home = placeCentre();
-      const wander: [number, number] = [
-        0.1 * Math.min(1, aspect()) * Math.sin(simParams.time * 0.13),
-        0.06 * Math.sin(simParams.time * 0.17 + 1),
-      ];
-      const from = offstage();
-      const k = easeOut(alive / ARRIVAL);
-      simParams.centre = [from[0] + (home[0] + wander[0] - from[0]) * k, from[1] + (home[1] + wander[1] - from[1]) * k];
-      step(f);
-      render(f);
-    },
-    { fps: 60 },
-  );
+    // Fly in from off stage, then wander a little around home.
+    const home = placeCentre();
+    const wander: [number, number] = [
+      0.1 * Math.min(1, aspect()) * Math.sin(simParams.time * 0.13),
+      0.06 * Math.sin(simParams.time * 0.17 + 1),
+    ];
+    const from = offstage();
+    const k = easeOut(alive / ARRIVAL);
+    simParams.centre = [from[0] + (home[0] + wander[0] - from[0]) * k, from[1] + (home[1] + wander[1] - from[1]) * k];
+    step(f);
+    render(f);
+  });
   canvas.dataset.state = "running";
   return true;
 }
