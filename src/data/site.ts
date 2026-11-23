@@ -5,7 +5,8 @@ export const site = {
   description:
     "Hezaerd is a game developer from Martinique. Projects, experience and contact.",
   role: "Game Dev",
-  location: "Martinique, FR",
+  tagline: "Jack of all trades, master of none, but oftentimes better than a master of one.",
+  locationLine: "From Martinique",
   email: "hezaerd@hezaerd.com",
   about: "Full-time Roblox developer and founder of Trio Forge.",
   stack: [
