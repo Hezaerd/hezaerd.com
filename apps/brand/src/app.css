@@ -49,4 +49,10 @@
   a {
     @apply transition-colors;
   }
+
+  a[target="_blank"]:not(:empty):not(:has(*))::after {
+    content: "↗";
+    display: inline-block;
+    margin-inline-start: 0.125rem;
+  }
 }
