@@ -60,6 +60,10 @@
 }
 
 @layer components {
+  .section-label {
+    @apply border-t border-line pt-5 text-xs tracking-[0.17em] text-muted uppercase;
+  }
+
   .link {
     background-image: linear-gradient(currentColor, currentColor);
     background-size: 0% 1px;

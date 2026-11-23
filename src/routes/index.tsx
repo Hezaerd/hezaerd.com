@@ -3,6 +3,9 @@ import { useEffect, useRef, useState } from "react";
 
 import { site } from "@/data/site";
 import { mountFlock } from "@/scripts/flock";
+import { About } from "@/sections/about";
+import { Contact } from "@/sections/contact";
+import { Record } from "@/sections/record";
 import { seo } from "@/seo";
 
 export const Route = createFileRoute("/")({
@@ -25,7 +28,7 @@ function Home() {
     }).then((ok) => ok && requestAnimationFrame(() => setLit(true)));
   }, []);
 
-  return (
+  const hero = (
     <section id="top" className="relative isolate min-h-[max(640px,100svh)] overflow-hidden">
       <canvas
         ref={canvas}
@@ -44,5 +47,14 @@ function Home() {
         </div>
       </div>
     </section>
+  );
+
+  return (
+    <>
+      {hero}
+      <About />
+      <Record />
+      <Contact />
+    </>
   );
 }
