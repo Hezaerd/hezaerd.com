@@ -1,8 +1,10 @@
-import fontCss from "@fontsource-variable/mona-sans/standard.css?url";
 import { createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
 import type { ReactNode } from "react";
+import { preload } from "react-dom";
 
 import { NotFoundWithTitle } from "@/not-found";
+import coreFont from "@/assets/fonts/hezaerd-sans-core.woff2?url";
+import fontCss from "@/styles/fonts.css?url";
 import appCss from "@/styles/global.css?url";
 
 export const Route = createRootRoute({
@@ -25,6 +27,7 @@ export const Route = createRootRoute({
 });
 
 function Shell({ children }: { children: ReactNode }) {
+  preload(coreFont, { as: "font", type: "font/woff2", crossOrigin: "anonymous" });
   return (
     <html lang="en" className="dark">
       <head>
