@@ -111,11 +111,14 @@ const simulate = tgpu.computeFn({ in: { id: d.builtin.globalInvocationId }, work
     shape = std.mix(shape, next, params.blend);
   }
   const goal = params.centre.add(params.aim).add(shape.xy.mul(params.scale));
-  // Formations hold their outline: the wind drops to a breath while one is up.
-  const calm = std.mix(1, 0.15, std.mix(params.kindA, params.kindB, params.blend));
+  // Formations hold their outline: the wind drops to a breath while one is up,
+  // and birds pull into place about 1.4x faster than they drift in the sheet.
+  const form = std.mix(params.kindA, params.kindB, params.blend);
+  const calm = std.mix(1, 0.15, form);
+  const pull = std.mix(1, 1.41, form);
   const wind = flockCurl(pos.mul(2.4).add(d.vec2f(0, t * 0.04)), t * 0.1).mul(calm);
   const agility = 0.75 + 0.5 * seed.w;
-  let accel = goal.sub(pos).mul(3.2).mul(agility).add(wind.mul(0.04)).sub(vel.mul(1.7));
+  let accel = goal.sub(pos).mul(3.2 * pull * pull).mul(agility).add(wind.mul(0.04)).sub(vel.mul(1.7 * pull));
 
   // Scatter from the pointer: the closer it is, the harder they break away,
   // with a sideways swerve so they part around it instead of only fleeing.
@@ -133,7 +136,7 @@ const simulate = tgpu.computeFn({ in: { id: d.builtin.globalInvocationId }, work
   vel = vel.add(accel.mul(params.dt));
 
   const speed = std.length(vel);
-  const cap = d.f32(1);
+  const cap = pull;
   if (speed > cap) {
     vel = vel.mul(cap / speed);
   }
