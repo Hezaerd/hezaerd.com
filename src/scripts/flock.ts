@@ -1,8 +1,8 @@
 import { clock, compute, draw, effect, frame, frameLoop, init, storage, surface, target } from "vgpu";
 
-import drawShader from "@/shaders/flock-draw.wgsl";
-import grainShader from "@/shaders/flock-grain.wgsl";
-import simShader from "@/shaders/flock-sim.wgsl";
+import drawShader from "@/shaders/flock-draw.ts?wgsl";
+import grainShader from "@/shaders/flock-grain.ts?wgsl";
+import simShader from "@/shaders/flock-sim.ts?wgsl";
 
 export type BirdShape = "speck" | "bird" | "streak";
 
@@ -140,7 +140,6 @@ export async function mountFlock(canvas: HTMLCanvasElement, options: FlockOption
     cell: cellPx(),
     gain: look.gain,
     fadeBottom: 0.2,
-    pad: 0,
   };
 
   const sim = compute(gpu, simShader, { label: "flock-sim", set: { sim: simParams, birds, seeds, extra } });
