@@ -13,6 +13,14 @@ export interface FlockScene {
   centre: { wide: [number, number]; narrow: [number, number] };
   scale: number;
   turn?: (time: number) => [yaw: number, pitch: number];
+  grab?: boolean;
+}
+
+interface Spin {
+  yaw: number;
+  pitch: number;
+  yawSpeed: number;
+  pitchSpeed: number;
 }
 
 interface FlockOptions {
@@ -48,6 +56,7 @@ const ARRIVAL = 3.2;
 const easeOut = (x: number) => 1 - Math.pow(1 - Math.min(Math.max(x, 0), 1), 3);
 const mix = (a: number, b: number, blend: number) => a + (b - a) * blend;
 const shareClosed = (sharePerSixtieth: number, seconds: number) => 1 - Math.pow(1 - sharePerSixtieth, seconds * 60);
+const clampPitch = (pitch: number) => Math.max(-1.2, Math.min(1.2, pitch));
 
 export function smoothstep(low: number, high: number, value: number): number {
   const x = Math.max(0, Math.min(1, (value - low) / (high - low)));
@@ -206,6 +215,12 @@ export async function mountFlock(canvas: HTMLCanvasElement, options: FlockOption
 
   let segment = -1;
   const lastScene = scenes.length - 1;
+  const spins = scenes.map<Spin | null>(({ grab }) => (grab ? { yaw: 0, pitch: 0, yawSpeed: 0, pitchSpeed: 0 } : null));
+  const sceneTurn = (i: number, time: number): [number, number] => {
+    const turn = scenes[i].turn?.(time) ?? noTurn;
+    const spin = spins[i];
+    return spin ? [turn[0] + spin.yaw, turn[1] + spin.pitch] : turn;
+  };
   const updateScene = (p: number, time: number, wander = 0) => {
     const i = Math.floor(p);
     const j = Math.min(i + 1, lastScene);
@@ -222,8 +237,8 @@ export async function mountFlock(canvas: HTMLCanvasElement, options: FlockOption
     }
     const blend = smoothstep(0.2, 0.8, p - i);
     simParams.blend = blend;
-    simParams.turnA = a.turn?.(time) ?? noTurn;
-    simParams.turnB = b.turn?.(time) ?? noTurn;
+    simParams.turnA = sceneTurn(i, time);
+    simParams.turnB = sceneTurn(j, time);
     simParams.scale = flockScale() * mix(a.scale, b.scale, blend);
 
     const [ax, ay] = placeCentre(a);
@@ -321,6 +336,57 @@ export async function mountFlock(canvas: HTMLCanvasElement, options: FlockOption
     return true;
   }
 
+  let drag: { id: number; spin: Spin; x: number; y: number; time: number } | null = null;
+  let hover: PointerEvent | null = null;
+  const hitsDisc = ({ clientX, clientY }: PointerEvent) => {
+    const r = canvas.getBoundingClientRect();
+    const [x, y] = simParams.centre;
+    const dx = clientX - r.left - (x + simParams.aim[0]) * (r.width / aspect());
+    const dy = clientY - r.top - (y + simParams.aim[1]) * r.height;
+    return Math.hypot(dx, dy) < simParams.scale * r.height;
+  };
+  const endDrag = (event?: PointerEvent) => {
+    if (!drag || (event && event.pointerId !== drag.id)) return;
+    const { id, spin, time } = drag;
+    drag = null;
+    if (event?.type !== "pointerup" || event.timeStamp - time > 80) {
+      spin.yawSpeed = 0;
+      spin.pitchSpeed = 0;
+    }
+    if (canvas.hasPointerCapture(id)) canvas.releasePointerCapture(id);
+  };
+  canvas.addEventListener("pointerdown", (event) => {
+    const spin = spins[Math.round(readProgress())];
+    if (!spin || drag || !event.isPrimary || event.button !== 0 || !hitsDisc(event)) return;
+    canvas.setPointerCapture(event.pointerId);
+    event.preventDefault();
+    spin.yawSpeed = 0;
+    spin.pitchSpeed = 0;
+    drag = { id: event.pointerId, spin, x: event.clientX, y: event.clientY, time: event.timeStamp };
+    canvas.style.cursor = "grabbing";
+  }, { signal });
+  canvas.addEventListener("pointermove", (event) => {
+    if (event.pointerType !== "touch") hover = event;
+    if (!drag || drag.id !== event.pointerId) return;
+    const { spin, x, y, time } = drag;
+    const radius = simParams.scale * canvas.getBoundingClientRect().height;
+    if (!radius) return;
+    const yaw = (event.clientX - x) / radius;
+    const pitch = clampPitch(spin.pitch + (event.clientY - y) / radius);
+    const dt = Math.max((event.timeStamp - time) / 1000, 0.016);
+    spin.yawSpeed = yaw / dt;
+    spin.pitchSpeed = (pitch - spin.pitch) / dt;
+    spin.yaw += yaw;
+    spin.pitch = pitch;
+    drag.x = event.clientX;
+    drag.y = event.clientY;
+    drag.time = event.timeStamp;
+  }, { signal });
+  canvas.addEventListener("pointerleave", () => (hover = null), { signal });
+  canvas.addEventListener("pointerup", endDrag, { signal });
+  canvas.addEventListener("pointercancel", endDrag, { signal });
+  canvas.addEventListener("lostpointercapture", endDrag, { signal });
+
   // The flock drifts towards the pointer, and birds near it scatter.
   const follow = options.follow ?? 0;
   const aim: [number, number] = [0, 0];
@@ -373,17 +439,31 @@ export async function mountFlock(canvas: HTMLCanvasElement, options: FlockOption
     const lean = shareClosed(0.025, delta);
     simParams.aim[0] += (aim[0] - simParams.aim[0]) * lean;
     simParams.aim[1] += (aim[1] - simParams.aim[1]) * lean;
+    const p = readProgress();
+    const activeSpin = spins[Math.round(p)];
+    if (drag && drag.spin !== activeSpin) endDrag();
+    const damping = Math.exp(-delta * 2.5);
+    for (const spin of spins) {
+      if (!spin || spin === drag?.spin) continue;
+      const travel = (1 - damping) / 2.5;
+      spin.yaw += spin.yawSpeed * travel;
+      spin.pitch = clampPitch(spin.pitch + spin.pitchSpeed * travel);
+      spin.yawSpeed *= damping;
+      spin.pitchSpeed *= damping;
+    }
     // A moving pointer scares the birds; a resting one they get used to.
-    pointerSpeed *= Math.exp(-delta * 2.5);
-    const alarm = pointerHere ? 0.4 + 0.6 * Math.min(1, pointerSpeed / 0.6) : 0;
+    pointerSpeed *= damping;
+    const alarm = pointerHere && !activeSpin ? 0.4 + 0.6 * Math.min(1, pointerSpeed / 0.6) : 0;
     simParams.cursorOn += (alarm - simParams.cursorOn) * shareClosed(0.12, delta);
 
     // Fly in from off stage, then wander a little around home.
-    updateScene(readProgress(), simParams.time, 1);
+    updateScene(p, simParams.time, 1);
     const home = simParams.centre;
     const from = offstage();
     const k = easeOut(alive / ARRIVAL);
     simParams.centre = [mix(from[0], home[0], k), mix(from[1], home[1], k)];
+    const cursor = drag ? "grabbing" : activeSpin && hover && hitsDisc(hover) ? "grab" : "";
+    if (canvas.style.cursor !== cursor) canvas.style.cursor = cursor;
     step(f);
     render(f);
   });

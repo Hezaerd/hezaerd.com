@@ -43,6 +43,7 @@ const scenes: [HomeScene, ...HomeScene[]] = [
     centre: { wide: [0.71, 0.48], narrow: [0.5, 0.25] },
     scale: 0.56,
     turn: (time) => [0.08 * Math.sin(time * 0.15), 0.03 * Math.sin(time * 0.13)],
+    grab: true,
     position: sidePosition,
     width: sideWidth,
     content: (
@@ -198,7 +199,7 @@ function Home() {
         <canvas
           ref={canvas}
           aria-hidden="true"
-          className={`absolute inset-0 -z-10 h-full w-full transition-opacity duration-1000 motion-reduce:transition-none ${lit ? "" : "opacity-0"}`}
+          className={`absolute inset-0 -z-10 h-full w-full [touch-action:pan-y_pinch-zoom] transition-opacity duration-1000 motion-reduce:transition-none ${lit ? "" : "opacity-0"}`}
         />
         <nav
           aria-label="Sections"
