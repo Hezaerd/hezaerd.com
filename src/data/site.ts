@@ -1,10 +1,10 @@
 export const site = {
   url: "https://hezaerd.com",
   name: "Hezaerd",
-  title: "Hezaerd, full-stack engineer",
+  title: "Hezaerd, Game Dev",
   description:
-    "Hezaerd is a full-stack engineer from Martinique who started in game development. Projects, experience and contact.",
-  role: "Full-stack engineer",
+    "Hezaerd is a game developer from Martinique. Projects, experience and contact.",
+  role: "Game Dev",
   location: "Martinique, FR",
   email: "hezaerd@hezaerd.com",
   hero: "I started in game dev: rhythm games, multiplayer, mods. These days I mostly build web apps, tools and sites.",
