@@ -91,7 +91,7 @@ export async function mountFlock(canvas: HTMLCanvasElement, options: FlockOption
   let grid = gridFor(...res);
   const aspect = () => res[0] / res[1];
 
-  const density = target(gpu, { size: grid, format: "rgba16float", label: "flock-density" });
+  const density = target(gpu, { size: grid, format: "r16float", label: "flock-density" });
   density.clearColor = [0, 0, 0, 0];
 
   const placeCentre = (): [number, number] => {
