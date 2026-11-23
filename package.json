@@ -22,6 +22,8 @@
     "@vgpu/wgsl": "0.6.0",
     "@webgpu/types": "^0.1.74",
     "cf": "1.0.0-rc.2",
-    "typescript": "6"
+    "typegpu": "0.12.10",
+    "typescript": "6",
+    "unplugin-typegpu": "0.12.8"
   }
 }

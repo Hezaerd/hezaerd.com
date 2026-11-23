@@ -1,11 +1,12 @@
 // @ts-check
 import sitemap from "@astrojs/sitemap";
 import tailwindcss from "@tailwindcss/vite";
-import { wgslVitePlugin } from "@vgpu/wgsl/loader-vite";
 import { defineConfig } from "astro/config";
+
+import { typegpuWgsl } from "./typegpu-wgsl.mjs";
 
 export default defineConfig({
   site: "https://hezaerd.com",
   integrations: [sitemap()],
-  vite: { plugins: [tailwindcss(), wgslVitePlugin({ minify: true })] },
+  vite: { plugins: [tailwindcss(), typegpuWgsl({ minify: true })] },
 });
