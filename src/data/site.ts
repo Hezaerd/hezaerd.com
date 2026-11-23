@@ -7,12 +7,12 @@ export const site = {
   role: "Game Dev",
   location: "Martinique, FR",
   email: "hezaerd@hezaerd.com",
-  hero: "I started in game dev: rhythm games, multiplayer, mods. These days I mostly build web apps, tools and sites.",
-  bio: [
-    "I learned to ship on Unity and C++, chasing 60fps and controls that feel right. That same care shows up in my web work now.",
-    "I spend most of my time on full-stack apps and the systems behind them. The games and mods are still here; that's where I came from.",
+  about: "Full-time Roblox developer and founder of Trio Forge.",
+  stack: [
+    { label: "Languages", items: ["C", "C++", "Rust", "TypeScript", "Java", "Lua(u)", "Python"] },
+    { label: "Engines", items: ["Unity", "Unreal Engine", "Roblox Studio"] },
+    { label: "Tools", items: ["Git", "Perforce", "Jira", "Trello", "Linear"] },
   ],
-  skills: ["TypeScript", "React", "C#", "C++", "Unity", "Unreal Engine", "Wwise", "FMOD"],
   links: [
     { label: "GitHub", href: "https://github.com/hezaerd" },
     { label: "Discord", href: "https://discord.com/users/225942632050720768" },

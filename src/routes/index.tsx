@@ -60,17 +60,15 @@ const scenes: [HomeScene, ...HomeScene[]] = [
       <>
         <h2 className={sectionHeading}>About</h2>
         <p className="mt-2 text-base text-foreground sm:text-lg">From Martinique</p>
-        <div className="mt-4 space-y-2 text-sm leading-snug text-muted sm:text-base">
-          <p>{site.hero}</p>
-          {site.bio.map((paragraph) => (
-            <p key={paragraph}>{paragraph}</p>
+        <p className="mt-4 text-base leading-snug text-muted sm:text-lg">{site.about}</p>
+        <dl className="mt-6 grid grid-cols-[auto_1fr] gap-x-6 gap-y-2 text-sm">
+          {site.stack.map(({ label, items }) => (
+            <div key={label} className="contents">
+              <dt className="text-faint">{label}</dt>
+              <dd className="text-foreground">{items.join(" · ")}</dd>
+            </div>
           ))}
-        </div>
-        <ul aria-label="Skills" className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-sm text-foreground">
-          {site.skills.map((skill) => (
-            <li key={skill}>{skill}</li>
-          ))}
-        </ul>
+        </dl>
       </>
     ),
   },
