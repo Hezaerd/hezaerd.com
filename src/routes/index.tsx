@@ -40,7 +40,7 @@ const scenes = [
     id: "about",
     form: globe([12, -72], [14.64, -61.02]),
     centre: { wide: [0.71, 0.48], narrow: [0.5, 0.25] },
-    scale: 0.7,
+    scale: 0.56,
     turn: (time) => [0.08 * Math.sin(time * 0.15), 0.03 * Math.sin(time * 0.13)],
     position: sidePosition,
     width: sideWidth,
