@@ -342,7 +342,7 @@ def main() -> None:
         f"""@font-face {{
   font-family: "{FAMILY}";
   font-style: normal;
-  font-display: swap;
+  font-display: block;
   font-weight: {limits["wght"][0]:g} {limits["wght"][1]:g};
   font-stretch: {limits["wdth"][0]:g}% {limits["wdth"][1]:g}%;
   src: url(../assets/fonts/{FILE_STEM}-{name}.woff2) format("woff2-variations");

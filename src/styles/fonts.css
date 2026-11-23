@@ -2,7 +2,7 @@
 @font-face {
   font-family: "Hezaerd Sans";
   font-style: normal;
-  font-display: swap;
+  font-display: block;
   font-weight: 200 900;
   font-stretch: 100% 125%;
   src: url(../assets/fonts/hezaerd-sans-vietnamese.woff2) format("woff2-variations");
@@ -12,7 +12,7 @@
 @font-face {
   font-family: "Hezaerd Sans";
   font-style: normal;
-  font-display: swap;
+  font-display: block;
   font-weight: 200 900;
   font-stretch: 100% 125%;
   src: url(../assets/fonts/hezaerd-sans-latin-ext.woff2) format("woff2-variations");
@@ -22,7 +22,7 @@
 @font-face {
   font-family: "Hezaerd Sans";
   font-style: normal;
-  font-display: swap;
+  font-display: block;
   font-weight: 200 900;
   font-stretch: 100% 125%;
   src: url(../assets/fonts/hezaerd-sans-core.woff2) format("woff2-variations");
