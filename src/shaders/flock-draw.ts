@@ -50,7 +50,7 @@ const vertex = tgpu.vertexFn({
   const side = d.vec2f(-heading.y, heading.x);
 
   const depth = std.pow(std.max(more.x, 0.1), params.depthSize);
-  const size = (params.radius * depth) / params.grid.y;
+  const size = ((params.radius * depth) / params.grid.y) * more.z;
   // Streaks lengthen with speed; the other shapes stay square.
   const stretch = std.select(1, 1 + std.min(speed * 6, 3), params.shape > 1.5);
   const p = bird.xy.add(heading.mul(corner.x).mul(stretch).add(side.mul(corner.y)).mul(size));

@@ -38,7 +38,7 @@ const layout = tgpu.bindGroupLayout({
   birds: { storage: birdArray, access: "mutable" },
   // xy point on the sheet, z drift, w agility.
   seeds: { storage: birdArray },
-  // x depth (perspective scale), y flap phase.
+  // x perspective scale, y flap phase, z visibility.
   extra: { storage: birdArray, access: "mutable" },
   formA: { storage: birdArray },
   formB: { storage: birdArray },
@@ -69,27 +69,32 @@ function flockSheet(uv: d.v2f, drift: number, t: number): d.v3f {
   // Bank: a slow yaw that sometimes turns the sheet nearly edge-on.
   const yaw = t * 0.1 + 1.25 * std.sin(t * 0.071);
   const pitch = 0.45 * std.sin(t * 0.093 + 0.8);
-  return projectPoint(p, d.vec2f(yaw, pitch));
+  return projectPoint(rotatePoint(p, d.vec2f(yaw, pitch)));
 }
 
-function projectPoint(point: d.v3f, turn: d.v2f): d.v3f {
+function rotatePoint(point: d.v3f, turn: d.v2f): d.v3f {
   "use gpu";
   const cy = std.cos(turn.x);
   const sy = std.sin(turn.x);
   const cp = std.cos(turn.y);
   const sp = std.sin(turn.y);
-  let p = d.vec3f(point.x * cy - point.z * sy, point.y, point.x * sy + point.z * cy);
-  p = d.vec3f(p.x, p.y * cp - p.z * sp, p.y * sp + p.z * cp);
+  const p = d.vec3f(point.x * cy - point.z * sy, point.y, point.x * sy + point.z * cy);
+  return d.vec3f(p.x, p.y * cp - p.z * sp, p.y * sp + p.z * cp);
+}
 
+function projectPoint(p: d.v3f): d.v3f {
+  "use gpu";
   const focal = 2.4;
   const s = focal / (focal + p.z);
   return d.vec3f(p.xy.mul(s), s);
 }
 
-function flockShape(seed: d.v4f, point: d.v3f, kind: number, turn: d.v2f, t: number): d.v3f {
+function flockShape(seed: d.v4f, point: d.v4f, kind: number, turn: d.v2f, t: number): d.v4f {
   "use gpu";
-  if (kind === 0) return flockSheet(seed.xy, seed.z, t);
-  return projectPoint(point, turn);
+  if (kind === 0) return d.vec4f(flockSheet(seed.xy, seed.z, t), 1);
+  if (point.w === 1) return d.vec4f(projectPoint(point.xyz), 1);
+  const rotated = rotatePoint(point.xyz, turn);
+  return d.vec4f(projectPoint(rotated), 1 - std.smoothstep(0.02, 0.15, rotated.z));
 }
 
 const simulate = tgpu.computeFn({ in: { id: d.builtin.globalInvocationId }, workgroupSize: [64] })(({ id }) => {
@@ -105,9 +110,9 @@ const simulate = tgpu.computeFn({ in: { id: d.builtin.globalInvocationId }, work
   let vel = bird.zw;
   const t = params.time;
 
-  let shape = flockShape(seed, layout.$.formA[i].xyz, params.kindA, params.turnA, t);
+  let shape = flockShape(seed, layout.$.formA[i], params.kindA, params.turnA, t);
   if (params.blend > 0) {
-    const next = flockShape(seed, layout.$.formB[i].xyz, params.kindB, params.turnB, t);
+    const next = flockShape(seed, layout.$.formB[i], params.kindB, params.turnB, t);
     shape = std.mix(shape, next, params.blend);
   }
   const goal = params.centre.add(params.aim).add(shape.xy.mul(params.scale));
@@ -142,7 +147,7 @@ const simulate = tgpu.computeFn({ in: { id: d.builtin.globalInvocationId }, work
   }
   pos = pos.add(vel.mul(params.dt));
   layout.$.birds[i] = d.vec4f(pos, vel);
-  layout.$.extra[i] = d.vec4f(shape.z, seed.z * 6.2831 + seed.w * 3, 0, 0);
+  layout.$.extra[i] = d.vec4f(shape.z, seed.z * 6.2831 + seed.w * 3, shape.w, 0);
 });
 
 export default tgpu.resolve([simulate]);

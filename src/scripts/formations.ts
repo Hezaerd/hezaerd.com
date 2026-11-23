@@ -29,14 +29,12 @@ export function globe(front: [number, number], mark: [number, number]): Formatio
     for (let i = 0; i < count - marker - rim; ) {
       const lat = Math.asin(Math.random() * 2 - 1) / radians;
       const lon = Math.random() * 360 - 180;
-      const point = place(lat, lon);
-      if (point[2] > 0.15) continue;
       if (!isLand(lat, lon) || (!coast(lat, lon) && Math.random() > 0.4)) continue;
-      points.set(point, i++ * 4);
+      points.set(place(lat, lon), i++ * 4);
     }
     for (let i = count - marker - rim; i < count - marker; i++) {
       const angle = Math.random() * circle;
-      points.set([Math.cos(angle), Math.sin(angle), 0], i * 4);
+      points.set([Math.cos(angle), Math.sin(angle), 0, 1], i * 4);
     }
     for (let i = count - marker; i < count; i++) {
       const angle = Math.random() * circle;
