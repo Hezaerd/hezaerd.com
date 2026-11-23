@@ -9,7 +9,7 @@ from pathlib import Path
 
 SOURCE = "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/v5.1.2/geojson/ne_110m_land.geojson"
 OUTPUT = Path(__file__).resolve().parent.parent / "src" / "data" / "land.ts"
-STEP = 2
+STEP = 1
 WIDTH, HEIGHT = 360 // STEP, 180 // STEP
 
 

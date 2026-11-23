@@ -17,16 +17,21 @@ export function globe(front: [number, number], mark: [number, number]): Formatio
     return [equator * Math.sin(longitude), meridian * sinFront - north * cosFront, -meridian * cosFront - north * sinFront];
   };
 
+  const coast = (lat: number, lon: number) => {
+    const reach = 1.5 / Math.max(0.2, Math.cos(lat * radians));
+    return !isLand(lat + 1.5, lon) || !isLand(lat - 1.5, lon) || !isLand(lat, lon + reach) || !isLand(lat, lon - reach);
+  };
+
   return (count) => {
     const points = new Float32Array(count * 4);
     const marker = Math.round(count * 0.035);
-    const rim = Math.round(count * 0.08);
+    const rim = Math.round(count * 0.05);
     for (let i = 0; i < count - marker - rim; ) {
       const lat = Math.asin(Math.random() * 2 - 1) / radians;
       const lon = Math.random() * 360 - 180;
       const point = place(lat, lon);
       if (point[2] > 0.15) continue;
-      if (!isLand(lat, lon) && Math.random() > 0.05) continue;
+      if (!isLand(lat, lon) || (!coast(lat, lon) && Math.random() > 0.4)) continue;
       points.set(point, i++ * 4);
     }
     for (let i = count - marker - rim; i < count - marker; i++) {

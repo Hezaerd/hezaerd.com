@@ -38,10 +38,10 @@ const scenes = [
   },
   {
     id: "about",
-    form: globe([8, -45], [14.64, -61.02]),
-    centre: { wide: [0.75, 0.47], narrow: [0.5, 0.25] },
-    scale: 0.61,
-    turn: (time) => [0.22 * Math.sin(time * 0.15), 0.06 * Math.sin(time * 0.13)],
+    form: globe([12, -72], [14.64, -61.02]),
+    centre: { wide: [0.71, 0.48], narrow: [0.5, 0.25] },
+    scale: 0.7,
+    turn: (time) => [0.08 * Math.sin(time * 0.15), 0.03 * Math.sin(time * 0.13)],
     position: sidePosition,
     width: sideWidth,
     content: (
