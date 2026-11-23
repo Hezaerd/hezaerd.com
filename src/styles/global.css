@@ -37,6 +37,10 @@
     text-rendering: optimizeLegibility;
   }
 
+  html:has([data-flock-track]) {
+    scroll-snap-type: y proximity;
+  }
+
   body {
     background: var(--background);
     min-height: 100svh;
