@@ -111,7 +111,9 @@ const simulate = tgpu.computeFn({ in: { id: d.builtin.globalInvocationId }, work
     shape = std.mix(shape, next, params.blend);
   }
   const goal = params.centre.add(params.aim).add(shape.xy.mul(params.scale));
-  const wind = flockCurl(pos.mul(2.4).add(d.vec2f(0, t * 0.04)), t * 0.1);
+  // Formations hold their outline: the wind drops to a breath while one is up.
+  const calm = std.mix(1, 0.15, std.mix(params.kindA, params.kindB, params.blend));
+  const wind = flockCurl(pos.mul(2.4).add(d.vec2f(0, t * 0.04)), t * 0.1).mul(calm);
   const agility = 0.75 + 0.5 * seed.w;
   let accel = goal.sub(pos).mul(3.2).mul(agility).add(wind.mul(0.04)).sub(vel.mul(1.7));
 

@@ -5,33 +5,40 @@ export type Formation = "sheet" | ((count: number) => Float32Array | Promise<Flo
 const radians = Math.PI / 180;
 const circle = 2 * Math.PI;
 
-export function globe(frontLat: number, frontLon: number): Formation {
-  const cosFront = Math.cos(frontLat * radians);
-  const sinFront = Math.sin(frontLat * radians);
+/** A globe facing `front`, drawn by its land, with a ring of birds marking `mark`. Both are [lat, lon] in degrees. */
+export function globe(front: [number, number], mark: [number, number]): Formation {
+  const cosFront = Math.cos(front[0] * radians);
+  const sinFront = Math.sin(front[0] * radians);
+  const place = (lat: number, lon: number): [number, number, number] => {
+    const north = Math.sin(lat * radians);
+    const equator = Math.cos(lat * radians);
+    const longitude = (lon - front[1]) * radians;
+    const meridian = equator * Math.cos(longitude);
+    return [equator * Math.sin(longitude), meridian * sinFront - north * cosFront, -meridian * cosFront - north * sinFront];
+  };
 
   return (count) => {
     const points = new Float32Array(count * 4);
     const marker = Math.round(count * 0.035);
-    for (let i = 0; i < count - marker; ) {
-      const north = Math.random() * 2 - 1;
-      const lat = Math.asin(north) / radians;
+    const rim = Math.round(count * 0.08);
+    for (let i = 0; i < count - marker - rim; ) {
+      const lat = Math.asin(Math.random() * 2 - 1) / radians;
       const lon = Math.random() * 360 - 180;
-      const equator = Math.sqrt(1 - north * north);
-      const longitude = (lon - frontLon) * radians;
-      const meridian = equator * Math.cos(longitude);
-      const depth = -meridian * cosFront - north * sinFront;
-      const ocean = 0.075 + 0.14 * Math.max(0, 1 - Math.abs(depth + 1 / 2.4) * 5);
-      if (!isLand(lat, lon) && Math.random() > ocean) continue;
-
-      points.set(
-        [equator * Math.sin(longitude), meridian * sinFront - north * cosFront, depth],
-        i++ * 4,
-      );
+      const point = place(lat, lon);
+      if (point[2] > 0.15) continue;
+      if (!isLand(lat, lon) && Math.random() > 0.05) continue;
+      points.set(point, i++ * 4);
+    }
+    for (let i = count - marker - rim; i < count - marker; i++) {
+      const angle = Math.random() * circle;
+      points.set([Math.cos(angle), Math.sin(angle), 0], i * 4);
     }
     for (let i = count - marker; i < count; i++) {
       const angle = Math.random() * circle;
-      const radius = 0.052 + (Math.random() - 0.5) * 0.018;
-      points.set([radius * Math.cos(angle), radius * Math.sin(angle), -Math.sqrt(1 - radius * radius)], i * 4);
+      const reach = 3 + (Math.random() - 0.5);
+      const lat = mark[0] + reach * Math.cos(angle);
+      const lon = mark[1] + (reach * Math.sin(angle)) / Math.cos(mark[0] * radians);
+      points.set(place(lat, lon), i * 4);
     }
     return points;
   };
