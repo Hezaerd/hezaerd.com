@@ -1,19 +1,29 @@
 import { clock, compute, draw, effect, frame, frameLoop, init, storage, surface, target } from "vgpu";
 
+import { assignPoints, type Formation } from "@/scripts/formations";
 import drawShader from "@/shaders/flock-draw.ts?wgsl";
 import grainShader from "@/shaders/flock-grain.ts?wgsl";
 import simShader from "@/shaders/flock-sim.ts?wgsl";
 
 export type BirdShape = "speck" | "bird" | "streak";
 
-interface FlockOptions {
+export interface FlockScene {
+  form: Formation;
   /** Flock centre in uv (y down); `narrow` applies under 768px wide. */
   centre: { wide: [number, number]; narrow: [number, number] };
+  scale: number;
+  turn?: (time: number) => [yaw: number, pitch: number];
+}
+
+interface FlockOptions {
+  scenes: readonly [FlockScene, ...FlockScene[]];
+  progress: () => number;
+  signal: AbortSignal;
   shape?: BirdShape;
   /** Grain cell in CSS pixels. */
   cell?: number;
-  /** Element whose box the flock keeps quiet behind. */
-  clear?: HTMLElement | null;
+  /** Text boxes the flock keeps quiet behind, in scene order. */
+  clear: readonly (HTMLElement | null)[];
   /** How far the flock leans towards the pointer, in world units. */
   follow?: number;
   /** Multiplies the bird size, for exploring. */
@@ -35,9 +45,14 @@ const STEP = 1 / 30;
 /** Seconds the flock takes to fly in from off screen. */
 const ARRIVAL = 3.2;
 
-const reducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const easeOut = (x: number) => 1 - Math.pow(1 - Math.min(Math.max(x, 0), 1), 3);
+const mix = (a: number, b: number, blend: number) => a + (b - a) * blend;
 const shareClosed = (sharePerSixtieth: number, seconds: number) => 1 - Math.pow(1 - sharePerSixtieth, seconds * 60);
+
+export function smoothstep(low: number, high: number, value: number): number {
+  const x = Math.max(0, Math.min(1, (value - low) / (high - low)));
+  return x * x * (3 - 2 * x);
+}
 
 /**
  * Each bird's point on the sheet: spread fairly evenly inside a ragged,
@@ -68,17 +83,28 @@ function makeSeeds(count: number): Float32Array<ArrayBuffer> {
  * unavailable, so the caller keeps its still fallback on screen.
  */
 export async function mountFlock(canvas: HTMLCanvasElement, options: FlockOptions): Promise<boolean> {
+  const { scenes, progress, signal } = options;
   let gpu: Awaited<ReturnType<typeof init>>;
   try {
     gpu = await init();
   } catch {
     return false;
   }
+  if (signal.aborted) {
+    gpu.dispose();
+    return false;
+  }
+  signal.addEventListener("abort", () => gpu.dispose(), { once: true });
 
   const look = SHAPES[options.shape ?? "streak"];
-  const narrow = () => canvas.clientWidth < 768;
-  const count = narrow() ? look.narrow : look.wide;
+  const wide = window.matchMedia("(min-width: 48rem)");
+  const count = wide.matches ? look.wide : look.narrow;
   const cellCss = options.cell ?? 1.5;
+  const seedData = makeSeeds(count);
+  const forms = await Promise.all(
+    scenes.map(async ({ form }) => (form === "sheet" ? null : assignPoints(seedData, await form(count)))),
+  );
+  if (signal.aborted) return false;
 
   const screen = surface(gpu, canvas, { dpr: [1, 2], clearColor: [0, 0, 0, 1] });
   const cellPx = () => Math.max(1, Math.round(cellCss * screen.dpr));
@@ -94,13 +120,13 @@ export async function mountFlock(canvas: HTMLCanvasElement, options: FlockOption
   const density = target(gpu, { size: grid, format: "r16float", label: "flock-density" });
   density.clearColor = [0, 0, 0, 0];
 
-  const placeCentre = (): [number, number] => {
-    const [u, v] = narrow() ? options.centre.narrow : options.centre.wide;
+  const placeCentre = ({ centre }: FlockScene): [number, number] => {
+    const [u, v] = wide.matches ? centre.wide : centre.narrow;
     return [u * aspect(), v];
   };
   const flockScale = () => 0.5 * Math.min(1, aspect() / 1.3);
   // Where the flock forms before it flies in: past the right edge, a little high.
-  const offstage = (): [number, number] => [aspect() + flockScale() * 2.2, placeCentre()[1] - 0.25];
+  const offstage = (): [number, number] => [aspect() + flockScale() * 2.2, placeCentre(scenes[0])[1] - 0.25];
 
   const start = offstage();
   const birdData = new Float32Array(count * 4);
@@ -109,10 +135,12 @@ export async function mountFlock(canvas: HTMLCanvasElement, options: FlockOption
   }
   const birds = storage(gpu, birdData.byteLength, "read-write");
   birds.write(birdData);
-  const seedData = makeSeeds(count);
   const seeds = storage(gpu, seedData.byteLength, "read");
   seeds.write(seedData);
   const extra = storage(gpu, count * 16, "read-write");
+  const formA = storage(gpu, seedData.byteLength, "read");
+  const formB = storage(gpu, seedData.byteLength, "read");
+  const noTurn: [number, number] = [0, 0];
 
   const simParams = {
     centre: start,
@@ -124,6 +152,11 @@ export async function mountFlock(canvas: HTMLCanvasElement, options: FlockOption
     cursor: [-10, -10] as [number, number],
     cursorOn: 0,
     avoidRadius: 0.1,
+    kindA: 0,
+    kindB: 0,
+    turnA: noTurn,
+    turnB: noTurn,
+    blend: 0,
   };
   const viewParams = {
     aspect: aspect(),
@@ -143,7 +176,7 @@ export async function mountFlock(canvas: HTMLCanvasElement, options: FlockOption
     fadeBottom: 0.2,
   };
 
-  const sim = compute(gpu, simShader, { label: "flock-sim", set: { sim: simParams, birds, seeds, extra } });
+  const sim = compute(gpu, simShader, { label: "flock-sim", set: { sim: simParams, birds, seeds, extra, formA, formB } });
   const splat = draw(gpu, {
     shader: drawShader,
     label: "flock-draw",
@@ -154,20 +187,63 @@ export async function mountFlock(canvas: HTMLCanvasElement, options: FlockOption
   });
   const grain = effect(gpu, grainShader, { label: "flock-grain", set: { grain: grainParams, density } });
 
+  const emptyClear: [number, number, number, number] = [0, 0, 0, 0];
+  let clearRects: (typeof emptyClear)[] = [];
   const measureClear = () => {
-    const el = options.clear;
-    if (!el) return;
     const c = canvas.getBoundingClientRect();
-    const r = el.getBoundingClientRect();
     if (c.width === 0 || c.height === 0) return;
-    grainParams.clear = [
-      (r.left - c.left + r.width / 2) / c.width,
-      (r.top - c.top + r.height / 2) / c.height,
-      (r.width / 2 + 24) / c.width,
-      (r.height / 2 + 24) / c.height,
-    ];
-    grain.set({ grain: grainParams });
+    clearRects = options.clear.map((el) => {
+      if (!el) return emptyClear;
+      const r = el.getBoundingClientRect();
+      return [
+        (r.left - c.left + r.width / 2) / c.width,
+        (r.top - c.top + r.height / 2) / c.height,
+        (r.width / 2 + 24) / c.width,
+        (r.height / 2 + 24) / c.height,
+      ];
+    });
   };
+
+  let segment = -1;
+  const lastScene = scenes.length - 1;
+  const updateScene = (p: number, time: number, wander = 0) => {
+    const i = Math.floor(p);
+    const j = Math.min(i + 1, lastScene);
+    const a = scenes[i];
+    const b = scenes[j];
+    if (segment !== i) {
+      const pointsA = forms[i];
+      const pointsB = forms[j];
+      if (pointsA) formA.write(pointsA);
+      if (pointsB) formB.write(pointsB);
+      simParams.kindA = pointsA ? 1 : 0;
+      simParams.kindB = pointsB ? 1 : 0;
+      segment = i;
+    }
+    const blend = smoothstep(0.2, 0.8, p - i);
+    simParams.blend = blend;
+    simParams.turnA = a.turn?.(time) ?? noTurn;
+    simParams.turnB = b.turn?.(time) ?? noTurn;
+    simParams.scale = flockScale() * mix(a.scale, b.scale, blend);
+
+    const [ax, ay] = placeCentre(a);
+    const [bx, by] = placeCentre(b);
+    const drift = wander * (1 - mix(simParams.kindA, simParams.kindB, blend));
+    simParams.centre = [
+      mix(ax, bx, blend) + drift * (0.1 * Math.min(1, aspect()) * Math.sin(time * 0.13)),
+      mix(ay, by, blend) + drift * (0.06 * Math.sin(time * 0.17 + 1)),
+    ];
+
+    const clearA = clearRects[i] ?? emptyClear;
+    const clearB = clearRects[j] ?? emptyClear;
+    grainParams.clear = [
+      mix(clearA[0], clearB[0], blend),
+      mix(clearA[1], clearB[1], blend),
+      mix(clearA[2], clearB[2], blend),
+      mix(clearA[3], clearB[3], blend),
+    ];
+  };
+  const readProgress = () => Math.max(0, Math.min(lastScene, progress()));
 
   const step = (f: ReturnType<typeof frame>) => {
     sim.set({ sim: simParams });
@@ -175,8 +251,22 @@ export async function mountFlock(canvas: HTMLCanvasElement, options: FlockOption
   };
   const render = (f: ReturnType<typeof frame>) => {
     splat.set({ view: viewParams });
+    grain.set({ grain: grainParams });
     f.pass({ target: density, clear: [0, 0, 0, 0] }, splat);
     f.pass(screen, grain);
+  };
+
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let staticScene = -1;
+  const settleScene = (scene: number) => {
+    staticScene = scene;
+    updateScene(scene, 0);
+    simParams.dt = STEP;
+    for (let i = 0; i < 240; i++) {
+      frame(gpu, step);
+      simParams.time += STEP;
+    }
+    frame(gpu, render);
   };
 
   let resizePending = false;
@@ -187,35 +277,46 @@ export async function mountFlock(canvas: HTMLCanvasElement, options: FlockOption
     resizePending = true;
     // Resize events can arrive while a frame is open: apply them next tick.
     setTimeout(() => {
+      if (signal.aborted) return;
       resizePending = false;
       density.resize(grid);
-      simParams.scale = flockScale();
       viewParams.aspect = aspect();
       viewParams.grid = grid;
       grainParams.res = res;
       grainParams.grid = grid;
       grainParams.cell = cellPx();
-      grain.set({ grain: grainParams });
       measureClear();
-      if (reducedMotion()) frame(gpu, render);
+      if (reducedMotion) settleScene(Math.round(readProgress()));
     });
   });
-  if (options.clear) new ResizeObserver(measureClear).observe(options.clear);
+  const clearObserver = new ResizeObserver(() => {
+    measureClear();
+    if (reducedMotion && staticScene >= 0) {
+      updateScene(staticScene, 0);
+      frame(gpu, render);
+    }
+  });
+  for (const el of options.clear) if (el) clearObserver.observe(el);
+  signal.addEventListener("abort", () => clearObserver.disconnect(), { once: true });
   measureClear();
 
   // Let the flock take its shape off stage before anyone sees it.
+  updateScene(0, 0);
+  simParams.centre = start;
   for (let i = 0; i < 150; i++) {
     frame(gpu, step);
     simParams.time += STEP;
   }
 
-  if (reducedMotion()) {
-    simParams.centre = placeCentre();
-    for (let i = 0; i < 240; i++) {
-      frame(gpu, step);
-      simParams.time += STEP;
-    }
-    frame(gpu, render);
+  if (reducedMotion) {
+    settleScene(Math.round(readProgress()));
+    const updateStatic = () => {
+      if (signal.aborted) return;
+      const scene = Math.round(readProgress());
+      if (scene !== staticScene) settleScene(scene);
+      requestAnimationFrame(updateStatic);
+    };
+    requestAnimationFrame(updateStatic);
     canvas.dataset.state = "static";
     return true;
   }
@@ -245,17 +346,17 @@ export async function mountFlock(canvas: HTMLCanvasElement, options: FlockOption
         aim[0] = (x - 0.5) * follow * aspect();
         aim[1] = (y - 0.5) * follow;
       },
-      { passive: true },
+      { passive: true, signal },
     );
-    document.documentElement.addEventListener("pointerleave", () => {
-      pointerHere = false;
-    });
+    document.documentElement.addEventListener("pointerleave", () => (pointerHere = false), { signal });
   }
 
   let visible = true;
-  new IntersectionObserver(([entry]) => {
+  const intersection = new IntersectionObserver(([entry]) => {
     visible = entry.isIntersecting;
-  }).observe(canvas);
+  });
+  intersection.observe(canvas);
+  signal.addEventListener("abort", () => intersection.disconnect(), { once: true });
 
   const time = clock(gpu);
   let last = time.time;
@@ -278,14 +379,11 @@ export async function mountFlock(canvas: HTMLCanvasElement, options: FlockOption
     simParams.cursorOn += (alarm - simParams.cursorOn) * shareClosed(0.12, delta);
 
     // Fly in from off stage, then wander a little around home.
-    const home = placeCentre();
-    const wander: [number, number] = [
-      0.1 * Math.min(1, aspect()) * Math.sin(simParams.time * 0.13),
-      0.06 * Math.sin(simParams.time * 0.17 + 1),
-    ];
+    updateScene(readProgress(), simParams.time, 1);
+    const home = simParams.centre;
     const from = offstage();
     const k = easeOut(alive / ARRIVAL);
-    simParams.centre = [from[0] + (home[0] + wander[0] - from[0]) * k, from[1] + (home[1] + wander[1] - from[1]) * k];
+    simParams.centre = [mix(from[0], home[0], k), mix(from[1], home[1], k)];
     step(f);
     render(f);
   });

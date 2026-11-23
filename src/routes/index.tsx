@@ -16,13 +16,17 @@ function Home() {
   const [lit, setLit] = useState(false);
 
   useEffect(() => {
+    const abort = new AbortController();
     mountFlock(canvas.current!, {
       shape: "streak",
-      centre: { wide: [0.68, 0.38], narrow: [0.5, 0.3] },
+      scenes: [{ form: "sheet", centre: { wide: [0.68, 0.38], narrow: [0.5, 0.3] }, scale: 1 }],
+      progress: () => 0,
+      signal: abort.signal,
       cell: 1,
       size: 1.5,
-      clear: heroText.current,
-    }).then((ok) => ok && requestAnimationFrame(() => setLit(true)));
+      clear: [heroText.current],
+    }).then((ok) => ok && requestAnimationFrame(() => !abort.signal.aborted && setLit(true)));
+    return () => abort.abort();
   }, []);
 
   return (

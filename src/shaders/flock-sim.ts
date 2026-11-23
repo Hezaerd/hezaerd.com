@@ -23,6 +23,11 @@ const Sim = d.struct({
   cursorOn: d.f32,
   // Radius birds keep clear of the pointer, in world units.
   avoidRadius: d.f32,
+  kindA: d.f32,
+  kindB: d.f32,
+  turnA: d.vec2f,
+  turnB: d.vec2f,
+  blend: d.f32,
 });
 
 const birdArray = (count: number) => d.arrayOf(d.vec4f, count);
@@ -35,6 +40,8 @@ const layout = tgpu.bindGroupLayout({
   seeds: { storage: birdArray },
   // x depth (perspective scale), y flap phase.
   extra: { storage: birdArray, access: "mutable" },
+  formA: { storage: birdArray },
+  formB: { storage: birdArray },
 });
 
 function flockCurl(p: d.v2f, t: number): d.v2f {
@@ -53,7 +60,7 @@ function flockSheet(uv: d.v2f, drift: number, t: number): d.v3f {
   "use gpu";
   const u = uv.x + 0.04 * std.sin(t * 0.3 + drift * 6.2831);
   const v = uv.y;
-  let p = d.vec3f(
+  const p = d.vec3f(
     u,
     v * 0.42 + 0.22 * std.sin(u * 1.7 + t * 0.27),
     0.32 * std.sin(u * 2.1 + t * 0.33) + 0.18 * std.sin(v * 3 - u * 1.3 + t * 0.47),
@@ -61,18 +68,28 @@ function flockSheet(uv: d.v2f, drift: number, t: number): d.v3f {
 
   // Bank: a slow yaw that sometimes turns the sheet nearly edge-on.
   const yaw = t * 0.1 + 1.25 * std.sin(t * 0.071);
-  const cy = std.cos(yaw);
-  const sy = std.sin(yaw);
-  p = d.vec3f(p.x * cy - p.z * sy, p.y, p.x * sy + p.z * cy);
-
   const pitch = 0.45 * std.sin(t * 0.093 + 0.8);
-  const cp = std.cos(pitch);
-  const sp = std.sin(pitch);
+  return projectPoint(p, d.vec2f(yaw, pitch));
+}
+
+function projectPoint(point: d.v3f, turn: d.v2f): d.v3f {
+  "use gpu";
+  const cy = std.cos(turn.x);
+  const sy = std.sin(turn.x);
+  const cp = std.cos(turn.y);
+  const sp = std.sin(turn.y);
+  let p = d.vec3f(point.x * cy - point.z * sy, point.y, point.x * sy + point.z * cy);
   p = d.vec3f(p.x, p.y * cp - p.z * sp, p.y * sp + p.z * cp);
 
   const focal = 2.4;
   const s = focal / (focal + p.z);
   return d.vec3f(p.xy.mul(s), s);
+}
+
+function flockShape(seed: d.v4f, point: d.v3f, kind: number, turn: d.v2f, t: number): d.v3f {
+  "use gpu";
+  if (kind === 0) return flockSheet(seed.xy, seed.z, t);
+  return projectPoint(point, turn);
 }
 
 const simulate = tgpu.computeFn({ in: { id: d.builtin.globalInvocationId }, workgroupSize: [64] })(({ id }) => {
@@ -88,8 +105,12 @@ const simulate = tgpu.computeFn({ in: { id: d.builtin.globalInvocationId }, work
   let vel = bird.zw;
   const t = params.time;
 
-  const sheet = flockSheet(seed.xy, seed.z, t);
-  const goal = params.centre.add(params.aim).add(sheet.xy.mul(params.scale));
+  let shape = flockShape(seed, layout.$.formA[i].xyz, params.kindA, params.turnA, t);
+  if (params.blend > 0) {
+    const next = flockShape(seed, layout.$.formB[i].xyz, params.kindB, params.turnB, t);
+    shape = std.mix(shape, next, params.blend);
+  }
+  const goal = params.centre.add(params.aim).add(shape.xy.mul(params.scale));
   const wind = flockCurl(pos.mul(2.4).add(d.vec2f(0, t * 0.04)), t * 0.1);
   const agility = 0.75 + 0.5 * seed.w;
   let accel = goal.sub(pos).mul(3.2).mul(agility).add(wind.mul(0.04)).sub(vel.mul(1.7));
@@ -116,7 +137,7 @@ const simulate = tgpu.computeFn({ in: { id: d.builtin.globalInvocationId }, work
   }
   pos = pos.add(vel.mul(params.dt));
   layout.$.birds[i] = d.vec4f(pos, vel);
-  layout.$.extra[i] = d.vec4f(sheet.z, seed.z * 6.2831 + seed.w * 3, 0, 0);
+  layout.$.extra[i] = d.vec4f(shape.z, seed.z * 6.2831 + seed.w * 3, 0, 0);
 });
 
 export default tgpu.resolve([simulate]);
