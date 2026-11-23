@@ -35,6 +35,11 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
+    scrollbar-width: none;
+  }
+
+  ::-webkit-scrollbar {
+    display: none;
   }
 
   body {
