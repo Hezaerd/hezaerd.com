@@ -84,8 +84,12 @@ export function glyph(text: string): Formation {
   };
 }
 
+/**
+ * Gives birds 0..n-1 the n points, pairing near with near so morphs stream
+ * rather than criss-cross. Birds past n get hidden points (w = 2).
+ */
 export function assignPoints(seeds: Float32Array, points: Float32Array): Float32Array<ArrayBuffer> {
-  const count = seeds.length / 4;
+  const count = points.length / 4;
   const strip = Math.ceil(Math.sqrt(count));
   const order = (cloud: Float32Array) => {
     const byX = Array.from({ length: count }, (_, i) => i).sort((a, b) => cloud[a * 4] - cloud[b * 4]);
@@ -98,7 +102,8 @@ export function assignPoints(seeds: Float32Array, points: Float32Array): Float32
 
   const birds = order(seeds);
   const targets = order(points);
-  const assigned = new Float32Array(points.length);
+  const assigned = new Float32Array(seeds.length);
+  for (let i = count; i < seeds.length / 4; i++) assigned[i * 4 + 3] = 2;
   for (let i = 0; i < count; i++) {
     const offset = targets[i] * 4;
     assigned.set(points.subarray(offset, offset + 4), birds[i] * 4);

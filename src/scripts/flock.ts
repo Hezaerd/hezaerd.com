@@ -14,6 +14,8 @@ export interface FlockScene {
   scale: number;
   turn?: (time: number) => [yaw: number, pitch: number];
   grab?: boolean;
+  /** Also flies the reserve birds, which hide in the murmuration, for formations that need more birds than it has. */
+  reserve?: boolean;
 }
 
 interface Spin {
@@ -109,11 +111,12 @@ export async function mountFlock(canvas: HTMLCanvasElement, options: FlockOption
 
   const look = SHAPES[options.shape ?? "streak"];
   const wide = window.matchMedia("(min-width: 48rem)");
-  const count = wide.matches ? look.wide : look.narrow;
+  const flock = wide.matches ? look.wide : look.narrow;
+  const count = flock * 2;
   const cellCss = options.cell ?? 1.5;
   const seedData = makeSeeds(count);
   const forms = await Promise.all(
-    scenes.map(async ({ form }) => (form === "sheet" ? null : assignPoints(seedData, await form(count)))),
+    scenes.map(async ({ form, reserve }) => (form === "sheet" ? null : assignPoints(seedData, await form(reserve ? count : flock)))),
   );
   if (signal.aborted) return false;
 
@@ -159,6 +162,7 @@ export async function mountFlock(canvas: HTMLCanvasElement, options: FlockOption
     time: 30,
     dt: STEP,
     count,
+    flock,
     scale: flockScale(),
     cursor: [-10, -10] as [number, number],
     cursorOn: 0,

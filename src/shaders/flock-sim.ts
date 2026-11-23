@@ -16,6 +16,8 @@ const Sim = d.struct({
   time: d.f32,
   dt: d.f32,
   count: d.f32,
+  // Birds the murmuration shows; the rest are a reserve that only some formations fly.
+  flock: d.f32,
   // Flock size, in world units.
   scale: d.f32,
   // The pointer, in world units, and how present it is (0 gone, 1 here).
@@ -92,9 +94,12 @@ function projectPoint(p: d.v3f): d.v3f {
   return d.vec3f(p.xy.mul(s), s);
 }
 
-function flockShape(seed: d.v4f, point: d.v4f, kind: number, turn: d.v2f, t: number): d.v4f {
+function flockShape(seed: d.v4f, point: d.v4f, kind: number, turn: d.v2f, t: number, bird: number): d.v4f {
   "use gpu";
-  if (kind === 0) return d.vec4f(flockSheet(seed.xy, seed.z, t), 1);
+  if (kind === 0) {
+    return d.vec4f(flockSheet(seed.xy, seed.z, t), std.select(d.f32(1), d.f32(0), bird >= layout.$.sim.flock));
+  }
+  if (point.w === 2) return d.vec4f(0, 0, 1, 0);
   if (point.w === 1) return d.vec4f(projectPoint(point.xyz), 1);
   const rotated = rotatePoint(point.xyz, turn);
   return d.vec4f(projectPoint(rotated), 1 - std.smoothstep(0.02, 0.15, rotated.z));
@@ -104,7 +109,7 @@ function flockShape(seed: d.v4f, point: d.v4f, kind: number, turn: d.v2f, t: num
 // birds ride a dragged globe instead of chasing it through their springs.
 function flockCarry(point: d.v4f, kind: number, turn: d.v2f, carry: d.v2f): d.v2f {
   "use gpu";
-  if (kind === 0 || point.w === 1) return d.vec2f(0, 0);
+  if (kind === 0 || point.w > 0.5) return d.vec2f(0, 0);
   const now = projectPoint(rotatePoint(point.xyz, turn));
   const before = projectPoint(rotatePoint(point.xyz, turn.sub(carry)));
   return now.xy.sub(before.xy);
@@ -123,9 +128,9 @@ const simulate = tgpu.computeFn({ in: { id: d.builtin.globalInvocationId }, work
   let vel = bird.zw;
   const t = params.time;
 
-  let shape = flockShape(seed, layout.$.formA[i], params.kindA, params.turnA, t);
+  let shape = flockShape(seed, layout.$.formA[i], params.kindA, params.turnA, t, d.f32(i));
   if (params.blend > 0) {
-    const next = flockShape(seed, layout.$.formB[i], params.kindB, params.turnB, t);
+    const next = flockShape(seed, layout.$.formB[i], params.kindB, params.turnB, t, d.f32(i));
     shape = std.mix(shape, next, params.blend);
   }
   const goal = params.centre.add(params.aim).add(shape.xy.mul(params.scale));

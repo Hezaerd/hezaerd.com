@@ -44,6 +44,7 @@ const scenes: [HomeScene, ...HomeScene[]] = [
     scale: 0.56,
     turn: (time) => [0.08 * Math.sin(time * 0.15), 0.03 * Math.sin(time * 0.13)],
     grab: true,
+    reserve: true,
     position: sidePosition,
     width: sideWidth,
     content: (
