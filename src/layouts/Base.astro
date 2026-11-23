@@ -8,9 +8,15 @@ interface Props {
   title?: string;
   description?: string;
   image?: string;
+  imageAlt?: string;
 }
 
-const { title = site.title, description = site.description, image = "/og.png" } = Astro.props;
+const {
+  title = site.title,
+  description = site.description,
+  image = "/og.png",
+  imageAlt = "Hezaerd's avatar: a white-haired figure with a bird across the eyes, in grainy monochrome on black.",
+} = Astro.props;
 const canonical = new URL(Astro.url.pathname, site.url).href;
 const ogImage = new URL(image, site.url).href;
 ---
@@ -36,7 +42,13 @@ const ogImage = new URL(image, site.url).href;
     <meta property="og:image" content={ogImage} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:alt" content={imageAlt} />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content={imageAlt} />
     <slot name="head" />
   </head>
   <body>
